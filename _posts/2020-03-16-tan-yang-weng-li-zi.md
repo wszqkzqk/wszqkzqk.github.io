@@ -105,19 +105,33 @@ Woods等人于1992年提出了六元碳氧𬭩环的过渡态模型。 [3] 确�
 糖苷酶
 ## 参考文献 #
  （英文）国际纯粹与应用化学联合会．"carbenium ion"．《化学术语总目录》在线版．
+
  Larsen, C. H.; Ridgway, B. H.; Shaw, J. T.; Woerpel, K. A., A Stereoelectronic Model to Explain the Highly Stereoselective Reactions of Nucleophiles with Five-Membered-Ring Oxocarbenium Ions, Journal of the American Chemical Society, 1999, 121 (51): 12208–12209, doi:10.1021/ja993349z
+
  Woods, R. J.; Andrews, C. W.; Bowen, J. P., Molecular mechanical investigations of the properties of oxocarbenium ions. 2. Application to glycoside hydrolysis, Journal of the American Chemical Society, 1992, 114 (3): 859–864, doi:10.1021/ja00029a008
+
  Romero, J. A. C.; Tabacco, S. A.; Woerpel, K. A., Stereochemical Reversal of Nucleophilic Substitution Reactions Depending upon Substituent: Reactions of Heteroatom-Substituted Six-Membered-Ring Oxocarbenium Ions through Pseudoaxial Conformers, Journal of the American Chemical Society, 1999, 122: 168–169, doi:10.1021/ja993366o
+
  Miljkovic, M. i.; Yeagley, D.; Deslongchamps, P.; Dory, Y. L., Experimental and Theoretical Evidence of Through-Space Electrostatic Stabilization of the Incipient Oxocarbenium Ion by an Axially Oriented Electronegative Substituent During Glycopyranoside Acetolysis, The Journal of Organic Chemistry, 1997, 62 (22): 7597–7604, doi:10.1021/jo970677d
+
  Hansen, Thomas; Lebedel, Ludivine; Remmerswaal, Wouter A.; van der Vorm, Stefan; Wander, Dennis P. A.; Somers, Mark; Overkleeft, Herman S.; Filippov, Dmitri V.; Désiré, Jérôme. Defining the SN1 Side of Glycosylation Reactions: Stereoselectivity of Glycopyranosyl Cations. ACS Central Science. 2019-04-18, 5 (5): 781–788. ISSN 2374-7943. doi:10.1021/acscentsci.9b00042.
+
  Vollhardt; Shore. Organic Chemistry. New York, NY: W. H. Freeman and Co. 2009.
+
  Harmata, M.; Rashatasakhon, P., Cycloaddition reactions of vinyl oxocarbenium ions, Tetrahedron, 2003, 59 (14): 2371–2395, doi:10.1016/s0040-4020(03)00253-9
+
  Roush, M.; Gillis, P.; Essenfeld, A., Hydrofluoric acid catalyzed intramolecular Diels–Alder reactions, Journal of Organic Chemistry, 1984, 49 (24): 4674–4682, doi:10.1021/jo00198a018
+
  Kanwar, S.; Trehan, S., Acetate aldol reactions of chiral oxocarbenium ions, Tetrahedron Letters, 2005, 46 (8): 1329–1332, doi:10.1016/j.tetlet.2004.12.116
+
  Carrick, J. D.; Jennings, M. P., An Efficient Formal Synthesis of (−)-Clavosolide a Featuring a "Mismatched" Stereoselective Oxocarbenium Reduction, Organic Letters, 2009, 11 (3): 769–772, doi:10.1021/ol8028302
+
  Martinez-Solorio, D.; Jennings, M. P., Formal Synthesis of (−)-Neopeltolide Featuring a Highly Stereoselective Oxocarbenium Formation/Reduction Sequence, The Journal of Organic Chemistry, 2010, 75 (12): 4095–4104, doi:10.1021/jo100443h
+
  Maton, Anthea; Jean Hopkins; Charles William McLaughlin; Susan Johnson; Maryanna Quon Warner; David LaHart; Jill D. Wright. Human Biology and Health. Englewood Cliffs, New Jersey, USA: Prentice Hall. 1993: 52–59. ISBN 0-13-981176-1.
+
  Muller-Steffner, H. M.; Augustin, A.; Schuber, F., Mechanism of Cyclization of Pyridine Nucleotides by Bovine Spleen NAD+ Glycohydrolase, Journal of Biological Chemistry, 1996, 271 (39): 23967–23972, PMID 8798630, doi:10.1074/jbc.271.39.23967
+
  Zechel, D.L.; Withers, S.G. Glycosidase Mechanisms: Anatomy of a Finely Tuned Catalyst. Accounts of Chemical Research. 2000, 33 (1): 11–18. ISSN 0001-4842. PMID 10639071. doi:10.1021/ar970172.
 
 本文采用[CC-BY-SA-3.0](https://zh.wikipedia.org/wiki/Wikipedia:CC-BY-SA-3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC)发布，来自我创建的Wikipedia条目[碳氧鎓离子](https://zh.wikipedia.org/wiki/%E7%A2%B3%E6%B0%A7%E9%8E%93%E7%A6%BB%E5%AD%90)
