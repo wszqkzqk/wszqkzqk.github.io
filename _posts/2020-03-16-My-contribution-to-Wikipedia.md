@@ -1,3 +1,4 @@
+---
 layout:     post
 title:      我在Wikipedia上参与贡献的条目
 subtitle:   Wikipedia条目推荐
@@ -6,6 +7,7 @@ author:     星外之神
 header-img: img/post-1122px-Wikipedia-logo-v2.svg.png
 catalog:    true
 tags:       Wikipedia
+---
 
 **我创建的条目：**
 
