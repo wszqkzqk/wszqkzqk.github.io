@@ -100,8 +100,8 @@ service-worker: true
 friends: [
     {
 
-    },{
-
+    },{title: "GitHub",
+        href: "https://github.com"
     },{
         title: "小米",
         href: "https://www.mi.com"
