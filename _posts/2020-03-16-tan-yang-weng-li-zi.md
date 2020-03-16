@@ -104,3 +104,5 @@ Woods等人于1992年提出了六元碳氧𬭩环的过渡态模型。 [3] 确�
  Maton, Anthea; Jean Hopkins; Charles William McLaughlin; Susan Johnson; Maryanna Quon Warner; David LaHart; Jill D. Wright. Human Biology and Health. Englewood Cliffs, New Jersey, USA: Prentice Hall. 1993: 52–59. ISBN 0-13-981176-1.
  Muller-Steffner, H. M.; Augustin, A.; Schuber, F., Mechanism of Cyclization of Pyridine Nucleotides by Bovine Spleen NAD+ Glycohydrolase, Journal of Biological Chemistry, 1996, 271 (39): 23967–23972, PMID 8798630, doi:10.1074/jbc.271.39.23967
  Zechel, D.L.; Withers, S.G. Glycosidase Mechanisms: Anatomy of a Finely Tuned Catalyst. Accounts of Chemical Research. 2000, 33 (1): 11–18. ISSN 0001-4842. PMID 10639071. doi:10.1021/ar970172.
+
+本文采用[CC-BY-SA-3.0](https://zh.wikipedia.org/wiki/Wikipedia:CC-BY-SA-3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC)发布，来自我创建的Wikipedia条目[碳氧鎓离子](https://zh.wikipedia.org/wiki/%E7%A2%B3%E6%B0%A7%E9%8E%93%E7%A6%BB%E5%AD%90)
