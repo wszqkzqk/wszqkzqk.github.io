@@ -18,11 +18,11 @@ sidebar-avatar: /img/wszqkzqk.png      # use absolute URL, seeing it's used in b
 
 # SNS settings
 RSS: false
-# weibo_username:     wszqkzqk
+weibo_username:   星外之神
 #zhihu_username:     wszqkzqk
 github_username:    wszqkzqk
 #facebook_username:
-#jianshu_username:
+jianshu_username: 星外之神
 #twitter_username:   wszqkzqk
 
 
@@ -97,7 +97,7 @@ service-worker: true
 
 
 # Friends
-friends: [
+#friends: [
     {
 
     },{
