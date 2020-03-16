@@ -4,7 +4,7 @@ title:      我在Wikipedia上参与贡献的条目
 subtitle:   Wikipedia条目推荐
 date:       2020-3-16
 author:     星外之神
-header-img: img/post-1122px-Wikipedia-logo-v2.svg.png
+header-img: img/post-1122px-Wikipedia-logo-v2.svg-dark.png
 catalog:    true
 tags:       Wikipedia
 ---
