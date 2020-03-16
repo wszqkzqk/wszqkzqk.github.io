@@ -1,6 +1,16 @@
+---
+layout:     post
+title:      碳氧𬭩离子
+subtitle:   Wikipedia条目推荐
+date:       2020-3-16
+author:     星外之神
+header-img: img/post-1122px-Wikipedia-logo-v2.svg.png
+catalog:    true
+tags:       Wikipedia
+
 #碳氧𬭩离子
 
-碳氧𬭩离子的一般结构
+![碳氧𬭩离子的一般结构](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/post-220px-Oxocarbenium-canonical_forms.png)
 
 碳氧𬭩离子（或氧碳𬭩离子）是一类在中心sp2-杂化的碳原子上连有氧取代基，并且能够在中心碳原子和氧原子之间通过Π键离域分散所携带的正电荷的化学物种。 [1] 碳氧𬭩离子可以用两个共振极限结构表示，一个是碳正离子形式，另一个是满足8电子规则且氧带形式电荷的氧𬭩形式。 真实结构为共振杂化体，介于两者之间。碳氧𬭩离子与酮或酯等中性羰基化合物相比，碳正离子形式的共振式对共振杂化体的结构的贡献更大。碳氧𬭩离子是糖苷键水解中常见的反应性中间体，并且是糖基化合成的常用策略。 这些离子作为多种化学反应中的活性中间体，已在有机合成中得到广泛应用，且已成功用于几种天然产物的全合成中。 此外，它们通常在自然界中以酶催化下的生物化学合成和碳水化合物水解的机理出现。 花青素是天然的黄酮染料，是稳定的氧碳𬭩化合物。 花色苷是造成多种常见花（例如紫罗兰）和食用植物（例如茄子和蓝莓）显现颜色的原因。
 
@@ -25,7 +35,8 @@
 
 在数值上，酮R2C=O（如丙酮）的羰基碳所携带的的典型部分电荷为δ+ = 0.51（源自Hartree-Fock计算）。而当酮的氧原子质子化后产生[R2C=OH]+ 物种，部分电荷增加至δ+ = 0.61。 相比之下，酮和碳氧𬭩离子的氮取代类似物，亚胺(R2C=NR)和亚胺𬭩离子([R2C=NRH]+)的部分电荷分别为δ+ = 0.33和δ+ = 0.54 。因此，羰基碳所携带的部分正电荷大小的顺序为亚胺<酮<亚胺𬭩<碳氧𬭩。
 
-C=Xelectrophilicity.png
+![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/post-440px-C=Xelectrophilicity.png)
+
 这也是包含 C=X (X = O, NR)键的物种的亲电性的顺序。 这个顺序在有机合成中得到了应用和解释，例如：为什么还原胺化通常最好在pH= 5至6时进行，这个反应用到了 氰基硼氢化钠 (Na+[H3B(CN)]−) 或三乙酰氧基硼钠(Na+[HB(OAc)3]−)作还原剂。 带有吸电子基团的氰基硼氢化钠和三乙酰氧基硼氢化钠比硼氢化钠还原能力弱，它们与酮的直接反应通常是一个缓慢而低效的过程。 但是，在还原胺化反应过程中原位形成的亚胺𬭩离子（并非是亚胺本身）比酮类原料具有更强的亲电性，并且将以在合成中有价值的速率与负氢还原剂反应。 重要的是，该反应是一般在弱酸性条件下进行的，此时电中性的亚胺中间体显著质子化，形成亚胺𬭩离子，而在弱酸性环境中，酮并不能够质子化，亲电性依然较弱。 因此，反应条件和试剂确保了在该反应中由亚胺基还原选择性地形成胺，而不是直接还原羰基（或其质子化形式）以形成醇。
 
 ##形成
@@ -34,35 +45,35 @@ C=Xelectrophilicity.png
 ##合成应用
 ###五元环
 
-假想的五元氧碳𬭩离子过渡态
+![假想的五元氧碳𬭩离子过渡态](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/post-5-membered.png)
 五元环反应所涉及的立体化学可以通过信封形过渡态模型来预测。 亲核试剂有利于从信封的“内部”或右侧图的顶部加成。从信封内部加成将产生有利的交错式构象，而从信封外加成则将产生能量不利的重叠式构象 。 [2]
 
-Woerpel 1999.png
+![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/post-450px-Woerpel_1999.png)
 ###六元环
 
-六元碳氧𬭩离子环的过渡态模型
+![六元碳氧𬭩离子环的过渡态模型](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/post-450px-6-membered.png)
 Woods等人于1992年提出了六元碳氧𬭩环的过渡态模型。 [3] 确定六元环的亲核加成的立体化学的一般策略与五元环类似。 此分析依据的一种假设是：该环与环己烯具有相同的构象，其中三个碳和一个氧在一个平面内，而另外两个碳原子一个在该平面上方，另一个在下方（请参阅右图）。 依据环上存在的取代基，可以确定最低的能量构象，确定时要考虑空间和立体电子效应。 确定了这种构象后，就可以考虑亲核加成的立体化学。 加成将通过低能量的椅式过渡状态进行。可以在下面看到此类反应的示例。 该示例还说明了负电取代基可能会有较明显的的立体电子效应，通常这会改变最优构象的结构，使得反应的选择性发生变化。 [4]
 
-6-Membered Oxocarbenium.png
+![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/post-500px-6-Membered_Oxocarbenium.png)
 ###立体电子效应
 在不包含氧原子的烯烃环中，任何大的取代基都倾向于位于赤道位置，以使空间效应最小化。 但是在含碳氧𬭩离子的环中， 负电性取代基倾向于优先占据轴向或准轴向位置。 当负电性原子处于轴向位置时，其电子密度可以通过立体电子效应分散给环中带正电的氧原子。 [5] 这种相互作用稳定了轴向构象。表现出这种现象的取代基的实例主要有 羟基 ， 醚和卤素。 在确定氧代碳𬭩离子的亲核加成反应中能量最低的构象时，必须考虑立体电子效应 。 [4] [6]
 
-Axialoxo.png
+![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/post-200px-Axialoxo.png)
 ###环加成
 在有机合成中，乙烯基氧碳𬭩离子（右侧结构）可广泛用于环加成反应中。 它们通常在Diels-Alder反应中用作亲二烯体 。 通常将吸电子酮添加到该亲二烯体中以提高反应速率， [7]在反应过程中，这些酮经常转化为乙烯基氧碳𬭩离子[8]。目前尚不清楚该机理是否必须经历碳氧𬭩离子中间体，但Roush和他的同事在以下所示的环化反应中证明了该反应确实生成了氧碳𬭩离子中间体。 该反应可观察到的两种产物只有在氧碳𬭩环作为中间体存在时才能形成。已经有人报道氧碳𬭩离子中间体参与的[9][4+3], [2+2], [3+2]和[5+2]环加成。
 
-Oxointermediate.png
+![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/post-500px-Oxointermediate.png)
 ###羟醛反应
 已有利用手性氧碳𬭩离子与乙烯醇衍生等价物进行高度非对映选择性和对映选择性的反应 [10] 氧碳𬭩离子在反应中用作亲电试剂 。 当甲基替换为更大的取代基时，反应的非对映选择性增加。
 
-Oxoaldol.png
+![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/post-500px-Oxoaldol.png)
 ###全合成实例
 氧碳𬭩离子已在多种场合中用于全合成。(+)-clavosolide的主要亚基是通过还原六元氧碳𬭩环合成的。 如所预测的，所有大的取代基都位于赤道位置，并且该转化经历了椅式过渡状态。 [11]
 
-Clavosolide.png
+![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/post-450px-Clavosolide.png)
 第二个例子可见于 (−)-neopeltolide合成的关键步骤，该步骤使用另一种六元氧碳𬭩环发生还原反应生成非对映选择性加氢产物。 [12]
 
-Neopeltolide.png
+![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/post-520px-Neopeltolide.png)
 ##生物学应用
 在生物系统中，氧碳𬭩离子最常见于碳水化合物的反应过程中。 由于糖存在于核酸中，它的化学性质对核酸在生物体内的功能起到了重要作用。 糖除了在核酸中发挥生理功能外，还是生物体的结构组分，可以多种形式存在，例如储能分子、细胞信号分子、蛋白质修饰，并在免疫系统 、 受精作用 、预防发病机制 、血液凝结和发育中发挥关键作用。 [13] 生物化学过程中糖化学性质丰富，许多糖参与的反应经历氧碳𬭩离子中间体。 本节概述了利用氧碳𬭩离子的几种重要的生物反应。
 
@@ -72,9 +83,10 @@ Neopeltolide.png
 ###糖苷酶
 糖苷酶是一种催化糖苷键断裂的酶，它能使底物糖分解产生两个较小的糖分子 。 这个过程对动物体内糖原等储能物质的利用以及植食生物进行纤维素的分解具有重要意义。 通常，酶的活性位点上的天冬氨酸或谷氨酸残基可以催化糖苷键的水解。 这些酶的机制涉及氧碳𬭩离子中间体，其一般实例如下所示。 [15]
 
-Sugarhydrolysis.png
+![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/post-500px-Sugarhydrolysis.png)
 ##参见
 碳正离子
+
 糖苷酶
 ##参考文献
  （英文）国际纯粹与应用化学联合会．"carbenium ion"．《化学术语总目录》在线版．
