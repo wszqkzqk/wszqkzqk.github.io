@@ -99,14 +99,19 @@ service-worker: true
 # Friends
 friends: [
     {
-
-    },{title: "GitHub",
+        title: "deepin",
+        href: "https://www.deepin.org"
+    },{
+        title: "GitHub",
         href: "https://github.com"
     },{
         title: "小米",
         href: "https://www.mi.com"
     },{
         title: "Wikipedia",
-        href: "https://www.wikipedia.org/"
+        href: "https://www.wikipedia.org"
+    },{
+        title: "Linux.org",
+        href: "https://linux.org"
     }
 ]
