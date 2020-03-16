@@ -1,4 +1,3 @@
----
 layout:     post
 title:      我在Wikipedia上参与贡献的条目
 subtitle:   Wikipedia条目推荐
