@@ -2,7 +2,7 @@
 title: 星外之神 Blog
 SEOTitle: 星外之神的博客 | wszqkzqk Blog
 header-img: img/post-bg-desk.jpg
-email: 1726509538@qq.com.com
+email: 1726509538@qq.com
 description: "Every failure is leading towards success."
 keyword: "wszqkzqk, wszqkzqk Blog, 星外之神的博客, wszqkzqk"
 url: "http://wszqkzqk.github.io"          # your host, for absolute URL
@@ -74,7 +74,7 @@ gitalk:
 
 # Analytics settings
 # Baidu Analytics
-#ba_track_id: 
+ba_track_id: bee5952215150b26a9fe25d43fdc1116 
 
 # Google Analytics
 #ga_track_id:             # Format: UA-xxxxxx-xx
