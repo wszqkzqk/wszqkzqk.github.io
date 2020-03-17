@@ -29,3 +29,4 @@ tags:       Wikipedia
 
 [三氟化氮](https://zh.wikipedia.org/wiki/%E4%B8%89%E6%B0%9F%E5%8C%96%E6%B0%AE)
 
+本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布
