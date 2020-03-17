@@ -127,3 +127,5 @@ tags:       HMO
 [三角酸](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/三角酸.pdf)
 
 [三角酸](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/三角酸.pdf)
+
+本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布
