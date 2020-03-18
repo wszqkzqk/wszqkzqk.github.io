@@ -10,7 +10,7 @@ tags:       Wikipedia
             有机化学
 ---
 
-#Stereoelectronic effect
+# Stereoelectronic effect
 
 **注：这是博主在英文维基上发现的一个内容较为充实的条目，虽然博主已经在原条目中提交了一些文字修改和述图修正，但囿于个人能力有限，其中仍然有一些小错误。欢迎读者到原条目处（链接在文末）提供修改方案，也可以在中文维基中提供对应条目的翻译扩充**
 
@@ -27,7 +27,7 @@ The term stereoelectronic effect should not be misused to refer to a simple comb
 ![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/Tim_Project_Image_1.gif)
 
 
-##Contents
+## Contents
 
 **1	Trend of different orbitals**
 
@@ -57,7 +57,7 @@ The term stereoelectronic effect should not be misused to refer to a simple comb
 
 **8	References**
 
-##Trend of different orbitals
+## Trend of different orbitals
 
 Take the simplest CH2X–CH3 system as an example; the donor orbital is σ(C–H) orbital and the acceptor is σ*(C–X). When moving from fluorine to chlorine, then to bromine, the electronegativity of the halogen and the energy level of the σ*(C–X) orbitals decreases.[7] Consequently, the general trend of acceptors can be summarized as: π*(C=O)>σ*(C–Hal)>σ*(C–O)>σ*(C–N)>σ*(C–C), σ*(C–H). For donating orbitals, the nonbonding orbitals, or the lone pairs, are generally more effective than bonding orbitals due to the high energy levels. Also, different from acceptors, donor orbitals require less polarized bonds. Thus, the general trends for donor orbitals would be: n(N)>n(O)>σ(C–C), σ(C–H)>σ(C–N)>σ(C–O)>σ(C–S)>σ(C–Hal).[6]
 
@@ -67,15 +67,15 @@ Stereoelectronic effect can be directional in specific cases. The radius of sulf
 
 ![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/Tim_Project_Image_3.gif)
 
-##Influence on stability
+## Influence on stability
 
 If there is an electropositive substituent (e.g. –SiR3, –SnR3, –HgR, etc.) at the β-position of carbocation, the positive charge could be stabilized which is also due largely to the stereoelectronic effect (illustrated below using –SiR3 as an example). The orientation of the two interacting orbitals can have a significant effect on the stabilization effect (σ(C–Si) → empty p orbital), where antiperiplanar (180°) > perpendicular (90°) > syn (0°).[8]
 
 ![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/Tim_Project_Image_4.gif)
 
-##Influence on conformation
+## Influence on conformation
 
-###Gauche effect
+### Gauche effect
 
 One structural consequence of acyclic systems due to the stereoelectronic effect is the gauche effect.[9] In 1,2-difluoroethane, despite the steric clash, the preferred conformation is the gauche one because σ(C–H) is a good donor and σ*(C–F) is a good acceptor and the stereoelectronic effect (σ(C–H) → σ*(C–F)) requires the energy minimum to be gauche instead of anti.[10]
 
@@ -85,7 +85,7 @@ This gauche effect has a profound effect in bio-chemical research. In (2S,4R)-4-
 
 ![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/Tim_Project_Image_6.gif)
 
-###Special effects of fluorine substituent
+### Special effects of fluorine substituent
 
 Stereoelectronic effects can have a significant influence in pharmaceutical research. Generally, the substitution of hydrogen by fluorine could be regarded as a way to tune both the hydrophobicity and the metabolic stability of a drug candidate. Moreover, it can have a profound influence on conformations, often due to stereoelectronic effects, in addition to normal steric effects resulting from the larger size of the fluorine atom. For instance, the ground state geometries of anisole (methoxybenzene) and (trifluoromethoxy)benzene differ dramatically. In anisole, the methyl group prefers to be coplanar with the phenyl group, while (trifluoromethoxy)benzene favors a geometry in which the [C(aryl)–C(aryl)–O–C(F3)] dihedral angle is around 90°. In other words, the O–CF3 bond is perpendicular to the plane of the phenyl group.[12]
 
@@ -93,9 +93,9 @@ Stereoelectronic effects can have a significant influence in pharmaceutical rese
 
 Further studies illustrate that even for only one or two hydrogen atoms in a methyl group being replaced by a fluorine atom, the distortion in the structure can also be significant, with the [C(aryl)–C(aryl)–O–C(H2F)] dihedral angle in the energy minimized structure being around 24° and the [C(aryl)–C(aryl)–O–C(HF2)] dihedral angle 33°.[12]
 
-##Influence on reaction selectivity
+## Influence on reaction selectivity
 
-###Reductive cyclizations
+### Reductive cyclizations
 
 Although the energy difference between coplanar anisole and its isomer is quite large, the rotation between the O–CH3 bond becomes favorable when the electronic properties of methoxy group on aromatic rings need to be altered to stabilize an unusual intermediate or a transition state. In the following reaction, the regioselectivity could be rationalized as the out-of-plane rotation of the O–C bond which changes the methoxy group from an in-plane donor group to an out-of-plane acceptor group.[13]
 
@@ -105,7 +105,7 @@ The intermediate of the above reaction is the di-anion and the stereoelectronic 
 
 ![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/Tim_Project_Image_9.gif)
 
-##Hydrogenation
+### Hydrogenation
 
 Even remote substituents on the benzene ring can affect the electron density on the aromatic ring and in turn influence the selectivity. In the hydrogenation of ketones using CBS catalysts, the ketone coordinates to the boron atom with the lone pair on the oxygen atom. In the following example, the inductive influence of the substituents can lead to differentiation of the two sp2 lone pairs on the oxygen atom.[14]
 
@@ -113,9 +113,9 @@ The relevant stereoelectronic interaction in the starting material is the nO →
 
 ![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/500px-CBS-stereoelectronics.png)
 
-##Influence on thermodynamics
+## Influence on thermodynamics
 
-###Influence on equilibrium
+### Influence on equilibrium
 
 The stereoelectronic effect influences the thermodynamics of equilibrium. For example, the following equilibrium could be achieved via a cascade of pericyclic reactions.
 
@@ -127,13 +127,13 @@ Another example of the preference in the equilibrium within the area of pericycl
 
 ![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/Tim_Project_Image-Add-3.gif)
 
-###Influence on resonance structures
+### Influence on resonance structures
 
 In another case, the stereoelectronic effect can result in an increased contribution of one resonance structure over another, which leads to further consequences in reactivity. For 1,4-benzoquinone monoxime, there are significant differences in the physical properties and reactivities between C2-C3 double bond and C5-C6 double bond. For instance, in the 1H NMR, 3J23 higher than 3J56.[17] The C2-C3 double bond also selectively undergoes Diels–Alder reaction with cyclopentadiene, despite the increased steric hindrance on that side of the molecule.[18] These data illustrate an increased contribution of resonance structure B over structure A. The authors argue that the donation from nN to σ*C4-C3 orbital lengthens the C4–C3 bond (C4 is the carbon bearing the nitrogen substituent), which reduces the p-p overlap between these two atoms. This in turn decreasing the relative importance of structure A which has a double bond between C4 and C3.[19]
 
 ![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/Tim_Project_Image_11.gif)
 
-##Application in asymmetric Diels–Alder reactions
+## Application in asymmetric Diels–Alder reactions
 
 In the asymmetric Diels–Alder reactions, instead of using chiral ligands or chiral auxiliaries to differentiate the side selectivity of the dienolphiles, the differentiation of face selectivity of the dienes (especially for cyclopentadiene derivatives) using stereoelectronic effects have been reported by Woodward since 1955.[20] A systematic research of facial selectivity using substituted cyclopentadiene or permethylcyclopentadiene derivatives have been conducted and the results can be listed as below.[21]
 
@@ -155,7 +155,7 @@ The inward rotation transition state of the second shown below is relatively fav
 
 ![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/Tim_Project_Image_19.gif)
 
-##Stereoelectronic effect versus steric clash
+## Stereoelectronic effect versus steric clash
 
 Sometimes, stereoelectronic effects can win over extreme steric clash. In a similar cyclobutene ring-opening reaction, the trimethylsilyl group, which is very bulky, still favors the inward rotation. The stereoelectronic effect, which is the interaction shown above when the acceptor orbital is the σ*(Si–CH3), appears to be a more predominant factor in determining the reaction selectivity against the steric hindrance and even wins over the penalty of the disrupted conjugation system of the product due to steric clash.[24]
 
@@ -163,7 +163,7 @@ Furthermore, the acceptor orbitals are not limited to the antibonding orbitals o
 
 ![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/Tim_Project_Image_20.gif)
 
-##References
+## References
 
  Alabugin, I. V. Stereoelectronic Effects: the Bridge between Structure and Reactivity. John Wiley & Sons Ltd, Chichester, UK, 2016. http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118906349.html
  
