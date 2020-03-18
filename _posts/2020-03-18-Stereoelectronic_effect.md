@@ -11,6 +11,7 @@ tags:       Wikipedia
 ---
 
 #Stereoelectronic effect
+
 **注：这是博主在英文维基上发现的一个内容较为充实的条目，虽然博主已经在原条目中提交了一些文字修改和述图修正，但囿于个人能力有限，其中仍然有一些小错误。欢迎读者到原条目处（链接在文末）提供修改方案，也可以在中文维基中提供对应条目的翻译扩充**
 
 In chemistry, primarily organic and computational chemistry, a stereoelectronic effect[1] is an effect on molecular geometry, reactivity, or physical properties due to spatial relationships in the molecules' electronic structure, in particular the interaction between atomic and/or molecular orbitals.[2] Phrased differently, stereoelectronic effects can also be defined as the geometric constraints placed on the ground and/or transition states of molecules that arise from considerations of orbital overlap.[3] Thus, a stereoelectronic effect explains a particular molecular property or reactivity by invoking stabilizing or destabilizing interactions that depend on the relative orientations of electrons (bonding or non-bonding) in space.[4][5]
@@ -163,6 +164,7 @@ Furthermore, the acceptor orbitals are not limited to the antibonding orbitals o
 ![](https://raw.githubusercontent.com/wszqkzqk/wszqkzqk.github.io/master/img/Tim_Project_Image_20.gif)
 
 ##References
+
  Alabugin, I. V. Stereoelectronic Effects: the Bridge between Structure and Reactivity. John Wiley & Sons Ltd, Chichester, UK, 2016. http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118906349.html
  
  Cramer, Christopher J. (1996). "Hyperconjugation as it affects conformational analysis". Journal of Molecular Structure: THEOCHEM. 370 (2–3): 135–146. doi:10.1016/S0166-1280(96)04567-8. ISSN 0166-1280.
