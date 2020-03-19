@@ -8,6 +8,7 @@ header-img: img/post-1122px-Wikipedia-logo-v2.svg-dark.png
 catalog:    true
 tags:       Wikipedia
             有机化学
+            立体化学
 ---
 
 # Stereoelectronic effect
