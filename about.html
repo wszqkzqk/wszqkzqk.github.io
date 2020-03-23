@@ -1,20 +1,20 @@
 ---
 layout: page
 title: "About"
-description: "Hey, this is wszqkzqk."
+description: "你好，我是星外之神."
 header-img: "img/post-bg-universe.jpg"
 ---
 
 <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=525241128&auto=1&height=66"></iframe>
 
-<!-- Language Selector -->
-<!-- <select class="sel-lang" onchange= "onLanChange(this.options[this.options.selectedIndex].value)">
-    <option value="0" selected> 中文 Chinese </option>
-    <option value="1"> 英文 English </option>
-</select> -->
+#<!-- Language Selector -->
+#<!-- <select class="sel-lang" onchange= "onLanChange(this.options[this.options.selectedIndex].value)">
+#    <option value="0" selected> 中文 Chinese </option>
+#    <option value="1"> 英文 English </option>
+#</select> -->
 
-<!-- Chinese Version -->
-<div class="zh post-container">
+#<!-- Chinese Version -->
+#<div class="zh post-container">
 
     <!--copied from markdown -->
     <blockquote><p>合抱之木，生于毫末<br>
@@ -40,64 +40,64 @@ header-img: "img/post-bg-universe.jpg"
     </ul>
 </div>
 
-<!-- English Version -->
-<!-- <div class="en post-container">
-    <blockquote><p> <br>
-    </p></blockquote>
+#<!-- English Version -->
+#<!-- <div class="en post-container">
+#    <blockquote><p> <br>
+#    </p></blockquote>
 
-    <p>Hi, I am <strong>wszqkzqk</strong>，you can call me <strong>ZQK</strong></p>
-    <p>This is my personal blog, through making Github Pages and Jekyll.My GitHub  👉 <a href="http://github.com/wszqkzqk">Github·wszqkzqk</a>.</p>
-    <p>I am a chemistry lover and a editor of Wikipedia.</p>
+#    <p>Hi, I am <strong>wszqkzqk</strong>，you can call me <strong>ZQK</strong></p>
+#    <p>This is my personal blog, through making Github Pages and Jekyll.My GitHub  👉 <a href="http://github.com/wszqkzqk">Github·wszqkzqk</a>.</p>
+#    <p>I am a chemistry lover and a editor of Wikipedia.</p>
 
-    <h5>Talks</h5>
+#    <h5>Talks</h5>
 
-    <ul>
-    <li><a href="https://github.com">GitHub</a></li>
-    <li><a href="http://jekyll.com.cn/">jekyll</a></li>
-    <li><a href="https://pages.github.com/">GitHub Pages</a></li>
-    <li><a href="https://wszqkzqk.github.io">wszqkzqk</a></li>
-    </ul>
-</div> -->
+#    <ul>
+#    <li><a href="https://github.com">GitHub</a></li>
+#    <li><a href="http://jekyll.com.cn/">jekyll</a></li>
+#    <li><a href="https://pages.github.com/">GitHub Pages</a></li>
+#    <li><a href="https://wszqkzqk.github.io">wszqkzqk</a></li>
+#    </ul>
+#</div> -->
 
-<!-- Handle Language Change -->
-<script type="text/javascript">
-    // get nodes
-    var $zh = document.querySelector(".zh");
-    var $en = document.querySelector(".en");
-    var $select = document.querySelector("select");
+#<!-- Handle Language Change -->
+#<script type="text/javascript">
+#    // get nodes
+#    var $zh = document.querySelector(".zh");
+#    var $en = document.querySelector(".en");
+#    var $select = document.querySelector("select");
 
-    // bind hashchange event
-    window.addEventListener('hashchange', _render);
+#    // bind hashchange event
+#    window.addEventListener('hashchange', _render);
 
-    // handle render
-    function _render(){
-        var _hash = window.location.hash;
-        // en
-        if(_hash == "#en"){
-            $select.selectedIndex = 1;
-            $en.style.display = "block";
-            $zh.style.display = "none";
-        // zh by default
-        }else{
-            // not trigger onChange, otherwise cause a loop call.
-            $select.selectedIndex = 0;
-            $zh.style.display = "block";
-            $en.style.display = "none";
-        }
-    }
+#    // handle render
+#    function _render(){
+#        var _hash = window.location.hash;
+#        // en
+#        if(_hash == "#en"){
+#            $select.selectedIndex = 1;
+#            $en.style.display = "block";
+#            $zh.style.display = "none";
+#        // zh by default
+#        }else{
+#            // not trigger onChange, otherwise cause a loop call.
+#            $select.selectedIndex = 0;
+#            $zh.style.display = "block";
+#            $en.style.display = "none";
+#        }
+#    }
 
-    // handle select change
-    function onLanChange(index){
-        if(index == 0){
-            window.location.hash = "#zh"
-        }else{
-            window.location.hash = "#en"
-        }
-    }
+#    // handle select change
+#    function onLanChange(index){
+#        if(index == 0){
+#            window.location.hash = "#zh"
+#        }else{
+#            window.location.hash = "#en"
+#        }
+#    }
 
-    // init
-    _render();
-</script>
+#    // init
+#    _render();
+#</script>
 
 
 <!-- Gitalk 评论 start  -->
