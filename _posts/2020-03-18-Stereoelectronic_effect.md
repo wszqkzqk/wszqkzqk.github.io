@@ -30,32 +30,19 @@ The term stereoelectronic effect should not be misused to refer to a simple comb
 
 ## Contents
 
-**1	Trend of different orbitals**
-
-**2	Influence on stability**
-
-**3	Influence on conformation**
-
-**3.1	Gauche effect**
-
-**3.2	Special effects of fluorine substituent**
-
-**4	Influence on reaction selectivity**
-
-**4.1	Reductive cyclizations**
-
-**4.2	Hydrogenation**
-
-**5	Influence on thermodynamics**
-
-**5.1	Influence on equilibrium**
-
-**5.2	Influence on resonance structures**
-
-**6	Application in asymmetric Diels–Alder reactions**
-
-**7	Stereoelectronic effect versus steric clash**
-
+**1	Trend of different orbitals**  
+**2	Influence on stability**  
+**3	Influence on conformation**  
+**3.1	Gauche effect**  
+**3.2	Special effects of fluorine substituent**  
+**4	Influence on reaction selectivity**  
+**4.1	Reductive cyclizations**  
+**4.2	Hydrogenation**  
+**5	Influence on thermodynamics**  
+**5.1	Influence on equilibrium**  
+**5.2	Influence on resonance structures**  
+**6	Application in asymmetric Diels–Alder reactions**  
+**7	Stereoelectronic effect versus steric clash**  
 **8	References**
 
 ## Trend of different orbitals
