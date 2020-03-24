@@ -20,6 +20,10 @@ tags:       HMO
 
 2.某些物质没有按照系统命名法命名，文件名仅起辨识作用
 
+[模拟氰基胍异构体1](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/模拟氰基胍异构体1.pdf)
+
+[模拟氰基胍异构体2](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/模拟氰基胍异构体2.pdf)
+
 [1-硝基萘](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/1-%E7%A1%9D%E5%9F%BA%E8%90%98.pdf)
 
 [1-萘胺](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/1-萘胺.pdf.pdf)
