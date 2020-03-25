@@ -54,7 +54,7 @@ tags:       HMO
 
 [α-吡喃酮](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/α-吡喃酮.pdf)
 
-[氨基羧基连在同一碳上.pdf](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/氨基羧基连在同一碳上.pdf)
+[氨基羧基连在同一碳上](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/氨基羧基连在同一碳上.pdf)
 
 [氨基硝基连在同一碳上](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/氨基硝基连在同一碳上.pdf)
 
@@ -92,7 +92,7 @@ tags:       HMO
 
 [内酰胺](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/内酰胺.pdf)
 
-[尿素.pdf](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/尿素.pdf)
+[尿素](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/尿素.pdf)
 
 [羟基羧基连在同一碳上](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/羟基羧基连在同一碳上.pdf)
 
@@ -112,7 +112,7 @@ tags:       HMO
 
 [四个苯环三个四元环](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/四个苯环三个四元环.pdf)
 
-[碳20.pdf](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/碳20.pdf)
+[碳20](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/碳20.pdf)
 
 [碳60](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/碳60.pdf)
 
