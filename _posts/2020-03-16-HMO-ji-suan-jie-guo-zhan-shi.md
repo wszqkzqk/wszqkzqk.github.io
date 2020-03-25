@@ -30,7 +30,7 @@ tags:       HMO
 
 [2,4-二氟-1-硝基苯](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/2,4-二氟~1-硝基苯.pdf)
 
-[20面体硼杂假球芳香性](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/20面体硼杂假球芳香性.pdf)
+[20面体硼杂拟球芳香性](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/20面体硼杂假球芳香性.pdf)
 
 [2-萘胺](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/2-萘胺.pdf.pdf)
 
@@ -125,11 +125,5 @@ tags:       HMO
 [小的模拟六方氮化硼单层](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/小的模拟六方氮化硼单层.pdf)
 
 [用于直观说明HOMO能量高不一定亲电反应活性强的例子](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/用于直观说明HOMO能量高不一定亲电反应活性强的例子.pdf)
-
-
-
-[三角酸](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/三角酸.pdf)
-
-[三角酸](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/三角酸.pdf)
 
 本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布
