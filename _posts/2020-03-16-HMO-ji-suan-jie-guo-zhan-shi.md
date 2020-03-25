@@ -20,9 +20,9 @@ tags:       HMO
 
 2.某些物质没有按照系统命名法命名，文件名仅起辨识作用
 
-[模拟氰基胍异构体1](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/模拟氰基胍异构体1.pdf)
+[氰基胍异构体1（由于技术限制，请自行减去反键电子）](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/模拟氰基胍异构体1.pdf)
 
-[模拟氰基胍异构体2](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/模拟氰基胍异构体2.pdf)
+[氰基胍异构体2（由于技术限制，请自行减去反键电子）](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/模拟氰基胍异构体2.pdf)
 
 [1-硝基萘](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/1-%E7%A1%9D%E5%9F%BA%E8%90%98.pdf)
 
@@ -30,7 +30,7 @@ tags:       HMO
 
 [2,4-二氟-1-硝基苯](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/2,4-二氟~1-硝基苯.pdf)
 
-[20面体硼杂假球芳香性](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/20面体硼杂假球芳香性.pdf)
+[20面体硼杂拟球芳香性](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/20面体硼杂假球芳香性.pdf)
 
 [2-萘胺](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/2-萘胺.pdf.pdf)
 
@@ -54,7 +54,7 @@ tags:       HMO
 
 [α-吡喃酮](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/α-吡喃酮.pdf)
 
-[氨基羧基连在同一碳上.pdf](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/氨基羧基连在同一碳上.pdf)
+[氨基羧基连在同一碳上](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/氨基羧基连在同一碳上.pdf)
 
 [氨基硝基连在同一碳上](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/氨基硝基连在同一碳上.pdf)
 
@@ -92,7 +92,7 @@ tags:       HMO
 
 [内酰胺](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/内酰胺.pdf)
 
-[尿素.pdf](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/尿素.pdf)
+[尿素](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/尿素.pdf)
 
 [羟基羧基连在同一碳上](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/羟基羧基连在同一碳上.pdf)
 
@@ -112,7 +112,7 @@ tags:       HMO
 
 [四个苯环三个四元环](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/四个苯环三个四元环.pdf)
 
-[碳20.pdf](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/碳20.pdf)
+[碳20](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/碳20.pdf)
 
 [碳60](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/碳60.pdf)
 
@@ -125,11 +125,5 @@ tags:       HMO
 [小的模拟六方氮化硼单层](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/小的模拟六方氮化硼单层.pdf)
 
 [用于直观说明HOMO能量高不一定亲电反应活性强的例子](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/用于直观说明HOMO能量高不一定亲电反应活性强的例子.pdf)
-
-
-
-[三角酸](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/三角酸.pdf)
-
-[三角酸](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/三角酸.pdf)
 
 本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布
