@@ -108,7 +108,7 @@ tags:       HMO
 
 [十个环三个氮](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/十个环三个氮.pdf)
 
-[三角酸](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/三角酸.pdf)
+[2-羟基吡啶](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/2-羟基吡啶.pdf)
 
 [四个苯环三个四元环](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/四个苯环三个四元环.pdf)
 
