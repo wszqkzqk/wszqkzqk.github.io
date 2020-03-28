@@ -6,9 +6,7 @@ date:       2020-3-16
 author:     星外之神
 header-img: img/post-1122px-Wikipedia-logo-v2.svg-dark.png
 catalog:    true
-tags:       Wikipedia
-            活性中间体
-            有机化学
+tags:       Wikipedia 活性中间体 有机化学
 ---
 
 # 碳氧𬭩离子 #
