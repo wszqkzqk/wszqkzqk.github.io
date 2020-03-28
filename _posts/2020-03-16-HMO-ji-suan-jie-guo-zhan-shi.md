@@ -6,10 +6,7 @@ date:       2020-3-16
 author:     星外之神
 header-img: img/wszqkzqk.png
 catalog:    true
-tags:       HMO
-            分子轨道理论
-            计算化学
-            有机化学
+tags:       HMO 分子轨道理论 计算化学 有机化学
 ---
 
 **这是我个人使用软件对某些典型的简单分子的分子轨道作的HMO计算结果,以PDF展示(点击即可下载)：**
