@@ -45,6 +45,9 @@ layout: default
             </div>
         </div>
     </div>
+	<div class="char-counter">
+                本文字数：{{ page.content | strip_html | strip_newlines | remove: " " | size }} {{ page.date | date: "%Y-%m-%d" }}
+            </div>
 </header>
 
 <!-- Post Content -->
