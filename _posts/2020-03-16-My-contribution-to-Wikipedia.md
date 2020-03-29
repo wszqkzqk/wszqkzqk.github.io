@@ -9,16 +9,6 @@ catalog:    true
 tags:       Wikipedia
 ---
 
-<iframe
-  frameborder="no"
-  border="0"
-  marginwidth="0"
-  marginheight="0"
-  width="330"
-  height="86"
-  src="//music.163.com/outchain/player?type=2&id=1434611107&auto=1&height=66">
-</iframe>
-
 **我创建的条目：**
 
 [碳氧𬭩离子](https://zh.wikipedia.org/wiki/%E7%A2%B3%E6%B0%A7%E9%8E%93%E7%A6%BB%E5%AD%90)
