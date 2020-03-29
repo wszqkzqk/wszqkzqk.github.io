@@ -201,4 +201,6 @@ Furthermore, the acceptor orbitals are not limited to the antibonding orbitals o
  
  Schlapbach, A.; Hoffmann, R. W. (2001). "(E)-α-Sulfonamidocrotylboronates as Reagents for the Stereoselective Homoaldol Synthesis". J. Org. Chem. 66 (2): 323–328. doi:10.1002/1099-0690(200101)2001:2<323::aid-ejoc323>3.0.co;2-a.
 
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=1317457152&auto=1&height=66"></iframe>
+
 本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，来自我参与编辑的Wikipedia条目[Stereoelectronic effect](https://en.wikipedia.org/wiki/Stereoelectronic_effect)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
