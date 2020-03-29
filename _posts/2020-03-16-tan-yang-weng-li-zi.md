@@ -121,4 +121,6 @@ Woods等人于1992年提出了六元碳氧𬭩环的过渡态模型。 [3] 确�
 
  Zechel, D.L.; Withers, S.G. Glycosidase Mechanisms: Anatomy of a Finely Tuned Catalyst. Accounts of Chemical Research. 2000, 33 (1): 11–18. ISSN 0001-4842. PMID 10639071. doi:10.1021/ar970172.
 
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=1317420144&auto=1&height=66"></iframe>
+
 本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，来自我创建的Wikipedia条目[碳氧𬭩离子](https://zh.wikipedia.org/wiki/%E7%A2%B3%E6%B0%A7%E9%8E%93%E7%A6%BB%E5%AD%90)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
