@@ -9,7 +9,7 @@ catalog:    true
 tags:       HMO 分子轨道理论 计算化学 有机化学
 ---
 
-<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1317420146&auto=1&height=66"></iframe>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=1317420146&auto=1&height=66"></iframe>
 
 **这是我个人使用软件对某些典型的简单分子的分子轨道作的HMO计算结果,以PDF展示(点击即可下载)：**
 
