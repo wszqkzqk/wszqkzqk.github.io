@@ -10,7 +10,7 @@ description: "天下难事，必作于易；天下大事，必作于细"
         {% assign count = count | plus: single_count %}
         {% endfor %}
 
-        {{ site.posts.size }}篇文章
+        共{{ site.posts.size }}篇文章
 
         {% if count > 1000 %}
         {{ count | divided_by: 1000 }},{{ count | modulo: 1000 }}字
