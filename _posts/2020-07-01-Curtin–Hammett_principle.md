@@ -77,4 +77,34 @@ K是A和B异构化平衡的平衡常数，k1和k2则是A和B各自生成C和D的
 埃利尔已经证明，对于假设的用放射性碘取代碘代环己烷的反应会有两个能量完全相同的过渡态。 [9] 因为不论是碘处在平伏键或者直立键的异构体，反应时都会经过一个相同的过渡态，它们的ΔΔG‡ 将完全是0。通过科廷–哈米特定律，放射性碘在平伏键的产物的比例将会是50%，同样，放射性碘在直立键的产物的比例也是50%。然而产物之间的平衡转化阻止了这一现象的观测。[3]  
 ![](/img/C-H原理述图11.png)
 
+#### 例子：甲基化反应
+
+当基态能量不同，但过渡态能量相近时，在过渡态中某一中间体的比例将会降低，而差的整体选择性将会被观测到。比方说，在接下来的甲基化反应中观测到一个基态异构体占据高比例。  
+![](/img/C-H原理述图12.png)
+
+由于氢原子的1,3-烯丙位张力要小，所以该异构体在基态时比例达到99%。然而，过渡态能量同时取决于1,3-烯丙位张力的存在和甲基进攻时的空间位阻。此时，这两个因素作用的结果是相反的，过渡态的能量差要比基态的能量差要小。结果差的整体选择性就被观测到了。  
+![](/img/C-H原理述图13.png)
+
+## 参考文献
+
+ Carey, Francis A.; Sundberg, Richard J.; (1984). Advanced Organic Chemistry Part A Structure and Mechanisms (2nd ed.). New York N.Y.: Plenum Press. ISBN 0-306-41198-9
+ 
+ IUPAC, Compendium of Chemical Terminology, 2nd ed. (the "Gold Book") (1997). Online corrected version: (1994) Curtin-Hammett Principle
+ 
+ Jeffrey I. Seeman. Effect of Conformational Change on Reactivity in Organic Chemistry. Evaluations, Application, and Extensions of Cutin–Hammett/Winstein–Holness Kinetics. Chemical Reviews. 1983, 83 (2): 83–134. doi:10.1021/cr00054a001.
+ 
+ Jeffrey I. Seeman. The Curtin–Hammett Principle and the Winstein–Holness Equation. Journal of Chemical Education. 1986, 63 (1): 42–48. Bibcode:1986JChEd..63...42S. doi:10.1021/ed063p42.
+ 
+ P. J. Crowley, M. J. T. Robinson and M. G. Ward. Conformational effects in compounds with 6-membered rings-XII. Tetrahedron. 1977, 33 (9): 915–925. doi:10.1016/0040-4020(77)80202-0.
+ 
+ Luis Carballeira, Ignacio Pérez-Juste. Influence of calculation level and effect of methylation on axial/equatorial equilibria in piperidines. Journal of Computational Chemistry. 1998, 19 (8): 961–976. doi:10.1002/(SICI)1096-987X(199806)19:8<961::AID-JCC14>3.0.CO;2-A.
+ 
+ Y. Shvo and E.D. Kaufman. Configurational and conformational analysis of cyclic amine oxides. Tetrahedron. 1972, 28 (3): 573–580. doi:10.1016/0040-4020(72)84021-3.
+ 
+ Rodney D. Otzenberger, Kenneth B. Lipkowitz, Bradford P. Mundy. Quaternizations in the 8-azabicyclo[4.3.0]non-3-ene series. Journal of Organic Chemistry. 1974, 39 (3): 319–321. doi:10.1021/jo00917a008.
+ 
+ Eliel, E. L. “Stereochemistry of Carbon Compounds”; McGraw–Hill: New York, 1962, pp 149–156, 234–239.
+ 
+ Giese, B.; Kopping, B.; Gobel, T.; Dickhaut, J.; Thoma, G.; Kulicke, K.; Trach, F. Organic Reactions. 2004.
+
 本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，来自Wikipedia条目[科廷–哈米特定律](https://zh.wikipedia.org/wiki/%E7%A7%91%E5%BB%B7%E2%80%93%E5%93%88%E7%B1%B3%E7%89%B9%E5%AE%9A%E5%BE%8B)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
