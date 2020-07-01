@@ -124,7 +124,7 @@ k<sup>‡</sup>直接正比于对应于活化络合物向产物转化的振动�
 由于ΔG = ΔH –TΔS，可以将速率常数的表达式扩充，得到艾林方程：  
 ![](过渡态理论述图21.svg)  
 
-TST的速率常数表达式可以用于计算Δ<sup>‡</sup>G<sup>⦵</sup>、Δ<sup>‡</sup>H<sup>⦵</sup>、Δ<sup>‡</sup>S<sup>⦵</sup>和甚至Δ‡V（用速率数据表达的（活化体积）。
+TST的速率常数表达式可以用于计算Δ<sup>‡</sup>G<sup>⦵</sup>、Δ<sup>‡</sup>H<sup>⦵</sup>、Δ<sup>‡</sup>S<sup>⦵</sup>和甚至Δ<sup>‡</sup>V（用速率数据表达的（活化体积）。
 
 
 
