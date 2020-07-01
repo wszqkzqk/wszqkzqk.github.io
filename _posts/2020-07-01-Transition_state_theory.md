@@ -51,8 +51,14 @@ A叫做频率因子（现在叫指前因子），E被看作为活化能。到20�
 
 ### 动力学理论处理
 
+上世纪初，Max Trautz和William Lewis基于气体的动力学理论，用碰撞理论研究反应速率。碰撞理论将反应中的分子处理成相互碰撞的硬质小球；该理论忽视熵变。
 
+Lewis用他的这种处理跟踪反应并和实验结果取得了很好的一致性。
 
+2HI → H2 + I2
 
+然而，此后当这种处理方法用于其他反应时，在理论和实验结果上出现了差异性。
+
+### 统计热力学处理
 
 本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，来自我参与编辑的Wikipedia条目[过渡态理论](https://zh.wikipedia.org/wiki/%E8%BF%87%E6%B8%A1%E6%80%81%E7%90%86%E8%AE%BA)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
