@@ -1,0 +1,49 @@
+---
+layout:     post
+title:      科廷–哈米特定律
+subtitle:   Wikipedia条目推荐
+date:       2020-3-18
+author:     星外之神
+header-img: img/post-1122px-Wikipedia-logo-v2.svg-dark.png
+catalog:    true
+tags:       Wikipedia 有机化学  物理化学
+---
+
+科廷–哈米特定律（Curtin–Hammett principle），是由大卫·亚罗·科廷和路易斯·普朗克·哈米特提出的化学动力学上的一个定律。该定律表明，对于一个反应而言，若其反应中间体或反应物具有一对迅速转换的异构体（通常情况下为构象异构），则由异构体产生的不可逆产物（即不能通过平衡移动反应变回该异构体）的比例将同时取决于过渡态转变为产物的自由能以及这两种异构体之间转换所需要的能量差。结果使得产物之间的比例并不仅仅由中间体或反应物的异构体平衡时的比例所决定。 [1][2]科廷–哈米特定律已经被用于解释大量的具有立体选择性的反应。
+
+## 定义
+
+科廷–哈米特定律适用于由两种达成平衡转换的底物所产生的两种产物的系统。这些快速转化的底物可以是对映体、非对映体或者结构异构。产物的产生必须是不可逆的，并且这两种产物之间也不能相互转化。[3]
+举例说明：假设化学物种A和B之间可以相互转化，同时A可以不可逆的生成C，而B可以不可逆的生成D。
+
+![](/img/C-H原理平衡反应.svg)
+
+K是A和B异构化平衡的平衡常数，k1和k2则是A和B各自生成C和D的速率常数。当平衡转化的速率远大于k1和k2时，那么由科廷–哈米特定律可以得知，C、D两种产物的比例是不由A和B平衡时的比例决定的，而是由各自的过渡态的能量所决定的。如果反应物A和B所具有的能量不同（意即A和B相互转化时会产生能量变化），那么产物的比例仅仅由各自的过渡态和相对应的产物之间的能量差所决定。不过在真实的反应历程中，这两种反应物常常有着相同的能量级别，尽管它们相互转化时跨过的能垒会低到使科廷–哈米特定律起作用。在这种情况下，产物的比例就由A和B的比例以及其各自生成产物C和D所跨过的能垒决定。
+反应能线图如下：
+
+![](/img/650px-Curtin-Hammett_Principle_Diagram.png)
+
+产物的比例取决于图中的标记值 ΔΔG‡ : C 将会是主要产物, 因为过渡态1(TS1)的能量比过渡态2(TS2)的能量低。通常认为的产物比例并不反映物质A和B的相对自由能的说法是不正确的。[3][4] 下面将给出一个引论, 产物的比例将可以被表述成 K, k1,和 k2的一个函数。
+
+## 引论
+
+一个符合科廷–哈米特定律的化学动力学反应可以被以下参数表示：
+
+{\displaystyle \mathrm {C\ {\xleftarrow {k_{1}}}\ A\ {\overset {K}{\rightleftharpoons }}\ B\ {\xrightarrow {k_{2}}}\ D} }{\displaystyle \mathrm {C\ {\xleftarrow {k_{1}}}\ A\ {\overset {K}{\rightleftharpoons }}\ B\ {\xrightarrow {k_{2}}}\ D} }
+由A生成C的速率方程如下:
+
+{\displaystyle {\frac {d[C]}{dt}}=k_{1}[A]}{\displaystyle {\frac {d[C]}{dt}}=k_{1}[A]}
+同样，由B生成D的速率方程为:
+
+{\displaystyle {\frac {d[D]}{dt}}=k_{2}[B]=k_{2}K[A]}{\displaystyle {\frac {d[D]}{dt}}=k_{2}[B]=k_{2}K[A]}
+其中 K 是AB相互转化的平衡常数. 那么它们的速率之比可以表示为:
+
+{\displaystyle {\frac {\frac {d[D]}{dt}}{\frac {d[C]}{dt}}}={\frac {k_{2}K[A]}{k_{1}[A]}}={\frac {k_{2}K}{k_{1}}}}{\displaystyle {\frac {\frac {d[D]}{dt}}{\frac {d[C]}{dt}}}={\frac {k_{2}K[A]}{k_{1}[A]}}={\frac {k_{2}K}{k_{1}}}}
+由于平衡转化速率相对于产物生成的速率要大, 反应物的比 [B]/[A]的值是平衡常数K，其在反应全过程中始终保持不变。因此，产物的比例可以写成:
+
+{\displaystyle {\frac {[D]}{[C]}}={\frac {k_{2}K}{k_{1}}}={\frac {e^{-\Delta G_{2}^{\ddagger }/RT}e^{-\Delta G/RT}}{e^{-\Delta G_{1}^{\ddagger }/RT}}}}{\displaystyle {\frac {[D]}{[C]}}={\frac {k_{2}K}{k_{1}}}={\frac {e^{-\Delta G_{2}^{\ddagger }/RT}e^{-\Delta G/RT}}{e^{-\Delta G_{1}^{\ddagger }/RT}}}}
+如果反应物A和B处在相同的能量级别, 即{\displaystyle \Delta }\Delta G = 0, 那么产物的比例将仅仅由各自的过渡态到产物的相对能量决定:
+
+{\displaystyle {\frac {[D]}{[C]}}=e^{-{\frac {\Delta \Delta G^{\ddagger }}{RT}}}}{\displaystyle {\frac {[D]}{[C]}}=e^{-{\frac {\Delta \Delta G^{\ddagger }}{RT}}}}
+
+本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，来自Wikipedia条目[科廷–哈米特定律](https://zh.wikipedia.org/wiki/%E7%A7%91%E5%BB%B7%E2%80%93%E5%93%88%E7%B1%B3%E7%89%B9%E5%AE%9A%E5%BE%8B)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
