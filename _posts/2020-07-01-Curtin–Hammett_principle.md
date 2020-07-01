@@ -9,6 +9,8 @@ catalog:    true
 tags:       Wikipedia 有机化学  物理化学
 ---
 
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=480353&auto=1&height=66"></iframe>
+
 # 科廷–哈米特定律
 
 科廷–哈米特定律（Curtin–Hammett principle），是由大卫·亚罗·科廷和路易斯·普朗克·哈米特提出的化学动力学上的一个定律。该定律表明，对于一个反应而言，若其反应中间体或反应物具有一对迅速转换的异构体（通常情况下为构象异构），则由异构体产生的不可逆产物（即不能通过平衡移动反应变回该异构体）的比例将同时取决于过渡态转变为产物的自由能以及这两种异构体之间转换所需要的能量差。结果使得产物之间的比例并不仅仅由中间体或反应物的异构体平衡时的比例所决定。 [1][2]科廷–哈米特定律已经被用于解释大量的具有立体选择性的反应。

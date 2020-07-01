@@ -9,6 +9,8 @@ catalog:    true
 tags:       Wikipedia 有机化学  物理化学
 ---
 
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=443086&auto=1&height=66"></iframe>
+
 # 过渡态理论
 
 过渡状态理论 （Transition state theory，TST）解释基元化学反应的反应速率。该理论假设在反应物和活化的过渡态络合物之间有一种特殊的化学平衡（准平衡）。[1]
