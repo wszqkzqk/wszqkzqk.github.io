@@ -47,6 +47,12 @@ A叫做频率因子（现在叫指前因子），E被看作为活化能。到20�
 ![](过渡态理论述图5.svg)  
 在大约与热内·马塞林同时研究他这个公式的同时，三位荷兰化学家Philip Abraham Kohnstamm、Frans Eppo Cornelis Scheffer、和Wiedold Frans Brandsma首次提出了标准活化熵和标准活化焓的概念。他们提出的速率常数方程如下：  
 ![](过渡态理论述图6.svg)  
+然而，常数的性质仍不清楚。
+
+### 动力学理论处理
+
+
+
 
 
 本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，来自我参与编辑的Wikipedia条目[过渡态理论](https://zh.wikipedia.org/wiki/%E8%BF%87%E6%B8%A1%E6%80%81%E7%90%86%E8%AE%BA)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
