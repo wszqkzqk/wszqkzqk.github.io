@@ -2,7 +2,7 @@
 layout:     post
 title:      科廷–哈米特定律
 subtitle:   Wikipedia条目推荐
-date:       2020-3-18
+date:       2020-07-01
 author:     星外之神
 header-img: img/post-1122px-Wikipedia-logo-v2.svg-dark.png
 catalog:    true
