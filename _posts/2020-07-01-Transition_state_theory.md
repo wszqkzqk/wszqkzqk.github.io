@@ -154,7 +154,92 @@ TST的速率常数表达式可以用于计算Δ<sup>‡</sup>G<sup>⦵</sup>、�
 
 是对变分过渡态理论的一项改良，其中，对于域值能量以下的能量，分割面的位置取微典型变分阈值能量的位置。这样就迫使如果处于阈值能量一下的能量分布的速率常数为零。然后选择一个折衷的分割平面使具有较高能量的反应物所产生的速率常数最小化。
 
+## TST的应用: 酶反应
 
+同样反应条件下，同一个化学反应，有没有酶催化其反应速率相差巨大。每个催化事件至少包括三步。所有的催化步骤都发生在几毫秒中，毫秒数量级的基元反应速率，是酶促反应的特点。根据过渡状态理论，催化循环的最小部分花在最重要一步，即过渡态。绝对反应速率理论定义过渡态的建议为：在反应坐标中的一个独特的、决定反应速率的物种。此后不久，莱纳斯·鲍林（Linus Pauling）指出，酶的强有力的催化作用可以用非常紧密地结合于过渡态物种来解释。[11]因为反应速率于在过渡态络合物中的反应物部分成正比，因此，他建议酶作用是增加反应性物种的浓度。[12]因为，酶典型地可以将反应速率增加至非催化反应的1010-1015倍，并且，Michaelis 络合物对分解反应常数的范围是：10−3-10−6 M。因而，他们提出将过渡态络合物与10−14-10−23 M范围的分解反应常数相结合。
 
+该建议被在Chapel Hill的被卡罗林纳大学的Wolfenden极其同所完善。他们假设由酶造成的速率增高正比于酶对相对于Michaelis络合物的过渡态结构的亲和力。随着底物从Michaelis络合物朝着产物进展，在底物的电子分布方面发生酶诱导的化学过程。
+
+酶通过质子化改变底物的电子结构、电子转移、集合扭曲、疏水分配、和与路易斯酸堿的相互作用。这些是通过依次地蛋白质和底物的构象变化而完成的。当单个的微弱的力量组合起来，集中在底物上这些单独的能量的总和导致了一个巨大的力量，能够重新定位成键电子，引起键的断裂和键的形成。很像过渡态结构的类似物因而应可作为已知的最强有力的该酶的非共价抑制剂而起到对该酶的抑制作用，甚至，如果仅仅一小部分过渡态能量该抑制剂被俘获都可明显见到抑制效应。
+
+所有的化学转化都通过一个叫做过渡态的不稳定结构，过渡态在底物和产物的化学结构之间保持平衡。对于化学反应的过渡态人们认为有大约10-13 秒的寿命。在数量级上是一个单键振动的时间。没有物理的和谱学的方法可以直接观察酶催化反应的过渡态的结构，然而，过渡态的结构是了解酶催化反应的核心。因为酶的作用是降低化学反应的活化能。
+
+现在人们普遍接收的观点是：酶的功能是稳定居于反应物和产物之间的过渡态，并且，因而，人们料想它也会于任何与该过渡态在结构上相似的该酶的抑制剂紧密结合。底物和产物经常参与几个酶催化反应，然而，过渡态只能倾向于一种参与的酶的特征，这样一种抑制剂是针对一种特定的酶的。许多过渡态抑制剂的确认支持酶催化的过渡态稳定化假设。
+
+目前已知有大量的酶与过渡态类似物相互作用，其中大多数已经被设计用于目标酶的抑制。例子包括：HIV-1戴白酶、消旋酶类、β-内酰胺酶类、金属蛋白酶类、环氧化酶类和许多其他的酶类。
+
+### 嘌呤核苷磷酸化酶
+
+嘌呤核苷磷酸化酶（Purine nucleoside phosphorylase，PNP）是一个与分解代谢和核苷酸再循环有关的酶。它也是开发治疗白血病和自体免疫性疾病患者中T-细胞凋亡的新治疗药物的目标。[13]次黄嘌呤核苷、鸟嘌呤核苷、和2’-脱氧鸟嘌呤核苷是该酶的主要底物（图3显示一个代表性的PNP催化次黄嘌呤核苷底物的反应。）
+
+![嘌呤核苷磷酸化酶与肌苷底物的反应](嘌呤核苷磷酸化酶与肌苷底物的反应.png)
+
+阿尔伯特·爱因斯坦医学院（Albert Einstein College of Medicine）的 Vern Schramm及其同事已经确定了PNP的过渡态结构并且用它巧妙地开发了紧密结合过渡态的一系列类似物用以抑制这个酶。[14]PNP的Immucillin-H抑制剂非常像公认的该过渡态结构（见图4），该抑制剂具有几处变化以使得该化合物比稍现即逝的过渡态物种更稳定。
+
+![](PNP过渡态和Immucillin-H过渡态类似物.png)
+
+PNP过渡态结构包含在嘌呤环N7位上用于质子化的升高的pKa。它作为氢键氢的提供者与侧链上第243位上的天门冬氨酸残基上的羰基氧形成氢键。在immucillin-H上这个位置上用9-脱氮杂嘌呤替代次黄嘌呤进行模拟。过渡态也在糖环上形成一个氧𬭩离子，它由具有更稳定的核糖甙键亚氨基核糖醇部分提供。在过渡态中磷酸酯键与键的形成牵涉不多，因而，这一部分在设计类似物抑制剂时不考虑结构模拟。 过渡态类似物展示慢结合抑制物的性质，其中，第一部抑制物结合形成可逆络合物EI，然后，通过一个慢的构象改变导致一个非常稳定结合的EI*络合物。
+
+![](过渡态理论述图22.svg)  
+![](过渡态理论述图23.svg)  ![](过渡态理论述图24.svg)  
+
+immucillin-H结合的计量化学研究确定每个PNP三聚体与一个抑制剂分子相结合，而且，一个抑制剂分子就足够对这个酶产生
+
+KI由对immucillin-H的滴定确定，并且测定它对PNP最初速率vo，并且该值为41 nM，KI*是由同样的速度测定计算而来的，但是用了第二稳态速率vs取代了初速率。第二稳态速率对应于当所有E已经形成EI的平衡时的稳态抑制速率。
+
+抑制作用。此前，人们揭示PNP的全部催化活性每次是在分子的一个位置上进行，很像对于F1-ATP合成酶那样。人们还注意到在三个部位上全可以看到底物、产物、基态类似物的结合。因而，immucillin-H stoichiometry是抑制剂是模拟酶的过渡态的又一个线索。结构证据支持该过渡态类似物的一对三抑制作用，并且，所有基态类似物都显示完全酶占据的immucillin-H计量化学。
+
+来自于酶过渡态分析的immucillin-H设计是开发具有药理学活性的高亲和力的酶抑制剂的强有力的方法。
+
+## 注释
+
+ International Union of Pure and Applied Chemistry (IUPAC). Transition State Theory. http://goldbook.iupac.org/T06470.html (accessed November 23, 2008)
+ 
+ Truhlar, D. G.; Garrett, B. C.; Klippenstein, S. J., Current Status of Transition-State Theory. The Journal of physical chemistry 1996, 100, (31), 12771-12800
+ 
+ Laidler, K.; King, C, Development of transition-state theory. The Journal of physical chemistry 1983, 87, (15), 2657
+ 
+ 
+ Laidler, K.; King, C, A lifetime of transition-state theory. The chemical intelligencer 1998, 4, (3), 39
+ 
+ Laidler, K. J., Theories of Chemical Reaction Rates (McGraw-Hill Series in Advanced Chemistry). 1969; p 234 pp.
+ 
+ Eric V. Anslyn and Dennis A. Dougherty. Transition State Theory and Related Topics. In Modern Physical Organic Chemistry University Science Books: 2006; pp 365-373
+ 
+ Laidler, K. J., Theories of Chemical Reaction Rates (McGraw-Hill Series in Advanced Chemistry). 1969; p 234 pp
+ 
+ 艾林, H.; Journal of Chemical Physics, 1935, 3, 107-115
+ 
+ Masel, R. Principles of Adsorption and Reactions on Solid Surfaces; Wiley, New York, 1996
+ 
+ Pineda, J. R.; Schwartz, S. D.; Philosophical Transactions of the Royal Society B 2006, 361, 1433-1438
+ 
+ Pauling, L.; American Scienist 1948, 36, 50-58.
+ 
+ Radzicka, A., Wolfenden, R. Science 1995, 267, 90-93.
+ 
+ Ringia, E.A.T.; Tyler, P.C.; Evans, G.B.; Furneaux, R.H.; Murkin, A.S.; Schramm, V.L., Transition State Analogue Discrimination by Related Purine Nucleoside Phosphorylases. Journal of American Chemical Society 2006, 128 (22), 7126-7127.
+ 
+ Miles RW, Tyler PC, Furneaux RH, Bagdassarian CK, Schramm VL. One-third-the-sites transition-state inhibitors for purine nucleoside phosphorylase. Biochemistry. 1998, 37, (24), 8615-21
+
+## 参见
+
+科廷–哈米特定律
+
+## 参考文献
+
+Laidler, K.; King, C., Development of transition-state theory. The Journal of physical chemistry 1983, 87, (15), 2657
+
+Laidler, K., A lifetime of transition-state theory. The chemical intelligencer 1998, 4, (3), 39
+
+Eric V. Anslyn, Dennis A. Doughtery., Transition State Theory and Related Topics. In Modern Physical Organic Chemistry University Science Books: 2006; pp 365–373
+
+Schramm, VL., Enzymatic Transition States and Transition State Analog Design. Annual Review of Biochemistry 1998, 67, 693-720
+
+Schramm, V.L., Enzymatic Transition State Theory and Transition State Analogue Design. Journal of Biological Chemistry 2007, 282, (39), 28297-28300
+
+Radzicka, A.; Woldenden, R., Transition State and Multisubstrate$Analog Inhibitors. Methods in Enzymology 1995, 249, 284-312
+
+Cleland, W.W., Isotope Effects: Determination of Enzyme Transition State Structure. Methods in Enzymology 1995, 249, 341-373
 
 本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，来自我参与编辑的Wikipedia条目[过渡态理论](https://zh.wikipedia.org/wiki/%E8%BF%87%E6%B8%A1%E6%80%81%E7%90%86%E8%AE%BA)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
