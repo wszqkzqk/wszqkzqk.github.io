@@ -6,7 +6,7 @@ date:       2020-3-19
 author:     星外之神
 header-img: img/wszqkzqk.png
 catalog:    true
-tags:       立体化学 分子轨道理论 有机化学
+tags:       化学 立体化学 分子轨道理论 有机化学
 ---
 
 <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=1317420143&auto=1&height=66"></iframe>

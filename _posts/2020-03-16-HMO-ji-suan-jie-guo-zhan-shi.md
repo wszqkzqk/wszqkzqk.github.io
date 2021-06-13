@@ -6,7 +6,7 @@ date:       2020-3-16
 author:     星外之神
 header-img: img/bg-sunrise.jpg
 catalog:    true
-tags:       HMO 分子轨道理论 计算化学 有机化学
+tags:       化学 HMO 分子轨道理论 计算化学 有机化学
 ---
 
 <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=1317420146&auto=1&height=66"></iframe>

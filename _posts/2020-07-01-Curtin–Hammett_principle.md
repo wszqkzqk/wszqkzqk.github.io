@@ -6,7 +6,7 @@ date:       2020-07-01
 author:     星外之神
 header-img: img/post-1122px-Wikipedia-logo-v2.svg-dark.png
 catalog:    true
-tags:       Wikipedia 有机化学  物理化学
+tags:       Wikipedia 化学 有机化学  物理化学
 ---
 
 <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=1317145486&auto=1&height=66"></iframe>

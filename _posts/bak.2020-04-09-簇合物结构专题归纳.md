@@ -6,7 +6,7 @@ date:       2020-04-09
 author:     星外之神
 header-img: img/簇合物背景-维基百科.png
 catalog:    true
-tags:       结构化学 元素化学
+tags:       化学 结构化学 元素化学
 ---
 
 <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=1317410252&auto=1&height=66"></iframe>
