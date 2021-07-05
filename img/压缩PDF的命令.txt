@@ -1,1 +1,0 @@
-gs -q -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -o 输出.pdf -dPDFSETTINGS=/screen -sOutputfile=输出.pdf /home/wszqkzqk/下载/输入.pdf
