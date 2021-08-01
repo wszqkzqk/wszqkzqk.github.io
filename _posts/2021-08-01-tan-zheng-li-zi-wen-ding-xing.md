@@ -1,0 +1,15 @@
+---
+layout:     post
+title:      碳正离子稳定性列表以及其他资源推荐
+subtitle:   数据汇总及拓展
+date:       2021-08-01
+author:     星外之神
+header-img: img/tanzhenglizi-bg.png
+catalog:    true
+tags:       Wikipedia 化学 有机化学
+---
+
+
+
+本文的数据主要来自[Wikipedia](https://www.wikipedia.org/)上的相关条目（包括但不限于[Carbocation](https://en.wikipedia.org/wiki/Carbocation)）
+欢迎读者对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
