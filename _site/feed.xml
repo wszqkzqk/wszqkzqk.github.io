@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>星外之神 Blog</title>
+    <description>天下难事，必作于易；天下大事，必作于细</description>
+    <link>http://wszqkzqk.github.io/</link>
+    <atom:link href="http://wszqkzqk.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Fri, 27 Mar 2020 15:54:31 +0800</pubDate>
+    <lastBuildDate>Fri, 27 Mar 2020 15:54:31 +0800</lastBuildDate>
+    <generator>Jekyll v3.1.6</generator>
+    
+      <item>
+        <title>互变异构热力学倾向专题归纳</title>
+        <description>&lt;h1 id=&quot;概述&quot;&gt;概述&lt;/h1&gt;
+
+&lt;p&gt;互变异构是某些有机化合物的结构在两种官能团异构体间产生平衡互相转换的现象。一般都涉及氢原子（或质子）的转移，以及单键向双键的转变。本文旨在对互变异构的热力学平衡倾向的一般规律做一个总结。&lt;/p&gt;
+
+&lt;h1 id=&quot;常见的互变异构举例&quot;&gt;常见的互变异构举例&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/500px-Tautomers_zh.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/220px-Oxepin-benzene_oxide.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可见，一般的互变异构类型可以分为质子转移和价互变。&lt;/p&gt;
+
+&lt;h1 id=&quot;倾向分析&quot;&gt;倾向分析&lt;/h1&gt;
+
+&lt;h2 id=&quot;价互变&quot;&gt;价互变&lt;/h2&gt;
+
+&lt;p&gt;对于以周环反应为基础的价互变的热力学倾向较为明显，一般是由&lt;strong&gt;键能&lt;/strong&gt;（如形成羰基、形成sigma键）、&lt;strong&gt;环张力&lt;/strong&gt;（如三元环的形成）等比较容易观察的因素决定，本文不予详细讨论。&lt;/p&gt;
+
+&lt;h2 id=&quot;质子转移互变&quot;&gt;质子转移互变&lt;/h2&gt;
+
+&lt;h3 id=&quot;酸性判据&quot;&gt;酸性判据&lt;/h3&gt;
+
+&lt;p&gt;个人认为，酸性判据是质子转移互变异构中最易理解也最重要的判据。&lt;/p&gt;
+
+&lt;p&gt;很多质子转移反应的互变位点间酸性强弱有较大差别，可以直接通过&lt;strong&gt;定性判断酸碱能力&lt;/strong&gt;得出结果，即：分析各个异构体向分子内异构位点转移质子的倾向，下面我将举例介绍方法的思想以及应用：&lt;/p&gt;
+
+&lt;p&gt;1.&lt;img src=&quot;https://wszqkzqk.github.io/img/互变述图1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这个例子的分析方法较为简单，对于左侧异构体来说，-SH本身即具有&lt;strong&gt;使胺质子化的酸性&lt;/strong&gt;，再加上此处-SH的酸性还被亚胺的共轭吸电子效应&lt;strong&gt;进一步增强&lt;/strong&gt;，同时&lt;strong&gt;亚胺&lt;/strong&gt;接受电子&lt;strong&gt;碱性增强&lt;/strong&gt;，故有较为强烈的质子转移倾向，易发生异构化；对于右侧的异构体来说，硫代羰基中的&lt;strong&gt;硫显然碱性很弱&lt;/strong&gt;，分子内的氨基即使受吸电子，也没有向其质子转移的倾向，故该分子稳定性较高。&lt;/p&gt;
+
+&lt;p&gt;2.&lt;img src=&quot;https://wszqkzqk.github.io/img/互变述图2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;氰酸与异氰酸的互变异构十分经典，氰酸极易分解，而异氰酸稍稳定。本例可以按照例1的方法分析。&lt;/p&gt;
+
+&lt;p&gt;需要注意，异氰酸中由于轨道作用特殊，有两个&lt;strong&gt;互相正交的π轨道&lt;/strong&gt;，形成了一个C、O参与形成的π键和一个由C、N、O参与形成的三中心四电子大π键，我们分析羰基与亚胺相互的电子效应时，主要考虑的即为这个三中心四电子键。可见，这个三中心四电子键可以看作&lt;strong&gt;氧向C=N提供孤对电子&lt;/strong&gt;形成，故增强了&lt;strong&gt;氧&lt;/strong&gt;的&lt;strong&gt;正&lt;/strong&gt;电性，削弱了&lt;strong&gt;氮&lt;/strong&gt;的&lt;strong&gt;负&lt;/strong&gt;电性，不利于质子转移的发生。&lt;/p&gt;
+
+&lt;p&gt;而与此相反，氰酸的-CN对-OH有&lt;strong&gt;吸电子&lt;/strong&gt;作用，使氮的负电性增强，氧的正电性增强，使得质子转移更加有利。&lt;/p&gt;
+
+&lt;p&gt;故最终结论与实验一致，即：受氰基吸电子的羟基向得到电子的氰基转移电子的倾向强于受给电子作用的亚胺向羰基氧转移质子的倾向，异氰酸为更稳定的异构体。&lt;/p&gt;
+
+&lt;p&gt;同样，直接分析酸性的方法还适用于与此类似的某些例子，如：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/互变述图3.png&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://wszqkzqk.github.io/img/互变述图4.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;共轭判据&quot;&gt;共轭判据&lt;/h3&gt;
+
+&lt;p&gt;在某些情况下，我们单纯从最为简单的酸性分析可能会出现一些问题，这一般是由于体系受到了共轭效应的较大影响。下文内容将对这些效应的影响作具体讨论，包括共振能、芳香性（包括Y芳香性）。当然，下文的&lt;strong&gt;部分&lt;/strong&gt;例子也可以直接用酸性判据分析&lt;/p&gt;
+
+&lt;p&gt;1.&lt;img src=&quot;https://wszqkzqk.github.io/img/互变述图5.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这个例子乍一看时易使人迷惑，右侧异构体氰基与亚胺相连，吸电子基直接接吸电子基，看似并不稳定，但是事实上确实是右侧的异构体有利。&lt;/p&gt;
+
+&lt;p&gt;这里用&lt;strong&gt;Y芳香性&lt;/strong&gt;来理解这一问题：&lt;/p&gt;
+
+&lt;p&gt;胍基正离子Y芳香性的轨道系数及能量分布如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Y芳香性述图0.png&quot; alt=&quot;该图由软件对三氨基甲基自由基平面理想分子的HMO计算后期处理得&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Y芳香性述图1.png&quot; alt=&quot;&quot; /&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Y芳香性述图2.png&quot; alt=&quot;&quot; /&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Y芳香性述图3.png&quot; alt=&quot;&quot; /&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Y芳香性述图4.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可见Y芳香性与一般的芳香性相同，也有非常明显的轨道简并特征，增大了HOMO与LUMO的分裂，且由计算结果可知，&lt;strong&gt;Y芳香性可以带来非常大的共振能&lt;/strong&gt;，大大降低了分子的能量。&lt;/p&gt;
+
+&lt;p&gt;我们都知道，胍基正离子非常稳定，是Y芳香性的典型例子。结合简单的轨道知识我们可以类比得到，在这样的Y形6电子体系中，当周围的基团&lt;strong&gt;能量越接近&lt;/strong&gt;时，轨道的&lt;strong&gt;重组越有效&lt;/strong&gt;，HOMO、SHOMO以及LUMO、SLUMO的能量更趋于简并，共振能越大，&lt;strong&gt;Y芳香性越强&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;因此，对于左右两个异构体热力学稳定性的判断分析，仅需分析中心碳原子周围3个基团的&lt;strong&gt;能量匹配&lt;/strong&gt;程度。&lt;/p&gt;
+
+&lt;p&gt;我们不妨先对无取代的中性分子胍分析。对于电中性的胍，我们也可以认为其有Y芳香性，只是由于分子无C&lt;sub&gt;3&lt;/sub&gt;，各个取代基所贡献的轨道能量不同，显然，质子化&lt;strong&gt;两次&lt;/strong&gt;的氨基比仅发生了&lt;strong&gt;一次&lt;/strong&gt;质子化的亚胺所贡献的轨道能量更低（也可以从最稳定共振式中氨基氮有两个非sigma电子而亚胺氮仅一个看出），而这种&lt;strong&gt;能量&lt;/strong&gt;的&lt;strong&gt;差异&lt;/strong&gt;对Y芳香性起到了&lt;strong&gt;削弱&lt;/strong&gt;作用。&lt;/p&gt;
+
+&lt;p&gt;接下来，我们再来分析不同位点氰基取代的效果：&lt;/p&gt;
+
+&lt;p&gt;相比于-H，-CN显然具有更&lt;strong&gt;强&lt;/strong&gt;的&lt;strong&gt;吸&lt;/strong&gt;电子效应，故-CN取代的氮原子的轨道&lt;strong&gt;能量&lt;/strong&gt;会进一步&lt;strong&gt;降低&lt;/strong&gt;，所以当-CN连在&lt;strong&gt;原本&lt;/strong&gt;轨道能量&lt;strong&gt;高&lt;/strong&gt;的亚胺氮上时，亚胺氮的原子轨道能量得到&lt;strong&gt;降低&lt;/strong&gt;，与氨基氮&lt;strong&gt;更加接近&lt;/strong&gt;，故Y芳香性得到了&lt;strong&gt;增强&lt;/strong&gt;；相反，如果氰基取代在氨基上，氨基能量就会进一步降低，&lt;strong&gt;拉大&lt;/strong&gt;了轨道间的能量差异，Y芳香性&lt;strong&gt;减弱&lt;/strong&gt;，热力学上能量不利。&lt;/p&gt;
+
+&lt;p&gt;2.&lt;img src=&quot;https://wszqkzqk.github.io/img/互变述图6.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/互变述图4.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;显然，这样涉及较大共振能变化的，尤其是涉及芳香性变化的例子不太适合直接用酸碱性分析判断。这两个例子看似有一点矛盾，其实都符合改变结构以增加共振能的规律。&lt;/p&gt;
+
+&lt;p&gt;在第一个图中，左侧异构体显然是&lt;strong&gt;无&lt;/strong&gt;芳香性的，故芳香性&lt;strong&gt;强烈驱动&lt;/strong&gt;它生成右侧异构体，克服了由固有原子酸碱特征导致的不利；然而，在第二个图中，二者&lt;strong&gt;都能满足6电子芳香性&lt;/strong&gt;，因为：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/互变述图7.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;但是，由于两个异构体都具有给电子基与吸电子基相连的情况，二者的&lt;strong&gt;芳香性&lt;/strong&gt;均受到了&lt;strong&gt;部分破坏&lt;/strong&gt;，具体能量可以参考我的两份HMO计算：（&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/2-羟基吡啶.pdf&quot;&gt;左侧异构体&lt;/a&gt;,&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/内酰胺.pdf&quot;&gt;右侧异构体&lt;/a&gt;）。
+二者共振积分和分别为13.404β和14.55β，实际上能量更低的是右侧异构体。&lt;/p&gt;
+
+&lt;p&gt;故一般而言，如果&lt;strong&gt;亚胺二号位有羟基，一般情况下互变为酰胺的倾向非常强&lt;/strong&gt;，这一特征可以由酸碱定性分析或共振能计算得出，在互变异构稳定性的分析时，不要忘记&lt;strong&gt;酰胺相比于亚胺酸一般更加稳定&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;其他影响&quot;&gt;其他影响&lt;/h3&gt;
+
+&lt;p&gt;物质的&lt;strong&gt;晶体结构、溶剂、形成超分子等因素&lt;/strong&gt;也会影响异构体分布比例，这时需要针对特定结构具体分析。例如：三聚氰胺本身具有互变异构体&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/互变述图7.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;但加入三聚氰酸后，该互变过程被锁定，仅以酮式存在，以满足氢键形成的所需要求。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/互变述图8.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;本文文本未经允许禁止转载，图片采用采用&lt;a href=&quot;https://creativecommons.org/licenses/by-sa/4.0/&quot;&gt;CC-BY-SA-4.0&lt;/a&gt;协议发布,部分图片引自&lt;a href=&quot;https://www.wikipedia.org/&quot;&gt;Wikipedia&lt;/a&gt;的相关条目&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E4%B8%89%E8%81%9A%E6%B0%B0%E9%85%B8&quot;&gt;1&lt;/a&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Cyanuric_acid&quot;&gt;2&lt;/a&gt;。由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况 欢迎读者提出意见或在评论区批评指教。&lt;/p&gt;
+</description>
+        <pubDate>Thu, 26 Mar 2020 00:00:00 +0800</pubDate>
+        <link>http://wszqkzqk.github.io/2020/03/26/%E4%BA%92%E5%8F%98%E5%BC%82%E6%9E%84%E5%80%BE%E5%90%91%E4%B8%93%E9%A2%98%E5%BD%92%E7%BA%B3/</link>
+        <guid isPermaLink="true">http://wszqkzqk.github.io/2020/03/26/%E4%BA%92%E5%8F%98%E5%BC%82%E6%9E%84%E5%80%BE%E5%90%91%E4%B8%93%E9%A2%98%E5%BD%92%E7%BA%B3/</guid>
+        
+        <category>有机化学</category>
+        
+        <category>结构化学</category>
+        
+        <category>元素化学</category>
+        
+        <category>分子轨道理论</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>不对称超共轭效应对选择性的影响</title>
+        <description>&lt;h1 id=&quot;不对称超共轭效应对选择性的影响&quot;&gt;不对称超共轭效应对选择性的影响&lt;/h1&gt;
+
+&lt;h2 id=&quot;问题解释以下反应的区域选择性&quot;&gt;问题：解释以下反应的区域选择性&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/不对称超共轭例子1.png&quot; alt=&quot;例1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/不对称超共轭例子2.png&quot; alt=&quot;例2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;不难看出，这两个问题都应该考虑超共轭效应的影响，为了研究此处的立体选择性，需要分析&lt;strong&gt;超共轭对HOMO的不对称极化作用&lt;/strong&gt;，即：参与超共轭的sigma键合电子(或负超共轭中的sigma*空轨道)被固定于共轭体系的一侧，对共轭体系上下两侧造成的影响并不相同，由此即会导致共轭体系两侧反应性不同。&lt;/p&gt;
+
+&lt;h2 id=&quot;超共轭效应的强弱的判断&quot;&gt;超共轭效应的强弱的判断&lt;/h2&gt;
+
+&lt;h3 id=&quot;例1&quot;&gt;例1&lt;/h3&gt;
+
+&lt;p&gt;例1中，轨道重叠的角度匹配程度导致了双键上下两侧的超共轭作用强度不同：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/不对称超共轭述图1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如上图所示，标粗的键相比于上方的1、2号键来说与双键π轨道的夹角更小，因此&lt;strong&gt;轨道重叠更加充分&lt;/strong&gt;，是这个分子中主要应考虑的超共轭作用。&lt;/p&gt;
+
+&lt;h3 id=&quot;例2&quot;&gt;例2&lt;/h3&gt;
+
+&lt;p&gt;例2中，&lt;strong&gt;参与超共轭的sigma轨道能量不同&lt;/strong&gt;导致了双键上下两侧的超共轭作用强度不同，全部由&lt;strong&gt;sp3&lt;/strong&gt;杂化碳参与形成的C-C sigma键的能量较有&lt;strong&gt;sp2&lt;/strong&gt;杂化参与形成的sigma键的能量高，因此其参与超共轭的能力更强，是这个分子中主要应考虑的超共轭效应。&lt;/p&gt;
+
+&lt;h2 id=&quot;不对称超共轭作用的影响分析&quot;&gt;不对称超共轭作用的影响分析&lt;/h2&gt;
+
+&lt;h3 id=&quot;例1-1&quot;&gt;例1&lt;/h3&gt;
+
+&lt;p&gt;由于该分子具有一个镜面，我们仅用分析一侧即可，即，&lt;strong&gt;把该分子的分子轨道看作镜面两侧分子片段的重组，由对称性，这种方向的重组并不会影响π键上下两侧波瓣的相对大小关系，&lt;/strong&gt;故原分子在分子π键上下两侧反应性时，完全可以使用所切分的分子片段代替。&lt;/p&gt;
+
+&lt;p&gt;sigma轨道与双键碳的p轨道重组将产生&lt;strong&gt;两个新的轨道（正相重叠与反相重叠）&lt;/strong&gt;，由于应该保证&lt;strong&gt;最大的成键重叠&lt;/strong&gt;，故重组出的成键轨道可以示意如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/不对称超共轭述图2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;同理，这样重组还会产生一个&lt;strong&gt;反键轨道&lt;/strong&gt;，可以示意如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/不对称超共轭述图3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;由于&lt;strong&gt;所切分的分子片段可以看做三电子&lt;/strong&gt;（sigma键提供2个，切分的双键p轨道提供1个），&lt;strong&gt;有电子占据的最高能轨道“SOMO”为上述反键轨道&lt;/strong&gt;，在双键上方的波瓣更大；原分子的&lt;strong&gt;HOMO&lt;/strong&gt;由分子片段的&lt;strong&gt;“SOMO”同相重组而来&lt;/strong&gt;，镜面对称，π键上下波瓣相对大小未改变，故可预知原分子与亲点试剂的反应在上端发生，符合实验事实。&lt;/p&gt;
+
+&lt;h3 id=&quot;例2-1&quot;&gt;例2&lt;/h3&gt;
+
+&lt;p&gt;原理与例1相同，只不过这里是由底物分子提供LUMO。&lt;/p&gt;
+
+&lt;p&gt;底物分子的&lt;strong&gt;LUMO&lt;/strong&gt;由分子片段的&lt;strong&gt;“SOMO”异相重组而来&lt;/strong&gt;，镜面反对称，大波瓣在sigma超共轭给电子基异侧，与实验结果一致。&lt;/p&gt;
+
+&lt;p&gt;本文未经允许禁止转载，但欢迎在评论区提出修改意见。&lt;/p&gt;
+</description>
+        <pubDate>Thu, 19 Mar 2020 00:00:00 +0800</pubDate>
+        <link>http://wszqkzqk.github.io/2020/03/19/%E4%B8%8D%E5%AF%B9%E7%A7%B0%E8%B6%85%E5%85%B1%E8%BD%AD%E6%95%88%E5%BA%94%E5%AF%B9%E9%80%89%E6%8B%A9%E6%80%A7%E7%9A%84%E5%BD%B1%E5%93%8D/</link>
+        <guid isPermaLink="true">http://wszqkzqk.github.io/2020/03/19/%E4%B8%8D%E5%AF%B9%E7%A7%B0%E8%B6%85%E5%85%B1%E8%BD%AD%E6%95%88%E5%BA%94%E5%AF%B9%E9%80%89%E6%8B%A9%E6%80%A7%E7%9A%84%E5%BD%B1%E5%93%8D/</guid>
+        
+        <category>立体化学</category>
+        
+        <category>分子轨道理论</category>
+        
+        <category>有机化学</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>导向基团</title>
+        <description>&lt;h1 id=&quot;导向基团&quot;&gt;导向基团&lt;/h1&gt;
+
+&lt;p&gt;在有机化学中，导向基团（DG）是指可通过与试剂相互作用来促进反应有选择性地发生的取代基，该术语通常用于烃的CH键活化。导向基团可以作为“配位基团“（即“内部配体”）将金属催化剂引导至特定的C–H键附近。 例如， 苯乙酮中的酮基是Murai反应的导向基团。 [1]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-Figure_1._General_scheme_of_a_Murai_reaction.png&quot; alt=&quot;Murai反应 X=导向基团&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Murai反应与邻位定向金属化反应 ，该反应通常应用于取代的芳环的锂化 [2] 。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-600px-Directedorthometalation.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;可脱除性导向基团&quot;&gt;可脱除性导向基团&lt;/h2&gt;
+
+&lt;p&gt;由于导向基团是配体，因此其有效性与其对金属的亲和力相关。 常见的官能团通常只是弱配体（例如酮），因此通常是较差的DG。 这个问题可以通过使用可脱除性导向基团来解决。 例如：可以通过席夫碱缩合可逆地将弱DG（例如酮）转化为强DG（例如亚胺）。 反应完成后，可以水解使胺脱除，酮得到再生。 [3]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-388px-JunTDG.png&quot; alt=&quot;通过2-氨基-3-甲基吡啶提供的可脱除性导向基活化CH键&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;参考文献&quot;&gt;参考文献&lt;/h2&gt;
+
+&lt;p&gt;Sambiagio, C., D. Schönbauer, R. Blieck, T. Dao-Huy, G. Pototschnig, P. Schaaf, T. Wiesinger, M. F. Zia, J. Wencel-Delord, T. Besset, B. U. W. Maes and M. Schnürch. A Comprehensive Overview of Directing Groups Applied in Metal-Catalysed C–H functionalisation chemistry. Chemical Society Reviews. 2018, 47 (17): 6603–6743. PMC 6113863. PMID 30033454. doi:10.1039/C8CS00201K.&lt;/p&gt;
+
+&lt;p&gt;Directed ortho metalation.&lt;/p&gt;
+
+&lt;p&gt;St John-Campbell, S. and J. A. Bull. Transient imines as ‘next generation’ directing groups for the catalytic functionalisation of C–H bonds in a single operation (PDF). Organic &amp;amp; Biomolecular Chemistry. 2018, 16 (25): 4582–4595. PMID 29796566. doi:10.1039/C8OB00926K.&lt;/p&gt;
+
+&lt;p&gt;本文采用&lt;a href=&quot;https://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA-3.0&lt;/a&gt;协议发布，来自我创建的Wikipedia条目&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E5%AF%BC%E5%90%91%E5%9F%BA%E5%9B%A2&quot;&gt;导向基团&lt;/a&gt;，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在&lt;a href=&quot;https://github.com/wszqkzqk/wszqkzqk.github.io&quot;&gt;GitHub上的源代码&lt;/a&gt;提供Pull request，也欢迎在评论区多多指教。&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 Mar 2020 00:00:00 +0800</pubDate>
+        <link>http://wszqkzqk.github.io/2020/03/18/%E5%AF%BC%E5%90%91%E5%9F%BA%E5%9B%A2/</link>
+        <guid isPermaLink="true">http://wszqkzqk.github.io/2020/03/18/%E5%AF%BC%E5%90%91%E5%9F%BA%E5%9B%A2/</guid>
+        
+        <category>Wikipedia</category>
+        
+        <category>有机化学</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>立体电子效应（英语）</title>
+        <description>&lt;h1 id=&quot;stereoelectronic-effect&quot;&gt;Stereoelectronic effect&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;注：这是博主在英文维基上发现的一个内容较为充实的条目，虽然博主已经在原条目中提交了一些文字修改和述图修正，但囿于个人能力有限，其中仍然有一些小错误。欢迎读者到原条目处（链接在文末）提供修改方案，也可以在中文维基中提供对应条目的翻译扩充&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;In chemistry, primarily organic and computational chemistry, a stereoelectronic effect[1] is an effect on molecular geometry, reactivity, or physical properties due to spatial relationships in the molecules’ electronic structure, in particular the interaction between atomic and/or molecular orbitals.[2] Phrased differently, stereoelectronic effects can also be defined as the geometric constraints placed on the ground and/or transition states of molecules that arise from considerations of orbital overlap.[3] Thus, a stereoelectronic effect explains a particular molecular property or reactivity by invoking stabilizing or destabilizing interactions that depend on the relative orientations of electrons (bonding or non-bonding) in space.[4][5]&lt;/p&gt;
+
+&lt;p&gt;Founded on a few general principles that govern how orbitals interact, the stereoelectronic effect, along with the steric effect, inductive effect, solvent effect, mesomeric effect, and aromaticity, is an important type of explanation for observed patterns of selectivity, reactivity and stability in organic chemistry. In spite of the relatively straightforward premises, stereoelectronic effects often provide explanations for counterintuitive or surprising observations. As a result, stereoelectronic factors are now commonly considered and exploited in the development of new organic methodology and in the synthesis of complex targets. The scrutiny of stereoelectronic effects has also entered the realms of biochemistry and pharmaceutical chemistry in recent years.&lt;/p&gt;
+
+&lt;p&gt;A stereoelectronic effect generally involves a stabilizing donor–acceptor (i.e., filled-empty, 2-electron 2-orbital) interaction. The donor is usually a higher bonding or nonbonding orbital and the acceptor is often a low-lying antibonding orbital as shown in the scheme below. Whenever possible, if this stereoelectronic effect is to be favored, the donor–acceptor orbitals should have (1) a small energy gap and (2) be geometrically well disposed for interaction. In particular, this means that the shapes of the donor and acceptor orbitals (including π or σ symmetry and size of the interacting lobes) must be well-matched for interaction; an antiperiplanar orientation is especially favorable. Some authors require stereoelectronic effects to be stabilizing.[1] However, destabilizing donor-donor (i.e., filled-filled, 4-electron 2-orbital) interactions are occasionally invoked and are also sometimes referred to as stereoelectronic effects, although such effects are difficult to distinguish from generic steric repulsion.[3][6]&lt;/p&gt;
+
+&lt;p&gt;Important phenomena in which stereoelectronic effects and orbital alignment may play an important role (or may even be dominant) include the anomeric effect and hyperconjugation.[6]&lt;/p&gt;
+
+&lt;p&gt;The term stereoelectronic effect should not be misused to refer to a simple combination of steric and electronic effects.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_1.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;contents&quot;&gt;Contents&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;1	Trend of different orbitals&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;2	Influence on stability&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;3	Influence on conformation&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;3.1	Gauche effect&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;3.2	Special effects of fluorine substituent&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;4	Influence on reaction selectivity&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;4.1	Reductive cyclizations&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;4.2	Hydrogenation&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;5	Influence on thermodynamics&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;5.1	Influence on equilibrium&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;5.2	Influence on resonance structures&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;6	Application in asymmetric Diels–Alder reactions&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;7	Stereoelectronic effect versus steric clash&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;8	References&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;trend-of-different-orbitals&quot;&gt;Trend of different orbitals&lt;/h2&gt;
+
+&lt;p&gt;Take the simplest CH2X–CH3 system as an example; the donor orbital is σ(C–H) orbital and the acceptor is σ&lt;em&gt;(C–X). When moving from fluorine to chlorine, then to bromine, the electronegativity of the halogen and the energy level of the σ&lt;/em&gt;(C–X) orbitals decreases.[7] Consequently, the general trend of acceptors can be summarized as: π&lt;em&gt;(C=O)&amp;gt;σ&lt;/em&gt;(C–Hal)&amp;gt;σ&lt;em&gt;(C–O)&amp;gt;σ&lt;/em&gt;(C–N)&amp;gt;σ&lt;em&gt;(C–C), σ&lt;/em&gt;(C–H). For donating orbitals, the nonbonding orbitals, or the lone pairs, are generally more effective than bonding orbitals due to the high energy levels. Also, different from acceptors, donor orbitals require less polarized bonds. Thus, the general trends for donor orbitals would be: n(N)&amp;gt;n(O)&amp;gt;σ(C–C), σ(C–H)&amp;gt;σ(C–N)&amp;gt;σ(C–O)&amp;gt;σ(C–S)&amp;gt;σ(C–Hal).[6]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_2.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Stereoelectronic effect can be directional in specific cases. The radius of sulfur is much larger than the radius of carbon and oxygen. Thus the differences in C–S bond distances generate a much amplified difference in the two stereoelectronic effects in 1,3-dithiane (σ(C–H) → σ&lt;em&gt;(C–S)) than in 1,3-dioxane(σ(C–H) → σ&lt;/em&gt;(C–O)).[7] The differences between C–C and C–S bonds shown below causes a significant difference in the distances between C–S and two C–H bonds. The shorter the difference is, the better the interaction and the stronger the stereoelectronic effect.[7]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_3.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;influence-on-stability&quot;&gt;Influence on stability&lt;/h2&gt;
+
+&lt;p&gt;If there is an electropositive substituent (e.g. –SiR3, –SnR3, –HgR, etc.) at the β-position of carbocation, the positive charge could be stabilized which is also due largely to the stereoelectronic effect (illustrated below using –SiR3 as an example). The orientation of the two interacting orbitals can have a significant effect on the stabilization effect (σ(C–Si) → empty p orbital), where antiperiplanar (180°) &amp;gt; perpendicular (90°) &amp;gt; syn (0°).[8]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_4.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;influence-on-conformation&quot;&gt;Influence on conformation&lt;/h2&gt;
+
+&lt;h3 id=&quot;gauche-effect&quot;&gt;Gauche effect&lt;/h3&gt;
+
+&lt;p&gt;One structural consequence of acyclic systems due to the stereoelectronic effect is the gauche effect.[9] In 1,2-difluoroethane, despite the steric clash, the preferred conformation is the gauche one because σ(C–H) is a good donor and σ&lt;em&gt;(C–F) is a good acceptor and the stereoelectronic effect (σ(C–H) → σ&lt;/em&gt;(C–F)) requires the energy minimum to be gauche instead of anti.[10]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_5.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This gauche effect has a profound effect in bio-chemical research. In (2S,4R)-4-hydroxyproline fragment, the gauche interaction favors one the conformer that can bind selectively to the active site of pVHL, a domain in collagen, one of the most abundant animal protein structures and can lead to proteasomal degradation of HIF-α subunit.[11]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_6.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;special-effects-of-fluorine-substituent&quot;&gt;Special effects of fluorine substituent&lt;/h3&gt;
+
+&lt;p&gt;Stereoelectronic effects can have a significant influence in pharmaceutical research. Generally, the substitution of hydrogen by fluorine could be regarded as a way to tune both the hydrophobicity and the metabolic stability of a drug candidate. Moreover, it can have a profound influence on conformations, often due to stereoelectronic effects, in addition to normal steric effects resulting from the larger size of the fluorine atom. For instance, the ground state geometries of anisole (methoxybenzene) and (trifluoromethoxy)benzene differ dramatically. In anisole, the methyl group prefers to be coplanar with the phenyl group, while (trifluoromethoxy)benzene favors a geometry in which the [C(aryl)–C(aryl)–O–C(F3)] dihedral angle is around 90°. In other words, the O–CF3 bond is perpendicular to the plane of the phenyl group.[12]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/立体电子效应述图-ZQK.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Further studies illustrate that even for only one or two hydrogen atoms in a methyl group being replaced by a fluorine atom, the distortion in the structure can also be significant, with the [C(aryl)–C(aryl)–O–C(H2F)] dihedral angle in the energy minimized structure being around 24° and the [C(aryl)–C(aryl)–O–C(HF2)] dihedral angle 33°.[12]&lt;/p&gt;
+
+&lt;h2 id=&quot;influence-on-reaction-selectivity&quot;&gt;Influence on reaction selectivity&lt;/h2&gt;
+
+&lt;h3 id=&quot;reductive-cyclizations&quot;&gt;Reductive cyclizations&lt;/h3&gt;
+
+&lt;p&gt;Although the energy difference between coplanar anisole and its isomer is quite large, the rotation between the O–CH3 bond becomes favorable when the electronic properties of methoxy group on aromatic rings need to be altered to stabilize an unusual intermediate or a transition state. In the following reaction, the regioselectivity could be rationalized as the out-of-plane rotation of the O–C bond which changes the methoxy group from an in-plane donor group to an out-of-plane acceptor group.[13]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_8.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The intermediate of the above reaction is the di-anion and the stereoelectronic effect that stabilizes this intermediate over the other one is the fact that the anionic charge at the para position could delocalize to the oxygen atom via orbital interaction: π(benzene) → σ*(O–CH3).[13]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_9.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;hydrogenation&quot;&gt;Hydrogenation&lt;/h3&gt;
+
+&lt;p&gt;Even remote substituents on the benzene ring can affect the electron density on the aromatic ring and in turn influence the selectivity. In the hydrogenation of ketones using CBS catalysts, the ketone coordinates to the boron atom with the lone pair on the oxygen atom. In the following example, the inductive influence of the substituents can lead to differentiation of the two sp2 lone pairs on the oxygen atom.[14]&lt;/p&gt;
+
+&lt;p&gt;The relevant stereoelectronic interaction in the starting material is the nO → σ&lt;em&gt;(Ccarbonyl–Caryl) interaction. The electron-withdrawing substituent on the benzene ring depletes the electron density on the aromatic ring and thus makes the σ&lt;/em&gt;(Ccarbonyl–Caryl(nitro)) orbital a better acceptor than σ&lt;em&gt;(Ccarbonyl–Caryl(methoxy)). These two stereoelectronic interactions use different lone pairs on the oxygen atom (the one antiperiplanar to the σ&lt;/em&gt; in question for each), leading to lone pairs with different electron densities. In particular, the enhanced depletion of electron density from the lone pair antiperiplanar to the 4-nitrophenyl group leads to weakened ability for that lone pair to coordinate to boron. This in turn results in the lone pair antiperiplanar to the 4-methoxyphenyl binding preferentially to the catalyst, leading to well-defined facial selectivity. Under optimized conditions, the product is formed with excellent levels of enantioselectivity (95% ee).[14]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/500px-CBS-stereoelectronics.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;influence-on-thermodynamics&quot;&gt;Influence on thermodynamics&lt;/h2&gt;
+
+&lt;h3 id=&quot;influence-on-equilibrium&quot;&gt;Influence on equilibrium&lt;/h3&gt;
+
+&lt;p&gt;The stereoelectronic effect influences the thermodynamics of equilibrium. For example, the following equilibrium could be achieved via a cascade of pericyclic reactions.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_10.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Despite very similar structures, one of the two isomers is strongly favored over the other because of a stereoelectronic effect. Since the σ&lt;em&gt;C-C orbital adjacent to the electron-withdrawing carbonyl group is lower in energy and is therefore a better acceptor than the σ&lt;/em&gt;C-C orbital adjacent to the methoxy, the isomer in which the nO(σ) lone pair is able to donate into this lower-energy antibonding orbital will be stabilized (orbital interaction illustrated).[15]&lt;/p&gt;
+
+&lt;p&gt;Another example of the preference in the equilibrium within the area of pericyclic reaction is shown below. The stereoelectronic effect that affect the equilibrium is the interaction between the delocalized “banana bonds” and the empty p orbital on the boron atom.[16]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image-Add-3.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;influence-on-resonance-structures&quot;&gt;Influence on resonance structures&lt;/h3&gt;
+
+&lt;p&gt;In another case, the stereoelectronic effect can result in an increased contribution of one resonance structure over another, which leads to further consequences in reactivity. For 1,4-benzoquinone monoxime, there are significant differences in the physical properties and reactivities between C2-C3 double bond and C5-C6 double bond. For instance, in the 1H NMR, 3J23 higher than 3J56.[17] The C2-C3 double bond also selectively undergoes Diels–Alder reaction with cyclopentadiene, despite the increased steric hindrance on that side of the molecule.[18] These data illustrate an increased contribution of resonance structure B over structure A. The authors argue that the donation from nN to σ*C4-C3 orbital lengthens the C4–C3 bond (C4 is the carbon bearing the nitrogen substituent), which reduces the p-p overlap between these two atoms. This in turn decreasing the relative importance of structure A which has a double bond between C4 and C3.[19]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_11.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;application-in-asymmetric-dielsalder-reactions&quot;&gt;Application in asymmetric Diels–Alder reactions&lt;/h2&gt;
+
+&lt;p&gt;In the asymmetric Diels–Alder reactions, instead of using chiral ligands or chiral auxiliaries to differentiate the side selectivity of the dienolphiles, the differentiation of face selectivity of the dienes (especially for cyclopentadiene derivatives) using stereoelectronic effects have been reported by Woodward since 1955.[20] A systematic research of facial selectivity using substituted cyclopentadiene or permethylcyclopentadiene derivatives have been conducted and the results can be listed as below.[21]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image-Add-4.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The stereoelectronic effect affecting the outcome of the facial selectivity of the diene in Diels–Alder reaction is the interaction between the σ(C(sp2)–CH3) (when σ(C(sp2)–X) is a better acceptor than a donor) or σ(C(sp2)–X) (when σ(C(sp2)–X) is a better donor than an acceptor) and the σ* orbital of the forming bond between the diene and the dienophile.[21]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_16.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If the two geminal substituents are both aromatic rings with different substituents tuning the electron density, the differentiation of the facial selectivity is also facile where the dienophile approaches to the diene anti to the more electron-rich C–C bond where the stereoelectronic effect in this case is similar to the previous one.[22]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_17.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The ring opening of cyclobutene under heating conditions can have two products: inward and outward rotation.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_18.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The inward rotation transition state of the second shown below is relatively favored for acceptor R substituents (e.g. NO2) but is especially disfavored by donor R substituents (e.g. NMe2).[23]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_19.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;stereoelectronic-effect-versus-steric-clash&quot;&gt;Stereoelectronic effect versus steric clash&lt;/h2&gt;
+
+&lt;p&gt;Sometimes, stereoelectronic effects can win over extreme steric clash. In a similar cyclobutene ring-opening reaction, the trimethylsilyl group, which is very bulky, still favors the inward rotation. The stereoelectronic effect, which is the interaction shown above when the acceptor orbital is the σ*(Si–CH3), appears to be a more predominant factor in determining the reaction selectivity against the steric hindrance and even wins over the penalty of the disrupted conjugation system of the product due to steric clash.[24]&lt;/p&gt;
+
+&lt;p&gt;Furthermore, the acceptor orbitals are not limited to the antibonding orbitals of carbon-heteroatom bonds or the empty orbitals; in the following case, the acceptor orbital is the σ&lt;em&gt;(B–O) orbital. In the six-membered ring transition state, the stereoelectronic interaction is σ(C–X) → σ&lt;/em&gt;(B–O).[25]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/Tim_Project_Image_20.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+
+&lt;p&gt;Alabugin, I. V. Stereoelectronic Effects: the Bridge between Structure and Reactivity. John Wiley &amp;amp; Sons Ltd, Chichester, UK, 2016. http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118906349.html&lt;/p&gt;
+
+&lt;p&gt;Cramer, Christopher J. (1996). “Hyperconjugation as it affects conformational analysis”. Journal of Molecular Structure: THEOCHEM. 370 (2–3): 135–146. doi:10.1016/S0166-1280(96)04567-8. ISSN 0166-1280.&lt;/p&gt;
+
+&lt;p&gt;Evans, D. A. (2006). Chemistry 206 Lecture Notes. Cambridge, MA: Harvard University (Unpublished). pp. 1–2 (Lecture 1).&lt;/p&gt;
+
+&lt;p&gt;Pierre., Deslongchamps (1983). Stereoelectronic effects in organic chemistry (1st ed.). Oxford [Oxfordshire]: Pergamon Press. ISBN 0080261841. OCLC 9412829.&lt;/p&gt;
+
+&lt;p&gt;A fully rigorous analysis of stereoelectronic effects would involve the analysis of interactions between symmetry-correct canonical molecular orbitals. However, in practice, many chemists (e.g., Evans, Fleming, Kirby) use a localized molecular orbital model to analyze stereoelectronic effects. Deslongchamps goes so far as to describe stereoelectronic effects as originating from the stereochemical relationship of electron pairs. Orbital interactions invoked in a stereoelectronic effect can generally be ‘translated’ to an equally valid classical valence bond/resonance form picture, though usually involving ‘no-bond’ resonance forms.&lt;/p&gt;
+
+&lt;p&gt;Kirby, A. J. (1996). Stereoelectronic Effects. Oxford: Oxford University Press. ISBN 9780198558934.&lt;/p&gt;
+
+&lt;p&gt;Alabugin, Igor V.; Zeidan, Tarek A. (2002). “Stereoelectronic Effects and General Trends in Hyperconjugative Acceptor Ability of σ Bonds”. Journal of the American Chemical Society. 124 (12): 3175–3185. doi:10.1021/ja012633z. ISSN 0002-7863. PMID 11902907.&lt;/p&gt;
+
+&lt;p&gt;Carey, F. A.; Sundberg, R. J. (2007). Advanced Organic Chemistry, Part A: Structure and Mechanism (5th ed.). New York: Springer. ISBN 978-0387448978.&lt;/p&gt;
+
+&lt;p&gt;Hanack, M. (1965). Conformational Theory. New York and London: Academic Press.&lt;/p&gt;
+
+&lt;p&gt;Anslyn, E. V.; Dougherty, D. A. (2004). Modern Physical Organic Chemistry. Sausalito, Calif.: University Science Books. ISBN 1891389319.&lt;/p&gt;
+
+&lt;p&gt;Fujimori, D.G. (2009). “Hypoxia sensing goes gauche”. Nat. Chem. Biol. 5 (4): 202–203. doi:10.1038/nchembio0409-202. PMID 19295524.&lt;/p&gt;
+
+&lt;p&gt;Müller, K.; Faeh, C.; Diederich, F. (2007). “Fluorine in Pharmaceuticals: Looking Beyond Intuition”. Science. 317 (5846): 1881–1886. Bibcode:2007Sci…317.1881M. doi:10.1126/science.1131943. ISSN 0036-8075. PMID 17901324.&lt;/p&gt;
+
+&lt;p&gt;Peterson, Paul W.; Shevchenko, Nikolay; Alabugin, Igor V. (2013). ““Stereoelectronic Umpolung”: Converting a p-Donor into a σ-Acceptor via Electron Injection and a Conformational Change”. Organic Letters. 15 (9): 2238–2241. doi:10.1021/ol400813d. ISSN 1523-7060. PMID 23639080.&lt;/p&gt;
+
+&lt;p&gt;Corey, E.J.; Helal, Christopher J. (1995). “Novel electronic effects of remote substituents on the oxazaborolidine-catalyzed enantioselective reduction of ketones”. Tetrahedron Letters. 36 (50): 9153–9156. doi:10.1016/0040-4039(95)01961-G. ISSN 0040-4039.&lt;/p&gt;
+
+&lt;p&gt;Venkataraman, Hemalatha; Cha, Jin K. (1989). “The scope and mechanism of rearrangement of 4,6-dialkoxy-2-pyrones”. Tetrahedron Letters. 30 (27): 3509–3512. doi:10.1016/S0040-4039(00)99426-7. ISSN 0040-4039.&lt;/p&gt;
+
+&lt;p&gt;Gridnev, Ilya D.; Tok, Oleg L.; Gridneva, Natalya A.; Bubnov, Yuri N.; Schreiner, Peter R. (1998). “Synthesis and Dynamic Properties of Cycloheptatrienyl(dipropyl)borane. Equilibrium with 7-Dipropylborylnorcaradiene”. Journal of the American Chemical Society. 120 (5): 1034–1043. doi:10.1021/ja9724699. ISSN 0002-7863.&lt;/p&gt;
+
+&lt;p&gt;Norris, R. K.; Sternhell, S. (1969). “2-Substituted and 2,6-disubstituted 1,4-benzoquinone 4-oximes (“p-nitrosophenols”)”. Aust. J. Chem. 22 (5): 935–970. doi:10.1071/CH9690935.&lt;/p&gt;
+
+&lt;p&gt;Baldwin, J. E.; Norris, R. K. (1981). “Stereoelectronic control in organic chemistry: addition reactions of some 1,4-benzoquinone 4-(O-methyloximes)”. J. Org. Chem. 46 (4): 697–703. doi:10.1021/jo00317a011.&lt;/p&gt;
+
+&lt;p&gt;Perrin, C. L.; Engler, R. E. (1997). “Origin of Apparent Stereoelectronic Effects in Structure and Reactivity of Benzoquinone Monooximes”. J. Org. Chem. 62 (3): 687–692. doi:10.1021/jo961386s. PMID 11671465.&lt;/p&gt;
+
+&lt;p&gt;Winstein, S.; Shatavsky, M.; Norton, C.; Woodward, R. B. (1955). “7-Norbornenyl and 7-Norbornyl Cations”. J. Am. Chem. Soc. 77 (15): 4183–4184. doi:10.1021/ja01620a078.&lt;/p&gt;
+
+&lt;p&gt;Mehta, Goverdhan; Uma, R. (2000). “Stereoelectronic Control in Diels−Alder Reaction of Dissymmetric 1,3-Dienes”. Accounts of Chemical Research. 33 (5): 278–286. doi:10.1021/ar990123s. ISSN 0001-4842. PMID 10813872.&lt;/p&gt;
+
+&lt;p&gt;Halterman, R. L.; McCarthy, B. A.; McEvoy, M. A. (1992). “Stereoelectronic control of facial selectivity in the Diels-Alder cycloaddition of sterically unbiased 5,5-diarylcyclopentadienes”. J. Org. Chem. 57 (21): 5585–5589. doi:10.1021/jo00047a009.&lt;/p&gt;
+
+&lt;p&gt;Shindo, M.; Sato, Y.; Shishido, J. (1998). “A highly stereoselective synthesis of tri- and tetrasubstituted olefins via ynolates”. Tetrahedron Lett. 39 (27): 4857–4860. doi:10.1016/s0040-4039(98)00921-6.&lt;/p&gt;
+
+&lt;p&gt;Murakami, M.; Hasegawa, M. (2004). “Synthesis and Thermal Ring Opening oftrans-3,4-Disilylcyclobutene”. Angew. Chem. Int. Ed. 43 (37): 4874–4876. doi:10.1002/anie.200460144. PMID 15372640.&lt;/p&gt;
+
+&lt;p&gt;Schlapbach, A.; Hoffmann, R. W. (2001). “(E)-α-Sulfonamidocrotylboronates as Reagents for the Stereoselective Homoaldol Synthesis”. J. Org. Chem. 66 (2): 323–328. doi:10.1002/1099-0690(200101)2001:2&amp;lt;323::aid-ejoc323&amp;gt;3.0.co;2-a.&lt;/p&gt;
+
+&lt;p&gt;本文采用&lt;a href=&quot;https://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA-3.0&lt;/a&gt;协议发布，来自我参与编辑的Wikipedia条目&lt;a href=&quot;https://en.wikipedia.org/wiki/Stereoelectronic_effect&quot;&gt;Stereoelectronic effect&lt;/a&gt;，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在&lt;a href=&quot;https://github.com/wszqkzqk/wszqkzqk.github.io&quot;&gt;GitHub上的源代码&lt;/a&gt;提供Pull request，也欢迎在评论区多多指教。&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 Mar 2020 00:00:00 +0800</pubDate>
+        <link>http://wszqkzqk.github.io/2020/03/18/Stereoelectronic_effect/</link>
+        <guid isPermaLink="true">http://wszqkzqk.github.io/2020/03/18/Stereoelectronic_effect/</guid>
+        
+        <category>Wikipedia</category>
+        
+        <category>有机化学</category>
+        
+        <category>立体化学</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>碳氧𬭩离子</title>
+        <description>&lt;h1 id=&quot;碳氧𬭩离子&quot;&gt;碳氧𬭩离子&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-220px-Oxocarbenium-canonical_forms.png&quot; alt=&quot;碳氧𬭩离子的一般结构&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;碳氧𬭩离子（或氧碳𬭩离子）是一类在中心sp2-杂化的碳原子上连有氧取代基，并且能够在中心碳原子和氧原子之间通过Π键离域分散所携带的正电荷的化学物种。 [1] 碳氧𬭩离子可以用两个共振极限结构表示，一个是碳正离子形式，另一个是满足8电子规则且氧带形式电荷的氧𬭩形式。 真实结构为共振杂化体，介于两者之间。碳氧𬭩离子与酮或酯等中性羰基化合物相比，碳正离子形式的共振式对共振杂化体的结构的贡献更大。碳氧𬭩离子是糖苷键水解中常见的反应性中间体，并且是糖基化合成的常用策略。 这些离子作为多种化学反应中的活性中间体，已在有机合成中得到广泛应用，且已成功用于几种天然产物的全合成中。 此外，它们通常在自然界中以酶催化下的生物化学合成和碳水化合物水解的机理出现。 花青素是天然的黄酮染料，是稳定的氧碳𬭩化合物。 花色苷是造成多种常见花（例如紫罗兰）和食用植物（例如茄子和蓝莓）显现颜色的原因。&lt;/p&gt;
+
+&lt;h2 id=&quot;目录&quot;&gt;目录&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;1	电子分布和反应性&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;2	形成&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;3	合成应用&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;3.1	五元环&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;3.2	六元环&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;3.3	立体电子效应&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;3.4	环加成&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;3.5	羟醛反应&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;3.6	全合成实例&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;4	生物学应用&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;4.1	核苷酸生物合成&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;4.2	糖苷酶&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;5	参见&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;6	参考文献&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;电子分布和反应性&quot;&gt;电子分布和反应性&lt;/h2&gt;
+&lt;p&gt;氧碳𬭩离子的最优共振式包含一个碳氧双键 ，该氧原子与另一个基团相连，因此带有形式正电荷。 经典价键理论（或“共振式”）认为，π键的极化可以用次稳定的共振式描述，碳周围有六个电子且携带形式正电荷（见上文）。 根据前线分子轨道理论 ，碳氧𬭩离子的最低未占据分子轨道 （LUMO）是π *轨道，在碳原子上具有较大波瓣。电负性较高的氧对LUMO的贡献相对较小。 因此，在发生亲核进攻时 ，碳是亲电位点 。 与酮相比，碳氧𬭩离子双键的极化作用更加突出：它们更像“真正的”碳正离子，并且对亲核试剂更具反应性。 在有机反应中，通常通过路易斯酸或布朗斯台德酸与氧的配位来活化酮，生成氧碳𬭩离子中间体。&lt;/p&gt;
+
+&lt;p&gt;在数值上，酮R2C=O（如丙酮）的羰基碳所携带的的典型部分电荷为δ+ = 0.51（源自Hartree-Fock计算）。而当酮的氧原子质子化后产生[R2C=OH]+ 物种，部分电荷增加至δ+ = 0.61。 相比之下，酮和碳氧𬭩离子的氮取代类似物，亚胺(R2C=NR)和亚胺𬭩离子([R2C=NRH]+)的部分电荷分别为δ+ = 0.33和δ+ = 0.54 。因此，羰基碳所携带的部分正电荷大小的顺序为亚胺&amp;lt;酮&amp;lt;亚胺𬭩&amp;lt;碳氧𬭩。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-440px-C=Xelectrophilicity.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这也是包含 C=X (X = O, NR)键的物种的亲电性的顺序。 这个顺序在有机合成中得到了应用和解释，例如：为什么还原胺化通常最好在pH= 5至6时进行，这个反应用到了 氰基硼氢化钠 (Na+[H3B(CN)]−) 或三乙酰氧基硼氢化钠(Na+[HB(OAc)3]−)作还原剂。 带有吸电子基团的氰基硼氢化钠和三乙酰氧基硼氢化钠比硼氢化钠还原能力弱，它们与酮的直接反应通常是一个缓慢而低效的过程。 但是，在还原胺化反应过程中原位形成的亚胺𬭩离子（并非是亚胺本身）比酮类原料具有更强的亲电性，并且将以在合成中有价值的速率与负氢还原剂反应。 重要的是，该反应是一般在弱酸性条件下进行的，此时电中性的亚胺中间体显著质子化，形成亚胺𬭩离子，而在弱酸性环境中，酮并不能够质子化，亲电性依然较弱。 因此，反应条件和试剂确保了在该反应中由亚胺基还原选择性地形成胺，而不是直接还原羰基（或其质子化形式）以形成醇。&lt;/p&gt;
+
+&lt;h2 id=&quot;形成&quot;&gt;形成&lt;/h2&gt;
+&lt;p&gt;氧碳𬭩离子的形成可以通过几种不同的途径进行。 最常见的是：酮的氧原子与路易斯酸配位，从而活化酮，使其成为更有效的亲电子试剂。 路易斯酸可以是多种分子或离子，可以是质子或金属配合物等。 本条目的其余部分将重点讨论烷基氧碳𬭩离子。烷基氧碳𬭩离子额外连接在羰基氧上的原子是碳。 形成这种离子的一种方式是离去基团的消除，在糖化学中，该离去基团通常是醚或酯 。&lt;/p&gt;
+
+&lt;h2 id=&quot;合成应用&quot;&gt;合成应用&lt;/h2&gt;
+&lt;h3 id=&quot;五元环&quot;&gt;五元环&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-5-membered.png&quot; alt=&quot;假想的五元氧碳𬭩离子过渡态&quot; /&gt;
+五元环反应所涉及的立体化学可以通过信封形过渡态模型来预测。 亲核试剂有利于从信封的“内部”或右侧图的顶部加成。从信封内部加成将产生有利的交错式构象，而从信封外加成则将产生能量不利的重叠式构象 。 [2]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-450px-Woerpel_1999.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;六元环&quot;&gt;六元环&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-450px-6-membered.png&quot; alt=&quot;六元碳氧𬭩离子环的过渡态模型&quot; /&gt;
+Woods等人于1992年提出了六元碳氧𬭩环的过渡态模型。 [3] 确定六元环的亲核加成的立体化学的一般策略与五元环类似。 此分析依据的一种假设是：该环与环己烯具有相同的构象，其中三个碳和一个氧在一个平面内，而另外两个碳原子一个在该平面上方，另一个在下方（请参阅右图）。 依据环上存在的取代基，可以确定最低的能量构象，确定时要考虑空间和立体电子效应。 确定了这种构象后，就可以考虑亲核加成的立体化学。 加成将通过低能量的椅式过渡状态进行。可以在下面看到此类反应的示例。 该示例还说明了负电取代基可能会有较明显的的立体电子效应，通常这会改变最优构象的结构，使得反应的选择性发生变化。 [4]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-500px-6-Membered_Oxocarbenium.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;立体电子效应&quot;&gt;立体电子效应&lt;/h3&gt;
+&lt;p&gt;在不包含氧原子的烯烃环中，任何大的取代基都倾向于位于赤道位置，以使空间效应最小化。 但是在含碳氧𬭩离子的环中， 负电性取代基倾向于优先占据轴向或准轴向位置。 当负电性原子处于轴向位置时，其电子密度可以通过立体电子效应分散给环中带正电的氧原子。 [5] 这种相互作用稳定了轴向构象。表现出这种现象的取代基的实例主要有 羟基 ， 醚和卤素。 在确定氧代碳𬭩离子的亲核加成反应中能量最低的构象时，必须考虑立体电子效应 。 [4] [6]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-200px-Axialoxo.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;环加成&quot;&gt;环加成&lt;/h3&gt;
+&lt;p&gt;在有机合成中，乙烯基氧碳𬭩离子（右侧结构）可广泛用于环加成反应中。 它们通常在Diels-Alder反应中用作亲二烯体 。 通常将吸电子酮添加到该亲二烯体中以提高反应速率， [7]在反应过程中，这些酮经常转化为乙烯基氧碳𬭩离子[8]。目前尚不清楚该机理是否必须经历碳氧𬭩离子中间体，但Roush和他的同事在以下所示的环化反应中证明了该反应确实生成了氧碳𬭩离子中间体。 该反应可观察到的两种产物只有在氧碳𬭩环作为中间体存在时才能形成。已经有人报道氧碳𬭩离子中间体参与的[9][4+3], [2+2], [3+2]和[5+2]环加成。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-500px-Oxointermediate.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;羟醛反应&quot;&gt;羟醛反应&lt;/h3&gt;
+&lt;p&gt;已有利用手性氧碳𬭩离子与乙烯醇衍生等价物进行高度非对映选择性和对映选择性的反应 [10] 氧碳𬭩离子在反应中用作亲电试剂 。 当甲基替换为更大的取代基时，反应的非对映选择性增加。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-500px-Oxoaldol.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;全合成实例&quot;&gt;全合成实例&lt;/h3&gt;
+&lt;p&gt;氧碳𬭩离子已在多种场合中用于全合成。(+)-clavosolide的主要亚基是通过还原六元氧碳𬭩环合成的。 如所预测的，所有大的取代基都位于赤道位置，并且该转化经历了椅式过渡状态。 [11]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-450px-Clavosolide.png&quot; alt=&quot;&quot; /&gt;
+第二个例子可见于 (−)-neopeltolide合成的关键步骤，该步骤使用另一种六元氧碳𬭩环发生还原反应生成非对映选择性加氢产物。 [12]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-520px-Neopeltolide.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;h2 id=&quot;生物学应用&quot;&gt;生物学应用&lt;/h2&gt;
+&lt;p&gt;在生物系统中，氧碳𬭩离子最常见于碳水化合物的反应过程中。 由于糖存在于核酸中，它的化学性质对核酸在生物体内的功能起到了重要作用。 糖除了在核酸中发挥生理功能外，还是生物体的结构组分，可以多种形式存在，例如储能分子、细胞信号分子、蛋白质修饰，并在免疫系统 、 受精作用 、预防发病机制 、血液凝结和发育中发挥关键作用。 [13] 生物化学过程中糖化学性质丰富，许多糖参与的反应经历氧碳𬭩离子中间体。 本节概述了利用氧碳𬭩离子的几种重要的生物反应。&lt;/p&gt;
+
+&lt;h3 id=&quot;核苷酸生物合成&quot;&gt;核苷酸生物合成&lt;/h3&gt;
+&lt;p&gt;酶催化下核苷酸的分子内环化可产生几种重要的生物分子。 这些环化通常通过氧碳𬭩中间体进行。 该反应的一个例子是环ADP核糖的环化。 [14]&lt;/p&gt;
+
+&lt;h3 id=&quot;糖苷酶&quot;&gt;糖苷酶&lt;/h3&gt;
+&lt;p&gt;糖苷酶是一种催化糖苷键断裂的酶，它能使底物糖分解产生两个较小的糖分子 。 这个过程对动物体内糖原等储能物质的利用以及植食生物进行纤维素的分解具有重要意义。 通常，酶的活性位点上的天冬氨酸或谷氨酸残基可以催化糖苷键的水解。 这些酶的机制涉及氧碳𬭩离子中间体，其一般实例如下所示。 [15]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://wszqkzqk.github.io/img/post-500px-Sugarhydrolysis.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;h2 id=&quot;参见&quot;&gt;参见&lt;/h2&gt;
+&lt;p&gt;碳正离子&lt;/p&gt;
+
+&lt;p&gt;糖苷酶&lt;/p&gt;
+&lt;h2 id=&quot;参考文献&quot;&gt;参考文献&lt;/h2&gt;
+&lt;p&gt;（英文）国际纯粹与应用化学联合会．”carbenium ion”．《化学术语总目录》在线版．&lt;/p&gt;
+
+&lt;p&gt;Larsen, C. H.; Ridgway, B. H.; Shaw, J. T.; Woerpel, K. A., A Stereoelectronic Model to Explain the Highly Stereoselective Reactions of Nucleophiles with Five-Membered-Ring Oxocarbenium Ions, Journal of the American Chemical Society, 1999, 121 (51): 12208–12209, doi:10.1021/ja993349z&lt;/p&gt;
+
+&lt;p&gt;Woods, R. J.; Andrews, C. W.; Bowen, J. P., Molecular mechanical investigations of the properties of oxocarbenium ions. 2. Application to glycoside hydrolysis, Journal of the American Chemical Society, 1992, 114 (3): 859–864, doi:10.1021/ja00029a008&lt;/p&gt;
+
+&lt;p&gt;Romero, J. A. C.; Tabacco, S. A.; Woerpel, K. A., Stereochemical Reversal of Nucleophilic Substitution Reactions Depending upon Substituent: Reactions of Heteroatom-Substituted Six-Membered-Ring Oxocarbenium Ions through Pseudoaxial Conformers, Journal of the American Chemical Society, 1999, 122: 168–169, doi:10.1021/ja993366o&lt;/p&gt;
+
+&lt;p&gt;Miljkovic, M. i.; Yeagley, D.; Deslongchamps, P.; Dory, Y. L., Experimental and Theoretical Evidence of Through-Space Electrostatic Stabilization of the Incipient Oxocarbenium Ion by an Axially Oriented Electronegative Substituent During Glycopyranoside Acetolysis, The Journal of Organic Chemistry, 1997, 62 (22): 7597–7604, doi:10.1021/jo970677d&lt;/p&gt;
+
+&lt;p&gt;Hansen, Thomas; Lebedel, Ludivine; Remmerswaal, Wouter A.; van der Vorm, Stefan; Wander, Dennis P. A.; Somers, Mark; Overkleeft, Herman S.; Filippov, Dmitri V.; Désiré, Jérôme. Defining the SN1 Side of Glycosylation Reactions: Stereoselectivity of Glycopyranosyl Cations. ACS Central Science. 2019-04-18, 5 (5): 781–788. ISSN 2374-7943. doi:10.1021/acscentsci.9b00042.&lt;/p&gt;
+
+&lt;p&gt;Vollhardt; Shore. Organic Chemistry. New York, NY: W. H. Freeman and Co. 2009.&lt;/p&gt;
+
+&lt;p&gt;Harmata, M.; Rashatasakhon, P., Cycloaddition reactions of vinyl oxocarbenium ions, Tetrahedron, 2003, 59 (14): 2371–2395, doi:10.1016/s0040-4020(03)00253-9&lt;/p&gt;
+
+&lt;p&gt;Roush, M.; Gillis, P.; Essenfeld, A., Hydrofluoric acid catalyzed intramolecular Diels–Alder reactions, Journal of Organic Chemistry, 1984, 49 (24): 4674–4682, doi:10.1021/jo00198a018&lt;/p&gt;
+
+&lt;p&gt;Kanwar, S.; Trehan, S., Acetate aldol reactions of chiral oxocarbenium ions, Tetrahedron Letters, 2005, 46 (8): 1329–1332, doi:10.1016/j.tetlet.2004.12.116&lt;/p&gt;
+
+&lt;p&gt;Carrick, J. D.; Jennings, M. P., An Efficient Formal Synthesis of (−)-Clavosolide a Featuring a “Mismatched” Stereoselective Oxocarbenium Reduction, Organic Letters, 2009, 11 (3): 769–772, doi:10.1021/ol8028302&lt;/p&gt;
+
+&lt;p&gt;Martinez-Solorio, D.; Jennings, M. P., Formal Synthesis of (−)-Neopeltolide Featuring a Highly Stereoselective Oxocarbenium Formation/Reduction Sequence, The Journal of Organic Chemistry, 2010, 75 (12): 4095–4104, doi:10.1021/jo100443h&lt;/p&gt;
+
+&lt;p&gt;Maton, Anthea; Jean Hopkins; Charles William McLaughlin; Susan Johnson; Maryanna Quon Warner; David LaHart; Jill D. Wright. Human Biology and Health. Englewood Cliffs, New Jersey, USA: Prentice Hall. 1993: 52–59. ISBN 0-13-981176-1.&lt;/p&gt;
+
+&lt;p&gt;Muller-Steffner, H. M.; Augustin, A.; Schuber, F., Mechanism of Cyclization of Pyridine Nucleotides by Bovine Spleen NAD+ Glycohydrolase, Journal of Biological Chemistry, 1996, 271 (39): 23967–23972, PMID 8798630, doi:10.1074/jbc.271.39.23967&lt;/p&gt;
+
+&lt;p&gt;Zechel, D.L.; Withers, S.G. Glycosidase Mechanisms: Anatomy of a Finely Tuned Catalyst. Accounts of Chemical Research. 2000, 33 (1): 11–18. ISSN 0001-4842. PMID 10639071. doi:10.1021/ar970172.&lt;/p&gt;
+
+&lt;p&gt;本文采用&lt;a href=&quot;https://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA-3.0&lt;/a&gt;协议发布，来自我创建的Wikipedia条目&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E5%AF%BC%E5%90%91%E5%9F%BA%E5%9B%A2&quot;&gt;导向基团&lt;/a&gt;，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在&lt;a href=&quot;https://github.com/wszqkzqk/wszqkzqk.github.io&quot;&gt;GitHub上的源代码&lt;/a&gt;提供Pull request，也欢迎在评论区多多指教。&lt;/p&gt;
+</description>
+        <pubDate>Mon, 16 Mar 2020 00:00:00 +0800</pubDate>
+        <link>http://wszqkzqk.github.io/2020/03/16/tan-yang-weng-li-zi/</link>
+        <guid isPermaLink="true">http://wszqkzqk.github.io/2020/03/16/tan-yang-weng-li-zi/</guid>
+        
+        <category>Wikipedia</category>
+        
+        <category>活性中间体</category>
+        
+        <category>有机化学</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>我在Wikipedia上参与贡献的条目</title>
+        <description>&lt;p&gt;&lt;strong&gt;我创建的条目：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E7%A2%B3%E6%B0%A7%E9%8E%93%E7%A6%BB%E5%AD%90&quot;&gt;碳氧𬭩离子&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E5%AF%BC%E5%90%91%E5%9F%BA%E5%9B%A2&quot;&gt;导向基团&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;我参与贡献的条目：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E7%AB%8B%E4%BD%93%E7%94%B5%E5%AD%90%E6%95%88%E5%BA%94&quot;&gt;立体电子效应&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E6%B0%A2%E6%B0%A7%E5%8C%96%E9%92%A0&quot;&gt;氢氧化钠&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Stereoelectronic_effect&quot;&gt;Stereoelectronic effect&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E7%9F%BF%E7%89%A9%E5%88%97%E8%A1%A8&quot;&gt;矿物列表&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E6%B0%AF%E5%8C%96%E6%B0%A2&quot;&gt;氯化氢&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E4%B8%89%E6%B0%9F%E5%8C%96%E6%B0%AE&quot;&gt;三氟化氮&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本文采用&lt;a href=&quot;https://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA-3.0&lt;/a&gt;协议发布&lt;/p&gt;
+</description>
+        <pubDate>Mon, 16 Mar 2020 00:00:00 +0800</pubDate>
+        <link>http://wszqkzqk.github.io/2020/03/16/My-contribution-to-Wikipedia/</link>
+        <guid isPermaLink="true">http://wszqkzqk.github.io/2020/03/16/My-contribution-to-Wikipedia/</guid>
+        
+        <category>Wikipedia</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>我的HMO计算</title>
+        <description>&lt;p&gt;&lt;strong&gt;这是我个人使用软件对某些典型的简单分子的分子轨道作的HMO计算结果,以PDF展示(点击即可下载)：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;注：&lt;/p&gt;
+
+&lt;p&gt;1.以下结果仅供参考&lt;/p&gt;
+
+&lt;p&gt;2.某些物质没有按照系统命名法命名，文件名仅起辨识作用&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/模拟氰基胍异构体1.pdf&quot;&gt;氰基胍异构体1（由于技术限制，请自行减去反键电子）&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/模拟氰基胍异构体2.pdf&quot;&gt;氰基胍异构体2（由于技术限制，请自行减去反键电子）&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/1-%E7%A1%9D%E5%9F%BA%E8%90%98.pdf&quot;&gt;1-硝基萘&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/1-萘胺.pdf.pdf&quot;&gt;1-萘胺&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/2,4-二氟~1-硝基苯.pdf&quot;&gt;2,4-二氟-1-硝基苯&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/20面体硼杂假球芳香性.pdf&quot;&gt;20面体硼杂拟球芳香性&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/2-萘胺.pdf.pdf&quot;&gt;2-萘胺&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/2-硝基萘.pdf&quot;&gt;2-硝基萘&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/4-吡喃酮.pdf&quot;&gt;4-吡喃酮&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/5,6-dimethylidenecyclohexa-1,3-diene.pdf&quot;&gt;5,6-dimethylidenecyclohexa-1,3-diene&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/B3N3H6.pdf&quot;&gt;B3N3H6&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/C4H4.pdf&quot;&gt;C4H4&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;&#39;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/C4(NH2)2(NO2)2.pdf&#39;&quot;&gt;C4(NH2)2(NO2)2&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/C4H4.pdf&quot;&gt;C4H4&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/C6H6.pdf&quot;&gt;C6H6.pdf&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;&#39;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/C6(NH2)3(NO2)3.pdf&#39;&quot;&gt;C6(NH2)3(NO2)3&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/α-吡喃酮.pdf&quot;&gt;α-吡喃酮&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/氨基羧基连在同一碳上.pdf&quot;&gt;氨基羧基连在同一碳上&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/氨基硝基连在同一碳上.pdf&quot;&gt;氨基硝基连在同一碳上&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/苯甲酸.pdf&quot;&gt;苯甲酸&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/苯六甲酸酐.pdf&quot;&gt;苯六甲酸酐&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/吡啶.pdf&quot;&gt;吡啶&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/吡咯.pdf&quot;&gt;吡咯&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/苄基自由基.pdf&quot;&gt;苄基自由基.pdf&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/成环秘籍2-第28题.pdf&quot;&gt;成环秘籍2-第28题&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/方酸.pdf&quot;&gt;方酸&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/呋喃.pdf&quot;&gt;呋喃&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/福山B120.pdf&quot;&gt;福山B120&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/环庚三烯酮.pdf&quot;&gt;环庚三烯酮&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/甲酰胺.pdf&quot;&gt;甲酰胺&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/克酮酸.pdf&quot;&gt;克酮酸&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/邻二亚甲基苯.pdf&quot;&gt;邻二亚甲基苯&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/玫棕酸.pdf&quot;&gt;玫棕酸&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/模拟六方氮化硼单层.pdf&quot;&gt;模拟六方氮化硼单层&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/模拟石墨烯.pdf&quot;&gt;模拟石墨烯&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/内酰胺.pdf&quot;&gt;内酰胺&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/尿素.pdf&quot;&gt;尿素&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/羟基羧基连在同一碳上.pdf&quot;&gt;羟基羧基连在同一碳上&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/球碳稳定性不由所谓球芳香性决定的示例.pdf&quot;&gt;球碳稳定性不由所谓球芳香性决定的示例&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/噻吩.pdf&quot;&gt;噻吩&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/三氨基甲基自由基.pdf&quot;&gt;三氨基甲基自由基&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/三个苯环一个氮.pdf&quot;&gt;三个苯环一个氮&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/三角酸.pdf&quot;&gt;三角酸&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/十个环三个氮.pdf&quot;&gt;十个环三个氮&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/2-羟基吡啶.pdf&quot;&gt;2-羟基吡啶&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/四个苯环三个四元环.pdf&quot;&gt;四个苯环三个四元环&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/碳20.pdf&quot;&gt;碳20&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/碳60.pdf&quot;&gt;碳60&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/推拉效应削弱双键的例子.pdf&quot;&gt;推拉效应削弱双键的例子&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/无六方对称的草率石墨烯计算.pdf&quot;&gt;无六方对称的草率石墨烯计算&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/硝基苯.pdf&quot;&gt;硝基苯&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/小的模拟六方氮化硼单层.pdf&quot;&gt;小的模拟六方氮化硼单层&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/用于直观说明HOMO能量高不一定亲电反应活性强的例子.pdf&quot;&gt;用于直观说明HOMO能量高不一定亲电反应活性强的例子&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本文采用&lt;a href=&quot;https://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA-3.0&lt;/a&gt;协议发布&lt;/p&gt;
+</description>
+        <pubDate>Mon, 16 Mar 2020 00:00:00 +0800</pubDate>
+        <link>http://wszqkzqk.github.io/2020/03/16/HMO-ji-suan-jie-guo-zhan-shi/</link>
+        <guid isPermaLink="true">http://wszqkzqk.github.io/2020/03/16/HMO-ji-suan-jie-guo-zhan-shi/</guid>
+        
+        <category>HMO</category>
+        
+        <category>分子轨道理论</category>
+        
+        <category>计算化学</category>
+        
+        <category>有机化学</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>

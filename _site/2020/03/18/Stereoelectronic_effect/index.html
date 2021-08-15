@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="天下难事，必作于易；天下大事，必作于细">
+    <meta name="keywords"  content="wszqkzqk, wszqkzqk Blog, 星外之神的博客, wszqkzqk">
+    <meta name="theme-color" content="#000000">
+    
+    <title>立体电子效应（英语） - 星外之神的博客 | wszqkzqk Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://wszqkzqk.github.io/2020/03/18/Stereoelectronic_effect/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">星外之神 Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-1122px-Wikipedia-logo-v2.svg-dark.png" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-1122px-Wikipedia-logo-v2.svg-dark.png')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Wikipedia" title="Wikipedia">Wikipedia</a>
+                        
+                        <a class="tag" href="/tags/#有机化学" title="有机化学">有机化学</a>
+                        
+                        <a class="tag" href="/tags/#立体化学" title="立体化学">立体化学</a>
+                        
+                    </div>
+                    <h1>立体电子效应（英语）</h1>
+                    
+                    
+                    <h2 class="subheading">Wikipedia条目推荐</h2>
+                    
+                    <span class="meta">Posted by 星外之神 on March 18, 2020</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h1 id="stereoelectronic-effect">Stereoelectronic effect</h1>
+
+<p><strong>注：这是博主在英文维基上发现的一个内容较为充实的条目，虽然博主已经在原条目中提交了一些文字修改和述图修正，但囿于个人能力有限，其中仍然有一些小错误。欢迎读者到原条目处（链接在文末）提供修改方案，也可以在中文维基中提供对应条目的翻译扩充</strong></p>
+
+<p>In chemistry, primarily organic and computational chemistry, a stereoelectronic effect[1] is an effect on molecular geometry, reactivity, or physical properties due to spatial relationships in the molecules’ electronic structure, in particular the interaction between atomic and/or molecular orbitals.[2] Phrased differently, stereoelectronic effects can also be defined as the geometric constraints placed on the ground and/or transition states of molecules that arise from considerations of orbital overlap.[3] Thus, a stereoelectronic effect explains a particular molecular property or reactivity by invoking stabilizing or destabilizing interactions that depend on the relative orientations of electrons (bonding or non-bonding) in space.[4][5]</p>
+
+<p>Founded on a few general principles that govern how orbitals interact, the stereoelectronic effect, along with the steric effect, inductive effect, solvent effect, mesomeric effect, and aromaticity, is an important type of explanation for observed patterns of selectivity, reactivity and stability in organic chemistry. In spite of the relatively straightforward premises, stereoelectronic effects often provide explanations for counterintuitive or surprising observations. As a result, stereoelectronic factors are now commonly considered and exploited in the development of new organic methodology and in the synthesis of complex targets. The scrutiny of stereoelectronic effects has also entered the realms of biochemistry and pharmaceutical chemistry in recent years.</p>
+
+<p>A stereoelectronic effect generally involves a stabilizing donor–acceptor (i.e., filled-empty, 2-electron 2-orbital) interaction. The donor is usually a higher bonding or nonbonding orbital and the acceptor is often a low-lying antibonding orbital as shown in the scheme below. Whenever possible, if this stereoelectronic effect is to be favored, the donor–acceptor orbitals should have (1) a small energy gap and (2) be geometrically well disposed for interaction. In particular, this means that the shapes of the donor and acceptor orbitals (including π or σ symmetry and size of the interacting lobes) must be well-matched for interaction; an antiperiplanar orientation is especially favorable. Some authors require stereoelectronic effects to be stabilizing.[1] However, destabilizing donor-donor (i.e., filled-filled, 4-electron 2-orbital) interactions are occasionally invoked and are also sometimes referred to as stereoelectronic effects, although such effects are difficult to distinguish from generic steric repulsion.[3][6]</p>
+
+<p>Important phenomena in which stereoelectronic effects and orbital alignment may play an important role (or may even be dominant) include the anomeric effect and hyperconjugation.[6]</p>
+
+<p>The term stereoelectronic effect should not be misused to refer to a simple combination of steric and electronic effects.</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_1.gif" alt="" /></p>
+
+<h2 id="contents">Contents</h2>
+
+<p><strong>1	Trend of different orbitals</strong><br />
+<strong>2	Influence on stability</strong><br />
+<strong>3	Influence on conformation</strong><br />
+<strong>3.1	Gauche effect</strong><br />
+<strong>3.2	Special effects of fluorine substituent</strong><br />
+<strong>4	Influence on reaction selectivity</strong><br />
+<strong>4.1	Reductive cyclizations</strong><br />
+<strong>4.2	Hydrogenation</strong><br />
+<strong>5	Influence on thermodynamics</strong><br />
+<strong>5.1	Influence on equilibrium</strong><br />
+<strong>5.2	Influence on resonance structures</strong><br />
+<strong>6	Application in asymmetric Diels–Alder reactions</strong><br />
+<strong>7	Stereoelectronic effect versus steric clash</strong><br />
+<strong>8	References</strong></p>
+
+<h2 id="trend-of-different-orbitals">Trend of different orbitals</h2>
+
+<p>Take the simplest CH2X–CH3 system as an example; the donor orbital is σ(C–H) orbital and the acceptor is σ<em>(C–X). When moving from fluorine to chlorine, then to bromine, the electronegativity of the halogen and the energy level of the σ</em>(C–X) orbitals decreases.[7] Consequently, the general trend of acceptors can be summarized as: π<em>(C=O)&gt;σ</em>(C–Hal)&gt;σ<em>(C–O)&gt;σ</em>(C–N)&gt;σ<em>(C–C), σ</em>(C–H). For donating orbitals, the nonbonding orbitals, or the lone pairs, are generally more effective than bonding orbitals due to the high energy levels. Also, different from acceptors, donor orbitals require less polarized bonds. Thus, the general trends for donor orbitals would be: n(N)&gt;n(O)&gt;σ(C–C), σ(C–H)&gt;σ(C–N)&gt;σ(C–O)&gt;σ(C–S)&gt;σ(C–Hal).[6]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_2.gif" alt="" /></p>
+
+<p>Stereoelectronic effect can be directional in specific cases. The radius of sulfur is much larger than the radius of carbon and oxygen. Thus the differences in C–S bond distances generate a much amplified difference in the two stereoelectronic effects in 1,3-dithiane (σ(C–H) → σ<em>(C–S)) than in 1,3-dioxane(σ(C–H) → σ</em>(C–O)).[7] The differences between C–C and C–S bonds shown below causes a significant difference in the distances between C–S and two C–H bonds. The shorter the difference is, the better the interaction and the stronger the stereoelectronic effect.[7]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_3.gif" alt="" /></p>
+
+<h2 id="influence-on-stability">Influence on stability</h2>
+
+<p>If there is an electropositive substituent (e.g. –SiR3, –SnR3, –HgR, etc.) at the β-position of carbocation, the positive charge could be stabilized which is also due largely to the stereoelectronic effect (illustrated below using –SiR3 as an example). The orientation of the two interacting orbitals can have a significant effect on the stabilization effect (σ(C–Si) → empty p orbital), where antiperiplanar (180°) &gt; perpendicular (90°) &gt; syn (0°).[8]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_4.gif" alt="" /></p>
+
+<h2 id="influence-on-conformation">Influence on conformation</h2>
+
+<h3 id="gauche-effect">Gauche effect</h3>
+
+<p>One structural consequence of acyclic systems due to the stereoelectronic effect is the gauche effect.[9] In 1,2-difluoroethane, despite the steric clash, the preferred conformation is the gauche one because σ(C–H) is a good donor and σ<em>(C–F) is a good acceptor and the stereoelectronic effect (σ(C–H) → σ</em>(C–F)) requires the energy minimum to be gauche instead of anti.[10]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_5.gif" alt="" /></p>
+
+<p>This gauche effect has a profound effect in bio-chemical research. In (2S,4R)-4-hydroxyproline fragment, the gauche interaction favors one the conformer that can bind selectively to the active site of pVHL, a domain in collagen, one of the most abundant animal protein structures and can lead to proteasomal degradation of HIF-α subunit.[11]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_6.gif" alt="" /></p>
+
+<h3 id="special-effects-of-fluorine-substituent">Special effects of fluorine substituent</h3>
+
+<p>Stereoelectronic effects can have a significant influence in pharmaceutical research. Generally, the substitution of hydrogen by fluorine could be regarded as a way to tune both the hydrophobicity and the metabolic stability of a drug candidate. Moreover, it can have a profound influence on conformations, often due to stereoelectronic effects, in addition to normal steric effects resulting from the larger size of the fluorine atom. For instance, the ground state geometries of anisole (methoxybenzene) and (trifluoromethoxy)benzene differ dramatically. In anisole, the methyl group prefers to be coplanar with the phenyl group, while (trifluoromethoxy)benzene favors a geometry in which the [C(aryl)–C(aryl)–O–C(F3)] dihedral angle is around 90°. In other words, the O–CF3 bond is perpendicular to the plane of the phenyl group.[12]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/立体电子效应述图-ZQK.png" alt="" /></p>
+
+<p>Further studies illustrate that even for only one or two hydrogen atoms in a methyl group being replaced by a fluorine atom, the distortion in the structure can also be significant, with the [C(aryl)–C(aryl)–O–C(H2F)] dihedral angle in the energy minimized structure being around 24° and the [C(aryl)–C(aryl)–O–C(HF2)] dihedral angle 33°.[12]</p>
+
+<h2 id="influence-on-reaction-selectivity">Influence on reaction selectivity</h2>
+
+<h3 id="reductive-cyclizations">Reductive cyclizations</h3>
+
+<p>Although the energy difference between coplanar anisole and its isomer is quite large, the rotation between the O–CH3 bond becomes favorable when the electronic properties of methoxy group on aromatic rings need to be altered to stabilize an unusual intermediate or a transition state. In the following reaction, the regioselectivity could be rationalized as the out-of-plane rotation of the O–C bond which changes the methoxy group from an in-plane donor group to an out-of-plane acceptor group.[13]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_8.gif" alt="" /></p>
+
+<p>The intermediate of the above reaction is the di-anion and the stereoelectronic effect that stabilizes this intermediate over the other one is the fact that the anionic charge at the para position could delocalize to the oxygen atom via orbital interaction: π(benzene) → σ*(O–CH3).[13]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_9.gif" alt="" /></p>
+
+<h3 id="hydrogenation">Hydrogenation</h3>
+
+<p>Even remote substituents on the benzene ring can affect the electron density on the aromatic ring and in turn influence the selectivity. In the hydrogenation of ketones using CBS catalysts, the ketone coordinates to the boron atom with the lone pair on the oxygen atom. In the following example, the inductive influence of the substituents can lead to differentiation of the two sp2 lone pairs on the oxygen atom.[14]</p>
+
+<p>The relevant stereoelectronic interaction in the starting material is the nO → σ<em>(Ccarbonyl–Caryl) interaction. The electron-withdrawing substituent on the benzene ring depletes the electron density on the aromatic ring and thus makes the σ</em>(Ccarbonyl–Caryl(nitro)) orbital a better acceptor than σ<em>(Ccarbonyl–Caryl(methoxy)). These two stereoelectronic interactions use different lone pairs on the oxygen atom (the one antiperiplanar to the σ</em> in question for each), leading to lone pairs with different electron densities. In particular, the enhanced depletion of electron density from the lone pair antiperiplanar to the 4-nitrophenyl group leads to weakened ability for that lone pair to coordinate to boron. This in turn results in the lone pair antiperiplanar to the 4-methoxyphenyl binding preferentially to the catalyst, leading to well-defined facial selectivity. Under optimized conditions, the product is formed with excellent levels of enantioselectivity (95% ee).[14]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/500px-CBS-stereoelectronics.png" alt="" /></p>
+
+<h2 id="influence-on-thermodynamics">Influence on thermodynamics</h2>
+
+<h3 id="influence-on-equilibrium">Influence on equilibrium</h3>
+
+<p>The stereoelectronic effect influences the thermodynamics of equilibrium. For example, the following equilibrium could be achieved via a cascade of pericyclic reactions.</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_10.gif" alt="" /></p>
+
+<p>Despite very similar structures, one of the two isomers is strongly favored over the other because of a stereoelectronic effect. Since the σ<em>C-C orbital adjacent to the electron-withdrawing carbonyl group is lower in energy and is therefore a better acceptor than the σ</em>C-C orbital adjacent to the methoxy, the isomer in which the nO(σ) lone pair is able to donate into this lower-energy antibonding orbital will be stabilized (orbital interaction illustrated).[15]</p>
+
+<p>Another example of the preference in the equilibrium within the area of pericyclic reaction is shown below. The stereoelectronic effect that affect the equilibrium is the interaction between the delocalized “banana bonds” and the empty p orbital on the boron atom.[16]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image-Add-3.gif" alt="" /></p>
+
+<h3 id="influence-on-resonance-structures">Influence on resonance structures</h3>
+
+<p>In another case, the stereoelectronic effect can result in an increased contribution of one resonance structure over another, which leads to further consequences in reactivity. For 1,4-benzoquinone monoxime, there are significant differences in the physical properties and reactivities between C2-C3 double bond and C5-C6 double bond. For instance, in the 1H NMR, 3J23 higher than 3J56.[17] The C2-C3 double bond also selectively undergoes Diels–Alder reaction with cyclopentadiene, despite the increased steric hindrance on that side of the molecule.[18] These data illustrate an increased contribution of resonance structure B over structure A. The authors argue that the donation from nN to σ*C4-C3 orbital lengthens the C4–C3 bond (C4 is the carbon bearing the nitrogen substituent), which reduces the p-p overlap between these two atoms. This in turn decreasing the relative importance of structure A which has a double bond between C4 and C3.[19]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_11.gif" alt="" /></p>
+
+<h2 id="application-in-asymmetric-dielsalder-reactions">Application in asymmetric Diels–Alder reactions</h2>
+
+<p>In the asymmetric Diels–Alder reactions, instead of using chiral ligands or chiral auxiliaries to differentiate the side selectivity of the dienolphiles, the differentiation of face selectivity of the dienes (especially for cyclopentadiene derivatives) using stereoelectronic effects have been reported by Woodward since 1955.[20] A systematic research of facial selectivity using substituted cyclopentadiene or permethylcyclopentadiene derivatives have been conducted and the results can be listed as below.[21]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image-Add-4.gif" alt="" /></p>
+
+<p>The stereoelectronic effect affecting the outcome of the facial selectivity of the diene in Diels–Alder reaction is the interaction between the σ(C(sp2)–CH3) (when σ(C(sp2)–X) is a better acceptor than a donor) or σ(C(sp2)–X) (when σ(C(sp2)–X) is a better donor than an acceptor) and the σ* orbital of the forming bond between the diene and the dienophile.[21]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_16.gif" alt="" /></p>
+
+<p>If the two geminal substituents are both aromatic rings with different substituents tuning the electron density, the differentiation of the facial selectivity is also facile where the dienophile approaches to the diene anti to the more electron-rich C–C bond where the stereoelectronic effect in this case is similar to the previous one.[22]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_17.gif" alt="" /></p>
+
+<p>The ring opening of cyclobutene under heating conditions can have two products: inward and outward rotation.</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_18.gif" alt="" /></p>
+
+<p>The inward rotation transition state of the second shown below is relatively favored for acceptor R substituents (e.g. NO2) but is especially disfavored by donor R substituents (e.g. NMe2).[23]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_19.gif" alt="" /></p>
+
+<h2 id="stereoelectronic-effect-versus-steric-clash">Stereoelectronic effect versus steric clash</h2>
+
+<p>Sometimes, stereoelectronic effects can win over extreme steric clash. In a similar cyclobutene ring-opening reaction, the trimethylsilyl group, which is very bulky, still favors the inward rotation. The stereoelectronic effect, which is the interaction shown above when the acceptor orbital is the σ*(Si–CH3), appears to be a more predominant factor in determining the reaction selectivity against the steric hindrance and even wins over the penalty of the disrupted conjugation system of the product due to steric clash.[24]</p>
+
+<p>Furthermore, the acceptor orbitals are not limited to the antibonding orbitals of carbon-heteroatom bonds or the empty orbitals; in the following case, the acceptor orbital is the σ<em>(B–O) orbital. In the six-membered ring transition state, the stereoelectronic interaction is σ(C–X) → σ</em>(B–O).[25]</p>
+
+<p><img src="https://wszqkzqk.github.io/img/Tim_Project_Image_20.gif" alt="" /></p>
+
+<h2 id="references">References</h2>
+
+<p>Alabugin, I. V. Stereoelectronic Effects: the Bridge between Structure and Reactivity. John Wiley &amp; Sons Ltd, Chichester, UK, 2016. http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118906349.html</p>
+
+<p>Cramer, Christopher J. (1996). “Hyperconjugation as it affects conformational analysis”. Journal of Molecular Structure: THEOCHEM. 370 (2–3): 135–146. doi:10.1016/S0166-1280(96)04567-8. ISSN 0166-1280.</p>
+
+<p>Evans, D. A. (2006). Chemistry 206 Lecture Notes. Cambridge, MA: Harvard University (Unpublished). pp. 1–2 (Lecture 1).</p>
+
+<p>Pierre., Deslongchamps (1983). Stereoelectronic effects in organic chemistry (1st ed.). Oxford [Oxfordshire]: Pergamon Press. ISBN 0080261841. OCLC 9412829.</p>
+
+<p>A fully rigorous analysis of stereoelectronic effects would involve the analysis of interactions between symmetry-correct canonical molecular orbitals. However, in practice, many chemists (e.g., Evans, Fleming, Kirby) use a localized molecular orbital model to analyze stereoelectronic effects. Deslongchamps goes so far as to describe stereoelectronic effects as originating from the stereochemical relationship of electron pairs. Orbital interactions invoked in a stereoelectronic effect can generally be ‘translated’ to an equally valid classical valence bond/resonance form picture, though usually involving ‘no-bond’ resonance forms.</p>
+
+<p>Kirby, A. J. (1996). Stereoelectronic Effects. Oxford: Oxford University Press. ISBN 9780198558934.</p>
+
+<p>Alabugin, Igor V.; Zeidan, Tarek A. (2002). “Stereoelectronic Effects and General Trends in Hyperconjugative Acceptor Ability of σ Bonds”. Journal of the American Chemical Society. 124 (12): 3175–3185. doi:10.1021/ja012633z. ISSN 0002-7863. PMID 11902907.</p>
+
+<p>Carey, F. A.; Sundberg, R. J. (2007). Advanced Organic Chemistry, Part A: Structure and Mechanism (5th ed.). New York: Springer. ISBN 978-0387448978.</p>
+
+<p>Hanack, M. (1965). Conformational Theory. New York and London: Academic Press.</p>
+
+<p>Anslyn, E. V.; Dougherty, D. A. (2004). Modern Physical Organic Chemistry. Sausalito, Calif.: University Science Books. ISBN 1891389319.</p>
+
+<p>Fujimori, D.G. (2009). “Hypoxia sensing goes gauche”. Nat. Chem. Biol. 5 (4): 202–203. doi:10.1038/nchembio0409-202. PMID 19295524.</p>
+
+<p>Müller, K.; Faeh, C.; Diederich, F. (2007). “Fluorine in Pharmaceuticals: Looking Beyond Intuition”. Science. 317 (5846): 1881–1886. Bibcode:2007Sci…317.1881M. doi:10.1126/science.1131943. ISSN 0036-8075. PMID 17901324.</p>
+
+<p>Peterson, Paul W.; Shevchenko, Nikolay; Alabugin, Igor V. (2013). ““Stereoelectronic Umpolung”: Converting a p-Donor into a σ-Acceptor via Electron Injection and a Conformational Change”. Organic Letters. 15 (9): 2238–2241. doi:10.1021/ol400813d. ISSN 1523-7060. PMID 23639080.</p>
+
+<p>Corey, E.J.; Helal, Christopher J. (1995). “Novel electronic effects of remote substituents on the oxazaborolidine-catalyzed enantioselective reduction of ketones”. Tetrahedron Letters. 36 (50): 9153–9156. doi:10.1016/0040-4039(95)01961-G. ISSN 0040-4039.</p>
+
+<p>Venkataraman, Hemalatha; Cha, Jin K. (1989). “The scope and mechanism of rearrangement of 4,6-dialkoxy-2-pyrones”. Tetrahedron Letters. 30 (27): 3509–3512. doi:10.1016/S0040-4039(00)99426-7. ISSN 0040-4039.</p>
+
+<p>Gridnev, Ilya D.; Tok, Oleg L.; Gridneva, Natalya A.; Bubnov, Yuri N.; Schreiner, Peter R. (1998). “Synthesis and Dynamic Properties of Cycloheptatrienyl(dipropyl)borane. Equilibrium with 7-Dipropylborylnorcaradiene”. Journal of the American Chemical Society. 120 (5): 1034–1043. doi:10.1021/ja9724699. ISSN 0002-7863.</p>
+
+<p>Norris, R. K.; Sternhell, S. (1969). “2-Substituted and 2,6-disubstituted 1,4-benzoquinone 4-oximes (“p-nitrosophenols”)”. Aust. J. Chem. 22 (5): 935–970. doi:10.1071/CH9690935.</p>
+
+<p>Baldwin, J. E.; Norris, R. K. (1981). “Stereoelectronic control in organic chemistry: addition reactions of some 1,4-benzoquinone 4-(O-methyloximes)”. J. Org. Chem. 46 (4): 697–703. doi:10.1021/jo00317a011.</p>
+
+<p>Perrin, C. L.; Engler, R. E. (1997). “Origin of Apparent Stereoelectronic Effects in Structure and Reactivity of Benzoquinone Monooximes”. J. Org. Chem. 62 (3): 687–692. doi:10.1021/jo961386s. PMID 11671465.</p>
+
+<p>Winstein, S.; Shatavsky, M.; Norton, C.; Woodward, R. B. (1955). “7-Norbornenyl and 7-Norbornyl Cations”. J. Am. Chem. Soc. 77 (15): 4183–4184. doi:10.1021/ja01620a078.</p>
+
+<p>Mehta, Goverdhan; Uma, R. (2000). “Stereoelectronic Control in Diels−Alder Reaction of Dissymmetric 1,3-Dienes”. Accounts of Chemical Research. 33 (5): 278–286. doi:10.1021/ar990123s. ISSN 0001-4842. PMID 10813872.</p>
+
+<p>Halterman, R. L.; McCarthy, B. A.; McEvoy, M. A. (1992). “Stereoelectronic control of facial selectivity in the Diels-Alder cycloaddition of sterically unbiased 5,5-diarylcyclopentadienes”. J. Org. Chem. 57 (21): 5585–5589. doi:10.1021/jo00047a009.</p>
+
+<p>Shindo, M.; Sato, Y.; Shishido, J. (1998). “A highly stereoselective synthesis of tri- and tetrasubstituted olefins via ynolates”. Tetrahedron Lett. 39 (27): 4857–4860. doi:10.1016/s0040-4039(98)00921-6.</p>
+
+<p>Murakami, M.; Hasegawa, M. (2004). “Synthesis and Thermal Ring Opening oftrans-3,4-Disilylcyclobutene”. Angew. Chem. Int. Ed. 43 (37): 4874–4876. doi:10.1002/anie.200460144. PMID 15372640.</p>
+
+<p>Schlapbach, A.; Hoffmann, R. W. (2001). “(E)-α-Sulfonamidocrotylboronates as Reagents for the Stereoselective Homoaldol Synthesis”. J. Org. Chem. 66 (2): 323–328. doi:10.1002/1099-0690(200101)2001:2&lt;323::aid-ejoc323&gt;3.0.co;2-a.</p>
+
+<p>本文采用<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA-3.0</a>协议发布，来自我参与编辑的Wikipedia条目<a href="https://en.wikipedia.org/wiki/Stereoelectronic_effect">Stereoelectronic effect</a>，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在<a href="https://github.com/wszqkzqk/wszqkzqk.github.io">GitHub上的源代码</a>提供Pull request，也欢迎在评论区多多指教。</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/03/16/tan-yang-weng-li-zi/" data-toggle="tooltip" data-placement="top" title="碳氧𬭩离子">
+                        Previous<br>
+                        <span>碳氧𬭩离子</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/03/18/%E5%AF%BC%E5%90%91%E5%9F%BA%E5%9B%A2/" data-toggle="tooltip" data-placement="top" title="导向基团">
+                        Next<br>
+                        <span>导向基团</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: 'e2d184a487a7a3d32aa4',
+                    clientSecret: 'de135a4200fd7e49b4f328a4f13da78af736ed47',
+                    repo: 'wszqkzqk.github.io',
+                    owner: 'wszqkzqk',
+                    admin: ['wszqkzqk'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+        				
+                            
+                				<a href="/tags/#分子轨道理论" title="分子轨道理论" rel="3">
+                                    分子轨道理论
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#有机化学" title="有机化学" rel="6">
+                                    有机化学
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Wikipedia" title="Wikipedia" rel="4">
+                                    Wikipedia
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://www.deepin.org">deepin</a></li>
+                    
+                        <li><a href="https://github.com">GitHub</a></li>
+                    
+                        <li><a href="https://www.mi.com">小米</a></li>
+                    
+                        <li><a href="https://www.wikipedia.org">Wikipedia</a></li>
+                    
+                        <li><a href="https://linux.org">Linux.org</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/wszqkzqk">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 星外之神 Blog 2020
+                    <br>
+                    Theme on <a href="https://github.com/wszqkzqk/wszqkzqk.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=wszqkzqk&repo=wszqkzqk.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'bee5952215150b26a9fe25d43fdc1116';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="天下难事，必作于易；天下大事，必作于细">
+    <meta name="keywords"  content="wszqkzqk, wszqkzqk Blog, 星外之神的博客, wszqkzqk">
+    <meta name="theme-color" content="#000000">
+    
+    <title>星外之神的博客 | wszqkzqk Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://wszqkzqk.github.io/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">星外之神 Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Page Header -->
+<header class="intro-header" style="background-image: url('/img/bg2.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>星外之神 Blog</h1>
+                    <!--<hr class="small">-->
+                    <span class="subheading">天下难事，必作于易；天下大事，必作于细</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+	<div class="row">
+        
+
+<!-- USE SIDEBAR -->
+    <!-- PostList Container -->
+    		<div class="
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                postlist-container
+            ">
+    			
+<div class="post-preview">
+    <a href="/2020/03/26/%E4%BA%92%E5%8F%98%E5%BC%82%E6%9E%84%E5%80%BE%E5%90%91%E4%B8%93%E9%A2%98%E5%BD%92%E7%BA%B3/">
+        <h2 class="post-title">
+            互变异构热力学倾向专题归纳
+        </h2>
+        
+        <h3 class="post-subtitle">
+            个人专题总结
+        </h3>
+        
+        <div class="post-content-preview">
+            概述
+
+互变异构是某些有机化合物的结构在两种官能团异构体间产生平衡互相转换的现象。一般都涉及氢原子（或质子）的转移，以及单键向双键的转变。本文旨在对互变异构的热力学平衡倾向的一般规律做一个总结。
+
+常见的互变异构举例
+
+
+
+
+
+可见，一般的互变异构类型可以分为质子转移和价互变。
+
+倾向分析
+
+价互变
+
+对于以周环反应为基础的价互变的热力学倾向较为明显，一般是由键能（如形成羰基、形成sigma...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 星外之神 on March 26, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/03/19/%E4%B8%8D%E5%AF%B9%E7%A7%B0%E8%B6%85%E5%85%B1%E8%BD%AD%E6%95%88%E5%BA%94%E5%AF%B9%E9%80%89%E6%8B%A9%E6%80%A7%E7%9A%84%E5%BD%B1%E5%93%8D/">
+        <h2 class="post-title">
+            不对称超共轭效应对选择性的影响
+        </h2>
+        
+        <h3 class="post-subtitle">
+            特色问题解析
+        </h3>
+        
+        <div class="post-content-preview">
+            不对称超共轭效应对选择性的影响
+
+问题：解释以下反应的区域选择性
+
+
+
+
+
+不难看出，这两个问题都应该考虑超共轭效应的影响，为了研究此处的立体选择性，需要分析超共轭对HOMO的不对称极化作用，即：参与超共轭的sigma键合电子(或负超共轭中的sigma*空轨道)被固定于共轭体系的一侧，对共轭体系上下两侧造成的影响并不相同，由此即会导致共轭体系两侧反应性不同。
+
+超共轭效应的强弱的判断
+
+例1...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 星外之神 on March 19, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/03/18/%E5%AF%BC%E5%90%91%E5%9F%BA%E5%9B%A2/">
+        <h2 class="post-title">
+            导向基团
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Wikipedia条目推荐
+        </h3>
+        
+        <div class="post-content-preview">
+            导向基团
+
+在有机化学中，导向基团（DG）是指可通过与试剂相互作用来促进反应有选择性地发生的取代基，该术语通常用于烃的CH键活化。导向基团可以作为“配位基团“（即“内部配体”）将金属催化剂引导至特定的C–H键附近。 例如， 苯乙酮中的酮基是Murai反应的导向基团。 [1]
+
+
+
+Murai反应与邻位定向金属化反应 ，该反应通常应用于取代的芳环的锂化 [2] 。
+
+
+
+可脱除性导向基团
+
+由...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 星外之神 on March 18, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/03/18/Stereoelectronic_effect/">
+        <h2 class="post-title">
+            立体电子效应（英语）
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Wikipedia条目推荐
+        </h3>
+        
+        <div class="post-content-preview">
+            Stereoelectronic effect
+
+注：这是博主在英文维基上发现的一个内容较为充实的条目，虽然博主已经在原条目中提交了一些文字修改和述图修正，但囿于个人能力有限，其中仍然有一些小错误。欢迎读者到原条目处（链接在文末）提供修改方案，也可以在中文维基中提供对应条目的翻译扩充
+
+In chemistry, primarily organic and computational che...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 星外之神 on March 18, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/03/16/tan-yang-weng-li-zi/">
+        <h2 class="post-title">
+            碳氧𬭩离子
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Wikipedia条目推荐
+        </h3>
+        
+        <div class="post-content-preview">
+            碳氧𬭩离子
+
+
+
+碳氧𬭩离子（或氧碳𬭩离子）是一类在中心sp2-杂化的碳原子上连有氧取代基，并且能够在中心碳原子和氧原子之间通过Π键离域分散所携带的正电荷的化学物种。 [1] 碳氧𬭩离子可以用两个共振极限结构表示，一个是碳正离子形式，另一个是满足8电子规则且氧带形式电荷的氧𬭩形式。 真实结构为共振杂化体，介于两者之间。碳氧𬭩离子与酮或酯等中性羰基化合物相比，碳正离子形式的共振式对共振杂化体的...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 星外之神 on March 16, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/03/16/My-contribution-to-Wikipedia/">
+        <h2 class="post-title">
+            我在Wikipedia上参与贡献的条目
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Wikipedia条目推荐
+        </h3>
+        
+        <div class="post-content-preview">
+            我创建的条目：
+
+碳氧𬭩离子
+
+导向基团
+
+我参与贡献的条目：
+
+立体电子效应
+
+氢氧化钠
+
+Stereoelectronic effect
+
+矿物列表
+
+氯化氢
+
+三氟化氮
+
+本文采用CC-BY-SA-3.0协议发布
+
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 星外之神 on March 16, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/03/16/HMO-ji-suan-jie-guo-zhan-shi/">
+        <h2 class="post-title">
+            我的HMO计算
+        </h2>
+        
+        <h3 class="post-subtitle">
+            典型简单分子的分子轨道HMO计算结果
+        </h3>
+        
+        <div class="post-content-preview">
+            这是我个人使用软件对某些典型的简单分子的分子轨道作的HMO计算结果,以PDF展示(点击即可下载)：
+
+注：
+
+1.以下结果仅供参考
+
+2.某些物质没有按照系统命名法命名，文件名仅起辨识作用
+
+氰基胍异构体1（由于技术限制，请自行减去反键电子）
+
+氰基胍异构体2（由于技术限制，请自行减去反键电子）
+
+1-硝基萘
+
+1-萘胺
+
+2,4-二氟-1-硝基苯
+
+20面体硼杂拟球芳香性
+
+2-萘胺
+
+2...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 星外之神 on March 16, 2020
+    </p>
+</div>
+<hr>
+
+
+<!-- Pager -->
+
+
+    		</div>
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+            ">
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                            
+                        
+                            
+                                <a href="/tags/#分子轨道理论" title="分子轨道理论" rel="3">
+                                    分子轨道理论
+                                </a>
+                            
+                        
+                            
+                        
+                            
+                                <a href="/tags/#有机化学" title="有机化学" rel="6">
+                                    有机化学
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#Wikipedia" title="Wikipedia" rel="4">
+                                    Wikipedia
+                                </a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Short About -->
+                <section class="visible-md visible-lg">
+                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
+                    <div class="short-about">
+                        
+                            <a href="/about">
+                                <img src="/img/wszqkzqk.png"/>
+                            </a>
+                        
+                        
+                            <p>见小曰明，守柔曰强</p>
+                        
+                        <!-- SNS Link -->
+                        <ul class="list-inline">
+                            
+                            <!-- add jianshu add target = "_blank" to <a> by BY -->
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://github.com/wszqkzqk">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                        </ul>
+                        
+                            <p>✉️ 1726509538@qq.com</p>
+                        
+                    </div>
+                </section>
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://www.deepin.org">deepin</a></li>
+                    
+                        <li><a href="https://github.com">GitHub</a></li>
+                    
+                        <li><a href="https://www.mi.com">小米</a></li>
+                    
+                        <li><a href="https://www.wikipedia.org">Wikipedia</a></li>
+                    
+                        <li><a href="https://linux.org">Linux.org</a></li>
+                    
+                </ul>
+                
+    		</div>
+        
+	</div>
+</div>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/wszqkzqk">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 星外之神 Blog 2020
+                    <br>
+                    Theme on <a href="https://github.com/wszqkzqk/wszqkzqk.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=wszqkzqk&repo=wszqkzqk.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'bee5952215150b26a9fe25d43fdc1116';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
