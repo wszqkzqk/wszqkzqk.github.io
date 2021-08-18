@@ -193,6 +193,28 @@ KI由对immucillin-H的滴定确定，并且测定它对PNP最初速率vo，并�
 
 来自于酶过渡态分析的immucillin-H设计是开发具有药理学活性的高亲和力的酶抑制剂的强有力的方法。
 
+## 参见
+
+科廷–哈米特定律
+
+## 参考文献
+
+Laidler, K.; King, C., Development of transition-state theory. The Journal of physical chemistry 1983, 87, (15), 2657
+
+Laidler, K., A lifetime of transition-state theory. The chemical intelligencer 1998, 4, (3), 39
+
+Eric V. Anslyn, Dennis A. Doughtery., Transition State Theory and Related Topics. In Modern Physical Organic Chemistry University Science Books: 2006; pp 365–373
+
+Schramm, VL., Enzymatic Transition States and Transition State Analog Design. Annual Review of Biochemistry 1998, 67, 693-720
+
+Schramm, V.L., Enzymatic Transition State Theory and Transition State Analogue Design. Journal of Biological Chemistry 2007, 282, (39), 28297-28300
+
+Radzicka, A.; Woldenden, R., Transition State and Multisubstrate$Analog Inhibitors. Methods in Enzymology 1995, 249, 284-312
+
+Cleland, W.W., Isotope Effects: Determination of Enzyme Transition State Structure. Methods in Enzymology 1995, 249, 341-373
+
+本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，来自我参与编辑的Wikipedia条目[过渡态理论](https://zh.wikipedia.org/wiki/%E8%BF%87%E6%B8%A1%E6%80%81%E7%90%86%E8%AE%BA)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
+
 ## 注释
 
 [^1]: International Union of Pure and Applied Chemistry (IUPAC). Transition State Theory. http://goldbook.iupac.org/T06470.html (accessed November 23, 2008)
@@ -222,25 +244,3 @@ KI由对immucillin-H的滴定确定，并且测定它对PNP最初速率vo，并�
 [^13]: Ringia, E.A.T.; Tyler, P.C.; Evans, G.B.; Furneaux, R.H.; Murkin, A.S.; Schramm, V.L., Transition State Analogue Discrimination by Related Purine Nucleoside Phosphorylases. Journal of American Chemical Society 2006, 128 (22), 7126-7127.
  
 [^14]: Miles RW, Tyler PC, Furneaux RH, Bagdassarian CK, Schramm VL. One-third-the-sites transition-state inhibitors for purine nucleoside phosphorylase. Biochemistry. 1998, 37, (24), 8615-21
-
-## 参见
-
-科廷–哈米特定律
-
-## 参考文献
-
-Laidler, K.; King, C., Development of transition-state theory. The Journal of physical chemistry 1983, 87, (15), 2657
-
-Laidler, K., A lifetime of transition-state theory. The chemical intelligencer 1998, 4, (3), 39
-
-Eric V. Anslyn, Dennis A. Doughtery., Transition State Theory and Related Topics. In Modern Physical Organic Chemistry University Science Books: 2006; pp 365–373
-
-Schramm, VL., Enzymatic Transition States and Transition State Analog Design. Annual Review of Biochemistry 1998, 67, 693-720
-
-Schramm, V.L., Enzymatic Transition State Theory and Transition State Analogue Design. Journal of Biological Chemistry 2007, 282, (39), 28297-28300
-
-Radzicka, A.; Woldenden, R., Transition State and Multisubstrate$Analog Inhibitors. Methods in Enzymology 1995, 249, 284-312
-
-Cleland, W.W., Isotope Effects: Determination of Enzyme Transition State Structure. Methods in Enzymology 1995, 249, 341-373
-
-本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，来自我参与编辑的Wikipedia条目[过渡态理论](https://zh.wikipedia.org/wiki/%E8%BF%87%E6%B8%A1%E6%80%81%E7%90%86%E8%AE%BA)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。

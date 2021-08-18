@@ -151,8 +151,9 @@ Furthermore, the acceptor orbitals are not limited to the antibonding orbitals o
 
 ![](/img/Tim_Project_Image_20.gif)
 
-## References
+本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，来自我参与编辑的Wikipedia条目[Stereoelectronic effect](https://en.wikipedia.org/wiki/Stereoelectronic_effect)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
 
+## References
 [^1]: Alabugin, I. V. Stereoelectronic Effects: the Bridge between Structure and Reactivity. John Wiley & Sons Ltd, Chichester, UK, 2016. http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118906349.html
  
 [^2]: Cramer, Christopher J. (1996). "Hyperconjugation as it affects conformational analysis". Journal of Molecular Structure: THEOCHEM. 370 (2–3): 135–146. doi:10.1016/S0166-1280(96)04567-8. ISSN 0166-1280.
@@ -202,6 +203,3 @@ Furthermore, the acceptor orbitals are not limited to the antibonding orbitals o
 [^24]: Murakami, M.; Hasegawa, M. (2004). "Synthesis and Thermal Ring Opening oftrans-3,4-Disilylcyclobutene". Angew. Chem. Int. Ed. 43 (37): 4874–4876. doi:10.1002/anie.200460144. PMID 15372640.
  
 [^25]: Schlapbach, A.; Hoffmann, R. W. (2001). "(E)-α-Sulfonamidocrotylboronates as Reagents for the Stereoselective Homoaldol Synthesis". J. Org. Chem. 66 (2): 323–328. doi:10.1002/1099-0690(200101)2001:2<323::aid-ejoc323>3.0.co;2-a.
-
-
-本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，来自我参与编辑的Wikipedia条目[Stereoelectronic effect](https://en.wikipedia.org/wiki/Stereoelectronic_effect)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
