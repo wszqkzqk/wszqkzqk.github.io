@@ -99,22 +99,22 @@ service-worker: true
 # Friends
 friends: [
     {
-        title: "deepin",
-        href: "https://www.deepin.org"
-    },{
-        title: "GitHub",
-        href: "https://github.com"
-    },{
         title: "Wikipedia",
         href: "https://www.wikipedia.org"
-    },{
-        title: "KDE",
-        href: "https://kde.org/"
     },{
         title: "Linux.org",
         href: "https://linux.org"
     },{
+        title: "KDE",
+        href: "https://kde.org/"
+    },{
+        title: "GitHub",
+        href: "https://github.com"
+    },{
         title: "Manjaro",
         href: "https://www.manjaro.org"
+    },{
+        title: "deepin",
+        href: "https://www.deepin.org"
     }
 ]
