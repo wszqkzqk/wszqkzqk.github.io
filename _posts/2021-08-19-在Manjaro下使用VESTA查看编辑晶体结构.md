@@ -17,7 +17,7 @@ VESTA是一款3D可视化程序，可用于查看或编辑结构模型、体积�
 与Crystal Maker不同的是，VESTA是一款跨平台软件，除了Windows外，还支持Mac与Linux:
 ![](/img/vesta-os-support.png)
 
-## 在Arch Linux/Manjaro上安装
+## 在Manjaro上安装
 
 ### 背景
 官方只给出了.bz2格式的压缩包和.rpm安装包，并没有适配Arch系的发行版。
@@ -61,7 +61,7 @@ VESTA在安装时并没有绑定文件后缀名默认打开方式，打开相关
 打开晶体文件后的示例：
 ![](/img/vesta-YInMnBlue.png)
 
-以后即可愉快地使用VESTA看晶体结构了！
+以后即可使用VESTA愉快地看晶体结构了！
 
 ## 转载授权声明
 本文采用[署名-非商业性使用-相同方式共享 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)协议发布
