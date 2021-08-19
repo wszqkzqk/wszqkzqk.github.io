@@ -61,5 +61,7 @@ VESTA在安装时并没有绑定文件后缀名默认打开方式，打开相关
 打开晶体文件后的示例：
 ![](/img/vesta-YInMnBlue.png)
 
+以后即可愉快地使用VESTA看晶体结构了！
+
 ## 转载授权声明
 本文采用[署名-非商业性使用-相同方式共享 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)协议发布
