@@ -13,6 +13,7 @@ tags:         Linux Manjaro 系统配置 化学 结构化学 无机化学
 
 ## 简介
 VESTA是一款3D可视化程序，可用于查看或编辑结构模型、体积数据（如电子/核密度）和晶体结构。可以替代Crystal Maker使用。VESTA是一款免费的闭源软件。
+![](/img/vesta.png)
 
 与Crystal Maker不同的是，VESTA是一款跨平台软件，除了Windows外，还支持Mac与Linux:
 ![](/img/vesta-os-support.png)
