@@ -1,6 +1,6 @@
 ---
 layout:       post
-title:        在Manjaro下使用VESTA查看编辑晶体结构
+title:        在Manjaro下使用VESTA查看或编辑晶体结构
 subtitle:     软件推荐
 date:         2021-08-17
 author:       星外之神
@@ -12,7 +12,7 @@ tags:         Linux Manjaro 系统配置 化学 结构化学 无机化学
 <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=28302231&auto=1&height=66"></iframe>
 
 ## 简介
-VESTA是一款3D可视化程序，可用于查看编辑结构模型、体积数据（如电子/核密度）和晶体结构。可以替代Crystal Maker使用。VESTA是一款免费的闭源软件。
+VESTA是一款3D可视化程序，可用于查看或编辑结构模型、体积数据（如电子/核密度）和晶体结构。可以替代Crystal Maker使用。VESTA是一款免费的闭源软件。
 
 与Crystal Maker不同的是，VESTA是一款跨平台软件，除了Windows外，还支持Mac与Linux:
 ![](/img/vesta-os-support.png)
