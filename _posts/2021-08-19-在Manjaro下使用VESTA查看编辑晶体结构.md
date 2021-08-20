@@ -30,7 +30,7 @@ VESTA是一款3D可视化程序，可用于查看或编辑结构模型、体积�
 准备安装的时候，我突然发现AUR上已经有了[vesta](https://aur.archlinux.org/packages/vesta/)软件包  
 然而，这个软件包有依赖错误，而且是从官方的.bz2软件包移植的，与我的来源并不相同
 
-于是我将我写的PKGBUILD推送到了AUR（已得到原作者官方允许）：[vesta-rpm](https://aur.archlinux.org/packages/vesta-rpm/)，与原有的[vesta](https://aur.archlinux.org/packages/vesta/)软件包共存
+于是我将我写的PKGBUILD推送到了AUR（已得到原作者官方认可）：[vesta-rpm](https://aur.archlinux.org/packages/vesta-rpm/)，与原有的[vesta](https://aur.archlinux.org/packages/vesta/)软件包共存
 ![](/img/vesta-rpm-aur.png)
 
 ### 安装
