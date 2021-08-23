@@ -48,16 +48,29 @@ makepkg -si
 ![](/img/vesta-rpm-install.png)
 
 ### 使用
+#### 运行软件
 直接运行VESTA的.desktop快捷方式或终端运行`VESTA`即可打开软件
 ![](/img/vesta-application.png)
-
-VESTA在安装时并没有绑定文件后缀名默认打开方式，打开相关文件时，需要手动选择：
+#### 打开文件
+##### 手动选择
+VESTA在安装时并没有绑定文件后缀名默认打开方式，打开相关文件时，可以手动选择：
 
 可以在软件内操作：  
 `File`-`Open`-选择所需文件即可
 
 也可在文件打开时的打开方式中选择VESTA：
 ![](/img/vesta-打开方式.png)
+##### 添加MIME
+如果认为每次都手动选择很麻烦，可以添加MIME，以后对应格式的文件即可用VESTA直接打开
+
+以KDE为例，找到`设置-应用程序-文件关联`，点击“添加”：
+![](/img/vesta-mime.png)
+设置对应的类型名后点击确定
+![](/img/vesta-mime-2.png)
+然后找到刚才添加的新文件类型，分别添加“文件名模式”（即对应的后缀名）并设置“程序优先顺序”（添加VESTA并设置在首位）
+![](/img/vesta-mime-3.png)
+
+完成设置后即可在双击文件时自动采用VESTA打开
 
 打开晶体文件后的示例：
 ![](/img/vesta-YInMnBlue.png)
