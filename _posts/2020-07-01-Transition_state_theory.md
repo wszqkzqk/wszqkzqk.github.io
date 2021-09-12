@@ -13,7 +13,7 @@ tags:       Wikipedia 化学 有机化学  物理化学
 
 # 过渡态理论
 
-过渡状态理论 （Transition state theory，TST）解释基元化学反应的反应速率。该理论假设在反应物和活化的过渡态络合物之间有一种特殊的化学平衡（准平衡）。[^1]
+过渡状态理论 （Transition state theory，TST）解释基元化学反应的反应速率。该理论假设在反应物和活化的过渡态络合物之间有一种特殊的化学平衡（准平衡）。[^<1>]
 
 TST最初用于定性地解释化学反应是怎么发生的。TST就其计算绝对反应速率常数的本来目的来说不算十分成功。因为，绝对反应速率常数的计算需要精确的知道势能面。[^（2）]但是，如果一个特定的反应的速率常数可以用经验的方法测定的话，该理论能够成功地计算了标准活化焓（Δ<sup>‡</sup>H⦵），标准活化熵（Δ<sup>‡</sup>S⦵），和标准活化吉布斯自由能（Δ<sup>‡</sup>G⦵）。（<sup>‡</sup>所表示的是在过渡状态时所感兴趣的值。）
 
@@ -217,7 +217,7 @@ Cleland, W.W., Isotope Effects: Determination of Enzyme Transition State Structu
 
 ## 注释
 
-[^1]: International Union of Pure and Applied Chemistry (IUPAC). Transition State Theory. http://goldbook.iupac.org/T06470.html (accessed November 23, 2008)
+[^<1>]: International Union of Pure and Applied Chemistry (IUPAC). Transition State Theory. http://goldbook.iupac.org/T06470.html (accessed November 23, 2008)
  
 [^（2）]: Truhlar, D. G.; Garrett, B. C.; Klippenstein, S. J., Current Status of Transition-State Theory. The Journal of physical chemistry 1996, 100, (31), 12771-12800
  
