@@ -13,13 +13,13 @@ tags:       Wikipedia 化学 有机化学  物理化学
 
 # 过渡态理论
 
-过渡状态理论 （Transition state theory，TST）解释基元化学反应的反应速率。该理论假设在反应物和活化的过渡态络合物之间有一种特殊的化学平衡（准平衡）。[^1]
+过渡状态理论 （Transition state theory，TST）解释基元化学反应的反应速率。该理论假设在反应物和活化的过渡态络合物之间有一种特殊的化学平衡（准平衡）。[^(1)]
 
-TST最初用于定性地解释化学反应是怎么发生的。TST就其计算绝对反应速率常数的本来目的来说不算十分成功。因为，绝对反应速率常数的计算需要精确的知道势能面。[^2]但是，如果一个特定的反应的速率常数可以用经验的方法测定的话，该理论能够成功地计算了标准活化焓（Δ<sup>‡</sup>H⦵），标准活化熵（Δ<sup>‡</sup>S⦵），和标准活化吉布斯自由能（Δ<sup>‡</sup>G⦵）。（<sup>‡</sup>所表示的是在过渡状态时所感兴趣的值。）
+TST最初用于定性地解释化学反应是怎么发生的。TST就其计算绝对反应速率常数的本来目的来说不算十分成功。因为，绝对反应速率常数的计算需要精确的知道势能面。[^(2)]但是，如果一个特定的反应的速率常数可以用经验的方法测定的话，该理论能够成功地计算了标准活化焓（Δ<sup>‡</sup>H⦵），标准活化熵（Δ<sup>‡</sup>S⦵），和标准活化吉布斯自由能（Δ<sup>‡</sup>G⦵）。（<sup>‡</sup>所表示的是在过渡状态时所感兴趣的值。）
 
-这一理论在1935年由普林斯顿大学的亨利·艾林和曼彻斯特大学的Meredith Gwynne Evans和迈克尔·波拉尼同时提出的。[^3][^4]TST也叫“活化络合物理论”、“绝对速率理论”和“绝对反应速率理论”[^5]。
+这一理论在1935年由普林斯顿大学的亨利·艾林和曼彻斯特大学的Meredith Gwynne Evans和迈克尔·波拉尼同时提出的。[^(3)][^(4)]TST也叫“活化络合物理论”、“绝对速率理论”和“绝对反应速率理论”[^(5)]。
 
-在TST理论出现之前，人们广泛地使用阿瑞尼士速率定律确定反应能垒的能量。阿伦尼乌斯方程是从经验推导而来，忽视了对机理的考虑。比如，没有考虑到从反应物到产物的转化是涉及到一个还是几个反应中间体。[^6]因而，需要进一步发展，以了解和这一定律相关联的两个参数，指前因子（the pre-exponential factor ）（A）和活化能（Ea）。产生了艾林方程的TST理论成功地解决了这两个问题。然而，从阿伦尼乌斯方程的发表（1889）到从TST推导出艾林方程（1935）整整经过了46年。在这46年里，许多科学家和研究人员对该理论的发展做出了显著的贡献。  
+在TST理论出现之前，人们广泛地使用阿瑞尼士速率定律确定反应能垒的能量。阿伦尼乌斯方程是从经验推导而来，忽视了对机理的考虑。比如，没有考虑到从反应物到产物的转化是涉及到一个还是几个反应中间体。[^(6)]因而，需要进一步发展，以了解和这一定律相关联的两个参数，指前因子（the pre-exponential factor ）（A）和活化能（Ea）。产生了艾林方程的TST理论成功地解决了这两个问题。然而，从阿伦尼乌斯方程的发表（1889）到从TST推导出艾林方程（1935）整整经过了46年。在这46年里，许多科学家和研究人员对该理论的发展做出了显著的贡献。  
 ![溴甲烷和氢氧根阴离子之间的双分子亲核取代(SN2) 反应](/img/过渡态理论述图1.png)
 
 ## 理论
@@ -134,9 +134,9 @@ TST的速率常数表达式可以用于计算Δ<sup>‡</sup>G<sup>⦵</sup>、�
 
 总的说来，TST已经给研究者提供了一个了解化学反应是如何发生的的概念基础。尽管该理论被广泛地接收，但它依然存在着局限性。 例如，该理论假设过渡结构走向势能面的下坡，它将导致一种产物分子（或一组产物），然而，在一些反应中，过渡态可以以某种方式跨过势能面，导致用过渡态理论一种未曾预料的产物的选择。（这种反应的一个例子是由Anslyn and Dougherty提供的重氮二环戊烷类的热分解反应）。
 
-过渡态理论也假定原子核的行为符合经典力学理论的假设[^8]。即假设只有能量足够的原子或分子碰撞才能形成过渡态，否则，不会发反应。然而，根据量子力学，对于任何有限能量的能垒，都有一些粒子仍然能够穿过能垒的可能性。结合到化学反应这就意味着甚至那些不具备足够能量穿过势能面的分子间的碰撞也有机会发生反应。[^9]当这对于高活化能的反应这种效果常常被人们忽略的同时，它对相对低能垒的反应则成为一种重要的现象，因为穿过活化能垒的几率随着活化能的降低而升高。
+过渡态理论也假定原子核的行为符合经典力学理论的假设[^(8)]。即假设只有能量足够的原子或分子碰撞才能形成过渡态，否则，不会发反应。然而，根据量子力学，对于任何有限能量的能垒，都有一些粒子仍然能够穿过能垒的可能性。结合到化学反应这就意味着甚至那些不具备足够能量穿过势能面的分子间的碰撞也有机会发生反应。[^(9)]当这对于高活化能的反应这种效果常常被人们忽略的同时，它对相对低能垒的反应则成为一种重要的现象，因为穿过活化能垒的几率随着活化能的降低而升高。
 
-过渡态理论不适用于高温反应。该理论假设反应体系通过势能面上最低的马鞍点。回想一下，最高的马鞍点叫做过渡态。当该描述与相对低温发生的反应一直时，然而，在高温下分子普遍具有较高能量的振动模式：它们的运动成为更复杂碰撞可能导致远离由过渡态能量所预期的过渡态。这个对过渡态理论的偏离甚至在双原子氢和氢自由基的交换反应中可以观察到。[^10]
+过渡态理论不适用于高温反应。该理论假设反应体系通过势能面上最低的马鞍点。回想一下，最高的马鞍点叫做过渡态。当该描述与相对低温发生的反应一直时，然而，在高温下分子普遍具有较高能量的振动模式：它们的运动成为更复杂碰撞可能导致远离由过渡态能量所预期的过渡态。这个对过渡态理论的偏离甚至在双原子氢和氢自由基的交换反应中可以观察到。[^(10)]
 
 由于存在这些局限性，有人建议了几种对过渡态理论的修正。下面将做一个简要的讨论。
 
@@ -158,7 +158,7 @@ TST的速率常数表达式可以用于计算Δ<sup>‡</sup>G<sup>⦵</sup>、�
 
 ## TST的应用: 酶反应
 
-同样反应条件下，同一个化学反应，有没有酶催化其反应速率相差巨大。每个催化事件至少包括三步。所有的催化步骤都发生在几毫秒中，毫秒数量级的基元反应速率，是酶促反应的特点。根据过渡状态理论，催化循环的最小部分花在最重要一步，即过渡态。绝对反应速率理论定义过渡态的建议为：在反应坐标中的一个独特的、决定反应速率的物种。此后不久，莱纳斯·鲍林（Linus Pauling）指出，酶的强有力的催化作用可以用非常紧密地结合于过渡态物种来解释。[^11]因为反应速率于在过渡态络合物中的反应物部分成正比，因此，他建议酶作用是增加反应性物种的浓度。[^12]因为，酶典型地可以将反应速率增加至非催化反应的1010-1015倍，并且，Michaelis 络合物对分解反应常数的范围是：10−3-10−6 M。因而，他们提出将过渡态络合物与10−14-10−23 M范围的分解反应常数相结合。
+同样反应条件下，同一个化学反应，有没有酶催化其反应速率相差巨大。每个催化事件至少包括三步。所有的催化步骤都发生在几毫秒中，毫秒数量级的基元反应速率，是酶促反应的特点。根据过渡状态理论，催化循环的最小部分花在最重要一步，即过渡态。绝对反应速率理论定义过渡态的建议为：在反应坐标中的一个独特的、决定反应速率的物种。此后不久，莱纳斯·鲍林（Linus Pauling）指出，酶的强有力的催化作用可以用非常紧密地结合于过渡态物种来解释。[^(11)]因为反应速率于在过渡态络合物中的反应物部分成正比，因此，他建议酶作用是增加反应性物种的浓度。[^(12)]因为，酶典型地可以将反应速率增加至非催化反应的1010-1015倍，并且，Michaelis 络合物对分解反应常数的范围是：10−3-10−6 M。因而，他们提出将过渡态络合物与10−14-10−23 M范围的分解反应常数相结合。
 
 该建议被在Chapel Hill的被卡罗林纳大学的Wolfenden极其同所完善。他们假设由酶造成的速率增高正比于酶对相对于Michaelis络合物的过渡态结构的亲和力。随着底物从Michaelis络合物朝着产物进展，在底物的电子分布方面发生酶诱导的化学过程。
 
@@ -172,11 +172,11 @@ TST的速率常数表达式可以用于计算Δ<sup>‡</sup>G<sup>⦵</sup>、�
 
 ### 嘌呤核苷磷酸化酶
 
-嘌呤核苷磷酸化酶（Purine nucleoside phosphorylase，PNP）是一个与分解代谢和核苷酸再循环有关的酶。它也是开发治疗白血病和自体免疫性疾病患者中T-细胞凋亡的新治疗药物的目标。[^13]次黄嘌呤核苷、鸟嘌呤核苷、和2’-脱氧鸟嘌呤核苷是该酶的主要底物（图3显示一个代表性的PNP催化次黄嘌呤核苷底物的反应。）
+嘌呤核苷磷酸化酶（Purine nucleoside phosphorylase，PNP）是一个与分解代谢和核苷酸再循环有关的酶。它也是开发治疗白血病和自体免疫性疾病患者中T-细胞凋亡的新治疗药物的目标。[^(13)]次黄嘌呤核苷、鸟嘌呤核苷、和2’-脱氧鸟嘌呤核苷是该酶的主要底物（图3显示一个代表性的PNP催化次黄嘌呤核苷底物的反应。）
 
 ![嘌呤核苷磷酸化酶与肌苷底物的反应](/img/嘌呤核苷磷酸化酶与肌苷底物的反应.png)
 
-阿尔伯特·爱因斯坦医学院（Albert Einstein College of Medicine）的 Vern Schramm及其同事已经确定了PNP的过渡态结构并且用它巧妙地开发了紧密结合过渡态的一系列类似物用以抑制这个酶。[^14]PNP的Immucillin-H抑制剂非常像公认的该过渡态结构（见图4），该抑制剂具有几处变化以使得该化合物比稍现即逝的过渡态物种更稳定。
+阿尔伯特·爱因斯坦医学院（Albert Einstein College of Medicine）的 Vern Schramm及其同事已经确定了PNP的过渡态结构并且用它巧妙地开发了紧密结合过渡态的一系列类似物用以抑制这个酶。[^(14)]PNP的Immucillin-H抑制剂非常像公认的该过渡态结构（见图4），该抑制剂具有几处变化以使得该化合物比稍现即逝的过渡态物种更稳定。
 
 ![](/img/PNP过渡态和Immucillin-H过渡态类似物.png)
 
@@ -217,30 +217,30 @@ Cleland, W.W., Isotope Effects: Determination of Enzyme Transition State Structu
 
 ## 注释
 
-[^1]: International Union of Pure and Applied Chemistry (IUPAC). Transition State Theory. http://goldbook.iupac.org/T06470.html (accessed November 23, 2008)
+[^(1)]: International Union of Pure and Applied Chemistry (IUPAC). Transition State Theory. http://goldbook.iupac.org/T06470.html (accessed November 23, 2008)
  
-[^2]: Truhlar, D. G.; Garrett, B. C.; Klippenstein, S. J., Current Status of Transition-State Theory. The Journal of physical chemistry 1996, 100, (31), 12771-12800
+[^(2)]: Truhlar, D. G.; Garrett, B. C.; Klippenstein, S. J., Current Status of Transition-State Theory. The Journal of physical chemistry 1996, 100, (31), 12771-12800
  
-[^3]: Laidler, K.; King, C, Development of transition-state theory. The Journal of physical chemistry 1983, 87, (15), 2657
+[^(3)]: Laidler, K.; King, C, Development of transition-state theory. The Journal of physical chemistry 1983, 87, (15), 2657
   
-[^4]: Laidler, K.; King, C, A lifetime of transition-state theory. The chemical intelligencer 1998, 4, (3), 39
+[^(4)]: Laidler, K.; King, C, A lifetime of transition-state theory. The chemical intelligencer 1998, 4, (3), 39
  
-[^5]: Laidler, K. J., Theories of Chemical Reaction Rates (McGraw-Hill Series in Advanced Chemistry). 1969; p 234 pp.
+[^(5)]: Laidler, K. J., Theories of Chemical Reaction Rates (McGraw-Hill Series in Advanced Chemistry). 1969; p 234 pp.
  
-[^6]: Eric V. Anslyn and Dennis A. Dougherty. Transition State Theory and Related Topics. In Modern Physical Organic Chemistry University Science Books: 2006; pp 365-373
+[^(6)]: Eric V. Anslyn and Dennis A. Dougherty. Transition State Theory and Related Topics. In Modern Physical Organic Chemistry University Science Books: 2006; pp 365-373
  
-[^7]: Laidler, K. J., Theories of Chemical Reaction Rates (McGraw-Hill Series in Advanced Chemistry). 1969; p 234 pp
+[^(7)]: Laidler, K. J., Theories of Chemical Reaction Rates (McGraw-Hill Series in Advanced Chemistry). 1969; p 234 pp
  
-[^8]: 艾林, H.; Journal of Chemical Physics, 1935, 3, 107-115
+[^(8)]: 艾林, H.; Journal of Chemical Physics, 1935, 3, 107-115
  
-[^9]: Masel, R. Principles of Adsorption and Reactions on Solid Surfaces; Wiley, New York, 1996
+[^(9)]: Masel, R. Principles of Adsorption and Reactions on Solid Surfaces; Wiley, New York, 1996
  
-[^10]: Pineda, J. R.; Schwartz, S. D.; Philosophical Transactions of the Royal Society B 2006, 361, 1433-1438
+[^(10)]: Pineda, J. R.; Schwartz, S. D.; Philosophical Transactions of the Royal Society B 2006, 361, 1433-1438
  
-[^11]: Pauling, L.; American Scienist 1948, 36, 50-58.
+[^(11)]: Pauling, L.; American Scienist 1948, 36, 50-58.
  
-[^12]: Radzicka, A., Wolfenden, R. Science 1995, 267, 90-93.
+[^(12)]: Radzicka, A., Wolfenden, R. Science 1995, 267, 90-93.
  
-[^13]: Ringia, E.A.T.; Tyler, P.C.; Evans, G.B.; Furneaux, R.H.; Murkin, A.S.; Schramm, V.L., Transition State Analogue Discrimination by Related Purine Nucleoside Phosphorylases. Journal of American Chemical Society 2006, 128 (22), 7126-7127.
+[^(13)]: Ringia, E.A.T.; Tyler, P.C.; Evans, G.B.; Furneaux, R.H.; Murkin, A.S.; Schramm, V.L., Transition State Analogue Discrimination by Related Purine Nucleoside Phosphorylases. Journal of American Chemical Society 2006, 128 (22), 7126-7127.
  
-[^14]: Miles RW, Tyler PC, Furneaux RH, Bagdassarian CK, Schramm VL. One-third-the-sites transition-state inhibitors for purine nucleoside phosphorylase. Biochemistry. 1998, 37, (24), 8615-21
+[^(14)]: Miles RW, Tyler PC, Furneaux RH, Bagdassarian CK, Schramm VL. One-third-the-sites transition-state inhibitors for purine nucleoside phosphorylase. Biochemistry. 1998, 37, (24), 8615-21

@@ -15,7 +15,7 @@ tags:       Wikipedia 化学 活性中间体 有机化学
 
 ![碳氧𬭩离子的一般结构](/img/post-220px-Oxocarbenium-canonical_forms.png)
 
-碳氧𬭩离子（或氧碳𬭩离子）是一类在中心sp2-杂化的碳原子上连有氧取代基，并且能够在中心碳原子和氧原子之间通过Π键离域分散所携带的正电荷的化学物种。 [^1] 碳氧𬭩离子可以用两个共振极限结构表示，一个是碳正离子形式，另一个是满足8电子规则且氧带形式电荷的氧𬭩形式。 真实结构为共振杂化体，介于两者之间。碳氧𬭩离子与酮或酯等中性羰基化合物相比，碳正离子形式的共振式对共振杂化体的结构的贡献更大。碳氧𬭩离子是糖苷键水解中常见的反应性中间体，并且是糖基化合成的常用策略。 这些离子作为多种化学反应中的活性中间体，已在有机合成中得到广泛应用，且已成功用于几种天然产物的全合成中。 此外，它们通常在自然界中以酶催化下的生物化学合成和碳水化合物水解的机理出现。 花青素是天然的黄酮染料，是稳定的氧碳𬭩化合物。 花色苷是造成多种常见花（例如紫罗兰）和食用植物（例如茄子和蓝莓）显现颜色的原因。
+碳氧𬭩离子（或氧碳𬭩离子）是一类在中心sp2-杂化的碳原子上连有氧取代基，并且能够在中心碳原子和氧原子之间通过Π键离域分散所携带的正电荷的化学物种。 [^(1)] 碳氧𬭩离子可以用两个共振极限结构表示，一个是碳正离子形式，另一个是满足8电子规则且氧带形式电荷的氧𬭩形式。 真实结构为共振杂化体，介于两者之间。碳氧𬭩离子与酮或酯等中性羰基化合物相比，碳正离子形式的共振式对共振杂化体的结构的贡献更大。碳氧𬭩离子是糖苷键水解中常见的反应性中间体，并且是糖基化合成的常用策略。 这些离子作为多种化学反应中的活性中间体，已在有机合成中得到广泛应用，且已成功用于几种天然产物的全合成中。 此外，它们通常在自然界中以酶催化下的生物化学合成和碳水化合物水解的机理出现。 花青素是天然的黄酮染料，是稳定的氧碳𬭩化合物。 花色苷是造成多种常见花（例如紫罗兰）和食用植物（例如茄子和蓝莓）显现颜色的原因。
 
 
 ## 目录 #
@@ -50,42 +50,42 @@ tags:       Wikipedia 化学 活性中间体 有机化学
 ### 五元环
 
 ![假想的五元氧碳𬭩离子过渡态](/img/post-5-membered.png)
-五元环反应所涉及的立体化学可以通过信封形过渡态模型来预测。 亲核试剂有利于从信封的“内部”或右侧图的顶部加成。从信封内部加成将产生有利的交错式构象，而从信封外加成则将产生能量不利的重叠式构象 。 [^2]
+五元环反应所涉及的立体化学可以通过信封形过渡态模型来预测。 亲核试剂有利于从信封的“内部”或右侧图的顶部加成。从信封内部加成将产生有利的交错式构象，而从信封外加成则将产生能量不利的重叠式构象 。 [^(2)]
 
 ![](/img/post-450px-Woerpel_1999.png)
 ### 六元环
 
 ![六元碳氧𬭩离子环的过渡态模型](/img/post-450px-6-membered.png)
-Woods等人于1992年提出了六元碳氧𬭩环的过渡态模型。 [^3] 确定六元环的亲核加成的立体化学的一般策略与五元环类似。 此分析依据的一种假设是：该环与环己烯具有相同的构象，其中三个碳和一个氧在一个平面内，而另外两个碳原子一个在该平面上方，另一个在下方（请参阅右图）。 依据环上存在的取代基，可以确定最低的能量构象，确定时要考虑空间和立体电子效应。 确定了这种构象后，就可以考虑亲核加成的立体化学。 加成将通过低能量的椅式过渡状态进行。可以在下面看到此类反应的示例。 该示例还说明了负电取代基可能会有较明显的的立体电子效应，通常这会改变最优构象的结构，使得反应的选择性发生变化。 [^4]
+Woods等人于1992年提出了六元碳氧𬭩环的过渡态模型。 [^(3)] 确定六元环的亲核加成的立体化学的一般策略与五元环类似。 此分析依据的一种假设是：该环与环己烯具有相同的构象，其中三个碳和一个氧在一个平面内，而另外两个碳原子一个在该平面上方，另一个在下方（请参阅右图）。 依据环上存在的取代基，可以确定最低的能量构象，确定时要考虑空间和立体电子效应。 确定了这种构象后，就可以考虑亲核加成的立体化学。 加成将通过低能量的椅式过渡状态进行。可以在下面看到此类反应的示例。 该示例还说明了负电取代基可能会有较明显的的立体电子效应，通常这会改变最优构象的结构，使得反应的选择性发生变化。 [^(4)]
 
 ![](/img/post-500px-6-Membered_Oxocarbenium.png)
 ### 立体电子效应
-在不包含氧原子的烯烃环中，任何大的取代基都倾向于位于赤道位置，以使空间效应最小化。 但是在含碳氧𬭩离子的环中， 负电性取代基倾向于优先占据轴向或准轴向位置。 当负电性原子处于轴向位置时，其电子密度可以通过立体电子效应分散给环中带正电的氧原子。 [^5] 这种相互作用稳定了轴向构象。表现出这种现象的取代基的实例主要有 羟基 ， 醚和卤素。 在确定氧代碳𬭩离子的亲核加成反应中能量最低的构象时，必须考虑立体电子效应 。 [^4] [^6]
+在不包含氧原子的烯烃环中，任何大的取代基都倾向于位于赤道位置，以使空间效应最小化。 但是在含碳氧𬭩离子的环中， 负电性取代基倾向于优先占据轴向或准轴向位置。 当负电性原子处于轴向位置时，其电子密度可以通过立体电子效应分散给环中带正电的氧原子。 [^(5)] 这种相互作用稳定了轴向构象。表现出这种现象的取代基的实例主要有 羟基 ， 醚和卤素。 在确定氧代碳𬭩离子的亲核加成反应中能量最低的构象时，必须考虑立体电子效应 。 [^(4)] [^(6)]
 
 ![](/img/post-200px-Axialoxo.png)
 ### 环加成
-在有机合成中，乙烯基氧碳𬭩离子（右侧结构）可广泛用于环加成反应中。 它们通常在Diels-Alder反应中用作亲二烯体 。 通常将吸电子酮添加到该亲二烯体中以提高反应速率， [^7]在反应过程中，这些酮经常转化为乙烯基氧碳𬭩离子[^8]。目前尚不清楚该机理是否必须经历碳氧𬭩离子中间体，但Roush和他的同事在以下所示的环化反应中证明了该反应确实生成了氧碳𬭩离子中间体。 该反应可观察到的两种产物只有在氧碳𬭩环作为中间体存在时才能形成。已经有人报道氧碳𬭩离子中间体参与的[^9][4+3], [2+2], [3+2]和[5+2]环加成。
+在有机合成中，乙烯基氧碳𬭩离子（右侧结构）可广泛用于环加成反应中。 它们通常在Diels-Alder反应中用作亲二烯体 。 通常将吸电子酮添加到该亲二烯体中以提高反应速率， [^(7)]在反应过程中，这些酮经常转化为乙烯基氧碳𬭩离子[^(8)]。目前尚不清楚该机理是否必须经历碳氧𬭩离子中间体，但Roush和他的同事在以下所示的环化反应中证明了该反应确实生成了氧碳𬭩离子中间体。 该反应可观察到的两种产物只有在氧碳𬭩环作为中间体存在时才能形成。已经有人报道氧碳𬭩离子中间体参与的[^(9)][4+3], [2+2], [3+2]和[5+2]环加成。
 
 ![](/img/post-500px-Oxointermediate.png)
 ### 羟醛反应
-已有利用手性氧碳𬭩离子与乙烯醇衍生等价物进行高度非对映选择性和对映选择性的反应 [^10] 氧碳𬭩离子在反应中用作亲电试剂 。 当甲基替换为更大的取代基时，反应的非对映选择性增加。
+已有利用手性氧碳𬭩离子与乙烯醇衍生等价物进行高度非对映选择性和对映选择性的反应 [^(10)] 氧碳𬭩离子在反应中用作亲电试剂 。 当甲基替换为更大的取代基时，反应的非对映选择性增加。
 
 ![](/img/post-500px-Oxoaldol.png)
 ### 全合成实例
-氧碳𬭩离子已在多种场合中用于全合成。(+)-clavosolide的主要亚基是通过还原六元氧碳𬭩环合成的。 如所预测的，所有大的取代基都位于赤道位置，并且该转化经历了椅式过渡状态。 [^11]
+氧碳𬭩离子已在多种场合中用于全合成。(+)-clavosolide的主要亚基是通过还原六元氧碳𬭩环合成的。 如所预测的，所有大的取代基都位于赤道位置，并且该转化经历了椅式过渡状态。 [^(11)]
 
 ![](/img/post-450px-Clavosolide.png)
-第二个例子可见于 (−)-neopeltolide合成的关键步骤，该步骤使用另一种六元氧碳𬭩环发生还原反应生成非对映选择性加氢产物。 [^12]
+第二个例子可见于 (−)-neopeltolide合成的关键步骤，该步骤使用另一种六元氧碳𬭩环发生还原反应生成非对映选择性加氢产物。 [^(12)]
 
 ![](/img/post-520px-Neopeltolide.png)
 ## 生物学应用 #
-在生物系统中，氧碳𬭩离子最常见于碳水化合物的反应过程中。 由于糖存在于核酸中，它的化学性质对核酸在生物体内的功能起到了重要作用。 糖除了在核酸中发挥生理功能外，还是生物体的结构组分，可以多种形式存在，例如储能分子、细胞信号分子、蛋白质修饰，并在免疫系统 、 受精作用 、预防发病机制 、血液凝结和发育中发挥关键作用。 [^13] 生物化学过程中糖化学性质丰富，许多糖参与的反应经历氧碳𬭩离子中间体。 本节概述了利用氧碳𬭩离子的几种重要的生物反应。
+在生物系统中，氧碳𬭩离子最常见于碳水化合物的反应过程中。 由于糖存在于核酸中，它的化学性质对核酸在生物体内的功能起到了重要作用。 糖除了在核酸中发挥生理功能外，还是生物体的结构组分，可以多种形式存在，例如储能分子、细胞信号分子、蛋白质修饰，并在免疫系统 、 受精作用 、预防发病机制 、血液凝结和发育中发挥关键作用。 [^(13)] 生物化学过程中糖化学性质丰富，许多糖参与的反应经历氧碳𬭩离子中间体。 本节概述了利用氧碳𬭩离子的几种重要的生物反应。
 
 ### 核苷酸生物合成
-酶催化下核苷酸的分子内环化可产生几种重要的生物分子。 这些环化通常通过氧碳𬭩中间体进行。 该反应的一个例子是环ADP核糖的环化。 [^14]
+酶催化下核苷酸的分子内环化可产生几种重要的生物分子。 这些环化通常通过氧碳𬭩中间体进行。 该反应的一个例子是环ADP核糖的环化。 [^(14)]
 
 ### 糖苷酶
-糖苷酶是一种催化糖苷键断裂的酶，它能使底物糖分解产生两个较小的糖分子 。 这个过程对动物体内糖原等储能物质的利用以及植食生物进行纤维素的分解具有重要意义。 通常，酶的活性位点上的天冬氨酸或谷氨酸残基可以催化糖苷键的水解。 这些酶的机制涉及氧碳𬭩离子中间体，其一般实例如下所示。 [^15]
+糖苷酶是一种催化糖苷键断裂的酶，它能使底物糖分解产生两个较小的糖分子 。 这个过程对动物体内糖原等储能物质的利用以及植食生物进行纤维素的分解具有重要意义。 通常，酶的活性位点上的天冬氨酸或谷氨酸残基可以催化糖苷键的水解。 这些酶的机制涉及氧碳𬭩离子中间体，其一般实例如下所示。 [^(15)]
 
 ![](/img/post-500px-Sugarhydrolysis.png)
 ## 参见 #
@@ -96,33 +96,33 @@ Woods等人于1992年提出了六元碳氧𬭩环的过渡态模型。 [^3] 确�
 本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，来自我创建的Wikipedia条目[碳氧𬭩离子](https://zh.wikipedia.org/wiki/%E7%A2%B3%E6%B0%A7%E9%8E%93%E7%A6%BB%E5%AD%90)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
 
 ## 参考文献 #
-[^1]: （英文）国际纯粹与应用化学联合会．"carbenium ion"．《化学术语总目录》在线版．
+[^(1)]: （英文）国际纯粹与应用化学联合会．"carbenium ion"．《化学术语总目录》在线版．
 
-[^2]: Larsen, C. H.; Ridgway, B. H.; Shaw, J. T.; Woerpel, K. A., A Stereoelectronic Model to Explain the Highly Stereoselective Reactions of Nucleophiles with Five-Membered-Ring Oxocarbenium Ions, Journal of the American Chemical Society, 1999, 121 (51): 12208–12209, doi:10.1021/ja993349z
+[^(2)]: Larsen, C. H.; Ridgway, B. H.; Shaw, J. T.; Woerpel, K. A., A Stereoelectronic Model to Explain the Highly Stereoselective Reactions of Nucleophiles with Five-Membered-Ring Oxocarbenium Ions, Journal of the American Chemical Society, 1999, 121 (51): 12208–12209, doi:10.1021/ja993349z
 
-[^3]: Woods, R. J.; Andrews, C. W.; Bowen, J. P., Molecular mechanical investigations of the properties of oxocarbenium ions. 2. Application to glycoside hydrolysis, Journal of the American Chemical Society, 1992, 114 (3): 859–864, doi:10.1021/ja00029a008
+[^(3)]: Woods, R. J.; Andrews, C. W.; Bowen, J. P., Molecular mechanical investigations of the properties of oxocarbenium ions. 2. Application to glycoside hydrolysis, Journal of the American Chemical Society, 1992, 114 (3): 859–864, doi:10.1021/ja00029a008
 
-[^4]: Romero, J. A. C.; Tabacco, S. A.; Woerpel, K. A., Stereochemical Reversal of Nucleophilic Substitution Reactions Depending upon Substituent: Reactions of Heteroatom-Substituted Six-Membered-Ring Oxocarbenium Ions through Pseudoaxial Conformers, Journal of the American Chemical Society, 1999, 122: 168–169, doi:10.1021/ja993366o
+[^(4)]: Romero, J. A. C.; Tabacco, S. A.; Woerpel, K. A., Stereochemical Reversal of Nucleophilic Substitution Reactions Depending upon Substituent: Reactions of Heteroatom-Substituted Six-Membered-Ring Oxocarbenium Ions through Pseudoaxial Conformers, Journal of the American Chemical Society, 1999, 122: 168–169, doi:10.1021/ja993366o
 
-[^5]: Miljkovic, M. i.; Yeagley, D.; Deslongchamps, P.; Dory, Y. L., Experimental and Theoretical Evidence of Through-Space Electrostatic Stabilization of the Incipient Oxocarbenium Ion by an Axially Oriented Electronegative Substituent During Glycopyranoside Acetolysis, The Journal of Organic Chemistry, 1997, 62 (22): 7597–7604, doi:10.1021/jo970677d
+[^(5)]: Miljkovic, M. i.; Yeagley, D.; Deslongchamps, P.; Dory, Y. L., Experimental and Theoretical Evidence of Through-Space Electrostatic Stabilization of the Incipient Oxocarbenium Ion by an Axially Oriented Electronegative Substituent During Glycopyranoside Acetolysis, The Journal of Organic Chemistry, 1997, 62 (22): 7597–7604, doi:10.1021/jo970677d
 
-[^6]: Hansen, Thomas; Lebedel, Ludivine; Remmerswaal, Wouter A.; van der Vorm, Stefan; Wander, Dennis P. A.; Somers, Mark; Overkleeft, Herman S.; Filippov, Dmitri V.; Désiré, Jérôme. Defining the SN1 Side of Glycosylation Reactions: Stereoselectivity of Glycopyranosyl Cations. ACS Central Science. 2019-04-18, 5 (5): 781–788. ISSN 2374-7943. doi:10.1021/acscentsci.9b00042.
+[^(6)]: Hansen, Thomas; Lebedel, Ludivine; Remmerswaal, Wouter A.; van der Vorm, Stefan; Wander, Dennis P. A.; Somers, Mark; Overkleeft, Herman S.; Filippov, Dmitri V.; Désiré, Jérôme. Defining the SN1 Side of Glycosylation Reactions: Stereoselectivity of Glycopyranosyl Cations. ACS Central Science. 2019-04-18, 5 (5): 781–788. ISSN 2374-7943. doi:10.1021/acscentsci.9b00042.
 
-[^7]: Vollhardt; Shore. Organic Chemistry. New York, NY: W. H. Freeman and Co. 2009.
+[^(7)]: Vollhardt; Shore. Organic Chemistry. New York, NY: W. H. Freeman and Co. 2009.
 
-[^8]: Harmata, M.; Rashatasakhon, P., Cycloaddition reactions of vinyl oxocarbenium ions, Tetrahedron, 2003, 59 (14): 2371–2395, doi:10.1016/s0040-4020(03)00253-9
+[^(8)]: Harmata, M.; Rashatasakhon, P., Cycloaddition reactions of vinyl oxocarbenium ions, Tetrahedron, 2003, 59 (14): 2371–2395, doi:10.1016/s0040-4020(03)00253-9
 
-[^9]: Roush, M.; Gillis, P.; Essenfeld, A., Hydrofluoric acid catalyzed intramolecular Diels–Alder reactions, Journal of Organic Chemistry, 1984, 49 (24): 4674–4682, doi:10.1021/jo00198a018
+[^(9)]: Roush, M.; Gillis, P.; Essenfeld, A., Hydrofluoric acid catalyzed intramolecular Diels–Alder reactions, Journal of Organic Chemistry, 1984, 49 (24): 4674–4682, doi:10.1021/jo00198a018
 
-[^10]: Kanwar, S.; Trehan, S., Acetate aldol reactions of chiral oxocarbenium ions, Tetrahedron Letters, 2005, 46 (8): 1329–1332, doi:10.1016/j.tetlet.2004.12.116
+[^(10)]: Kanwar, S.; Trehan, S., Acetate aldol reactions of chiral oxocarbenium ions, Tetrahedron Letters, 2005, 46 (8): 1329–1332, doi:10.1016/j.tetlet.2004.12.116
 
-[^11]: Carrick, J. D.; Jennings, M. P., An Efficient Formal Synthesis of (−)-Clavosolide a Featuring a "Mismatched" Stereoselective Oxocarbenium Reduction, Organic Letters, 2009, 11 (3): 769–772, doi:10.1021/ol8028302
+[^(11)]: Carrick, J. D.; Jennings, M. P., An Efficient Formal Synthesis of (−)-Clavosolide a Featuring a "Mismatched" Stereoselective Oxocarbenium Reduction, Organic Letters, 2009, 11 (3): 769–772, doi:10.1021/ol8028302
 
-[^12]: Martinez-Solorio, D.; Jennings, M. P., Formal Synthesis of (−)-Neopeltolide Featuring a Highly Stereoselective Oxocarbenium Formation/Reduction Sequence, The Journal of Organic Chemistry, 2010, 75 (12): 4095–4104, doi:10.1021/jo100443h
+[^(12)]: Martinez-Solorio, D.; Jennings, M. P., Formal Synthesis of (−)-Neopeltolide Featuring a Highly Stereoselective Oxocarbenium Formation/Reduction Sequence, The Journal of Organic Chemistry, 2010, 75 (12): 4095–4104, doi:10.1021/jo100443h
 
-[^13]: Maton, Anthea; Jean Hopkins; Charles William McLaughlin; Susan Johnson; Maryanna Quon Warner; David LaHart; Jill D. Wright. Human Biology and Health. Englewood Cliffs, New Jersey, USA: Prentice Hall. 1993: 52–59. ISBN 0-13-981176-1.
+[^(13)]: Maton, Anthea; Jean Hopkins; Charles William McLaughlin; Susan Johnson; Maryanna Quon Warner; David LaHart; Jill D. Wright. Human Biology and Health. Englewood Cliffs, New Jersey, USA: Prentice Hall. 1993: 52–59. ISBN 0-13-981176-1.
 
-[^14]: Muller-Steffner, H. M.; Augustin, A.; Schuber, F., Mechanism of Cyclization of Pyridine Nucleotides by Bovine Spleen NAD+ Glycohydrolase, Journal of Biological Chemistry, 1996, 271 (39): 23967–23972, PMID 8798630, doi:10.1074/jbc.271.39.23967
+[^(14)]: Muller-Steffner, H. M.; Augustin, A.; Schuber, F., Mechanism of Cyclization of Pyridine Nucleotides by Bovine Spleen NAD+ Glycohydrolase, Journal of Biological Chemistry, 1996, 271 (39): 23967–23972, PMID 8798630, doi:10.1074/jbc.271.39.23967
 
-[^15]: Zechel, D.L.; Withers, S.G. Glycosidase Mechanisms: Anatomy of a Finely Tuned Catalyst. Accounts of Chemical Research. 2000, 33 (1): 11–18. ISSN 0001-4842. PMID 10639071. doi:10.1021/ar970172.
+[^(15)]: Zechel, D.L.; Withers, S.G. Glycosidase Mechanisms: Anatomy of a Finely Tuned Catalyst. Accounts of Chemical Research. 2000, 33 (1): 11–18. ISSN 0001-4842. PMID 10639071. doi:10.1021/ar970172.
 
