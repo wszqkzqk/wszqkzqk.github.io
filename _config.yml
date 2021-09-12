@@ -47,7 +47,7 @@ gems: [jekyll-paginate]
 # Markdown settings
 # replace redcarpet to kramdown,
 # although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
-# document: http://jekyllrb.com/docs/configuration/#kramdown
+# document: http://jekyllrb.com/docs/configuration/markdown/#kramdown
 markdown: kramdown
 highlighter: rouge
 kramdown:
