@@ -4,7 +4,7 @@ title:        在Manjaro下使用VESTA查看或编辑晶体结构
 subtitle:     软件推荐
 date:         2021-08-17
 author:       星外之神
-header-img:   img/crystal-bg.png
+header-img:   img/vesta-bg.png
 catalog:      true
 tags:         Linux Manjaro 系统配置 化学 结构化学 无机化学
 --- 
