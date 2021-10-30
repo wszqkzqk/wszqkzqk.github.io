@@ -120,5 +120,8 @@ friends: [
     },{
         title: "deepin",
         href: "https://www.deepin.org"
+    },{
+        title: "竹林里有冰的博客",
+        href: "https://blog.zhullyb.top/"
     }
 ]
