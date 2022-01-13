@@ -11,13 +11,21 @@ tags:       Wikipedia
 
 <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=1317145490&auto=1&height=66"></iframe>
 
-**我创建的条目：**
+## 我创建的条目
 
 [碳氧𬭩离子](https://zh.wikipedia.org/wiki/%E7%A2%B3%E6%B0%A7%E9%8E%93%E7%A6%BB%E5%AD%90)
 
 [导向基团](https://zh.wikipedia.org/wiki/%E5%AF%BC%E5%90%91%E5%9F%BA%E5%9B%A2)
 
-**我参与贡献的条目：**
+[Blum-Ittah_氮丙啶合成](https://zh.wikipedia.org/wiki/Blum-Ittah_%E6%B0%AE%E4%B8%99%E5%95%B6%E5%90%88%E6%88%90)
+
+[巴顿脱羧反应](https://zh.wikipedia.org/wiki/%E5%B7%B4%E9%A1%BF%E8%84%B1%E7%BE%A7%E5%8F%8D%E5%BA%94)
+
+[尿素-过氧化氢加合物](https://zh.wikipedia.org/wiki/%E5%B0%BF%E7%B4%A0-%E8%BF%87%E6%B0%A7%E5%8C%96%E6%B0%A2%E5%8A%A0%E5%90%88%E7%89%A9)
+
+[四氟化硫氟化法](https://zh.wikipedia.org/wiki/%E5%9B%9B%E6%B0%9F%E5%8C%96%E7%A1%AB%E6%B0%9F%E5%8C%96%E6%B3%95)
+
+## 我参与贡献的条目
 
 [立体电子效应](https://zh.wikipedia.org/wiki/%E7%AB%8B%E4%BD%93%E7%94%B5%E5%AD%90%E6%95%88%E5%BA%94)
 
