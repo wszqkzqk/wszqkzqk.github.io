@@ -17,7 +17,7 @@ tags:       Wikipedia
 
 [导向基团](https://zh.wikipedia.org/wiki/%E5%AF%BC%E5%90%91%E5%9F%BA%E5%9B%A2)
 
-[Blum-Ittah_氮丙啶合成](https://zh.wikipedia.org/wiki/Blum-Ittah_%E6%B0%AE%E4%B8%99%E5%95%B6%E5%90%88%E6%88%90)
+[Blum-Ittah 氮丙啶合成](https://zh.wikipedia.org/wiki/Blum-Ittah_%E6%B0%AE%E4%B8%99%E5%95%B6%E5%90%88%E6%88%90)
 
 [巴顿脱羧反应](https://zh.wikipedia.org/wiki/%E5%B7%B4%E9%A1%BF%E8%84%B1%E7%BE%A7%E5%8F%8D%E5%BA%94)
 
