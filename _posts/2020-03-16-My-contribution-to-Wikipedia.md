@@ -25,6 +25,8 @@ tags:       Wikipedia
 
 [四氟化硫氟化法](https://zh.wikipedia.org/wiki/%E5%9B%9B%E6%B0%9F%E5%8C%96%E7%A1%AB%E6%B0%9F%E5%8C%96%E6%B3%95)
 
+[硫脲有机催化](https://zh.wikipedia.org/wiki/%E7%A1%AB%E8%84%B2%E6%9C%89%E6%9C%BA%E5%82%AC%E5%8C%96)
+
 ## 我参与贡献的条目
 
 [立体电子效应](https://zh.wikipedia.org/wiki/%E7%AB%8B%E4%BD%93%E7%94%B5%E5%AD%90%E6%95%88%E5%BA%94)
