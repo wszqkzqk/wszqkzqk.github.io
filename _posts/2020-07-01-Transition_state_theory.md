@@ -195,7 +195,7 @@ KI由对immucillin-H的滴定确定，并且测定它对PNP最初速率v<sub>o</
 
 ## 参见
 
-[科廷–哈米特定律](https://wszqkzqk.github.io/2020/07/01/Curtin-Hammett_principle)
+[科廷–哈米特定律](/2020/07/01/Curtin-Hammett_principle)
 
 ## 参考文献
 
