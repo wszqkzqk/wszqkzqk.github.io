@@ -9,7 +9,7 @@ catalog:    true
 tags:       python
 --- 
 
-
+**本文中的代码均采用[GPL v3](https://www.gnu.org/licenses/gpl-3.0.html)协议发布**
 
 ## 前言
 
@@ -54,10 +54,7 @@ def arccosh(x):
     return acosh(x)
 def arctanh(x):
     return atanh(x)
-print('''       积分器 <一个简单的数值积分工具>
-    Copyright (C) 2021-2022 星外之神 <wszqkzqk@qq.com>
-
-注意：三角函数请先化成正弦、余弦、正切及相应的反三角函数（现已支持双曲三角函数及对应的反三角函数）
+print('''注意：三角函数请先化成正弦、余弦、正切及相应的反三角函数（现已支持双曲三角函数及对应的反三角函数）
      请务必使用半角符号；圆周率请用"pi"表示；自然对数的底数请用"e"表示
      请用"*""/"表示乘除，"**"表示乘方，"abs"表示绝对值，"ln"或"log"表示自然对数，"lg"表示常用对数，"log(m, n)"表示m对于底数n的对数
 请输入被积函数（用x表示自变量）：''')   # 预备信息
@@ -223,7 +220,7 @@ print(out)
 
 |[![#~Linux-integ-single-multi.webp](/img/Linux-integ-single-multi.webp)](/img/Linux-integ-single-multi.webp)|
 |----|
-|Linux下单进程与多进程程序效率对比：在100 0000次分割的高计算量下，多进程程序效率是单进程程序的7.5倍|
+|Linux下单进程与多进程程序效率对比：在100,0000次分割的高计算量下，多进程程序效率是单进程程序的7.5倍|
 
 但是在Windows下会出现以下情况：
 
@@ -231,4 +228,135 @@ print(out)
 |----|
 |  Windows平台下各个子进程从头执行程序，并非只执行目标函数  |
 
-如上图所示，Windows下
+经过查证，出现该问题的原因是Windows和Linux(POSIX)的子进程实现方式不同，Windows下是`spawn`而POSIX中是`fork`，前者相比于后者对代码有更严格的要求，对于`spawn`方式，需要将不在子进程中执行的代码用`if __name__ == '__main__':`保护起来，使其只能在主进程中执行
+
+同时`spawn`的子进程没有保留主进程中的全局变量，因此所有变量都需要通过参数传递给进程函数
+
+### 问题修复后的情况
+
+#### 代码
+
+修复问题后，以下代码在Windows下得以正常运行：
+
+``` python
+#!/usr/bin/env python3
+
+from math import *
+def ln(x):
+    return log(x)
+def lg(x):
+    return log(x, 10)
+def arcsin(x):
+    return asin(x)
+def arccos(x):
+    return acos(x)
+def arctan(x):
+    return atan(x)
+def arcsinh(x):
+    return asinh(x)
+def arccosh(x):
+    return acosh(x)
+def arctanh(x):
+    return atanh(x)
+if __name__ == '__main__':
+    from platform import system
+    if system() == 'Windows':
+        print('检测到您在Windows平台下，Windows下多进程初始化耗时较久，当计算量过小时无法发挥性能优势')
+    from time import time
+    from os import cpu_count
+    n = cpu_count() # 默认为设备的逻辑核心数
+
+    from multiprocessing import Pool
+    print('''       多进程积分器 <一个简单的多进程数值积分工具>
+    Copyright (C) 2021-2022 星外之神 <wszqkzqk@qq.com>
+
+注意：三角函数请先化成正弦、余弦、正切及相应的反三角函数（现已支持双曲三角函数及对应的反三角函数）
+    请务必使用半角符号；圆周率请用"pi"表示；自然对数的底数请用"e"表示
+    请用"*""/"表示乘除，"**"表示乘方，"abs"表示绝对值，"ln"或"log"表示自然对数，"lg"表示常用对数，"log(m, n)"表示m对于底数n的对数
+请输入被积函数（用x表示自变量）：''')
+    fx = input()
+    print('请输入积分的下限：')
+    start = eval(input())
+    print('请输入积分的上限：')
+    end = eval(input())
+    print('请输入分割数（建议为CPU逻辑核心数的正整数倍；由于浮点数值运算具有不精确性，分割数过大反而可能增大误差）：')
+    block = int(input())
+    calcstart = time()
+    length = (end - start) / block
+    halflength = length / 2
+    tile = int(block / n)
+
+# 用于积分的函数
+
+def integration(blockstart, blockend, start, length, halflength, fx):
+    out = 0
+    x = start + blockstart*length
+    temp2 = eval(fx)    # 初始化x与temp2，以便后续让temp0调用上一次的temp2的值，可以减小运算量
+
+    for i in range(blockstart + 1, blockend + 1):
+        temp0 = temp2
+        x += halflength
+        temp1 = eval(fx)
+        x = start + i*length    # 浮点运算中，乘积误差比累加小，此处用乘法虽然降低了速度但是提高了准确度
+
+        temp2 = eval(fx)
+        temp = (temp0 + 4*temp1 + temp2) / 6
+        out += temp*length
+    return out
+
+if __name__ == '__main__':
+
+    # 进行分段，以便分进程计算
+
+    tilestart = 0
+    obj = []
+    for i in range(n - 1):
+        tileend = tilestart + tile
+        obj.append((tilestart, tileend, start, length, halflength, fx))
+        tilestart = tileend
+    obj.append((tilestart, block, start, length, halflength, fx))
+
+    # 分进程计算
+
+    with Pool(n) as pool:
+        out = sum(pool.starmap(integration, obj))
+
+    # 显示输出
+
+    print('\n完成！计算耗时：{}s'.format(time() - calcstart))
+    print('数值积分运算结果为：')
+    print(out)
+```
+
+#### 性能状况
+
+经过多次运行与比较，我发现该程序在Linux下的运行效率明显高于Windows（积分分割数为100,0000时Windows耗时`2.8s`，而Linux仅耗时`1.3s`），且Windows平台下空载（输入常函数，积分区间为0，分割数为1）耗时竟高达`0.6s`（Linux空载只需要`0.03s`）
+
+我认为造成Windows下程序运行较慢的原因有两个：
+- Windows下进程资源消耗较Linux(POSIX)大，建立进程耗时长（经过验证，空载的时间消耗主要来自建立进程池这一步）
+- Windows下官方版Python是用MSVC编译的，性能较GCC和Clang编译的差（虚拟机（8线程）Windows系统中用MinGW编译的Python运行该程序的速度甚至比实体机（16线程）上的快）
+
+## Windows下exe编译
+
+为了优化该程序在Windows下的性能，我开始在Windows中寻找编译该程序为exe文件的方法，试图在编译过程中选择使用GCC与Clang代替MSVC，提高程序运行效率
+
+现在仍然积极开发的编译方案主要有`pyinstaller`和`nuitka`
+
+### pyinstaller
+
+使用`pip install pyinstaller`安装，通过`pyinstaller -F file.py`（`-F`表示输出为单个文件）将`file.py`编译成exe文件，默认输出到命令执行目录的dist文件夹中
+
+pyinstaller编译的并非是机器码文件，它只是将代码、解释器和所需要的库封装到一起，因此也不依赖C编译器。然而，我并没有搞清这个pyinstaller封装的是所在Python环境的解释器还是自身库所携带的Python解释器（懒～），所以其实并不一定有性能提升
+
+但是，当我运行编译后的exe程序时，那个bug又出现了：
+
+[![#~integrator-windows-bug.webp](/img/integrator-windows-bug.webp)](/img/integrator-windows-bug.webp)
+
+### 解决办法
+
+查资料得知，编译为文件夹时可以在代码中加入`from multiprocessing import freeze_support`与`freeze_support`解决，但是，**编译为单个文件时不支持多进程，使用此方法依然无效**
+
+所以我只有放弃用pyinstaller编译多进程积分器的想法，但是我依然编译了一个单进程积分器（
+
+### nuitka
+
