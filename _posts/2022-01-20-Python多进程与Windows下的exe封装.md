@@ -424,7 +424,6 @@ if __name__ == '__main__':
     from time import time
     from os import cpu_count
     n = cpu_count() # 默认为设备的逻辑核心数
-
     from multiprocessing import Pool
     print('''       多进程积分器 <一个简单的多进程数值积分工具>
     Copyright (C) 2021-2022 星外之神 <wszqkzqk@qq.com>
@@ -447,18 +446,15 @@ if __name__ == '__main__':
     tile = int(block / n)
 
 # 用于积分的函数
-
 def integration(blockstart, blockend, start, length, halflength, fx):
     out = 0
     x = start + blockstart*length
     temp2 = eval(fx)    # 初始化x与temp2，以便后续让temp0调用上一次的temp2的值，可以减小运算量
-
     for i in range(blockstart + 1, blockend + 1):
         temp0 = temp2
         x += halflength
         temp1 = eval(fx)
         x = start + i*length    # 浮点运算中，乘积误差比累加小，此处用乘法虽然降低了速度但是提高了准确度
-
         temp2 = eval(fx)
         temp = (temp0 + 4*temp1 + temp2) / 6
         out += temp*length
@@ -467,7 +463,6 @@ def integration(blockstart, blockend, start, length, halflength, fx):
 if __name__ == '__main__':
 
     # 进行分段，以便分进程计算
-
     tilestart = 0
     obj = []
     for i in range(n - 1):
@@ -477,12 +472,10 @@ if __name__ == '__main__':
     obj.append((tilestart, block, start, length, halflength, fx))
 
     # 分进程计算
-
     with Pool(n) as pool:
         out = sum(pool.starmap(integration, obj))
 
     # 显示输出
-
     print('\n完成！计算耗时：{}s'.format(time() - calcstart))
     print('数值积分运算结果为：')
     print(out)
