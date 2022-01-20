@@ -9,6 +9,8 @@ catalog:    true
 tags:       python
 --- 
 
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=443086&auto=1&height=66"></iframe>
+
 **本文中的代码均采用[GPL v3](https://www.gnu.org/licenses/gpl-3.0.html)协议发布**
 
 ## 前言
