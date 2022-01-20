@@ -106,11 +106,13 @@ def integration(blockstart, blockend):
     out = 0
     x = start + blockstart*length
     temp2 = eval(fx)    # 初始化x与temp2，以便后续让temp0调用上一次的temp2的值，可以减小运算量
+
     for i in range(blockstart + 1, blockend + 1):
         temp0 = temp2
         x += halflength
         temp1 = eval(fx)
         x = start + i*length    # 浮点运算中，乘积误差比累加小，此处用乘法虽然降低了速度但是提高了准确度
+    
         temp2 = eval(fx)
         temp = (temp0 + 4*temp1 + temp2) / 6
         out += temp*length
