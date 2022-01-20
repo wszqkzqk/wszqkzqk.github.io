@@ -214,13 +214,13 @@ print('数值积分运算结果为：')
 print(out)
 ```
 
-### 初版代码运行结果
+### 踩坑：初版代码运行结果
 
 以上代码在我的Linux平台上运行毫无问题：
 
 |[![#~Linux-integ-single-multi.webp](/img/Linux-integ-single-multi.webp)](/img/Linux-integ-single-multi.webp)|
 |----|
-|Linux下单进程与多进程程序效率对比：在100,0000次分割的高计算量下，多进程程序效率是单进程程序的7.5倍|
+|Linux下单进程与多进程程序效率对比：在100,0000次分割的高计算量下，多进程程序效率是单进程程序的7.5倍 [^1]|
 
 但是在Windows下会出现以下情况：
 
@@ -330,7 +330,7 @@ if __name__ == '__main__':
 
 #### 性能状况
 
-经过多次运行与比较，我发现该程序在Linux下的运行效率明显高于Windows（积分分割数为100,0000时Windows耗时`2.8s`，而Linux仅耗时`1.3s`），且Windows平台下空载（输入常函数，积分区间为0，分割数为1）耗时竟高达`0.6s`（Linux空载只需要`0.03s`）
+经过多次运行与比较，我发现该程序在Linux下的运行效率明显高于Windows（积分分割数为100,0000时Windows耗时`2.8s`，而Linux仅耗时`1.3s`），且Windows平台下空载（输入常函数，积分区间为0，分割数为1）耗时竟高达`0.6s`（Linux空载只需要`0.03s`）[^1]
 
 我认为造成Windows下程序运行较慢的原因有两个：
 - Windows下进程资源消耗较Linux(POSIX)大，建立进程耗时长（经过验证，空载的时间消耗主要来自建立进程池这一步）
@@ -356,7 +356,52 @@ pyinstaller编译的并非是机器码文件，它只是将代码、解释器和
 
 查资料得知，编译为文件夹时可以在代码中加入`from multiprocessing import freeze_support`与`freeze_support`解决，但是，**编译为单个文件时不支持多进程，使用此方法依然无效**
 
-所以我只有放弃用pyinstaller编译多进程积分器的想法，但是我依然编译了一个单进程积分器（
+所以我只有放弃用pyinstaller编译多进程积分器的想法，但是我依然在Clang的Python环境下编译了一个[单进程积分器（点此下载）](https://github.com/wszqkzqk/jigai-B-homework/releases/download/0.0.4/integrator-single-clang.exe)，不过似乎真的没快多少（
 
 ### nuitka
 
+与pyinstaller不同，nuitka编译的exe直接就是机器码，因此，nuitka需要C编译器才能运行
+
+#### 踩坑：编译器支持
+
+在Windows平台下，nuitka支持三个C编译器，分别是`MSVC`、`MinGW`、`Clang`，我本来准备调用Clang进行编译，但是编译的时候发现nuitka只支持MSVC中的Clang而不支持MSYS2中的Clang，因此不能编译
+
+#### 踩坑：Python安装来源
+
+我改用MinGW编译器之后，同步切换到了MinGW编译的Python环境，但是在此环境中运行时，nuitka可能无法兼容MinGW提供的Python,报出了找不到`python39.lib`的错误，不知道怎么解决
+
+我又换到了MSStore里面的Python环境，然而nuitka依然不兼容
+
+最后，我从Python官网下载Python才解决了这个问题
+
+#### 编译
+
+nuitka除了依赖C编译器外，还需要其他几个库的支持，好在nuitka在运行过程中可以自动解决依赖问题，因此也並不算麻烦；我编译多进程积分器的命令如下：
+
+``` shell
+nuitka --mingw --standalone --onefile --show-progress --show-memory --enable-plugin=multiprocessing --output-dir=out targetfile.py
+```
+
+其中，`--mingw`是指定C编译器（默认为MSVC），`--standalone`是打包依赖，`--onefile`是要求程序打包为一个文件，`--show-progress`是显示编译过程，`--show-memory`是显示内存占用情况，`--enable-plugin=multiprocessing`是启用多进程支持，`--output-dir=out`是指定输出目录为当前目录下的`out`文件夹，最后的`targetfile.py`则是待编译的文件
+
+#### 编译程序体积压缩
+
+在没有压缩的情况下，nuitka编译的程序占用体积高达24 MB（pyinstaller编译的程序只有不到7 MB），因此，有必要对程序进行压缩
+
+其实nuitka默认启用了压缩，但压缩依赖第三方库，假如没有安装`zstandard`便无法压缩，因此，建议运行`pip install zstandard`后再进行编译，zstd压缩处理速度很快，而且压缩的exe文件大小仅8 MB左右
+
+此外，nuitka似乎仅支持Python中的zstd，并不能调用MSYS2中的zstd
+
+P.S. 这个压缩是生成一个压缩了的但是可以直接运行的exe文件，并不是生成一个zst文件，否则就没有意义了（
+
+#### 性能
+
+nuitka下调用MinGW编译的[多进程积分器（点此下载）](https://github.com/wszqkzqk/jigai-B-homework/releases/download/0.0.4/integrator-multi-mingw.exe)性能相比于MSVC编译的Python中运行的程序有一定的提高，接近在MinGW编译的Python中运行的水平，但是仍然与Linux下的性能表现有较大差距
+
+编译的[多进程积分器](https://github.com/wszqkzqk/jigai-B-homework/releases/download/0.0.4/integrator-multi-mingw.exe)相比于MSCV直接执行，空载启动时间由约`0.6s`下降到约`0.3s`，100,0000次分割运算时间由约`2.8s`下降到约`2s` [^1]
+
+[^1]: 所有数据均由搭载AMD 锐龙5800H的联想小新Pro 16在35w TDP功耗的均衡模式下测试出
+
+## 捐赠
+ 
+[![](/img/donate.jpg)](/img/donate.jpg)
