@@ -35,9 +35,10 @@ tags:       python
 
 ``` python
 #!/usr/bin/env python3
+
 from time import time
 from math import *
-#   按照习惯名称对部分函数定义别名
+# 按照习惯名称对部分函数定义别名
 def ln(x):
     return log(x)
 def lg(x):
