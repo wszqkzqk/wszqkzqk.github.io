@@ -69,6 +69,7 @@ end = eval(input())
 print('请输入分割数（由于浮点数值运算具有不精确性，分割数过大反而可能增大误差）')
 block = int(input())
 calcstart = time()  # 输入结束，计算开始，计时
+
 length = (end - start) / block
 halflength = length / 2
 out = 0
