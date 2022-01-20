@@ -394,6 +394,94 @@ nuitka --mingw --standalone --onefile --show-progress --show-memory --enable-plu
 
 P.S. 这个压缩是生成一个压缩了的但是可以直接运行的exe文件，并不是生成一个zst文件，否则就没有意义了（
 
+#### 踩坑：细节
+
+由于编译成了exe，使用者可能在资源管理器中直接双击打开而不专门在Windows终端中运行，因此，在这种情况下当程序运行结束时，计算结果会一闪而过，不方便使用者查看
+
+在代码末尾加一个`input('\n请按回车键退出')`就能解决这个问题
+
+#### 代码
+
+``` python
+from math import *
+def ln(x):
+    return log(x)
+def lg(x):
+    return log(x, 10)
+def arcsin(x):
+    return asin(x)
+def arccos(x):
+    return acos(x)
+def arctan(x):
+    return atan(x)
+def arcsinh(x):
+    return asinh(x)
+def arccosh(x):
+    return acosh(x)
+def arctanh(x):
+    return atanh(x)
+if __name__ == '__main__':
+    from time import time
+    from os import cpu_count
+    n = cpu_count() # 默认为设备的逻辑核心数
+    from multiprocessing import Pool
+    print('''       多进程积分器 <一个简单的多进程数值积分工具>
+    Copyright (C) 2021-2022 星外之神 <wszqkzqk@qq.com>
+
+注意：三角函数请先化成正弦、余弦、正切及相应的反三角函数（现已支持双曲三角函数及对应的反三角函数）
+    请务必使用半角符号；圆周率请用"pi"表示；自然对数的底数请用"e"表示
+    请用"*""/"表示乘除，"**"表示乘方，"abs"表示绝对值，"ln"或"log"表示自然对数，"lg"表示常用对数，"log(m, n)"表示m对于底数n的对数
+    Windows下多进程初始化耗时较久，当计算量过小时无法发挥性能优势，建议在计算量较大时使用
+请输入被积函数（用x表示自变量）：''')
+    fx = input()
+    print('请输入积分的下限：')
+    start = eval(input())
+    print('请输入积分的上限：')
+    end = eval(input())
+    print('请输入分割数（建议为CPU逻辑核心数的正整数倍；由于浮点数值运算具有不精确性，分割数过大反而可能增大误差）：')
+    block = int(input())
+    calcstart = time()
+    length = (end - start) / block
+    halflength = length / 2
+    tile = int(block / n)
+
+# 用于积分的函数
+def integration(blockstart, blockend, start, length, halflength, fx):
+    out = 0
+    x = start + blockstart*length
+    temp2 = eval(fx)    # 初始化x与temp2，以便后续让temp0调用上一次的temp2的值，可以减小运算量
+    for i in range(blockstart + 1, blockend + 1):
+        temp0 = temp2
+        x += halflength
+        temp1 = eval(fx)
+        x = start + i*length    # 浮点运算中，乘积误差比累加小，此处用乘法虽然降低了速度但是提高了准确度
+        temp2 = eval(fx)
+        temp = (temp0 + 4*temp1 + temp2) / 6
+        out += temp*length
+    return out
+
+if __name__ == '__main__':
+    # 进行分段，以便分进程计算
+    tilestart = 0
+    obj = []
+    for i in range(n - 1):
+        tileend = tilestart + tile
+        obj.append((tilestart, tileend, start, length, halflength, fx))
+        tilestart = tileend
+    obj.append((tilestart, block, start, length, halflength, fx))
+
+    # 分进程计算
+    with Pool(n) as pool:
+        out = sum(pool.starmap(integration, obj))
+
+    # 显示输出
+    print('\n完成！计算耗时：{}s'.format(time() - calcstart))
+    print('数值积分运算结果为：')
+    print(out)
+    
+    input('\n请按回车键退出')
+```
+
 #### 性能
 
 nuitka下调用MinGW编译的[多进程积分器（点此下载）](https://github.com/wszqkzqk/jigai-B-homework/releases/download/0.0.4/integrator-multi-mingw.exe)性能相比于MSVC编译的Python中运行的程序有一定的提高，接近在MinGW编译的Python中运行的水平，但是仍然与Linux下的性能表现有较大差距
