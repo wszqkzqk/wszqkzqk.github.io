@@ -332,7 +332,7 @@ if __name__ == '__main__':
 - Windows下进程资源消耗较Linux(POSIX)大，建立进程耗时长（经过验证，空载的时间消耗主要来自建立进程池这一步）
 - Windows下官方版Python是用MSVC编译的，性能较GCC和Clang编译的差（虚拟机（8线程）Windows系统中用MinGW编译的Python运行该程序的速度甚至比实体机（16线程）上的快）
 
-## Windows下exe编译
+## Windows下exe的编译
 
 为了优化该程序在Windows下的性能，我开始在Windows中寻找编译该程序为exe文件的方法，试图在编译过程中选择使用GCC与Clang代替MSVC，提高程序运行效率
 
