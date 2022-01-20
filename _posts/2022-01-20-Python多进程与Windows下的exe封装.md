@@ -9,3 +9,6 @@ catalog:    true
 tags:       python
 --- 
 
+
+
+由于现在电脑CPU单核性能提升已经遇到瓶颈，，最近打算尝试使用一下Python的
