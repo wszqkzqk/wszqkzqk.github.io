@@ -60,6 +60,7 @@ print('''注意：三角函数请先化成正弦、余弦、正切及相应的�
      请务必使用半角符号；圆周率请用"pi"表示；自然对数的底数请用"e"表示
      请用"*""/"表示乘除，"**"表示乘方，"abs"表示绝对值，"ln"或"log"表示自然对数，"lg"表示常用对数，"log(m, n)"表示m对于底数n的对数
 请输入被积函数（用x表示自变量）：''')   # 预备信息
+
 fx = input()
 print('请输入积分的下限：')
 start = eval(input())   # 使用eval函数，支持输入表达式
@@ -75,11 +76,14 @@ halflength = length / 2
 out = 0
 x = start
 temp2 = eval(fx)    # 初始化x与temp2，以便后续让temp0调用上一次的temp2的值，可以减小运算量
+
 for i in range(1, block + 1):   # 积分运算，辛普森法
+
     temp0 = temp2
     x += halflength
     temp1 = eval(fx)
     x = start + i*length    # 浮点运算中，乘积误差比累加小，此处用乘法虽然降低了速度但是提高了准确度
+
     temp2 = eval(fx)
     temp = (temp0 + 4*temp1 + temp2) / 6
     out += temp*length
