@@ -487,6 +487,8 @@ nuitka下调用MinGW编译的[***多进程积分器（点此下载）***](https:
 
 编译的[**多进程积分器**](https://github.com/wszqkzqk/jigai-B-homework/releases/download/0.0.4/integrator-multi-mingw.exe)相比于官方版Python直接执行，空载启动时间由约`0.6s`下降到约`0.3s`，100,0000次分割运算时间由约`2.8s`下降到约`2s` [^1]
 
+- 2022.01.21更新：这个积分器在Windows平台的运行速度受编译器影响似乎不是很大，让程序程序运行缓慢的真正原因可能是使用来自Microsoft Store中的Python；Python官网上的Python也是由MSVC编译而成，但是性能与MinGW编译的Python并没有明显差距（从Python官网上下载的Python空载启动时间约`0.3s`，100,0000次分割运算时间约`2s`）。
+
 [^1]: 所有数据均由搭载AMD 锐龙5800H的联想小新Pro 16在35w TDP功耗的均衡模式下测试出
 
 ## 捐赠
