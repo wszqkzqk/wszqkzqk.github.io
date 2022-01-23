@@ -381,7 +381,7 @@ nuitka --mingw --standalone --onefile --show-progress --show-memory --enable-plu
 在MSYS2中则为：
 
 ``` shell
-nuitka.bat --mingw --standalone --onefile --show-progress --show-memory --enable-plugin=multiprocessing --output-dir=out targetfile.py
+nuitka.bat --mingw --standalone --onefile --show-progress --show-memory --enable-plugin=multiprocessing --windows-icon-from-ico=target.ico --output-dir=out targetfile.py
 ```
 
 其中，`--mingw`是指定C编译器（默认为MSVC），`--standalone`是打包依赖，`--onefile`是要求程序打包为一个文件，`--show-progress`是显示编译过程，`--show-memory`是显示内存占用情况，`--enable-plugin=multiprocessing`是启用多进程支持，`--output-dir=out`是指定输出目录为当前目录下的`out`文件夹，最后的`targetfile.py`则是待编译的文件
