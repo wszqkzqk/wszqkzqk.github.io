@@ -396,7 +396,7 @@ nuitka.bat --mingw --standalone --onefile --show-progress --show-memory --enable
 
 其实nuitka默认启用了压缩，但压缩依赖第三方库，假如没有安装`zstandard`便无法压缩，因此，建议运行`pip install zstandard`后再进行编译，zstd压缩处理速度很快，而且压缩的exe文件大小仅8 MB左右
 
-此外，nuitka似乎仅支持Python中的zstd，并不能调用MSYS2中的zstd
+此外，nuitka似乎仅支持Python中的`zstandard`，并不能调用MSYS2中的zstd
 
 P.S. 这个压缩是生成一个压缩了的但是可以直接运行的exe文件，并不是生成一个zst文件，否则就没有意义了（
 
