@@ -375,7 +375,7 @@ pyinstaller编译的并非是机器码文件，它只是将代码、解释器和
 nuitka除了依赖C编译器外，还需要其他几个库的支持，好在nuitka在运行过程中可以自动解决依赖问题，因此也並不算麻烦；我编译多进程积分器的命令如下：
 
 ``` shell
-nuitka --mingw --standalone --onefile --show-progress --show-memory --enable-plugin=multiprocessing --output-dir=out targetfile.py
+nuitka --mingw --standalone --onefile --show-progress --show-memory --enable-plugin=multiprocessing --windows-icon-from-ico=target.ico --output-dir=out targetfile.py
 ```
 
 在MSYS2中则为：
