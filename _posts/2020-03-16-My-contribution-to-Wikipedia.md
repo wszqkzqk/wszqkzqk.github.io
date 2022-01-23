@@ -27,6 +27,8 @@ tags:       Wikipedia
 
 [硫脲有机催化](https://zh.wikipedia.org/wiki/%E7%A1%AB%E8%84%B2%E6%9C%89%E6%9C%BA%E5%82%AC%E5%8C%96)
 
+[应变 (化学)](https://zh.wikipedia.org/wiki/%E6%87%89%E8%AE%8A_(%E5%8C%96%E5%AD%B8))
+
 ## 我参与贡献的条目
 
 [立体电子效应](https://zh.wikipedia.org/wiki/%E7%AB%8B%E4%BD%93%E7%94%B5%E5%AD%90%E6%95%88%E5%BA%94)
