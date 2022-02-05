@@ -503,4 +503,4 @@ nuitka下调用MinGW编译的[***多进程积分器（点此下载）***](https:
 
 ## 捐赠
  
-[![](/img/donate.jpg)](/img/donate.jpg)
+[![](/img/donate.webp)](/img/donate.webp)
