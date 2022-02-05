@@ -4,7 +4,7 @@ title:      我的HMO计算
 subtitle:   典型简单分子的分子轨道HMO计算结果
 date:       2020-3-16
 author:     星外之神
-header-img: img/bg-sunrise.jpg
+header-img: img/bg-sunrise.webp
 catalog:    true
 tags:       化学 HMO 分子轨道理论 计算化学 有机化学
 ---

@@ -4,7 +4,7 @@ title:      杂记
 subtitle:   个人生活日志
 date:       2001-01-15
 author:     星外之神
-header-img: img/bg-sunrise.jpg
+header-img: img/bg-sunrise.webp
 catalog:    true
 tags:       个人生活
 --- 
