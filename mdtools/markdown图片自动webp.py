@@ -6,14 +6,14 @@ if system() == 'Linux':    # 需要先安装xclip软件包
     def clip(info):
         print(info)
         os.system('echo "' + info + '" |xclip -selection  c ')
-        print('已复制到剪贴板！')
+        print('已复制到剪贴板！\n')
     
     localimg = os.path.dirname(os.path.dirname(__file__)) + '/img'
 elif system() == 'Windows':
     def clip(info):
         print(info)
         os.system('echo "' + info + '" | clip')
-        print('已复制到剪贴板！（可能需要手动去除多余的引号）')
+        print('已复制到剪贴板！（可能需要手动去除多余的引号）\n')
     
     def unixpath(path):
         return path.replace('\\', '/')
