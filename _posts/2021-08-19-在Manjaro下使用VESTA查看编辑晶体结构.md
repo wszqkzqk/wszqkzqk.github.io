@@ -68,7 +68,9 @@ VESTA在安装时并没有绑定文件后缀名默认打开方式，打开相关
 `File`-`Open`-选择所需文件即可
 
 也可在文件打开时的打开方式中选择VESTA：
-![](/img/vesta-打开方式.png)
+
+[![#~/img/vesta-打开方式.webp](/img/vesta-打开方式.webp)](/img/vesta-打开方式.webp)
+
 ##### 添加MIME
 如果认为每次都手动选择很麻烦，可以添加MIME，以后对应格式的文件即可用VESTA直接打开
 
