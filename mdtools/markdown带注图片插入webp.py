@@ -2,7 +2,7 @@
 
 print('本程序将在插入图片的同时，将jpg、png、bmp、gif图片转化为webp格式\n')
 
-def autowebp(imgfile):  # 应仅对本地图片使用
+def autowebp(imgfile):  # 仅对本地图片使用
     if imgfile.split('.')[-1].lower() in {jpg, png, jpeg, bmp, gif}:
         
 
