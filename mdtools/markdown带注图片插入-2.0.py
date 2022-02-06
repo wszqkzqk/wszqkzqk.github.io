@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 print('请输入该行的图片分栏数：')
 n = int(input())
 picline = '|'

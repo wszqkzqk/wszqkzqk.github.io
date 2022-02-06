@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 from fnmatch import fnmatch
 def pic(x):    #图片格式转化
     if '://' in x:

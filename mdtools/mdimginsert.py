@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 from sys import argv
 from fnmatch import fnmatch
 def pathed(path):

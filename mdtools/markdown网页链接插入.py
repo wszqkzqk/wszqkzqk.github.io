@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import os
 from platform import system
 if system() == 'Linux':    # 需要先安装xclip软件包
