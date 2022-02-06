@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 from platform import system
+import sys
 
 if system() == 'Linux':    # 需要先安装xclip软件包
     def clip(info):
@@ -8,7 +9,7 @@ if system() == 'Linux':    # 需要先安装xclip软件包
         os.system('echo "' + info + '" |xclip -selection  c ')
         print('已复制到剪贴板！\n')
     
-    localimg = os.path.dirname(os.path.dirname(__file__)) + '/img'
+    localimg = os.path.dirname(sys.path[0]) + '/img'
 elif system() == 'Windows':
     def clip(info):
         print(info)
@@ -18,7 +19,7 @@ elif system() == 'Windows':
     def unixpath(path):
         return path.replace('\\', '/')
     
-    localimg = unixpath(os.path.dirname(os.path.dirname(__file__))) + '/img'
+    localimg = os.path.dirname(unixpath(sys.path[0])) + '/img'
 else:
     print('操作系统不受支持！')
     exit()

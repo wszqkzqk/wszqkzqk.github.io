@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
 import os
+import sys
 
 def unixpath(path):
     return path.replace('\\', '/')
 
 print('本程序将在插入图片的同时，将jpg、png、bmp、gif图片转化为webp格式\n')
-localimg = unixpath(os.path.dirname(os.path.dirname(__file__))) + '/img'
+localimg = os.path.dirname(unixpath(sys.path[0])) + '/img'
 
 def autowebp(imgfile):  # 仅对本地图片使用
     if imgfile.split('.')[-1].lower() in {'jpg', 'png', 'jpeg', 'bmp', 'gif'}:
@@ -83,18 +84,8 @@ for i in range(n):
         tailline += '{}|'.format(note)
     else:
         tailline += '    |'
-try:
-    print()
-    with open("otherfiles/tmp.md", "a", encoding="utf-8") as echo:
-        echo.write(picline + '\n')
-        print(picline)
-        echo.write(neckline + '\n')
-        print(neckline)
-        echo.write(tailline + '\n')
-        print(tailline)
-    print('\n已输出到"otherfiles/tmp.md"')
-except FileNotFoundError:
-    print()
-    print(picline)
-    print(neckline)
-    print(tailline)
+
+print()
+print(picline)
+print(neckline)
+print(tailline)
