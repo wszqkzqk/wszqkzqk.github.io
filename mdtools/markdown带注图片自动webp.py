@@ -14,7 +14,9 @@ def autowebp(imgfile):  # 仅对本地图片使用
         os.system('ffmpeg -i "{0}/{1}" "{0}/{2}"'.format(localimg, imgfile, webpimg))
         if os.path.getsize(imgfile) / os.path.getsize(webpimg) >= 1.15: # 如果转码前后的图片体积比大于1.15则取webp,否则仍然取之前的图片
             print('webp格式可以显著减少图片体积，采用webp格式！')
-            os.remove("{0}/{1}".format(localimg, imgfile))
+            flag = input('若需要删除源文件请输入"1"，否则请输入"0"（默认"0"）')
+            if flag == '1':
+                os.remove("{0}/{1}".format(localimg, imgfile))
             return '/img/' + webpimg
         else:
             print('webp格式没有显著减少图片体积，保留原有格式！')
