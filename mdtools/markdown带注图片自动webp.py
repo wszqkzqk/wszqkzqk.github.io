@@ -52,6 +52,8 @@ def autowebp(imgfile):  # 仅对本地图片使用
                     return '/img/' + imgfile
             else:
                 return '/img/' + webpimg
+    else:
+        return '/img/' + imgfile
 
 print('请输入该行的图片分栏数：')
 n = int(input())
