@@ -47,6 +47,8 @@ for i in range(len(content)):
         imgname = content[i][2:-1]
         if '://' in imgname:
             content[i] = '[![#~{0}]({0})]({0})\n'.format(imgname)
+        elif fnmatch(imgname, '/img/*'):
+            content[i] = '[![#~{0}]({0})]({0})\n'.format(imgname)
         else:
             content[i] = '[![#~{0}](/img/{0})](/img/{0})\n'.format(imgname)
 with open(path, "w", encoding="utf-8") as init:
