@@ -58,7 +58,7 @@ try:
         print(neckline)
         echo.write(tailline + '\n')
         print(tailline)
-    print('\n已输出到"其他联系/tmp.md"')
+    print('\n已输出到"otherfiles/tmp.md"')
 except FileNotFoundError:
     print()
     print(picline)
