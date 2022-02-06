@@ -9,7 +9,7 @@ print('本程序将在插入图片的同时，将jpg、png、bmp、gif图片转�
 localimg = unixpath(os.path.dirname(os.path.dirname(__file__))) + '/img'
 
 def autowebp(imgfile):  # 仅对本地图片使用
-    if imgfile.split('.')[-1].lower() in {jpg, png, jpeg, bmp, gif}:
+    if imgfile.split('.')[-1].lower() in {'jpg', 'png', 'jpeg', 'bmp', 'gif'}:
         webpimg = imgfile.split('.')[0] + '.webp'
         os.system('ffmpeg -i "{0}/{1}" "{0}/{2}"'.format(localimg, imgfile, webpimg))
         if os.path.getsize(imgfile) / os.path.getsize(webpimg) >= 1.15: # 如果转码前后的图片体积比大于1.15则取webp,否则仍然取之前的图片
