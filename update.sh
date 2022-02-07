@@ -28,7 +28,7 @@ if [[ ${flag} == 1 ]];then
 fi
 
 # 进行推送
-echo "正在向原仓库推送……"
+echo "正在向主仓库推送……"
 git push origin
 echo "正在向镜像仓库推送……"
 git push mirror
