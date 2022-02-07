@@ -3,6 +3,7 @@ cd `dirname $0`; pwd
 
 # 指定仓库地址(注意：对于gitee仓库应当用小写字母)
 repoinfo="wszqkzqk/wszqkzqk.github.io.git"
+mirrorrepoinfo="wszqkzqk/wszqkzqk.git"
 
 # 添加更改
 echo "正在添加变更文件……"
