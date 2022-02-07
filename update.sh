@@ -23,6 +23,7 @@ done
 # 如果不存在镜像仓库，进行添加
 if [[ ${flag} == 1 ]];then
     git remote add mirror git@gitee.com:${repoinfo}
+fi
 
 # 进行推送
 git push origin
