@@ -21,7 +21,7 @@ else:
     print('\n操作系统不受支持，无法自动将输出内容复制到剪贴板！请自行复制！')
 
 while 1:
-    print('请输入图片地址（默认在./img下，也可输入绝对网址）：')
+    print('请输入图片地址（默认在./img下，也可输入绝对网址或带有/img的完整地址）：')
     url = input()
     imgname = url
     if '://' not in url:

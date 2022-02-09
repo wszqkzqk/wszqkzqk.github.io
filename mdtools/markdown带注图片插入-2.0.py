@@ -5,7 +5,7 @@ picline = '|'
 neckline = '|' + ':----:|'*n
 tailline = '|'
 for i in range(n):
-    print('请输入第{}张图片的地址（默认在./img下，也可输入绝对网址）：'.format(i+1))
+    print('请输入第{}张图片的地址（默认在./img下，也可输入绝对网址或带有/img的完整地址）：'.format(i+1))
     url = input()
     imgname = url
     if ('://' not in url) and ('/img/' not in url) and url:
