@@ -130,9 +130,10 @@ while 1:
                 url = autowebp(url)
             else:
                 url = autowebp(os.path.basename(url))
-        print('请输入点击图片的链接指向（默认为本身）')
-        goto = input()
-        if not goto:
-            goto = url
-        clip('[![#~{0}]({0})]({1})'.format(url, goto))
-        print()
+        if url:
+            print('请输入点击图片的链接指向（默认为本身）')
+            goto = input()
+            if not goto:
+                goto = url
+            clip('[![#~{0}]({0})]({1})'.format(url, goto))
+            print()
