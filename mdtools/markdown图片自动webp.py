@@ -24,7 +24,7 @@ else:
     print('操作系统不受支持！')
     exit()
 
-print('本程序将在插入图片的同时，可以按需将jpg、png、bmp、gif、ico、icon图片转化为webp格式以节省空间与网页流量，并将自动对使用webp进行有损压缩还是无损压缩给出建议\n')
+print('本程序将在插入图片的同时，可以按需将jpg、png、bmp、gif、ico、icon、 raw图片转化为webp格式以节省空间与网页流量，并将自动对使用webp进行有损压缩还是无损压缩给出建议\n')
 localimg = os.path.dirname(unixpath(sys.path[0])) + '/img'
 
 def autowebp(imgfile):  # 仅对本地图片使用
@@ -36,7 +36,7 @@ def autowebp(imgfile):  # 仅对本地图片使用
 
     appendname = imgfile.split('.')[-1].lower()
 
-    if appendname in {'png', 'bmp', 'gif', 'ico', 'icon', 'jpg', 'jpeg'}:
+    if appendname in {'png', 'bmp', 'gif', 'ico', 'icon', 'jpg', 'jpeg', 'raw'}:
         llwebpimg = imgfile.split('.')[0] + '-lossless.webp'
         webpimg = imgfile.split('.')[0] + '.webp'
 
