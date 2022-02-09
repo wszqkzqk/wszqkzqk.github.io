@@ -98,7 +98,7 @@ def autowebp(imgfile):  # 仅对本地图片使用
                 print('完成！所选的新图片相比原图节省了{}%的空间'.format(round((originsize - llsize)*100 / originsize, 2)))
                 return '/img/' + llwebpimg
         elif llok:
-            print('检测到无损压缩能有效减小图片大小，采用有损压缩！')
+            print('检测到无损压缩能有效减小图片大小，采用无损压缩！')
             os.remove("{0}/{1}".format(localimg, webpimg))
             flag = input('若需要删除源文件请输入"1"，否则请输入"0"（默认"0"）：\n')
             if flag == '1':
@@ -106,7 +106,7 @@ def autowebp(imgfile):  # 仅对本地图片使用
             print('完成！所选的新图片相比原图节省了{}%的空间'.format(round((originsize - llsize)*100 / originsize, 2)))
             return '/img/' + llwebpimg
         elif lossyok:
-            print('检测到有损压缩能有效减小图片大小，采用无损压缩！')
+            print('检测到有损压缩能有效减小图片大小，采用有损压缩！')
             os.remove("{0}/{1}".format(localimg, llwebpimg))
             flag = input('若需要删除源文件请输入"1"，否则请输入"0"（默认"0"）：\n')
             if flag == '1':
