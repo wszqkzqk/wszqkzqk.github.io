@@ -137,4 +137,4 @@ for i in range(n):
     note = input()
     tailline += '{}|'.format(note)
 
-print('正在生成符合markdown语法的表格……\n', picline, neckline, tailline, '\n完成！请自行将以上内容复制到所需要的markdown文件内', sep='\n')
+print('正在生成符合markdown语法的输出内容……\n', picline, neckline, tailline, '\n完成！请自行将以上内容复制到所需要的markdown文件内', sep='\n')
