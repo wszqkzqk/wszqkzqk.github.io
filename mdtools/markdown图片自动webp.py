@@ -6,8 +6,10 @@ import sys
 if system() == 'Linux':    # 需要先安装xclip软件包
     def clip(info):
         print(info)
-        os.system('echo "' + info + '" |xclip -selection  c ')
-        print('已复制到剪贴板！\n')
+        if os.system('echo "' + info + '" |xclip -selection  c '):
+            print('无法调用xclip进行自动复制，请手动复制输出内容；若需要使用自动复制功能，请安装"xclip"软件包！')
+        else:
+            print('已复制到剪贴板！\n')
     
     localimg = os.path.dirname(sys.path[0]) + '/img'
 elif system() == 'Windows':
@@ -21,8 +23,9 @@ elif system() == 'Windows':
     
     localimg = os.path.dirname(unixpath(sys.path[0])) + '/img'
 else:
-    print('操作系统不受支持！')
-    exit()
+    print(info)
+    print('\n操作系统不受支持，无法自动将输出内容复制到剪贴板！请自行复制！')
+    localimg = os.path.dirname(unixpath(sys.path[0])) + '/img'
 
 print('本程序将在插入图片的同时，可以按需将jpg、png、bmp、gif、ico、icon、 raw图片转化为webp格式以节省空间与网页流量，并将自动对使用webp进行有损压缩还是无损压缩给出建议\n')
 localimg = os.path.dirname(unixpath(sys.path[0])) + '/img'

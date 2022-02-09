@@ -12,8 +12,9 @@ elif system() == 'Windows':
         os.system('echo "' + info + '" | clip')
         print('已复制到剪贴板！（可能需要手动去除多余的引号）')
 else:
-    print('操作系统不受支持！')
-    exit()
+    print(info)
+    print('\n操作系统不受支持，无法自动将输出内容复制到剪贴板！请自行复制！')
+
 while 1:
     print('请输入链接网址：')
     url = input()
