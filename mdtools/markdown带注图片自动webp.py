@@ -106,7 +106,7 @@ picline = '|'
 neckline = '|' + ':----:|'*n
 tailline = '|'
 for i in range(n):
-    print('请输入第{}张图片的地址（默认在/img下，也可输入绝对网址）：'.format(i+1))
+    print('请输入第{}张图片的地址（默认在./img下，也可输入绝对网址）：'.format(i+1))
     url = input()
     if '://' not in url:
         if '/img/' not in url:
@@ -120,7 +120,7 @@ for i in range(n):
         else:
             url = autowebp(os.path.basename(url))
     while not url:
-        print('请重新输入第{}张图片的地址（默认在/img下，也可输入绝对网址）：'.format(i+1))
+        print('请重新输入第{}张图片的地址（默认在./img下，也可输入绝对网址）：'.format(i+1))
         url = input()
         if '://' not in url:
             if '/img/' not in url:

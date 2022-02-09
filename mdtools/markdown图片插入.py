@@ -15,7 +15,7 @@ else:
     print('操作系统不受支持！')
     exit()
 while 1:
-    print('请输入图片地址（默认在/img下，也可输入绝对网址）：')
+    print('请输入图片地址（默认在./img下，也可输入绝对网址）：')
     url = input()
     imgname = url
     if '://' not in url:
