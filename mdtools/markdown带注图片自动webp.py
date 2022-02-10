@@ -19,8 +19,8 @@ def autowebp(imgfile):  # 仅对本地图片使用
     appendname = imgfile.split('.')[-1].lower()
 
     if appendname in {'png', 'bmp', 'gif', 'ico', 'icon', 'jpg', 'jpeg', 'raw'}:
-        llwebpimg = imgfile.split('.')[0] + '-lossless.webp'
-        webpimg = imgfile.split('.')[0] + '.webp'
+        llwebpimg = os.path.splitext(imgfile)[0] + '-lossless.webp'
+        webpimg = os.path.splitext(imgfile)[0] + '.webp'
 
         if os.path.exists("{0}/{1}".format(localimg, llwebpimg)):
             lltodo = input('检测到目标文件"{}"已存在！\n若需要直接使用已存在文件请输入"0"，覆盖请输入"1"，需要重命名请输入"2"（默认"0"）:\n'.format(llwebpimg))
