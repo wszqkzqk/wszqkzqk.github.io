@@ -126,9 +126,10 @@ for i in range(n):
                 if input() == '1':
                     picline += '    |'
                     tailline += '    |'
-                    url = ' '
+                    continue
         else:
             url = autowebp(os.path.basename(url))
+    # 重试机制
     while not url:
         print('请重新输入第{}张图片的地址（默认在./img下，也可输入绝对网址或带有/img的完整地址）：'.format(i+1))
         url = input()
@@ -141,16 +142,17 @@ for i in range(n):
                     if input() == '1':
                         picline += '    |'
                         tailline += '    |'
-                        url = ' '
+                        break
             else:
                 url = autowebp(os.path.basename(url))
-    print('请输入点击图片的链接指向（默认为本身）')
-    goto = input()
-    if not goto:
-        goto = url
-    picline += '[![#~{0}]({0})]({1})|'.format(url, goto)
-    print('请输入图注：')
-    note = input()
-    tailline += '{}|'.format(note)
+    else:
+        print('请输入点击图片的链接指向（默认为本身）')
+        goto = input()
+        if not goto:
+            goto = url
+        picline += '[![#~{0}]({0})]({1})|'.format(url, goto)
+        print('请输入图注：')
+        note = input()
+        tailline += '{}|'.format(note)
 
 print('正在生成符合markdown语法的输出内容……\n', picline, neckline, tailline, '\n完成！请自行将以上内容复制到所需要的markdown文件内', sep='\n')
