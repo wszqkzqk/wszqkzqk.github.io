@@ -2,9 +2,9 @@
 from sys import argv
 def pathed(path):
     if ((path[0] == "'") or (path[0] == '"')) and ((path[-1] == "'") or (path[-1] == '"')):
-        return path[1:-1]
+        return path[1:-1].replace('\\', '/')
     else:
-        return path
+        return path.replace('\\', '/')
 loadtarget = 0
 loadref = 0
 loadinner = 0
