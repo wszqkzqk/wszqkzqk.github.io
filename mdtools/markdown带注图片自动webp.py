@@ -6,7 +6,7 @@ import sys
 def unixpath(path):
     return path.replace('\\', '/')
 
-print('本程序将在插入图片的同时，可以按需将jpg、png、bmp、gif、ico、icon、 raw图片转化为webp格式以节省空间与网页流量，并将自动对使用webp进行有损压缩还是无损压缩给出建议\n')
+print('本程序将在插入带注图片的同时，可以按需将jpg、png、bmp、gif、ico、icon、 raw图片转化为webp格式以节省空间与网页流量，并将自动对使用webp进行有损压缩还是无损压缩给出建议\n')
 localimg = os.path.dirname(unixpath(sys.path[0])) + '/img'
 
 def autowebp(imgfile):  # 仅对本地图片使用
@@ -101,10 +101,19 @@ def autowebp(imgfile):  # 仅对本地图片使用
         return '/img/' + imgfile
 
 print('请输入该行的图片分栏数：')
-n = int(input())
+n = input()
+while 1:
+    try:
+        n = int(n)
+        break
+    except ValueError:
+        print('错误！请输入一个数字作为分栏数！')
+        n = input()
+
 picline = '|'
 neckline = '|' + ':----:|'*n
 tailline = '|'
+
 for i in range(n):
     print('请输入第{}张图片的地址（默认在./img下，也可输入绝对网址或带有/img的完整地址）：'.format(i+1))
     url = input()
@@ -117,6 +126,7 @@ for i in range(n):
                 if input() == '1':
                     picline += '    |'
                     tailline += '    |'
+                    url = ' '
         else:
             url = autowebp(os.path.basename(url))
     while not url:
@@ -126,6 +136,12 @@ for i in range(n):
             if '/img/' not in url:
                 if url:
                     url = autowebp(url)
+                else:
+                    print('无输入内容！若需要将此位置留空请输入"1"，不需要则请输入"0"（默认"0"）')
+                    if input() == '1':
+                        picline += '    |'
+                        tailline += '    |'
+                        url = ' '
             else:
                 url = autowebp(os.path.basename(url))
     print('请输入点击图片的链接指向（默认为本身）')
