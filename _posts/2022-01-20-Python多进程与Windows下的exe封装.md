@@ -503,4 +503,6 @@ nuitka下调用MinGW编译的[***多进程积分器（点此下载）***](https:
 
 ## 捐赠
  
-[![](/img/donate.webp)](/img/donate.webp)
+|  **支付宝**  |  **微信支付**  |
+|  ----  |  ----  |
+|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |
