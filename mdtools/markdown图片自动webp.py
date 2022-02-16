@@ -15,7 +15,7 @@ if system() == 'Linux':    # 需要先安装xclip软件包
 elif system() == 'Windows':
     def clip(info):
         print(info)
-        os.system('echo "' + info + '" | clip')
+        os.system('echo "' + info + '"| clip')
         print('已复制到剪贴板！（可能需要手动去除多余的引号）\n')
     
     def unixpath(path):
