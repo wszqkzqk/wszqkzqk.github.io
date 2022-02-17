@@ -352,7 +352,9 @@ pyinstaller编译的并非是机器码文件，它只是将代码、解释器和
 
 查资料得知，编译为文件夹时可以在代码中加入`from multiprocessing import freeze_support`与`freeze_support`解决，但是，**编译为单个文件时不支持多进程，使用此方法依然无效**
 
-所以我只有放弃用pyinstaller编译多进程积分器的想法，但是我依然在Clang的Python环境下编译了一个[***单进程积分器（点此下载）***](https://github.com/wszqkzqk/jigai-B-homework/releases/download/0.0.4/integrator-single-clang.exe)，不过似乎真的没快多少（
+所以我只有放弃用pyinstaller编译多进程积分器的想法，但是我依然在Clang的Python环境下编译了一个[***单进程积分器（点此下载）***](https://github.com/wszqkzqk/jigai-B-homework/releases/download/0.0.4/integrator-single-clang.exe)
+
+- 原理上pyinstaller是将`python.dll`目标`.py`文件封装在一起，因此实际上pyinstaller并不能优化python程序的速度
 
 ### nuitka
 
@@ -497,9 +499,9 @@ if __name__ == '__main__':
 
 nuitka下调用MinGW编译的[***多进程积分器（点此下载）***](https://github.com/wszqkzqk/jigai-B-homework/releases/download/0.0.4/integrator-multi-mingw.exe)性能相比于MSVC编译的Python中运行的程序有一定的提高，接近在MinGW编译的Python中运行的水平，但是仍然与Linux下的性能表现有较大差距
 
-编译的[**多进程积分器**](https://github.com/wszqkzqk/jigai-B-homework/releases/download/0.0.4/integrator-multi-mingw.exe)相比于官方版Python直接执行，空载启动时间由约`0.6s`下降到约`0.4s`，100,0000次分割运算时间由约`2.8s`下降到约`2s` [^1]
+编译的[**多进程积分器**](https://github.com/wszqkzqk/jigai-B-homework/releases/download/0.0.4/integrator-multi-mingw.exe)相比于官方版Python直接执行，空载启动时间由约`0.6s`下降到约`0.3s`，100,0000次分割运算时间由约`2.8s`下降到约`2s` [^1]
 
-- 2022.01.21更新：这个积分器在Windows平台的运行速度受编译器影响似乎不是很大，让程序程序运行缓慢的真正原因可能是使用来自Microsoft Store中的Python；Python官网上的Python也是由MSVC编译而成，但是性能与MinGW编译的Python并没有明显差距（从Python官网上下载的Python空载启动时间约`0.4s`，100,0000次分割运算时间约`2s`）。
+- 2022.01.21更新：这个积分器在Windows平台的运行速度受编译器影响似乎不是很大，让程序程序运行缓慢的真正原因可能是使用来自Microsoft Store中的Python；Python官网上的Python也是由MSVC编译而成，但是性能与MinGW编译的Python并没有明显差距（从Python官网上下载的Python空载启动时间约`0.35s`，100,0000次分割运算时间约`2s`）。
 - 2022.02.15更新：奇怪的是，wine运行Nuitka所打包的程序耗时空载耗时比Windows还短（仅需要`0.3s`），100,0000次分割运算时间仍约`2s`，与Windows下的表现接近
 
 [^1]: 所有数据均由搭载AMD 锐龙5800H的联想小新Pro 16在35w TDP功耗的均衡模式下测试出
