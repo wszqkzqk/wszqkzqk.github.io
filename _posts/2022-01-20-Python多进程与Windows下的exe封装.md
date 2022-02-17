@@ -400,7 +400,7 @@ nuitka.bat --mingw --standalone --onefile --show-progress --show-memory --enable
 
 此外，nuitka似乎仅支持Python中的`zstandard`，并不能调用MSYS2中的zstd
 
-P.S. 这个压缩是生成一个压缩了的但是可以直接运行的exe文件，并不是生成一个zst文件，否则就没有意义了（
+- 这个压缩是生成一个压缩了的但是可以直接运行的exe文件，并不是生成一个zst文件，否则就没有意义了（
 
 #### 踩坑：细节
 
