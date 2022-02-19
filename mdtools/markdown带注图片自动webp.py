@@ -156,3 +156,4 @@ for i in range(n):
         tailline += '{}|'.format(note)
 
 print('正在生成符合markdown语法的输出内容……\n', picline, neckline, tailline, '\n完成！请自行将以上内容复制到所需要的markdown文件内', sep='\n')
+input('\n请按回车键退出……')
