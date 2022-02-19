@@ -37,8 +37,8 @@ def autowebp(imgfile):  # 仅对本地图片使用
                 return '/img/' + webpimg
 
         # 调用ffmpeg转化
-        os.system('ffmpeg -i "{0}/{1}" "{0}/{2}"'.format(localimg, imgfile, webpimg))
-        os.system('ffmpeg -i "{0}/{1}" -lossless 1 "{0}/{2}"'.format(localimg, imgfile, llwebpimg))
+        os.system('echo y|ffmpeg -i "{0}/{1}" "{0}/{2}"'.format(localimg, imgfile, webpimg))
+        os.system('echo y|ffmpeg -i "{0}/{1}" -lossless 1 "{0}/{2}"'.format(localimg, imgfile, llwebpimg))
         
         originsize = os.path.getsize("{0}/{1}".format(localimg, imgfile))
         lossysize = os.path.getsize("{0}/{1}".format(localimg, webpimg))
