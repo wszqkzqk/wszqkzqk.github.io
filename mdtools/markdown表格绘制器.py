@@ -2,9 +2,9 @@
 from fnmatch import fnmatch
 def pic(x):    #图片格式转化
     if '://' in x:
-        return '[![]({0})]({0})'.format(x)
+        return '[![#~{1}]({0})]({0})'.format(x)
     else:
-        return '[![]({0}{1})]({0}{1})'.format('/img/', x)
+        return '[![#~{1}]({0}{1})]({0}{1})'.format('/img/', x)
 def scientificnum(s):    #读取科学计数法含义
     s = s.replace('×10', 'e', 1)
     s = s.replace('*10', 'e', 1)
