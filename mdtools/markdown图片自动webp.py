@@ -32,8 +32,8 @@ elif system() == 'Windows': # 增加Msys2或Cygwin判断，如果可以执行Uni
     from fnmatch import fnmatch
     for i in os.getenv('path').split(';'):
         if i:
-            targetFile = cleanpath(i) + '/echo.exe'
-            if fnmatch(targetFile, '*/bin/echo.exe') or fnmatch(targetFile, '*MSYS2*echo.exe'):
+            targetFile = cleanpath(i) + '\\echo.exe'
+            if fnmatch(targetFile, '*\\bin\\echo.exe') or fnmatch(targetFile, '*MSYS2*echo.exe'):
                 if os.path.exists(targetFile):
                     def clip(info):
                         print(info)
