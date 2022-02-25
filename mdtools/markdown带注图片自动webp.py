@@ -115,7 +115,7 @@ neckline = '|' + ':----:|'*n
 tailline = '|'
 
 for i in range(n):
-    print('请输入第{}张图片的地址（默认在./img下，也可输入绝对网址或带有/img的完整地址）：'.format(i+1))
+    print('请输入第{}张图片的地址（默认在./img下，也可输入绝对网址、绝对路径或带有/img的完整地址）：'.format(i+1))
     url = input()
     if '://' not in url:
         url = url.replace('\\', '/')
@@ -131,6 +131,9 @@ for i in range(n):
         else:
             if os.path.dirname(url) == os.path.dirname(unixpath(sys.path[0])) + '/img':
                 url = autowebp(os.path.basename(url))
+            else:
+                url = ''
+                print('该文件既不是网络文件，又不是./img目录下的文件！请检查输入！')
     # 重试机制
     while not url:
         print('请重新输入第{}张图片的地址（默认在./img下，也可输入绝对网址或带有/img的完整地址）：'.format(i+1))
@@ -149,6 +152,9 @@ for i in range(n):
             else:
                 if os.path.dirname(url) == os.path.dirname(unixpath(sys.path[0])) + '/img':
                     url = autowebp(os.path.basename(url))
+                else:
+                    url = ''
+                    print('该文件既不是网络文件，又不是./img目录下的文件！请检查输入！')
     else:
         print('请输入点击图片的链接指向（默认为本身）')
         goto = input()

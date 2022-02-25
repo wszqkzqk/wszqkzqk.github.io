@@ -151,6 +151,9 @@ while 1:
             else:
                 if os.path.dirname(url) == os.path.dirname(unixpath(sys.path[0])) + '/img':
                     url = autowebp(os.path.basename(url))
+                else:
+                    url = ''
+                    print('该文件既不是网络文件，又不是./img目录下的文件！请检查输入！')
         if url:
             print('请输入点击图片的链接指向（默认为本身）')
             goto = input()
