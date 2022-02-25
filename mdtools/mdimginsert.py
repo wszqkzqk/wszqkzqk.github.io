@@ -2,8 +2,8 @@
 from sys import argv
 from fnmatch import fnmatch
 def pathed(path):
-    if ((path[0] == "'") or (path[0] == '"')) and ((path[-1] == "'") or (path[-1] == '"')):
-        return path[1:-1].replace('\\', '/')
+    while len(path) > 1 and ((path[0] == "'" and path[-1] == "'") or (path[0] == '"' and path[-1] == '"')):
+        path = path[1:-1]
     else:
         return path.replace('\\', '/')
 imgchara = ('.png', '.jpg', '.jpeg', '.svg', '.gif', '.ico', '.icon', '.heif', '.avif', '.webp')

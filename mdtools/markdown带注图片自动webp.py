@@ -6,6 +6,12 @@ import sys
 def unixpath(path):
     return path.replace('\\', '/')
 
+def pathed(path):
+    while len(path) > 1 and ((path[0] == "'" and path[-1] == "'") or (path[0] == '"' and path[-1] == '"')):
+        path = path[1:-1]
+    else:
+        return path
+
 print('本程序将在插入带注图片的同时，可以按需将jpg、png、bmp、gif、ico、icon、 raw图片转化为webp格式以节省空间与网页流量，并将自动对使用webp进行有损压缩还是无损压缩给出建议\n')
 localimg = os.path.dirname(unixpath(sys.path[0])) + '/img'
 
@@ -116,7 +122,7 @@ tailline = '|'
 
 for i in range(n):
     print('请输入第{}张图片的地址（默认在./img下，也可输入绝对网址、绝对路径或带有/img的完整地址）：'.format(i+1))
-    url = input()
+    url = pathed(input())
     if '://' not in url:
         url = url.replace('\\', '/')
         if '/img/' not in url:
@@ -137,7 +143,7 @@ for i in range(n):
     # 重试机制
     while not url:
         print('请重新输入第{}张图片的地址（默认在./img下，也可输入绝对网址或带有/img的完整地址）：'.format(i+1))
-        url = input()
+        url = pathed(input())
         if '://' not in url:
             url = url.replace('\\', '/')
             if '/img/' not in url:

@@ -3,6 +3,12 @@ import os
 from platform import system
 import sys
 
+def pathed(path):
+    while len(path) > 1 and ((path[0] == "'" and path[-1] == "'") or (path[0] == '"' and path[-1] == '"')):
+        path = path[1:-1]
+    else:
+        return path
+
 if system() == 'Linux':    # 需要先安装xclip软件包
     def clip(info):
         print(info)
@@ -141,7 +147,7 @@ def autowebp(imgfile):  # 仅对本地图片使用
 
 while 1:
     print('请输入图片地址（默认在./img下，也可输入绝对网址或带有/img的完整地址）：')
-    url = input()
+    url = pathed(input())
     if url:
         url = url.replace('\\', '/')
         if '://' not in url:
