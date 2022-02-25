@@ -12,8 +12,8 @@ elif system() == 'Windows': # 增加Msys2或Cygwin判断，如果可以执行Uni
         return path.replace('\\', '/')
     
     def cleanpath(path):
-        path = path.replace('\\', '/')
-        if path[-1] == '/':
+        path = path.replace('/', '\\')
+        if path[-1] == '\\':
             return path[0:-1]
         else:
             return path
