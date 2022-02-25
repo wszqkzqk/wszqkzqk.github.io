@@ -129,7 +129,7 @@ for i in range(n):
                     tailline += '    |'
                     continue
         else:
-            if os.path.dirname(url) == os.path.dirname(unixpath(sys.path[0])) + '/img':
+            if os.path.dirname(url) == localimg:
                 url = autowebp(os.path.basename(url))
             else:
                 url = ''
@@ -150,7 +150,7 @@ for i in range(n):
                         tailline += '    |'
                         break
             else:
-                if os.path.dirname(url) == os.path.dirname(unixpath(sys.path[0])) + '/img':
+                if os.path.dirname(url) == localimg:
                     url = autowebp(os.path.basename(url))
                 else:
                     url = ''

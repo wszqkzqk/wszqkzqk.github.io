@@ -47,7 +47,6 @@ else:
     localimg = os.path.dirname(unixpath(sys.path[0])) + '/img'
 
 print('本程序将在插入图片的同时，可以按需将jpg、png、bmp、gif、ico、icon、 raw图片转化为webp格式以节省空间与网页流量，并将自动对使用webp进行有损压缩还是无损压缩给出建议\n')
-localimg = os.path.dirname(unixpath(sys.path[0])) + '/img'
 
 def autowebp(imgfile):  # 仅对本地图片使用
     
@@ -149,7 +148,7 @@ while 1:
             if '/img/' not in url:
                 url = autowebp(url)
             else:
-                if os.path.dirname(url) == os.path.dirname(unixpath(sys.path[0])) + '/img':
+                if os.path.dirname(url) == localimg:
                     url = autowebp(os.path.basename(url))
                 else:
                     url = ''
