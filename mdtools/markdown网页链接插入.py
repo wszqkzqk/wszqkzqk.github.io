@@ -5,8 +5,10 @@ from platform import system
 if system() == 'Linux':    # 需要先安装xclip软件包
     def clip(info):
         print(info)
-        os.system('echo "' + info + '" |xclip -selection  c ')
-        print('已复制到剪贴板！')
+        if os.system('echo "' + info + '" |xclip -selection  c '):
+            print('无法调用xclip进行自动复制，请手动复制输出内容；若需要使用自动复制功能，请安装"xclip"软件包！')
+        else:
+            print('已复制到剪贴板！\n')
 
 elif system() == 'Windows': # 增加Msys2或Cygwin判断，如果可以执行Unix命令就直接执行更方便的Unix命令
     def unixpath(path):
