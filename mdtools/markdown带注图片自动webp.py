@@ -118,6 +118,7 @@ for i in range(n):
     print('请输入第{}张图片的地址（默认在./img下，也可输入绝对网址或带有/img的完整地址）：'.format(i+1))
     url = input()
     if '://' not in url:
+        url = url.replace('\\', '/')
         if '/img/' not in url:
             if url:
                 url = autowebp(url)
@@ -134,6 +135,7 @@ for i in range(n):
         print('请重新输入第{}张图片的地址（默认在./img下，也可输入绝对网址或带有/img的完整地址）：'.format(i+1))
         url = input()
         if '://' not in url:
+            url = url.replace('\\', '/')
             if '/img/' not in url:
                 if url:
                     url = autowebp(url)
