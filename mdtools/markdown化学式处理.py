@@ -12,22 +12,23 @@ elif system() == 'Windows': # 增加Msys2或Cygwin判断，如果可以执行Uni
         return path.replace('\\', '/')
     
     def cleanpath(path):
-        path = path.replace('/', '\\')
-        if path[-1] == '\\':
+        path = path.replace('\\', '/')
+        if path[-1] == '/':
             return path[0:-1]
         else:
             return path
     
     from fnmatch import fnmatch
     for i in os.getenv('path').split(';'):
-        targetFile = cleanpath(i) + '\\echo.exe'
-        if fnmatch(targetFile, '*\\bin\\echo.exe') or fnmatch(targetFile, '*MSYS2*echo.exe'):
-            if os.path.exists(targetFile):
-                def clip(info):
-                    print(info)
-                    os.system('{} "'.format(targetFile) + info + '"| clip')
-                    print('已复制到剪贴板！\n')
-                break
+        if i:
+            targetFile = cleanpath(i) + '/echo.exe'
+            if fnmatch(targetFile, '*/bin/echo.exe') or fnmatch(targetFile, '*MSYS2*echo.exe'):
+                if os.path.exists(targetFile):
+                    def clip(info):
+                        print(info)
+                        os.system('{} "'.format(targetFile) + info + '"| clip')
+                        print('已复制到剪贴板！\n')
+                    break
     else:
         def clip(info):
             print(info)
