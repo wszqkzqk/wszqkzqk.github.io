@@ -149,7 +149,8 @@ while 1:
             if '/img/' not in url:
                 url = autowebp(url)
             else:
-                url = autowebp(os.path.basename(url))
+                if os.path.dirname(url) == os.path.dirname(unixpath(sys.path[0])) + '/img':
+                    url = autowebp(os.path.basename(url))
         if url:
             print('请输入点击图片的链接指向（默认为本身）')
             goto = input()

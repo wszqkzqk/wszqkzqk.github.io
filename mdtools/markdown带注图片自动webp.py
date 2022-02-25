@@ -129,7 +129,8 @@ for i in range(n):
                     tailline += '    |'
                     continue
         else:
-            url = autowebp(os.path.basename(url))
+            if os.path.dirname(url) == os.path.dirname(unixpath(sys.path[0])) + '/img':
+                url = autowebp(os.path.basename(url))
     # 重试机制
     while not url:
         print('请重新输入第{}张图片的地址（默认在./img下，也可输入绝对网址或带有/img的完整地址）：'.format(i+1))
@@ -146,7 +147,8 @@ for i in range(n):
                         tailline += '    |'
                         break
             else:
-                url = autowebp(os.path.basename(url))
+                if os.path.dirname(url) == os.path.dirname(unixpath(sys.path[0])) + '/img':
+                    url = autowebp(os.path.basename(url))
     else:
         print('请输入点击图片的链接指向（默认为本身）')
         goto = input()
