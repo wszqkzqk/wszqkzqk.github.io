@@ -37,7 +37,7 @@ elif system() == 'Windows': # 增加Msys2或Cygwin判断，如果可以执行Uni
                 if os.path.exists(targetFile):
                     def clip(info):
                         print(info)
-                        os.system('{} "'.format(targetFile) + info + '"| clip')
+                        os.system('{0} "{1}"| clip'.format(targetFile, info))
                         print('已复制到剪贴板！\n')
                     break
     else:
