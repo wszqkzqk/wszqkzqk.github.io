@@ -147,7 +147,7 @@ def autowebp(imgfile):  # 仅对本地图片使用
         return '/img/' + imgfile
 
 while 1:
-    print('请输入图片地址（默认在./img下，也可输入绝对网址或带有/img的完整地址）：')
+    print('请输入图片地址（默认在./img下，也可输入绝对网址、带有/img的完整地址或指向./img的本地绝对路径）：')
     url = pathed(input())
     if url:
         url = url.replace('\\', '/')
