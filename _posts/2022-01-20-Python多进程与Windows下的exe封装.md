@@ -342,7 +342,7 @@ if __name__ == '__main__':
 
 使用`pip install pyinstaller`安装，通过`pyinstaller -F file.py`（`-F`表示输出为单个文件）将`file.py`编译成exe文件，默认输出到命令执行目录的dist文件夹中
 
-pyinstaller编译的并非是机器码文件，它只是将代码、解释器和所需要的库封装到一起，因此也不依赖C编译器。然而，我并没有搞清这个pyinstaller封装的是所在Python环境的解释器还是自身库所携带的Python解释器（懒～），所以其实并不一定有性能提升
+pyinstaller编译的并非是机器码文件，它只是将代码编译为python字节码（`.pyc`文件），然后将其与解释器和所需要的库封装到一起，因此也不依赖C编译器。然而，我并没有搞清这个pyinstaller封装的是所在Python环境的解释器还是自身库所携带的Python解释器（懒～），所以其实并不一定有性能提升
 
 但是，当我运行编译后的exe程序时，那个bug又出现了：
 
@@ -354,11 +354,11 @@ pyinstaller编译的并非是机器码文件，它只是将代码、解释器和
 
 所以我只有放弃用pyinstaller编译多进程积分器的想法，但是我依然在Clang的Python环境下编译了一个[***单进程积分器（点此下载）***](https://github.com/wszqkzqk/jigai-B-homework/releases/download/0.0.4/integrator-single-clang.exe)
 
-- 原理上pyinstaller是将`python.dll`目标`.py`文件封装在一起，因此实际上pyinstaller并不能优化python程序的速度
+- 原理上pyinstaller是将`python.dll`目标`.pyc`文件封装在一起，因此实际上pyinstaller并不能优化python程序的速度
 
 ### nuitka
 
-与pyinstaller不同，nuitka编译的exe直接就是机器码，因此，nuitka需要C编译器才能运行
+与pyinstaller不同，nuitka是先将`.py`文件编译为`.c`源代码，再将`.c`源代码编译为python解释器可以识别的二进制文件，因此，nuitka需要C编译器才能运行
 
 #### 踩坑：编译器支持
 
@@ -376,7 +376,7 @@ pyinstaller编译的并非是机器码文件，它只是将代码、解释器和
 
 #### 编译
 
-nuitka除了依赖C编译器外，还需要其他几个库的支持，好在nuitka在运行过程中可以自动解决依赖问题，因此也並不算麻烦；我编译多进程积分器的命令如下：
+nuitka除了依赖C编译器外，还需要其他几个库的支持，好在nuitka在运行过程中可以自动解决依赖问题，因此也并不算麻烦；我编译多进程积分器的命令如下：
 
 ``` shell
 nuitka --mingw --standalone --onefile --show-progress --show-memory --enable-plugin=multiprocessing --windows-icon-from-ico=target.ico --output-dir=out targetfile.py
@@ -507,6 +507,7 @@ nuitka下调用MinGW编译的[***多进程积分器（点此下载）***](https:
 
 - 2022.01.21更新：这个积分器在Windows平台的运行速度受编译器影响似乎不是很大，让程序程序运行缓慢的真正原因可能是使用来自Microsoft Store中的Python；Python官网上的Python也是由MSVC编译而成，但是性能与MinGW编译的Python并没有明显差距（从Python官网上下载的Python空载启动时间约`0.35s`，100,0000次分割运算时间约`2s`）。
 - 2022.02.15更新：奇怪的是，wine运行Nuitka所打包的程序耗时空载耗时比Windows还短（仅需要`0.3s`），100,0000次分割运算时间仍约`2s`，与Windows下的表现接近
+- 2022.05.14更新：目前推测性能优化不明显的原因是该积分器最大的时间消耗在`eval`一步字符串到表达式的转化，而这步操作对于编译器而言很难优化，所以耗时其实都差不多
 
 [^1]: 所有数据均由搭载AMD 锐龙5800H的联想小新Pro 16在35w TDP功耗的均衡模式下测试出
 
