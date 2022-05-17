@@ -402,6 +402,7 @@ nuitka.bat --mingw --standalone --onefile --show-progress --show-memory --enable
 在没有压缩的情况下，nuitka编译的程序占用体积高达24 MB（pyinstaller编译的程序只有不到7 MB），因此，有必要对程序进行压缩
 
 其实nuitka默认启用了压缩，但压缩依赖第三方库，假如没有安装`zstandard`便无法压缩，因此，建议运行`pip install zstandard`后再进行编译，zstd压缩处理速度很快，而且压缩的exe文件大小仅8 MB左右
+- 2022.05.17更新：Nuitka 0.7以上版本打包文件大小进一步减小
 
 此外，nuitka似乎仅支持Python中的`zstandard`，并不能调用MSYS2中的zstd
 
@@ -518,6 +519,8 @@ nuitka下调用MinGW编译的[***多进程积分器（点此下载）***](https:
 为了避免对同一个字符串进行重复的编解码操作而造成性能浪费，Python内置了`compile()`函数，可以将字符串作为代码对象返回，并准备好执行。用`compile()`的结果替代原始字符串就能起到优化性能的作用。
 
 此外，多进程程序调用的`starmap()`函数不支持传递用`compile()`函数编译后的代码对象，所以对字符串的编译应当放到各个进程中进行
+
+开启优化后，程序的运算速度得到了大幅提升，单进程积分器对`4/(1+x**2)`在[0, 1]上进行分割100,0000次的数值积分耗时由`10 ~ 11s`大幅缩短到`0.6 ~ 0.7s`
 
 ### 代码
 
@@ -683,6 +686,111 @@ if __name__ == '__main__':
     input('\n请按回车键退出')
 ```
 
+#### 自动判断
+
+为了权衡开进程池的开销和多进程带来的性能提升，找到最优计算方案，这里默认在Windows平台下当分割数不大于100,0000时采用单进程计算，其余情况均采用多进程计算
+
+```python
+from math import *
+from timeit import default_timer as time
+from os import cpu_count
+from os import name as systemName
+from multiprocessing import Pool
+
+n = cpu_count() # 默认为设备的逻辑核心数
+
+def ln(x):
+    return log(x)
+def lg(x):
+    return log(x, 10)
+def arcsin(x):
+    return asin(x)
+def arccos(x):
+    return acos(x)
+def arctan(x):
+    return atan(x)
+def arcsinh(x):
+    return asinh(x)
+def arccosh(x):
+    return acosh(x)
+def arctanh(x):
+    return atanh(x)
+def integration(blockstart, blockend, start, length, halflength, func):
+    out = 0
+    x = start + blockstart*length
+    fx = compile(func, '', 'eval')
+    temp2 = eval(fx)
+    for i in range(blockstart + 1, blockend + 1):
+        temp0 = temp2
+        x += halflength
+        temp1 = eval(fx)
+        x = start + i*length
+        temp2 = eval(fx)
+        temp = (temp0 + 4*temp1 + temp2) / 6
+        out += temp*length
+    return out
+
+if __name__ == '__main__':
+    print('''       积分器 <一个简单的数值积分工具（支持自动切换多进程）>
+    Copyright (C) 2021-2022 星外之神 <wszqkzqk@qq.com>
+
+注意：三角函数请先化成正弦、余弦、正切及相应的反三角函数（现已支持双曲三角函数及对应的反三角函数）
+    请务必使用半角符号；圆周率请用"pi"表示；自然对数的底数请用"e"表示
+    请用"*""/"表示乘除，"**"表示乘方，"abs"表示绝对值，"ln"或"log"表示自然对数，"lg"表示常用对数，"log(m, n)"表示m对于底数n的对数
+    Windows下多进程初始化耗时较久，默认在分割数不小于100,0000时才启用多进程计算，其他平台则在任意分割数下均默认启用多进程计算
+请输入被积函数（用x表示自变量）：''')
+    fx = input()
+    print('请输入积分的下限：')
+    start = eval(input())
+    print('请输入积分的上限：')
+    end = eval(input())
+    print('请输入分割数（建议为CPU逻辑核心数的正整数倍；由于浮点数值运算具有不精确性，分割数过大反而可能增大误差）：')
+    block = int(input())
+    calcstart = time()
+    length = (end - start) / block
+    halflength = length / 2
+    tile = int(block / n)
+
+    # 分段数较大时多进程计算
+    if (block >= 1000000) or (systemName != 'nt'):
+        # 进行分段，以便分进程计算
+    
+        tilestart = 0
+        obj = []
+        for i in range(n - 1):
+            tileend = tilestart + tile
+            obj.append((tilestart, tileend, start, length, halflength, fx))
+            tilestart = tileend
+        obj.append((tilestart, block, start, length, halflength, fx))
+
+        with Pool(n) as pool:
+            out = sum(pool.starmap(integration, obj))
+
+        print('\n完成！计算耗时：{}s'.format(time() - calcstart))
+        print('数值积分运算结果为：')
+        print(out)
+        
+        input('\n请按回车键退出...')
+    
+    else:
+        out = 0
+        x = start
+        fx = compile(fx, '', 'eval')
+        temp2 = eval(fx)
+        for i in range(1, block + 1):
+            temp0 = temp2
+            x += halflength
+            temp1 = eval(fx)
+            x = start + i*length
+            temp2 = eval(fx)
+            temp = (temp0 + 4*temp1 + temp2) / 6
+            out += temp*length
+        print('\n完成！计算耗时：{}s'.format(time() - calcstart))
+        print('数值积分运算结果为：')
+        print(out)
+
+        input('\n请按回车键退出...')
+```
 
 ## 捐赠
  
