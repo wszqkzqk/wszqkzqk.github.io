@@ -330,7 +330,8 @@ if __name__ == '__main__':
 
 我认为造成Windows下程序运行较慢的原因有两个：
 - Windows下进程资源消耗较Linux(POSIX)大，建立进程耗时长（经过验证，空载的时间消耗主要来自建立进程池这一步）
-- Windows下官方版Python是用MSVC编译的，性能较GCC和Clang编译的差（虚拟机（8线程）Windows系统中用MinGW编译的Python运行该程序的速度甚至比实体机（16线程）上的快）
+  - 因为Windows下的`spawn`是直接新建一个进程，而POSIX的`fork`是利用写时复制技术在原有进程基础上建立新的进程，`spawn`的资源占用比`fork`大得多
+- Windows下官方版Python是用MSVC编译的，性能较GCC编译的差（虚拟机（8线程）Windows系统中用MinGW编译的Python运行该程序的速度甚至比实体机（16线程）上的快）
 
 ## Windows下exe的编译
 
@@ -351,14 +352,20 @@ pyinstaller编译的并非是机器码文件，它只是将代码编译为python
 ### 解决办法
 
 查资料得知，编译为文件夹时可以在代码中加入`from multiprocessing import freeze_support`与`freeze_support`解决，但是，**编译为单个文件时不支持多进程，使用此方法依然无效**
+- 此外，假如该程序没有输入这一步阻隔后续步骤，由于每次建立进程都会完整启动一遍程序，将会无限建立进程，导致内存泄漏，把程序变为“内存炸弹”
+- 因此用pyinstaller编译python多进程程序风险很大，一不小心就做成了一个病毒般的东西
 
 所以我只有放弃用pyinstaller编译多进程积分器的想法，但是我依然在Clang的Python环境下编译了一个[***单进程积分器（点此下载）***](https://github.com/wszqkzqk/jigai-B-homework/releases/download/0.0.4/integrator-single-clang.exe)
 
-- 原理上pyinstaller是将`python.dll`目标`.pyc`文件封装在一起，因此实际上pyinstaller并不能优化python程序的速度
+- 原理上pyinstaller是将`python.dll`目标`.pyc`文件封装在一起，因此实际上pyinstaller并不能显著优化python程序的速度
 
 ### nuitka
 
 与pyinstaller不同，nuitka是先将`.py`文件编译为`.c`源代码，再将`.c`源代码编译为python解释器可以识别的二进制文件，因此，nuitka需要C编译器才能运行
+- 然而，这里的二进制文件并非直接由机器执行，而仍然是调用python解释器进行解释，因此并不会拥有C语言的运行效率
+- Nuitka的编译主要是把python的PyObject抽离到C中
+- 由于Nuitka在编译过程中有所优化，因此Nuitka编译的程序相比编译前有一定的性能提升
+  - 根据我的简单测试，四则运算中整数、浮点运算均有越2~3倍的性能提升，其中浮点运算性能提升更加明显
 
 #### 踩坑：编译器支持
 
@@ -373,29 +380,38 @@ pyinstaller编译的并非是机器码文件，它只是将代码编译为python
 最后，我从Python官网下载Python才解决了这个问题
 
 - 2022.02.17更新：现在从Msys2官方源pacman安装的Nuitka已经可用了，但是不能在`bash`、`zsh`、`fish`这样的Msys2终端中执行，否则会因为错误调用`/usr/lib`中的库而编译失败（应当调用的是`/mingw64/bin`中的库，不知道为什么在Msys2终端中会出现这个错误，可能是Msys2终端指定了默认值？？？）
+- 2022.05.31更新：可以取消`bash`、`zsh`、`fish`启动的`--login`参数，或者直接在`cmd`、`powershell`、`pwsh`中启动`bash`、`zsh`、`fish`来避免这一问题
 
 #### 编译
 
 nuitka除了依赖C编译器外，还需要其他几个库的支持，好在nuitka在运行过程中可以自动解决依赖问题，因此也并不算麻烦；我编译多进程积分器的命令如下：
 
-``` shell
-nuitka --mingw --standalone --onefile --show-progress --show-memory --enable-plugin=multiprocessing --windows-icon-from-ico=target.ico --output-dir=out targetfile.py
+``` powershell
+nuitka --mingw64 --standalone --onefile --show-progress --show-memory --enable-plugin=multiprocessing --windows-icon-from-ico=target.ico --output-dir=out targetfile.py
 ```
 
-在MSYS2中则为：
+MSYS2的各个shell可能无法识别Windows的`.bat`文件，需要将命令改为：
 
 ``` shell
-nuitka.bat --mingw --standalone --onefile --show-progress --show-memory --enable-plugin=multiprocessing --windows-icon-from-ico=target.ico --output-dir=out targetfile.py
+python -m nuitka --mingw64 --standalone --onefile --show-progress --show-memory --enable-plugin=multiprocessing --windows-icon-from-ico=target.ico --output-dir=out targetfile.py
 ```
+
+如果是使用MSYS2中的python和Nuitka（即安装的是`${MINGW_PACKAGE_PREFIX}-python-nuitka`），则可执行：
+
+``` shell
+nuitka3 --mingw64 --standalone --onefile --show-progress --show-memory --enable-plugin=multiprocessing --windows-icon-from-ico=target.ico --output-dir=out targetfile.py
+```
+
 - 2022.04.06更新：
   - 现在的Nuitka版本(0.7.7)已经默认启用`multiprocessing`模块，无需在命令中体现
-  - 执行`nuitka --mingw --standalone --onefile --show-progress --show-memory --windows-icon-from-ico=target.ico --output-dir=out targetfile.py`即可
+  - 执行`nuitka --mingw64 --standalone --onefile --show-progress --show-memory --windows-icon-from-ico=target.ico --output-dir=out targetfile.py`即可
 
-其中，`--mingw`是指定C编译器（默认为MSVC），`--standalone`是打包依赖，`--onefile`是要求程序打包为一个文件，`--show-progress`是显示编译过程，`--show-memory`是显示内存占用情况，`--enable-plugin=multiprocessing`是启用多进程支持，`--output-dir=out`是指定输出目录为当前目录下的`out`文件夹，最后的`targetfile.py`则是待编译的文件
+其中，`--mingw64`是指定C编译器（默认为MSVC），`--standalone`是打包依赖，`--onefile`是要求程序打包为一个文件，`--show-progress`是显示编译过程，`--show-memory`是显示内存占用情况，`--enable-plugin=multiprocessing`是启用多进程支持，`--output-dir=out`是指定输出目录为当前目录下的`out`文件夹，最后的`targetfile.py`则是待编译的文件
 
 **注意：文件路径不支持中文**
 - 2022.01.23更新：编译是否成功似乎与路径是否含中文无关，但是输出路径最好不要为绝对路径，否则很容易出问题（可以就直接设置为`out`）  
 这可能是Windows的路径名规则与Unix不符所致
+- 2022.05.31更新：现在好像没有这一限制了
 
 #### 编译程序体积压缩
 
