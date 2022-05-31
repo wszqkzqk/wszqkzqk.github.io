@@ -419,7 +419,7 @@ nuitka3 --mingw64 --standalone --onefile --show-progress --show-memory --enable-
 在没有压缩的情况下，nuitka编译的程序占用体积高达24 MB（pyinstaller编译的程序只有不到7 MB），因此，有必要对程序进行压缩
 
 其实nuitka默认启用了压缩，但压缩依赖第三方库，假如没有安装`zstandard`便无法压缩，因此，建议运行`pip install zstandard`后再进行编译，zstd压缩处理速度很快，而且压缩的exe文件大小仅8 MB左右
-- 2022.05.17更新：Nuitka 0.7以上版本打包文件大小进一步减小
+- 2022.05.17更新：Nuitka 0.7以上版本打包文件大小进一步减小，仅5.5 MB左右
 
 此外，nuitka似乎仅支持Python中的`zstandard`，并不能调用MSYS2中的zstd
 
