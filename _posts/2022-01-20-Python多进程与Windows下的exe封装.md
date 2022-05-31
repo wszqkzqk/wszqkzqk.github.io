@@ -370,17 +370,18 @@ pyinstaller编译的并非是机器码文件，它只是将代码编译为python
 #### 踩坑：编译器支持
 
 在Windows平台下，nuitka支持三个C编译器，分别是`MSVC`、`MinGW`、`Clang`，我本来准备调用Clang进行编译，但是编译的时候发现nuitka只支持MSVC中的Clang而不支持MSYS2中的Clang，因此不能编译
+- 2022.05.31更新：与nuitka作者取得联系后，作者告知可以用`--mingw64 --clang`来使用MSYS2（MingW-w64）中的Clang
 
 #### 踩坑：Python安装来源
 
 我改用MinGW编译器之后，同步切换到了MinGW编译的Python环境，但是在此环境中运行时，nuitka可能无法兼容MinGW提供的Python,报出了找不到`python39.lib`的错误，不知道怎么解决
 
+- 2022.02.17更新：现在从Msys2官方源pacman安装的Nuitka已经可用了，但是不能在`bash`、`zsh`、`fish`这样的Msys2终端中执行，否则会因为错误调用`/usr/lib`中的库而编译失败（应当调用的是`/mingw64/bin`中的库，不知道为什么在Msys2终端中会出现这个错误，可能是Msys2终端指定了默认值？？？）
+- 2022.05.31更新：可以取消`bash`、`zsh`、`fish`启动的`--login`参数，或者直接在`cmd`、`powershell`、`pwsh`中启动`bash`、`zsh`、`fish`来避免这一问题
+
 我又换到了MSStore里面的Python环境，然而nuitka依然不兼容
 
 最后，我从Python官网下载Python才解决了这个问题
-
-- 2022.02.17更新：现在从Msys2官方源pacman安装的Nuitka已经可用了，但是不能在`bash`、`zsh`、`fish`这样的Msys2终端中执行，否则会因为错误调用`/usr/lib`中的库而编译失败（应当调用的是`/mingw64/bin`中的库，不知道为什么在Msys2终端中会出现这个错误，可能是Msys2终端指定了默认值？？？）
-- 2022.05.31更新：可以取消`bash`、`zsh`、`fish`启动的`--login`参数，或者直接在`cmd`、`powershell`、`pwsh`中启动`bash`、`zsh`、`fish`来避免这一问题
 
 #### 编译
 
