@@ -36,7 +36,7 @@ tags:       python
 ``` python
 #!/usr/bin/env python3
 
-from time import time
+from timeit import default_timer as time
 from math import *
 # 按照习惯名称对部分函数定义别名
 
@@ -140,7 +140,7 @@ for i in range(n):
 #### 初版整体代码
 
 ```python
-from time import time
+from timeit import default_timer as time
 from os import cpu_count
 n = cpu_count()    # 默认为设备的逻辑核心数
 
@@ -264,7 +264,7 @@ if __name__ == '__main__':
     from platform import system
     if system() == 'Windows':
         print('检测到您在Windows平台下，Windows下多进程初始化耗时较久，当计算量过小时无法发挥性能优势')
-    from time import time
+    from timeit import default_timer as time
     from os import cpu_count
     n = cpu_count() # 默认为设备的逻辑核心数
 
@@ -455,7 +455,7 @@ def arccosh(x):
 def arctanh(x):
     return atanh(x)
 if __name__ == '__main__':
-    from time import time
+    from timeit import default_timer as time
     from os import cpu_count
     n = cpu_count() # 默认为设备的逻辑核心数
 
@@ -564,7 +564,7 @@ nuitka下调用MinGW编译的[***多进程积分器（点此下载）***](https:
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from time import time
+from timeit import default_timer as time
 from math import *
 def ln(x):
     return log(x)
@@ -641,7 +641,7 @@ def arccosh(x):
 def arctanh(x):
     return atanh(x)
 if __name__ == '__main__':
-    from time import time
+    from timeit import default_timer as time
     from os import cpu_count
     n = cpu_count() # 默认为设备的逻辑核心数
 
