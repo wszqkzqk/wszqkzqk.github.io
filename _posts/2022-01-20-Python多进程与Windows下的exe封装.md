@@ -769,6 +769,7 @@ if __name__ == '__main__':
     tile = int(block / n)
 
     # 分段数较大时多进程计算
+
     if (block >= 1000000) or (systemName != 'nt'):
         # 进行分段，以便分进程计算
     
