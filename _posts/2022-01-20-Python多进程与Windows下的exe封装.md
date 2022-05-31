@@ -79,7 +79,7 @@ for i in range(1, block + 1):   # 积分运算，辛普森法
     temp0 = temp2
     x += halflength
     temp1 = eval(fx)
-    x = start + i*length    # 浮点运算中，乘积误差比累加小，此处用乘法虽然降低了速度但是提高了准确度
+    x = start + i*length
 
     temp2 = eval(fx)
     temp = (temp0 + 4*temp1 + temp2) / 6
@@ -111,7 +111,7 @@ def integration(blockstart, blockend):
         temp0 = temp2
         x += halflength
         temp1 = eval(fx)
-        x = start + i*length    # 浮点运算中，乘积误差比累加小，此处用乘法虽然降低了速度但是提高了准确度
+        x = start + i*length
     
         temp2 = eval(fx)
         temp = (temp0 + 4*temp1 + temp2) / 6
@@ -190,7 +190,7 @@ def integration(blockstart):
         temp0 = temp2
         x += halflength
         temp1 = eval(fx)
-        x = start + i*length    # 浮点运算中，乘积误差比累加小，此处用乘法虽然降低了速度但是提高了准确度
+        x = start + i*length
         temp2 = eval(fx)
         temp = (temp0 + 4*temp1 + temp2) / 6
         out += temp*length
@@ -293,7 +293,7 @@ def integration(blockstart, blockend, start, length, halflength, fx):
         temp0 = temp2
         x += halflength
         temp1 = eval(fx)
-        x = start + i*length    # 浮点运算中，乘积误差比累加小，此处用乘法虽然降低了速度但是提高了准确度
+        x = start + i*length
 
         temp2 = eval(fx)
         temp = (temp0 + 4*temp1 + temp2) / 6
@@ -467,7 +467,7 @@ def integration(blockstart, blockend, start, length, halflength, fx):
         temp0 = temp2
         x += halflength
         temp1 = eval(fx)
-        x = start + i*length    # 浮点运算中，乘积误差比累加小，此处用乘法虽然降低了速度但是提高了准确度
+        x = start + i*length
 
         temp2 = eval(fx)
         temp = (temp0 + 4*temp1 + temp2) / 6
