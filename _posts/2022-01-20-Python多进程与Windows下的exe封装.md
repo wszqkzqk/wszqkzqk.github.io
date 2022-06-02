@@ -707,6 +707,12 @@ if __name__ == '__main__':
 
 为了权衡开进程池的开销和多进程带来的性能提升，找到最优计算方案，这里默认在Windows平台下当分割数不大于100,0000时采用单进程计算，其余情况均采用多进程计算
 
+此外，这个版本还增加了异常捕捉，在输入非法时不会闪退，而是会提示重新输入，更加方便
+
+要使用的话推荐这个版本，当然这个程序是设计用来玩的（）
+
+Windows编译文件下载地址：[点击这里下载（封装python 3.10环境，MSVC编译）](https://github.com/wszqkzqk/jigai-B-homework/releases/download/refs%2Fheads%2Fmaster/integrator-auto-exe-with-python3.10-msvc-nuitka.exe)
+
 ```python
 from math import *
 from timeit import default_timer as time
@@ -757,18 +763,39 @@ if __name__ == '__main__':
     Windows下多进程初始化耗时较久，默认在分割数不小于100,0000时才启用多进程计算，其他平台则在任意分割数下均默认启用多进程计算
 请输入被积函数（用x表示自变量）：''')
     fx = input()
-    print('请输入积分的下限：')
-    start = eval(input())
-    print('请输入积分的上限：')
-    end = eval(input())
-    print('请输入分割数（建议为CPU逻辑核心数的正整数倍；由于浮点数值运算具有不精确性，分割数过大反而可能增大误差）：')
-    block = int(input())
+    while True:
+        try:
+            x = start = eval(input('请输入积分的下限：\n'))
+            break
+        except Exception:
+            print("错误！请检查后重新输入！")
+    while True:
+        try:
+            end = eval(input('请输入积分的上限：\n'))
+            break
+        except Exception:
+            print("错误！请检查后重新输入！")
+    while True:
+        try:
+            block = int(input('请输入分割数（建议为CPU逻辑核心数的正整数倍；由于浮点数值运算具有不精确性，分割数过大反而可能增大误差）：\n'))
+            break
+        except Exception:
+            print("错误！请检查后重新输入！")
+    while True:
+        try:
+            func = compile(fx, '', 'eval')
+            temp2 = eval(func)    # 初始化x与temp2，以便后续让temp0调用上一次的temp2的值，可以减小运算量
+
+            break
+        except Exception:
+            print("被积函数输入错误！请检查后重新输入！")
+            fx = input("请输入被积函数（用x表示自变量）：\n")
     calcstart = time()
     length = (end - start) / block
     halflength = length / 2
     tile = int(block / n)
 
-    # 分段数较大时多进程计算
+    # 分割数较大时多进程计算
 
     if (block >= 1000000) or (systemName != 'nt'):
         # 进行分段，以便分进程计算
@@ -792,15 +819,13 @@ if __name__ == '__main__':
     
     else:
         out = 0
-        x = start
-        fx = compile(fx, '', 'eval')
-        temp2 = eval(fx)
+
         for i in range(1, block + 1):
             temp0 = temp2
             x += halflength
-            temp1 = eval(fx)
+            temp1 = eval(func)
             x = start + i*length
-            temp2 = eval(fx)
+            temp2 = eval(func)
             temp = (temp0 + 4*temp1 + temp2) / 6
             out += temp*length
         print('\n完成！计算耗时：{}s'.format(time() - calcstart))
