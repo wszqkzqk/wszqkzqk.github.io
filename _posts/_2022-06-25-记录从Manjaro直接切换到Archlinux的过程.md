@@ -148,8 +148,10 @@ Manjaro默认配置好了zsh，然而这些配置在Archlinux中并没有直接�
 在Archlinux源及Archlinuxcn源中可以直接安装配置zsh所需要用到的`oh-my-zsh-git`、`oh-my-zsh-powerline-theme`
 
 ```shell
-sudo pacman -S oh-my-zsh-powerline-theme oh-my-zsh-git
+sudo pacman -S oh-my-zsh-powerline-theme-git oh-my-zsh-git zsh-syntax-highlighting zsh-autosuggestions
 ```
+
+安装完成后，
 
 ## fcitx5
 
