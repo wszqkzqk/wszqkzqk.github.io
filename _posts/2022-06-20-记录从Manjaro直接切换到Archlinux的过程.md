@@ -19,7 +19,7 @@ tags:         Linux Manjaro Archlinux Pacman 开源软件
 
 ```
 Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
-Server = http://mirrors.aliyun.com/archlinux/$repo/os/$arch
+Server = https://mirrors.aliyun.com/archlinux/$repo/os/$arch
 ```
 
 感觉北大访问隔壁的镜像源比校内的快QwQ（
