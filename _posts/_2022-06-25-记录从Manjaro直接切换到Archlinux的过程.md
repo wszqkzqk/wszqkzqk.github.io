@@ -121,4 +121,13 @@ sudo pacman -R $(pacman -Qqm|grep manjaro)
 sudo pacman -R $(pacman -Qqm|grep mhwd)
 ```
 
+其他残余软件也可以按需删除
+
+## 软件包切换
+
+很多Manjaro软件包的包名和版本号都与Archlinux一样，但是内容未必一样（最简单的例子：发行版信息`lsb-release`），所以建议切换后进行软件包的重新安装，执行完前几节的步骤后依赖问题已基本解决，可以继续执行：
+
+```shell
+sudo pacman -Syu $(pacman -Qqn)
+```
 
