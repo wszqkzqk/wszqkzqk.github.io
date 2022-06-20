@@ -197,3 +197,9 @@ GLFW_IM_MODULE=fcitx
 [![#~'/home/wszqkzqk/projects/wszqkzqk.github.io/img/switch-manjaro-to-archlinux.webp'](/img/'/home/wszqkzqk/projects/wszqkzqk.github.io/img/switch-manjaro-to-archlinux.webp')](/img/'/home/wszqkzqk/projects/wszqkzqk.github.io/img/switch-manjaro-to-archlinux.webp')
 
 不过由本文可以看到，由Manjaro切换Archlinux的过程仍然较为繁琐，仅推荐在需要将使用了很久、不便于迁移的Manjaro系统切换至Archlinux时使用，不推荐用这个方法通过安装Manjaro来安装Archlinux，如果需要直接安装Archlinux又想要避免安装的麻烦可以尝试[EndeavourOS](https://endeavouros.com/)
+
+## 捐赠    
+
+|  **支付宝**  |  **微信支付**  |
+|  :----:  |  :----:  |
+|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |
