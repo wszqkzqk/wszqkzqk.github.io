@@ -141,7 +141,7 @@ Manjaro默认使用了自己的主题，而Manjaro的主题文件已经在之前
 - 把`=`后的内容改成`"/usr/share/grub/themes/starfield/theme.txt"`
 - 完成后，执行`sudo grub-mkconfig -o /boot/grub/grub.cfg`重新生成`grub.cfg`
 
-## zsh
+## Zsh
 
 Manjaro默认配置好了zsh，然而这些配置在Archlinux中并没有直接集成，需要自己进行
 
@@ -186,6 +186,26 @@ XMODIFIERS=@im=fcitx
 INPUT_METHOD=fcitx
 SDL_IM_MODULE=fcitx
 GLFW_IM_MODULE=fcitx
+```
+
+## 类似Manjaro的GUI包管理器
+
+如果想要在Archlinux下面使用GUI的包管理器就不推荐pamac了（那还不如直接用Manjaro），这里推荐使用Octopi
+
+```
+yay -S octopi
+```
+
+如果需要托盘驻留插件，对于KDE,可以执行：
+
+```
+yay -S octopi-notifier-framework
+```
+
+其他桌面环境执行：
+
+```
+yay -S octopi-notifier-qt5
 ```
 
 ## 总结
