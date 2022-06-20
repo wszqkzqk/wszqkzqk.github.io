@@ -22,7 +22,7 @@ Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
 Server = http://mirrors.aliyun.com/archlinux/$repo/os/$arch
 ```
 
-感觉北大访问隔壁的镜像源比本地的快QwQ（
+感觉北大访问隔壁的镜像源比校内的快QwQ（
 
 为了切换到Archlinux,还需要编辑`/etc/pacman.conf`，在`HoldPkg = pacman glibc manjaro-system`中删除`manjaro-system`，同时，注释掉`SyncFirst = manjaro-system archlinux-keyring manjaro-keyring`一行，与Archlinux保持一致
 
