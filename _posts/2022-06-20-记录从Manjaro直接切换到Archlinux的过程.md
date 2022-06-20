@@ -39,7 +39,7 @@ Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch
 然后进行软件仓库同步并安装新的keyring：
 
 ```shell
-sudo pacman -Syy archlinux-keyring
+sudo pacman -Syy archlinuxcn-keyring
 ```
 
 再从Archlinuxcn源中直接安装AUR助手yay：
