@@ -51,7 +51,7 @@ sudo pacman -S yay
 
 由于Manjaro和Archlinux的软件包并非一一对应，想要更改了镜像源就直接切换升级是不可能的，还需要进行一些操作
 
-### bash
+### Bash
 
 首先，Manjaro和Archlinux的`bash`封装不同，Manjaro将bash本身与bash的配置文件`.bashrc`封装成了`bash`和`bashrc-manjaro`两个软件包，并且`bash`依赖于`bashrc-manjaro`，所以需要对现有Manjaro系统的文件进行编辑
 
@@ -90,7 +90,7 @@ sudo pacman -S linux linux-headers linux-zen linux-zen-headers
 sudo pacman -R linux515 linux515-headers linux518 linux518-headers
 ```
 
-## Manjaro特色软件
+### Manjaro特色软件
 
 Archlinux的软件源里面显然也不会有Manjaro的特色软件，因此这些软件也需要进行替换或者删除
 
