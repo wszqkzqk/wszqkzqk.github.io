@@ -24,6 +24,8 @@ Server = http://mirrors.aliyun.com/archlinux/$repo/os/$arch
 
 感觉北大访问隔壁的镜像源比本地的快QwQ（
 
+为了切换到Archlinux,还需要编辑`/etc/pacman.conf`，在`HoldPkg = pacman glibc manjaro-system`中删除`manjaro-system`，同时，注释掉`SyncFirst = manjaro-system archlinux-keyring manjaro-keyring`一行，与Archlinux保持一致
+
 ## 添加Archlinuxcn源并安装yay
 
 编辑`/etc/pacman.conf`，在文本后添加：
@@ -93,3 +95,30 @@ sudo pacman -R linux515 linux515-headers linux518 linux518-headers
 Archlinux的软件源里面显然也不会有Manjaro的特色软件，因此这些软件也需要进行替换或者删除
 
 利用`pacman -Qqm`可以列出现在源中没有的本地软件包，有一些可能是AUR的或自己构建的，而其余的则是Manjaro的“前朝余孽”
+
+首先，需要将Manjaro的`pacman-mirrors`替换成Archlinux的`pacman-mirrorlist`，然而，直接采用`sudo pacman -S pacman-mirrorlist`并不可行，因为我们现在还没有移除Manjaro自身的包管理相关软件，这些软件依赖于Manjaro的`pacman-mirrors`，需要先行卸载：
+
+```shell
+sudo pacman -Rc libpamac python-manjaro-sdk
+```
+
+这个时候被卸载的可能不只是Manjaro的程序，如果有其他的可以在卸载之后再安装回来
+
+然后，在对Manjaro的`pacman-mirrors`进行替换：
+
+```shell
+sudo pacman -S pacman-mirrorlist
+```
+
+现在即可以成功安装
+
+这个步骤完成后，就可以删除其他在`pacman -Qqm`中列出的Manjaro特色软件了
+
+一般来说，除了`manjaro-*`需要删除以外，因为Archlinux与Manjaro的硬件配置机制不同，`mhwd*`也需要删除，这一步建议手动排查，但是也可以进行直接删除：
+
+```shell
+sudo pacman -R $(pacman -Qqm|grep manjaro)
+sudo pacman -R $(pacman -Qqm|grep mhwd)
+```
+
+
