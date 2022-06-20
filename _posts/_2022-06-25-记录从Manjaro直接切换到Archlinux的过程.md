@@ -151,7 +151,16 @@ Manjaro默认配置好了zsh，然而这些配置在Archlinux中并没有直接�
 sudo pacman -S oh-my-zsh-powerline-theme-git oh-my-zsh-git zsh-syntax-highlighting zsh-autosuggestions
 ```
 
-安装完成后，
+安装完成后，还需要复制`.zshrc`文件：
+
+```shell
+mv ~/.zshrc ~/.zshrc.bak    # 将原来Manjaro的默认配置文件备份保存
+cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
+```
+
+打开`~/.zshrc`进行编辑，找到`plugins=`，在括号中添加`zsh-syntax-highlighting zsh-autosuggestions`
+
+oh my zsh的历史保存文件地址与Manjaro配置的zsh的保存位置不同，为了继续使用以前的
 
 ## fcitx5
 
