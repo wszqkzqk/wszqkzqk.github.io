@@ -218,7 +218,7 @@ yay -S octopi-notifier-qt5
 
 最后贴上一张图，切换后`neofetch`与KDE信息中心的系统信息已经变成了Archlinux：
 
-[![#~'/home/wszqkzqk/projects/wszqkzqk.github.io/img/switch-manjaro-to-archlinux.webp'](/img/'/home/wszqkzqk/projects/wszqkzqk.github.io/img/switch-manjaro-to-archlinux.webp')](/img/'/home/wszqkzqk/projects/wszqkzqk.github.io/img/switch-manjaro-to-archlinux.webp')
+[![#~switch-manjaro-to-archlinux.webp](/img/switch-manjaro-to-archlinux.webp')](/img/switch-manjaro-to-archlinux.webp')
 
 不过由本文可以看到，由Manjaro切换Archlinux的过程仍然较为繁琐，仅推荐在需要将使用了很久、不便于迁移的Manjaro系统切换至Archlinux时使用，不推荐用这个方法通过安装Manjaro来安装Archlinux，如果需要直接安装Archlinux又想要避免安装的麻烦可以尝试[EndeavourOS](https://endeavouros.com/)
 
