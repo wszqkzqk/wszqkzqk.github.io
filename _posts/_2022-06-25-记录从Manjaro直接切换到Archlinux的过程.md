@@ -92,4 +92,4 @@ sudo pacman -R linux515 linux515-headers linux518 linux518-headers
 
 Archlinux的软件源里面显然也不会有Manjaro的特色软件，因此这些软件也需要进行替换或者删除
 
-利用`pacman -Qqm`可以列出现在源中没有的本地软件包，有一些可能是AUR的
+利用`pacman -Qqm`可以列出现在源中没有的本地软件包，有一些可能是AUR的或自己构建的，而其余的则是Manjaro的“前朝余孽”
