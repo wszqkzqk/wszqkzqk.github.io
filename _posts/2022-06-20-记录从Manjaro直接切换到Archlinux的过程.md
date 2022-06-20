@@ -196,7 +196,7 @@ GLFW_IM_MODULE=fcitx
 yay -S octopi
 ```
 
-如果需要托盘驻留插件，对于KDE,可以执行：
+如果需要托盘驻留插件，对于KDE，可以执行：
 
 ```
 yay -S octopi-notifier-framework
