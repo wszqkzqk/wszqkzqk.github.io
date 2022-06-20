@@ -164,6 +164,13 @@ cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
 
 打开`~/.zshrc`进行编辑，找到`plugins=`，在括号中添加`zsh-syntax-highlighting zsh-autosuggestions`，此外，还推荐将`ZSH_THEME`设置为`"powerline"`，切换到更好看到主题
 
+为了真正启用语法高亮和自动补全功能，还需要将插件链接到oh my zsh的目录下：
+
+```shell
+sudo ln -s /usr/share/zsh/plugins/zsh-syntax-highlighting /usr/share/oh-my-zsh/custom/plugins/
+sudo ln -s /usr/share/zsh/plugins/zsh-autosuggestions /usr/share/oh-my-zsh/custom/plugins/
+```
+
 oh my zsh的历史保存文件地址与Manjaro配置的zsh的保存位置不同，为了继续使用以前的历史记录，可以执行：
 
 ```shell
