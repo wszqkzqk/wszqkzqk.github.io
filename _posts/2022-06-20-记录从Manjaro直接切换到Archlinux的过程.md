@@ -2,7 +2,7 @@
 layout:       post
 title:        记录从Manjaro直接切换到Archlinux的过程
 subtitle:     折腾日志
-date:         2022-06-25
+date:         2022-06-20
 author:       星外之神
 header-img:   img/switch-manjaro-to-archlinux-bg.webp
 catalog:      true
