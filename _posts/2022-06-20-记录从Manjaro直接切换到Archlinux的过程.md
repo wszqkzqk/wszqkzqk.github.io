@@ -43,6 +43,7 @@ sudo pacman -Syy archlinuxcn-keyring
 ```
 
 再从Archlinuxcn源中直接安装AUR助手yay：
+
 ```shell
 sudo pacman -S yay
 ```
