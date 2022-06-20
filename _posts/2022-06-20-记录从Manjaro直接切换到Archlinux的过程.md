@@ -47,7 +47,7 @@ sudo pacman -Syy archlinux-keyring
 sudo pacman -S yay
 ```
 
-## 切换软件
+## 切换软件依赖
 
 由于Manjaro和Archlinux的软件包并非一一对应，想要更改了镜像源就直接切换升级是不可能的，还需要进行一些操作
 
@@ -123,11 +123,14 @@ sudo pacman -R $(pacman -Qqm|grep mhwd)
 
 其他残余软件也可以按需删除
 
-## 软件包切换
+## 重新安装Archlinux的软件包
 
 很多Manjaro软件包的包名和版本号都与Archlinux一样，但是内容未必一样（最简单的例子：发行版信息`lsb-release`），所以建议切换后进行软件包的重新安装，执行完前几节的步骤后依赖问题已基本解决，可以继续执行：
 
 ```shell
+# 首先清除以前下载的Manjaro的软件包
+sudo pacman -Scc
+# 重新安装所有已安装的库内软件包
 sudo pacman -Syu $(pacman -Qqn)
 ```
 
