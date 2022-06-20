@@ -131,3 +131,20 @@ sudo pacman -R $(pacman -Qqm|grep mhwd)
 sudo pacman -Syu $(pacman -Qqn)
 ```
 
+## grub
+
+Manjaro默认使用了自己的主题，而Manjaro的主题文件已经在之前被我们删除，所以grub主题文件需要重新指定
+
+这里我不想折腾，直接使用了grub自带的starfield主题：
+- 打开`/etc/default/grub`
+- 找到`GRUB_THEME=`一行
+- 把`=`后的内容改成`"/usr/share/grub/themes/starfield/theme.txt"`
+- 完成后，执行`sudo grub-mkconfig -o /boot/grub/grub.cfg`重新生成`grub.cfg`
+
+## zsh
+
+Manjaro默认配置好了zsh
+
+## fcitx5
+
+Manjaro通过依赖的方式在安装fcitx5的时候通过向`/etc/xdg`添加`fcitx5`文件夹及配置文件自动启用了fcitx5在软件中的输入功能
