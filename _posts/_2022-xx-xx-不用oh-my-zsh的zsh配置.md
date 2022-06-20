@@ -21,4 +21,10 @@ Zsh、Fish甚至从Windows下发展而来的PowerShell相比于Bash而言，都�
 
 ## 替代实现
 
+oh-my-zsh提供的便利主要是主题支持和插件支持，当然还有其他的操作绑定。这些我们都可以想办法去进行性能更优的替代实现。
 
+### 主题支持及状态提示
+
+在oh-my-zsh的启发下，[Jan De Dobbeleer](https://github.com/JanDeDobbeleer)开发了一个功能较为接近的[oh-my-posh](https://github.com/JanDeDobbeleer/oh-my-posh)。与oh-my-zsh不同，oh-my-posh采用Go语言开发，虽然运行效率仍然较C/C++低不少，但是其性能仍然显著高于直接用Sell写成的oh-my-zsh。
+
+虽然oh-my-posh看似是为微软的PowerShell设计，但是由于它并没有用绑定在Shell上的语言实现，因此实际上oh-my-posh支持多种Shell环境，其中当然也包括了Zsh。
