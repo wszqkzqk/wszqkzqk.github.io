@@ -166,6 +166,34 @@ oh my zsh的历史保存文件地址与Manjaro配置的zsh的保存位置不同�
 cp ~/.zhistory ~/.zsh_history
 ```
 
+完成后可以将各个地方的，默认shell切换到zsh：
+
+```shell
+chsh -s /bin/zsh
+sudo chsh -s /bin/zsh
+```
+
 ## Fcitx5
 
-Manjaro通过依赖的方式在安装Fcitx5的时候通过向`/etc/xdg`添加`fcitx5`文件夹及配置文件自动启用了fcitx5在软件中的输入功能
+Manjaro通过依赖的方式在安装Fcitx5的时候向`/etc/xdg`添加`fcitx5`文件夹及配置文件自动启用了Fcitx5在软件中的输入功能（软件包`manjaro-asian-input-support-fcitx5`），因此安装了Fcitx5后开箱即用，不需要配置
+
+但是Archlinux软件源没有这一软件包，应当手动对Fcitx5进行配置，编辑`/etc/environment`，加入：
+
+```shell
+GTK_IM_MODULE=fcitx
+QT_IM_MODULE=fcitx
+XMODIFIERS=@im=fcitx
+INPUT_METHOD=fcitx
+SDL_IM_MODULE=fcitx
+GLFW_IM_MODULE=fcitx
+```
+
+## 总结
+
+以上过程完成后，切换即基本完成（部分Manjaro的残留文件可以手动进行清理），我在使用过程中并没有发现由切换造成的bug
+
+最后贴上一张图，切换后`neofetch`与KDE信息中心的系统信息已经变成了Archlinux：
+
+[![#~'/home/wszqkzqk/projects/wszqkzqk.github.io/img/switch-manjaro-to-archlinux.webp'](/img/'/home/wszqkzqk/projects/wszqkzqk.github.io/img/switch-manjaro-to-archlinux.webp')](/img/'/home/wszqkzqk/projects/wszqkzqk.github.io/img/switch-manjaro-to-archlinux.webp')
+
+不过由本文可以看到，由Manjaro切换Archlinux的过程仍然较为繁琐，仅推荐在需要将使用了很久、不便于迁移的Manjaro系统切换至Archlinux时使用，不推荐用这个方法通过安装Manjaro来安装Archlinux，如果需要直接安装Archlinux又想要避免安装的麻烦可以尝试[EndeavourOS](https://endeavouros.com/)

@@ -49,9 +49,8 @@ elif system() == 'Windows': # 增加Msys2或Cygwin判断，如果可以执行Uni
     localimg = os.path.dirname(unixpath(sys.path[0])) + '/img'
 
 else:
-    print(info)
     print('\n操作系统不受支持，无法自动将输出内容复制到剪贴板！请自行复制！')
-    localimg = os.path.dirname(unixpath(sys.path[0])) + '/img'
+    localimg = os.path.dirname(sys.path[0]) + '/img'
 
 print('本程序将在插入图片的同时，可以按需将jpg、png、bmp、gif、ico、icon、 raw图片转化为webp格式以节省空间与网页流量，并将自动对使用webp进行有损压缩还是无损压缩给出建议\n')
 
