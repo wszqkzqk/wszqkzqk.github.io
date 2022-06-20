@@ -45,6 +45,14 @@ sudo pacman -S bash
 sudo pacman -R bashrc-manjaro
 ```
 
-这样就不会有依赖错误和文件冲突了
+这样就不会有依赖错误和文件冲突了，但是这样的卸载操作可能会将Archlinux的bash软件包的`/etc/skel/.bashrc`保存为`/etc/skel/.bashrc.pacsave`，所以还需要执行：
 
+```shell
+sudo mv /etc/skel/.bashrc.pacsave /etc/skel/.bashrc
+```
 
+如果不喜欢刚才带来的文件冗余，也可以删除之前生成的`.bak`文件：
+
+```shell
+sudo rm /etc/bash.bashrc.bak /etc/skel/.bashrc.bak
+```
