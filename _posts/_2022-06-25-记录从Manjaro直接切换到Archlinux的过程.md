@@ -40,7 +40,10 @@ Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch
 sudo pacman -Syy archlinux-keyring
 ```
 
-
+再从Archlinuxcn源中直接安装AUR助手yay：
+```shell
+sudo pacman -S yay
+```
 
 ## 切换软件
 
