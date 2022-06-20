@@ -162,7 +162,7 @@ mv ~/.zshrc ~/.zshrc.bak    # 将原来Manjaro的默认配置文件备份保存
 cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
 ```
 
-打开`~/.zshrc`进行编辑，找到`plugins=`，在括号中添加`zsh-syntax-highlighting zsh-autosuggestions`
+打开`~/.zshrc`进行编辑，找到`plugins=`，在括号中添加`zsh-syntax-highlighting zsh-autosuggestions`，此外，还推荐将`ZSH_THEME`设置为`"powerline"`，切换到更好看到主题
 
 oh my zsh的历史保存文件地址与Manjaro配置的zsh的保存位置不同，为了继续使用以前的历史记录，可以执行：
 
