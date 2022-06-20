@@ -160,8 +160,12 @@ cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
 
 打开`~/.zshrc`进行编辑，找到`plugins=`，在括号中添加`zsh-syntax-highlighting zsh-autosuggestions`
 
-oh my zsh的历史保存文件地址与Manjaro配置的zsh的保存位置不同，为了继续使用以前的
+oh my zsh的历史保存文件地址与Manjaro配置的zsh的保存位置不同，为了继续使用以前的历史记录，可以执行：
 
-## fcitx5
+```shell
+cp ~/.zhistory ~/.zsh_history
+```
 
-Manjaro通过依赖的方式在安装fcitx5的时候通过向`/etc/xdg`添加`fcitx5`文件夹及配置文件自动启用了fcitx5在软件中的输入功能
+## Fcitx5
+
+Manjaro通过依赖的方式在安装Fcitx5的时候通过向`/etc/xdg`添加`fcitx5`文件夹及配置文件自动启用了fcitx5在软件中的输入功能
