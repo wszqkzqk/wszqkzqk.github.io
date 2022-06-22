@@ -21,9 +21,17 @@ Zsh、Fish甚至从Windows下发展而来的PowerShell相比于Bash而言，都�
 
 ### 准备
 
-考虑到有的读者可能对Windows下的终端配置不熟悉，在这里我简单列出一下Windows下安装Zsh的方法。由于WSL对Windows本身的交互并不是很方便，里面的工具链也不能用来构建Windows本地应用，故我在这里推荐使用Msys2。Msys2相当于Windows版的Pacman包管理器，不仅与Archlinux系发行版的包管理命令完美兼容，而且包构建方便（只需要写一份`PKGBUILD`）、官方源中软件丰富，包含了gcc、clang等编译器与众多库，还有ffmpeg等基础软件和VLC等方便的用户端GUI软件。
+考虑到有的读者可能对Windows下的终端配置不熟悉，在这里我简单列出一下Windows下安装Zsh的方法。
 
+由于WSL对Windows本身的交互并不是很方便，里面的工具链也不能用来构建Windows本地应用，我在这里推荐使用Msys2。Msys2相当于Windows版的Pacman包管理器，不仅与Archlinux系发行版的包管理命令完美兼容，而且包构建方便（只需要写一份`PKGBUILD`）、官方源中软件丰富，包含了gcc、clang等编译器与众多库，还有ffmpeg等基础软件和VLC等方便的用户端GUI软件，功能十分强大。
 
+Msys2已经包含在了winget的软件库中，可以直接通过命令安装：
+
+```powershell
+winget install msys2.msys2
+```
+
+安装完成后，
 
 ## 替代实现
 
