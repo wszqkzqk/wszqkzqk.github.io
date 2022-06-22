@@ -1,7 +1,7 @@
 ---
 layout:       post
 title:        不借助oh-my-zsh进行Zsh配置
-subtitle:     Zsh配置日志
+subtitle:     Zsh配置日志：解决Zsh启动缓慢的问题
 date:         2022-xx-xx
 author:       星外之神
 header-img:   img/
@@ -31,15 +31,30 @@ Msys2已经包含在了winget的软件库中，可以直接通过命令安装：
 winget install msys2.msys2
 ```
 
-安装完成后，需要在系统环境变量（现在的Windows应该只需要在开始菜单的搜索框中输入`path`就能弹出）中添加如下变量：
+安装完成后，需要在系统环境变量（现在的Windows系统应该只需要在开始菜单的搜索框中输入`path`就能弹出）中添加如下变量：
 
 |   变量名  |   变量值  |
 | ---- | --- |
 |   MSYS2_PATH_TYPE[^1] | inherit   |
 
-其实也可以把Msys2的相关路径添加到`Path`变量中，但是据说可能会出现一些冲突，然而笔者添加了以后并没有发现什么问题
+其实也可以把Msys2的相关路径（使用的MinGW-w64工具链路径`{Msys2安装路径}/{使用的MinGW类型}/bin`以及Msys2路径`{Msys2安装路径}/usr/bin`）添加到`Path`变量中，方便直接在Windows的cmd或者PowerShell中调用Msys2命令，但是据说可能会出现一些冲突，然而笔者添加了以后并没有发现什么问题，因此这也可以作为一个可选项。
 
-## 替代实现
+添加完成后，在MinTTY中运行Msys2终端，安装Zsh：
+
+```bash
+pacman -S zsh
+```
+
+为了方便，可以将Msys2集成到Windows终端，在Windows终端中选择`添加新配置文件`-`新建空配置文件`，在`命令行`中填入：
+
+```cmd
+cmd.exe /c set MSYSTEM={你使用的MinGW环境名称} && set CHERE_INVOKING=enabled_from_arguments && {Msys2安装位置}/usr/bin/
+zsh.exe --login
+```
+
+
+
+## oh-my-zsh的替代实现
 
 oh-my-zsh提供的便利主要是主题支持和插件支持，当然还有其他的操作绑定。这些我们都可以想办法去进行性能更优的替代实现。
 
