@@ -34,7 +34,7 @@ winget install msys2.msys2
 安装完成后，需要在系统环境变量（现在的Windows系统应该只需要在开始菜单的搜索框中输入`path`就能弹出）中添加如下变量：
 
 |       变量名               |   变量值   |
-|       ----                | ---       |
+|       ----                |    ---    |
 |   MSYS2_PATH_TYPE[^1]     | inherit   |
 
 其实也可以把MSYS2的相关路径（使用的MinGW-w64工具链路径`{MSYS2安装路径}/{使用的MinGW类型}/bin`以及MSYS2路径`{MSYS2安装路径}/usr/bin`）添加到`Path`变量中，方便直接在Windows的cmd或者PowerShell中调用MSYS2命令，但是据说可能会出现一些冲突，然而笔者添加了以后并没有发现什么问题，因此这也可以作为一个可选项。
