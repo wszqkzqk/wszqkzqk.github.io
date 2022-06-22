@@ -32,7 +32,7 @@ oh-my-zsh提供的便利主要是主题支持和插件支持，当然还有其�
 oh-my-posh不仅是跨Shell的，它还是跨平台的，Windows与Acrhlinux系发行版均可以很方便地安装，Windows安装命令如下：
 
 ```powershell
-winget install JanDeDobbeleer.oh-my-posh
+winget install JanDeDobbeleer.OhMyPosh
 ```
 
 Archlinux系发行版则是（使用yay）：
