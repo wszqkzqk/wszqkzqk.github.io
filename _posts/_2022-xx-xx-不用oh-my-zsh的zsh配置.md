@@ -52,7 +52,12 @@ cmd.exe /c set MSYSTEM={你使用的MinGW环境名称} && set CHERE_INVOKING=ena
 zsh.exe --login
 ```
 
+例如：
 
+```cmd
+cmd.exe /c set MSYSTEM=UCRT64 && set CHERE_INVOKING=enabled_from_arguments && D:/msys64/usr/bin/
+zsh.exe --login
+```
 
 ## oh-my-zsh的替代实现
 
@@ -76,13 +81,23 @@ Archlinux系发行版则是（使用yay）：
 sudo yay -S oh-my-posh-bin
 ```
 
-安装后，不同平台的配置流程有些区别，Archlinux下执行：
+#### 预览
+
+安装后，不同平台的文件位置有些区别，Windows下可以执行：
+
+```zsh
+eval "$(oh-my-posh init zsh --config $POSH_THEMES_PATH/themes/{想要使用的主题文件})"
+```
+
+Archlinux下执行：
 
 ```zsh
 eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/{想要使用的主题文件})"
 ```
 
 我个人使用的是`atomic.omp.json`这款主题。
+
+如果配置成功，就会正常显示界面：
 
 
 
