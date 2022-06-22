@@ -86,7 +86,8 @@ sudo yay -S oh-my-posh-bin
 安装后，不同平台的文件位置有些区别，Windows下可以执行：
 
 ```zsh
-eval "$(oh-my-posh init zsh --config $POSH_THEMES_PATH/themes/{想要使用的主题文件})"
+# $POSH_THEMES_PATH路径在安装时已经添加到了环境变量中
+eval "$(oh-my-posh init zsh --config $POSH_THEMES_PATH/{想要使用的主题文件})"
 ```
 
 Archlinux下执行：
@@ -95,7 +96,7 @@ Archlinux下执行：
 eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/{想要使用的主题文件})"
 ```
 
-我个人使用的是`atomic.omp.json`这款主题。
+oh-my-posh项目推荐使用的是`jandedobbeleer.omp.json`这款主题。
 
 如果配置成功，就会正常显示界面：
 
