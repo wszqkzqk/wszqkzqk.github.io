@@ -29,4 +29,15 @@ oh-my-zsh提供的便利主要是主题支持和插件支持，当然还有其�
 
 虽然oh-my-posh从名称来看好像是为微软的PowerShell专门设计，但是由于它并没有用绑定在Shell上的语言实现，故实际上oh-my-posh支持多种Shell环境，当然也包括Zsh。
 
+oh-my-posh不仅是跨Shell的，它还是跨平台的，Windows与Acrhlinux系发行版均可以很方便地安装，Windows安装命令如下：
+
+```powershell
+winget install JanDeDobbeleer.oh-my-posh
+```
+
+Archlinux系发行版则是（使用yay）：
+
+```bash
+sudo yay -S oh-my-posh-bin
+```
 
