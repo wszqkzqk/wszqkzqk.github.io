@@ -96,7 +96,7 @@ $ cat ~/.zshrc
 > # Created by newuser for 5.8
 ```
 
-oh-my-posh在不同平台的文件位置有些区别，Windows下可以执行：
+oh-my-posh在不同平台的文件位置有些区别，在Zsh中预览效果时，Windows下可以执行：
 
 ```zsh
 # $POSH_THEMES_PATH路径在安装时已经添加到了环境变量中
@@ -117,11 +117,11 @@ oh-my-posh项目推荐使用的是`jandedobbeleer.omp.json`这款主题。
 |:----:|
 |预览中的oh-my-posh主题效果|
 
-这里我们可以发现，系统并没有自带oh-my-posh主题所需要的字体，部分字符被显示成了方块，这一问题我们稍后再解决
+这里我们可以发现，系统并没有自带oh-my-posh主题所需要的字体，部分字符被显示成了方块，这一问题我们稍后再解决。
 
 ### 编写`.zshrc`文件
 
-
+`.zshrc`是Zsh的配置文件，没有了oh-my-zsh，我们需要自行手动编写。
 
 
 
