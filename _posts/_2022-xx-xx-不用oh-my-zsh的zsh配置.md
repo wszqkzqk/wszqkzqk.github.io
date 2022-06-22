@@ -6,7 +6,7 @@ date:         2022-xx-xx
 author:       星外之神
 header-img:   img/
 catalog:      true
-tags:         Linux Windows Msys2 Zsh 开源软件
+tags:         Linux Windows Msys2 Zsh 开源软件 Pacman 系统配置
 ---
 
 ## 前言
@@ -31,7 +31,13 @@ Msys2已经包含在了winget的软件库中，可以直接通过命令安装：
 winget install msys2.msys2
 ```
 
-安装完成后，
+安装完成后，需要在系统环境变量（现在的Windows应该只需要在开始菜单的搜索框中输入`path`就能弹出）中添加如下变量：
+
+|   变量名  |   变量值  |
+| ---- | --- |
+|   MSYS2_PATH_TYPE[^1] | inherit   |
+
+其实也可以把Msys2的相关路径添加到`Path`变量中，但是据说可能会出现一些冲突，然而笔者添加了以后并没有发现什么问题
 
 ## 替代实现
 
@@ -63,3 +69,6 @@ eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/{想要使用�
 
 我个人使用的是`atomic.omp.json`这款主题。
 
+
+
+[^1]: 指定Msys2程序读取的变量类型，`inherit`表示将系统变量合并到Msys2环境变量

@@ -6,7 +6,7 @@ date:         2022-06-20
 author:       星外之神
 header-img:   img/switch-manjaro-to-archlinux-bg.webp
 catalog:      true
-tags:         Linux Manjaro Archlinux Pacman 开源软件
+tags:         Linux Manjaro Archlinux Pacman 开源软件 系统配置
 ---
 
 ## 说明
