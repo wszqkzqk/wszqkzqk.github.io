@@ -98,7 +98,17 @@ eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/{想要使用�
 
 oh-my-posh项目推荐使用的是`jandedobbeleer.omp.json`这款主题。
 
-如果配置成功，就会正常显示界面：
+如果配置成功，就会显示界面：
+
+|[![#~/img/预览中的oh-my-posh主题效果.webp](/img/预览中的oh-my-posh主题效果.webp)](/img/预览中的oh-my-posh主题效果.webp)|
+|:----:|
+|预览中的oh-my-posh主题效果|
+
+这里我们可以发现，系统并没有自带oh-my-posh主题所需要的字体，部分字符被显示成了方块，这一问题我们稍后再解决
+
+### 编写`.zshrc`文件
+
+
 
 
 
