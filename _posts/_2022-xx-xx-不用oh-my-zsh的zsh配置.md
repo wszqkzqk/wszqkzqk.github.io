@@ -17,7 +17,13 @@ Zsh、Fish甚至从Windows下发展而来的PowerShell相比于Bash而言，都�
 
 然而，Zsh虽然可扩展性高，功能强大，但是它的配置并不容易。一般来说，要方便地配置Zsh需要借助oh-my-zsh这个强大的工具。但oh-my-zsh这个工具主要用Shell脚本写成，性能并不出色，往往需要较长的启动时间。
 
-由于Linux下有十分成熟的内存缓存机制，因此当oh-my-zsh在系统启动后完成过一次加载，之后便可以直接从内存中读取已经缓存的内容，能够做到瞬间启动。然而，Windows下的内存缓冲机制则没有这么友好，如果使用oh-my-zsh，Zsh的加载时间将会特别长。此外，由于Windows下的Unix Shell环境均是移植而来，利用了Cygwin或衍生库将Unix API Calls转化为Windows API Calls，有显著的性能损失，对于Unix的`fork()`API转化效率尤其低下，再加上无论是Cygwin还是Msys2都将Unix Shell内置的`echo`、`[`等功能拆分成了独立`.exe`文件，增加了调用性能开销。因此，在Windows下使用本来就比较吃资源的oh-my-zsh十分卡顿，体验并不好。
+由于Linux下有十分成熟的内存缓存机制，因此当oh-my-zsh在系统启动后完成过一次加载，之后便可以直接从内存中读取已经缓存的内容，能够做到瞬间启动。然而，Windows下的内存缓冲机制则没有这么友好，如果使用oh-my-zsh，Zsh的加载时间将会特别长。此外，由于Windows下的Unix Shell环境均是移植而来，利用了Cygwin或衍生库将Unix API Calls转化为Windows API Calls，有显著的性能损失，对于Unix的`fork()`API转化效率尤其低下，再加上无论是Cygwin还是Msys2都将Unix Shell内置的`echo`、`[`等功能拆分成了独立`.exe`文件，增加了调用性能开销（不过WSL的原生实现可能要好一点）。因此，在Windows下使用本来就比较吃资源的oh-my-zsh十分卡顿，体验并不好。
+
+### 准备
+
+考虑到有的读者可能对Windows下的终端配置不熟悉，在这里我简单列出一下Windows下安装Zsh的方法。由于WSL对Windows本身的交互并不是很方便，里面的工具链也不能用来构建Windows本地应用，故我在这里推荐使用Msys2。Msys2相当于是一个Windows版的Pacman包管理器，与Archlinux系发行版命令完美兼容
+
+
 
 ## 替代实现
 
@@ -40,4 +46,12 @@ Archlinux系发行版则是（使用yay）：
 ```bash
 sudo yay -S oh-my-posh-bin
 ```
+
+安装后，不同平台的配置流程有些区别，Archlinux下执行：
+
+```zsh
+eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/{想要使用的主题文件})"
+```
+
+我个人使用的是`atomic.omp.json`这款主题。
 
