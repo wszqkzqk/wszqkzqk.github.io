@@ -121,11 +121,26 @@ oh-my-posh项目推荐使用的是`jandedobbeleer.omp.json`这款主题。
 
 ### 下载安装Zsh相关功能插件
 
-Zsh具有许多能够提高生产力的插件，如自动补全插件、匹配历史搜索插件、语法高亮插件等。
+Zsh具有许多能够提高生产力的插件，如自动补全插件、语法高亮插件等。
+
+对于Archlinux，这些插件都已经集成到了软件源中，可以直接安装：
+
+```zsh
+yay -S zsh-syntax-highlighting zsh-autosuggestions
+```
+
+对Windows则较为麻烦，需要手动clone到本地：、
+
+```zsh
+mkdir ~/.zshconfig
+cd ~/zshconfig
+git clone https://github.com/zsh-users/zsh-autosuggestions
+
+```
 
 ### 编写`.zshrc`文件
 
-`.zshrc`是Zsh的配置文件，没有了oh-my-zsh，我们需要自行手动编写。
+`.zshrc`是Zsh的配置文件，没有了oh-my-zsh，我们需要进行手动编写。
 
 
 
