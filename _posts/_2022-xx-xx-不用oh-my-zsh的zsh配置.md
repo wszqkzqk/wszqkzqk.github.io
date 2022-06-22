@@ -6,7 +6,7 @@ date:         2022-xx-xx
 author:       星外之神
 header-img:   img/
 catalog:      true
-tags:         Linux Windows Msys2 Zsh 开源软件 Pacman 系统配置
+tags:         Linux Windows MSYS2 Zsh 开源软件 Pacman 系统配置
 ---
 
 ## 前言
@@ -17,15 +17,15 @@ Zsh、Fish甚至从Windows下发展而来的PowerShell相比于Bash而言，都�
 
 然而，Zsh虽然可扩展性高，功能强大，但是它的配置并不容易。一般来说，要方便地配置Zsh需要借助oh-my-zsh这个强大的工具。但oh-my-zsh这个工具主要用Shell脚本写成，性能并不出色，往往需要较长的启动时间。
 
-由于Linux下有十分成熟的内存缓存机制，因此当oh-my-zsh在系统启动后完成过一次加载，之后便可以直接从内存中读取已经缓存的内容，能够做到瞬间启动。然而，Windows下的内存缓冲机制则没有这么友好，如果使用oh-my-zsh，Zsh的加载时间将会特别长。此外，由于Windows下的Unix Shell环境均是移植而来，利用了Cygwin或衍生库将Unix API Calls转化为Windows API Calls，有显著的性能损失，对于Unix的`fork()`API转化效率尤其低下，再加上无论是Cygwin还是Msys2都将Unix Shell内置的`echo`、`[`等功能拆分成了独立`.exe`文件，增加了调用性能开销（不过WSL的原生实现可能要好一点）。因此，在Windows下使用本来就比较吃资源的oh-my-zsh十分卡顿，体验并不好。
+由于Linux下有十分成熟的内存缓存机制，因此当oh-my-zsh在系统启动后完成过一次加载，之后便可以直接从内存中读取已经缓存的内容，能够做到瞬间启动。然而，Windows下的内存缓冲机制则没有这么友好，如果使用oh-my-zsh，Zsh的加载时间将会特别长。此外，由于Windows下的Unix Shell环境均是移植而来，利用了Cygwin或衍生库将Unix API Calls转化为Windows API Calls，有显著的性能损失，对于Unix的`fork()`API转化效率尤其低下，再加上无论是Cygwin还是MSYS2都将Unix Shell内置的`echo`、`[`等功能拆分成了独立`.exe`文件，增加了调用性能开销（不过WSL的原生实现可能要好一点）。因此，在Windows下使用本来就比较吃资源的oh-my-zsh十分卡顿，体验并不好。
 
 ### 准备
 
 考虑到有的读者可能对Windows下的终端配置不熟悉，在这里我简单列出一下Windows下安装Zsh的方法。
 
-由于WSL对Windows本身的交互并不是很方便，里面的工具链也不能用来构建Windows本地应用，我在这里推荐使用Msys2。Msys2相当于Windows版的Pacman包管理器，不仅与Archlinux系发行版的包管理命令完美兼容，而且包构建方便（只需要写一份`PKGBUILD`）、官方源中软件丰富，包含了gcc、clang等编译器与众多库，还有ffmpeg等基础软件和VLC等方便的用户端GUI软件，功能十分强大。
+由于WSL对Windows本身的交互并不是很方便，里面的工具链也不能用来构建Windows本地应用，我在这里推荐使用MSYS2。MSYS2相当于Windows版的Pacman包管理器，不仅与Archlinux系发行版的包管理命令完美兼容，而且包构建方便（只需要写一份`PKGBUILD`）、官方源中软件丰富，包含了gcc、clang等编译器与众多库，还有ffmpeg等基础软件和VLC等方便的用户端GUI软件，功能十分强大。
 
-Msys2已经包含在了winget的软件库中，可以直接通过命令安装：
+MSYS2已经包含在了winget的软件库中，可以直接通过命令安装：
 
 ```powershell
 winget install msys2.msys2
@@ -37,18 +37,18 @@ winget install msys2.msys2
 | ---- | --- |
 |   MSYS2_PATH_TYPE[^1] | inherit   |
 
-其实也可以把Msys2的相关路径（使用的MinGW-w64工具链路径`{Msys2安装路径}/{使用的MinGW类型}/bin`以及Msys2路径`{Msys2安装路径}/usr/bin`）添加到`Path`变量中，方便直接在Windows的cmd或者PowerShell中调用Msys2命令，但是据说可能会出现一些冲突，然而笔者添加了以后并没有发现什么问题，因此这也可以作为一个可选项。
+其实也可以把MSYS2的相关路径（使用的MinGW-w64工具链路径`{MSYS2安装路径}/{使用的MinGW类型}/bin`以及MSYS2路径`{MSYS2安装路径}/usr/bin`）添加到`Path`变量中，方便直接在Windows的cmd或者PowerShell中调用MSYS2命令，但是据说可能会出现一些冲突，然而笔者添加了以后并没有发现什么问题，因此这也可以作为一个可选项。
 
-添加完成后，在MinTTY中运行Msys2终端，安装Zsh：
+添加完成后，在MinTTY中运行MSYS2终端，安装Zsh：
 
 ```bash
 pacman -S zsh
 ```
 
-为了方便，可以将Msys2集成到Windows终端，在Windows终端中选择`添加新配置文件`-`新建空配置文件`，在`命令行`中填入：
+为了方便，可以将MSYS2集成到Windows终端，在Windows终端中选择`添加新配置文件`-`新建空配置文件`，在`命令行`中填入：
 
 ```cmd
-cmd.exe /c set MSYSTEM={你使用的MinGW环境名称} && set CHERE_INVOKING=enabled_from_arguments && {Msys2安装位置}/usr/bin/
+cmd.exe /c set MSYSTEM={你使用的MinGW环境名称} && set CHERE_INVOKING=enabled_from_arguments && {MSYS2安装位置}/usr/bin/
 zsh.exe --login
 ```
 
@@ -86,4 +86,4 @@ eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/{想要使用�
 
 
 
-[^1]: 指定Msys2程序读取的变量类型，`inherit`表示将系统变量合并到Msys2环境变量
+[^1]: 指定MSYS2程序读取的变量类型，`inherit`表示将系统变量合并到MSYS2环境变量
