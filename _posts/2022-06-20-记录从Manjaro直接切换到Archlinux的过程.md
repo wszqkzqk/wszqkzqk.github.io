@@ -33,7 +33,7 @@ Server = https://mirrors.aliyun.com/archlinux/$repo/os/$arch
 ```
 [archlinuxcn]
 SigLevel = Optional TrustedOnly
-Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
 ```
 
 然后进行软件仓库同步并安装新的keyring：
