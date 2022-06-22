@@ -129,13 +129,13 @@ Zsh具有许多能够提高生产力的插件，如自动补全插件、语法�
 yay -S zsh-syntax-highlighting zsh-autosuggestions
 ```
 
-对Windows则较为麻烦，需要手动clone到本地：、
+对Windows则较为麻烦，需要手动clone到本地：
 
 ```zsh
 mkdir ~/.zshconfig
 cd ~/zshconfig
 git clone https://github.com/zsh-users/zsh-autosuggestions
-
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
 ```
 
 ### 编写`.zshrc`文件
