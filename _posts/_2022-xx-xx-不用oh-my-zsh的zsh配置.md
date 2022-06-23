@@ -182,4 +182,20 @@ source ~/.zsh-config/zsh-history-substring-search/zsh-history-substring-search.z
 source ~/.zsh-config/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh            # 加载语法高亮插件
 ```
 
+### 字体配置
+
+oh-my-posh工具依赖[Nerd Fonts](https://www.nerdfonts.com/)字体，在Archlinux下可以直接在Archlinuxcn源中下载`nerd-fonts-noto`字体：
+
+```zsh
+sudo pacman -S nerd-fonts-noto
+```
+
+Windows下则需要手动下载并安装，官方推荐的字体是[Meslo LGM NF](https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Meslo.zip)，下载后解压并右键点击，选择`为所有用户安装`（避免Windows终端无法识别字体）。
+
+安装完成后，在终端中切换到对应的`Nerd Front`字体即可，安装成功后，配置了oh-my-posh主题的Zsh便不再乱码。
+
+|[![#~/img/oh-my-posh配置好字体以后的显示情况.webp](/img/oh-my-posh配置好字体以后的显示情况.webp)](/img/oh-my-posh配置 好字体以后的显示情况.webp)|
+|:----:|
+|配置好字体以后的显示情况|
+
 [^1]: 指定MSYS2程序读取的环境变量类型，`inherit`表示将系统变量合并到MSYS2环境变量
