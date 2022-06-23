@@ -168,12 +168,12 @@ setopt HIST_BEEP
 ```
 - 还可以根据习惯指定相关快捷键绑定，比如搜索历史记录、逐词跳过等：
 ```zsh
-bindkey '^[[A' history-substring-search-up      # Up 设置向前查找与此相关
-bindkey '^[[B' history-substring-search-down    # Down 设置向后查找与此相关
+bindkey "^[[A" history-substring-search-up      # Up 设置向前查找与此相关
+bindkey "^[[B" history-substring-search-down    # Down 设置向后查找与此相关
 bindkey ";5A" history-beginning-search-backward # Ctrl-Up 向前查找以此开头
 bindkey ";5B" history-beginning-search-forward  # Ctrl-Down 向后查找以此开头
-bindkey ';5C' emacs-forward-word                # Ctrl-Right 向前跳过一个单词
-bindkey ';5D' emacs-backward-word               # Ctrl-Left 向后跳过一个单词
+bindkey ";5C" emacs-forward-word                # Ctrl-Right 向前跳过一个单词
+bindkey ";5D" emacs-backward-word               # Ctrl-Left 向后跳过一个单词
 ```
 - 最后加载之前下载的插件（这里用的是Windows的路径，Archlinux替换为对应的安装路径即可）：
 ```zsh
