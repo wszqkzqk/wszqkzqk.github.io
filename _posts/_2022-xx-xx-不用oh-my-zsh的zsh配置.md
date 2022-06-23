@@ -37,7 +37,7 @@ winget install msys2.msys2
 |       ----                |    ---    |
 |   MSYS2_PATH_TYPE[^1]     | inherit   |
 
-其实也可以把MSYS2的相关路径（使用的MinGW-w64工具链路径`{MSYS2安装路径}/{使用的MinGW类型}/bin`以及MSYS2路径`{MSYS2安装路径}/usr/bin`）添加到`Path`变量中，方便直接在Windows的cmd或者PowerShell中调用MSYS2命令，但是据说可能会出现一些冲突，然而笔者添加了以后并没有发现什么问题，因此这也可以作为一个可选项。
+其实也可以把MSYS2的相关路径（使用的MinGW-w64工具链路径`MSYS2安装路径/使用的MinGW类型/bin`以及MSYS2路径`MSYS2安装路径/usr/bin`）添加到`Path`变量中，方便直接在Windows的cmd或者PowerShell中调用MSYS2命令，但是据说可能会出现一些冲突，然而笔者添加了以后并没有发现什么问题，因此这也可以作为一个可选项。
 
 添加完成后，在MinTTY中运行MSYS2终端，安装Zsh：
 
@@ -100,13 +100,13 @@ oh-my-posh在不同平台的文件位置有些区别，在Zsh中预览效果时�
 
 ```zsh
 # $POSH_THEMES_PATH路径在安装时已经添加到了环境变量中
-eval "$(oh-my-posh init zsh --config $POSH_THEMES_PATH/{想要使用的主题文件})"
+eval "$(oh-my-posh init zsh --config $POSH_THEMES_PATH/想要使用的主题文件)"
 ```
 
 Archlinux下执行：
 
 ```zsh
-eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/{想要使用的主题文件})"
+eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/想要使用的主题文件)"
 ```
 
 oh-my-posh项目推荐使用的是`jandedobbeleer.omp.json`这款主题。
@@ -144,7 +144,7 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
 
 - 首先需要在Zsh运行时指定oh-my-posh主题，添加：
 ```zsh
-eval "$(oh-my-posh init zsh --config {主题文件路径})"
+eval "$(oh-my-posh init zsh --config 主题文件路径)"
 ```
 - 为了自动保存历史，我们还需要指定历史记录文件地址及读取、写入配置：
 ```zsh
