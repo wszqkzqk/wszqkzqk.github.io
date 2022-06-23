@@ -175,7 +175,7 @@ bindkey ";5B" history-beginning-search-forward  # Ctrl-Down 向后查找以此�
 bindkey ";5C" emacs-forward-word                # Ctrl-Right 向前跳过一个单词
 bindkey ";5D" emacs-backward-word               # Ctrl-Left 向后跳过一个单词
 ```
-- 最后加载之前下载的插件（这里用的是Windows的路径，Archlinux替换为对应的安装路径即可）：
+- 最后加载之前下载的插件（这里用的是Windows按照本文下载的路径，Archlinux替换为对应的安装路径即可）：
 ```zsh
 source ~/.zsh-config/zsh-autosuggestions/zsh-autosuggestions.zsh                    # 加载自动补全插件
 source ~/.zsh-config/zsh-history-substring-search/zsh-history-substring-search.zsh  # 加载历史搜索插件
