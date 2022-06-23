@@ -144,4 +144,4 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
 
 
 
-[^1]: 指定MSYS2程序读取的变量类型，`inherit`表示将系统变量合并到MSYS2环境变量
+[^1]: 指定MSYS2程序读取的环境变量类型，`inherit`表示将系统变量合并到MSYS2环境变量
