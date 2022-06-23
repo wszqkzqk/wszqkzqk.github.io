@@ -140,8 +140,46 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
 
 ### 编写`.zshrc`文件
 
-`.zshrc`是Zsh的配置文件，没有了oh-my-zsh，我们需要进行手动编写。
+`.zshrc`是Zsh的配置文件，没有了oh-my-zsh，我们需要手动进行编写。
 
+- 首先需要在Zsh运行时指定oh-my-posh主题，添加：
+```zsh
+eval "$(oh-my-posh init zsh --config {主题文件路径})"
+```
+- 为了自动保存历史，我们还需要指定历史记录文件地址及读取、写入配置：
+```zsh
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=100000000
+SAVEHIST=100000000
 
+setopt BANG_HIST
+setopt EXTENDED_HISTORY
+setopt INC_APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_REDUCE_BLANKS、
+setopt HIST_VERIFY
+setopt HIST_BEEP
+```
+- 还可以根据习惯指定相关快捷键绑定，比如搜索历史记录、逐词跳过等：
+```zsh
+bindkey '^[[A' history-substring-search-up      # Up 设置向前查找与此相关
+bindkey '^[[B' history-substring-search-down    # Down 设置向后查找与此相关
+bindkey ";5A" history-beginning-search-backward # Ctrl-Up 向前查找以此开头
+bindkey ";5B" history-beginning-search-forward  # Ctrl-Down 向后查找以此开头
+bindkey ';5C' emacs-forward-word                # Ctrl-Right 向前跳过一个单词
+bindkey ';5D' emacs-backward-word               # Ctrl-Left 向后跳过一个单词
+```
+- 最后加载之前下载的插件（这里用的是Windows的路径，Archlinux替换为对应的安装路径即可）：
+```zsh
+source ~/.zsh-config/zsh-autosuggestions/zsh-autosuggestions.zsh                    # 加载自动补全插件
+source ~/.zsh-config/zsh-history-substring-search/zsh-history-substring-search.zsh  # 加载历史搜索插件
+source ~/.zsh-config/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh            # 加载语法高亮插件
+```
 
 [^1]: 指定MSYS2程序读取的环境变量类型，`inherit`表示将系统变量合并到MSYS2环境变量
