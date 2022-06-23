@@ -48,7 +48,7 @@ pacman -S zsh
 为了方便，可以将MSYS2集成到Windows终端，在Windows终端中选择`添加新配置文件`-`新建空配置文件`，在`命令行`中填入：
 
 ```cmd
-cmd.exe /c set MSYSTEM={你使用的MinGW环境名称} && set CHERE_INVOKING=enabled_from_arguments && {MSYS2安装位置}/usr/bin/
+cmd.exe /c set MSYSTEM=你使用的MinGW环境名称 && set CHERE_INVOKING=enabled_from_arguments && MSYS2安装位置/usr/bin/
 zsh.exe --login
 ```
 
