@@ -133,7 +133,7 @@ yay -S zsh-syntax-highlighting zsh-autosuggestions
 
 ```zsh
 mkdir ~/.zshconfig
-cd ~/zshconfig
+cd ~/.zshconfig
 git clone https://github.com/zsh-users/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
 ```
