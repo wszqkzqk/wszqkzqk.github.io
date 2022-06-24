@@ -11,7 +11,7 @@ tags:         Linux Windows MSYS2 Zsh 开源软件 Pacman 系统配置
 
 ## 前言
 
-Linux下最常用的Bash发布于1989年，在此后的发展中并没有引入太多么革命性的功能，已经是一个十分古老的Unix Shell了。虽然它仍然是众Linux发行版预装最多的Shell，但是它的扩展性也早已不如其他的Shell。
+Linux下最常用的Bash发布于1989年，在此后的发展中并没有引入太多么革命性的功能，已经是一款十分古老的Unix Shell了。虽然它仍然是众Linux发行版预装最多的Shell，但是它的扩展性也早已不如其他的Shell。
 
 Zsh、Fish甚至从Windows下发展而来的PowerShell相比于Bash而言，都极具扩展性。其中，只有Zsh能够很好地兼容Bash的语法，所以，将Zsh作为Bash的替代品非常合适。
 
