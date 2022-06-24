@@ -4,7 +4,7 @@ title:        不借助oh-my-zsh进行Zsh配置
 subtitle:     Zsh配置日志：解决Zsh启动缓慢的问题
 date:         2022-06-24
 author:       星外之神
-header-img:   img/
+header-img:   img/shell-config-bg.webp
 catalog:      true
 tags:         Linux Windows MSYS2 Zsh 开源软件 Pacman 系统配置
 ---
