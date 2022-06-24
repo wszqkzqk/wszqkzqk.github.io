@@ -201,7 +201,7 @@ Windows下则需要手动下载并安装，官方推荐的字体是[Meslo LGM NF
 
 安装完成后，在终端中切换到对应的`Nerd Front`字体即可，安装成功后，配置了oh-my-posh主题的Zsh便不再乱码。
 
-|[![#~/img/oh-my-posh配置好字体以后的显示情况.webp](/img/oh-my-posh配置好字体以后的显示情况.webp)](/img/oh-my-posh配置 好字体以后的显示情况.webp)|
+|[![#~/img/oh-my-posh配置好字体以后的显示情况.webp](/img/oh-my-posh配置好字体以后的显示情况.webp)](/img/oh-my-posh配置好字体以后的显示情况.webp)|
 |:----:|
 |配置好字体以后的显示情况|
 
