@@ -109,7 +109,7 @@ Archlinux下执行：
 eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/想要使用的主题文件)"
 ```
 
-oh-my-posh项目推荐使用的是`jandedobbeleer.omp.json`这款主题。
+具体的主题样式预览参见[oh-my-posh官网](https://ohmyposh.dev/docs/themes)，可以从中选择自己喜欢的主题，oh-my-posh项目推荐使用的是`jandedobbeleer.omp.json`这款主题。
 
 如果配置成功，就会显示界面：
 
