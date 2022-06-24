@@ -9,6 +9,8 @@ catalog:      true
 tags:         Linux Windows MSYS2 Zsh 开源软件 Pacman 系统配置
 ---
 
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=“330” height=“86” src="//music.163.com/outchain/player?type=2&id=1825023368&auto=1&height=66"></iframe>
+
 ## 前言
 
 Linux下最常用的Bash发布于1989年，在此后的发展中并没有引入太多么革命性的功能，已经是一款十分古老的Unix Shell了。虽然它仍然是众Linux发行版预装最多的Shell，但是它的扩展性也早已不如其他的Shell。
