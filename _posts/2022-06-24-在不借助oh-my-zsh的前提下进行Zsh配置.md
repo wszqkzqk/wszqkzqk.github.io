@@ -41,6 +41,13 @@ winget install msys2.msys2
 
 其实也可以把MSYS2的相关路径（使用的MinGW-w64工具链路径`MSYS2安装路径/使用的MinGW类型/bin`以及MSYS2路径`MSYS2安装路径/usr/bin`）添加到`Path`变量中，方便直接在Windows的cmd或者PowerShell中调用MSYS2命令，但是据说可能会出现一些冲突，然而笔者添加了以后并没有发现什么问题，因此这也可以作为一个可选项。
 
+- 将MSYS2的相关可执行文件路径添加到系统环境变量的一个示例：
+
+|   在`Path`变量中添加的内容 |
+|           ----          |
+|D:\msys64\ucrt64\bin[^2] |
+|D:\msys64\usr\bin[^2]    |
+
 添加完成后，在MinTTY中运行MSYS2终端，安装Zsh：
 
 ```bash
@@ -209,3 +216,4 @@ Windows下则需要手动下载并安装，官方推荐的字体是[Meslo LGM NF
 |配置好字体以后的显示情况|
 
 [^1]: 指定MSYS2程序读取的环境变量类型，`inherit`表示将系统变量合并到MSYS2环境变量
+[^2]: 注意应当写成本地MSYS2可执行文件目录所在路径或本地使用的MSYS2的MINGW环境的所在路径，且应当保证MINGW环境的所在路径排在前面
