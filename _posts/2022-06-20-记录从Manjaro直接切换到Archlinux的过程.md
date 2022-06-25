@@ -149,6 +149,8 @@ Manjaro默认使用了自己的主题，而Manjaro的主题文件已经在之前
 
 ## Zsh
 
+### 基于oh-my-zsh的配置
+
 Manjaro默认配置好了zsh，然而这些配置在Arch Linux中并没有直接集成，需要自己进行
 
 在Arch Linux源及Archlinuxcn源中可以直接安装配置zsh所需要用到的`oh-my-zsh-git`、`oh-my-zsh-powerline-theme`
@@ -185,6 +187,10 @@ cp ~/.zhistory ~/.zsh_history
 chsh -s /bin/zsh
 sudo chsh -s /bin/zsh
 ```
+
+### 不基于oh-my-zsh的配置
+
+Zsh的配置也可以不依赖于oh-my-zsh而直接进行，具体内容见我的另一篇博客：[在不借助oh-my-zsh的前提下进行Zsh配置](/2022/06/24/在不借助oh-my-zsh的前提下进行Zsh配置)
 
 ## Fcitx5
 
