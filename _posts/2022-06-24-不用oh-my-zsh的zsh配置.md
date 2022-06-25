@@ -25,7 +25,7 @@ Zsh、Fish甚至从Windows下发展而来的PowerShell相比于Bash而言，都�
 
 考虑到有的读者可能对Windows下的终端配置不熟悉，在这里我简单列出一下Windows下安装Zsh的方法。
 
-由于WSL对Windows本身的交互并不是很方便，里面的工具链也不能用来构建Windows本地应用，我在这里推荐使用MSYS2。MSYS2相当于Windows版的Pacman包管理器，不仅与Archlinux系发行版的包管理命令完美兼容，而且包构建方便（只需要写一份`PKGBUILD`）、官方源中软件丰富，包含了gcc、clang等编译器与众多库，还有ffmpeg等基础软件和VLC等方便的用户端GUI软件，功能十分强大。
+由于WSL对Windows本身的交互并不是很方便，里面的工具链也不能用来构建Windows本地应用，我在这里推荐使用MSYS2。MSYS2相当于Windows版的Pacman包管理器，不仅与Arch Linux系发行版的包管理命令完美兼容，而且包构建方便（只需要写一份`PKGBUILD`）、官方源中软件丰富，包含了gcc、clang等编译器与众多库，还有ffmpeg等基础软件和VLC等方便的用户端GUI软件，功能十分强大。
 
 MSYS2已经包含在了winget的软件库中，可以直接通过命令安装：
 
@@ -77,7 +77,7 @@ oh-my-posh不仅是跨Shell的，它还是跨平台的，Windows与Acrhlinux系�
 winget install JanDeDobbeleer.OhMyPosh
 ```
 
-Archlinux系发行版则是（使用yay）：
+Arch Linux系发行版则是（使用yay）：
 
 ```bash
 sudo yay -S oh-my-posh-bin
@@ -105,7 +105,7 @@ oh-my-posh在不同平台的文件位置有些区别，在Zsh中预览效果时�
 eval "$(oh-my-posh init zsh --config $POSH_THEMES_PATH/想要使用的主题文件)"
 ```
 
-Archlinux下执行：
+Arch Linux下执行：
 
 ```zsh
 eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/想要使用的主题文件)"
@@ -125,7 +125,7 @@ eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/想要使用�
 
 Zsh具有许多能够提高生产力的插件，如自动补全插件、语法高亮插件等。
 
-对于Archlinux，这些插件都已经集成到了软件源中，可以直接安装：
+对于Arch Linux，这些插件都已经集成到了软件源中，可以直接安装：
 
 ```zsh
 yay -S zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search
@@ -184,7 +184,7 @@ bindkey ";5C" emacs-forward-word                # Ctrl-Right 向前跳过一个�
 bindkey ";5D" emacs-backward-word               # Ctrl-Left 向后跳过一个单词
 ```
 
-- 最后加载之前下载的插件（这里用的是Windows按照本文方法下载的路径，Archlinux替换为对应的安装路径即可）：
+- 最后加载之前下载的插件（这里用的是Windows按照本文方法下载的路径，Arch Linux替换为对应的安装路径即可）：
 
 ```zsh
 source ~/.zsh-config/zsh-autosuggestions/zsh-autosuggestions.zsh                    # 加载自动补全插件
@@ -194,7 +194,7 @@ source ~/.zsh-config/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh        
 
 ### 字体配置
 
-oh-my-posh工具依赖[Nerd Fonts](https://www.nerdfonts.com/)字体，在Archlinux下可以直接在Archlinuxcn源中下载`nerd-fonts-noto`字体：
+oh-my-posh工具依赖[Nerd Fonts](https://www.nerdfonts.com/)字体，在Arch Linux下可以直接在Archlinuxcn源中下载`nerd-fonts-noto`字体：
 
 ```zsh
 sudo pacman -S nerd-fonts-noto
