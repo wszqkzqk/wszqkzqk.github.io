@@ -1,12 +1,12 @@
 ---
 layout:       post
-title:        记录从Manjaro直接切换到Archlinux的过程
+title:        记录从Manjaro直接切换到Arch Linux的过程
 subtitle:     折腾日志
 date:         2022-06-20
 author:       星外之神
 header-img:   img/switch-manjaro-to-archlinux-bg.webp
 catalog:      true
-tags:         Linux Manjaro Archlinux Pacman 开源软件 系统配置
+tags:         Linux Manjaro ArchLinux Pacman 开源软件 系统配置
 ---
 
 <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=444356916&auto=1&height=66"></iframe>
@@ -17,7 +17,7 @@ tags:         Linux Manjaro Archlinux Pacman 开源软件 系统配置
 
 ## 更改镜像源
 
-首先需要把`/ect/pacman.d/mirrorlist`改成Archlinux的源，在中国可以直接改成：
+首先需要把`/ect/pacman.d/mirrorlist`改成Arch Linux的源，在中国可以直接改成：
 
 ```
 Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
@@ -26,7 +26,7 @@ Server = https://mirrors.aliyun.com/archlinux/$repo/os/$arch
 
 感觉北大访问隔壁的镜像源比校内的快QwQ（
 
-为了切换到Archlinux,还需要编辑`/etc/pacman.conf`，在`HoldPkg = pacman glibc manjaro-system`中删除`manjaro-system`，同时，注释掉`SyncFirst = manjaro-system archlinux-keyring manjaro-keyring`一行，与Archlinux保持一致
+为了切换到Arch Linux,还需要编辑`/etc/pacman.conf`，在`HoldPkg = pacman glibc manjaro-system`中删除`manjaro-system`，同时，注释掉`SyncFirst = manjaro-system archlinux-keyring manjaro-keyring`一行，与Arch Linux保持一致
 
 ## 添加Archlinuxcn源并安装yay
 
@@ -52,13 +52,13 @@ sudo pacman -S yay
 
 ## 切换软件依赖
 
-由于Manjaro和Archlinux的软件包并非一一对应，想要更改了镜像源就直接切换升级是不可能的，还需要进行一些操作
+由于Manjaro和Arch Linux的软件包并非一一对应，想要更改了镜像源就直接切换升级是不可能的，还需要进行一些操作
 
 ### Bash
 
-首先，Manjaro和Archlinux的`bash`封装不同，Manjaro将bash本身与bash的配置文件`.bashrc`封装成了`bash`和`bashrc-manjaro`两个软件包，并且`bash`依赖于`bashrc-manjaro`，所以需要对现有Manjaro系统的文件进行编辑
+首先，Manjaro和Arch Linux的`bash`封装不同，Manjaro将bash本身与bash的配置文件`.bashrc`封装成了`bash`和`bashrc-manjaro`两个软件包，并且`bash`依赖于`bashrc-manjaro`，所以需要对现有Manjaro系统的文件进行编辑
 
-可以将`bashrc-manjaro`的文件先转移备份到其他地方，再覆盖安装Archlinux的`bash`：
+可以将`bashrc-manjaro`的文件先转移备份到其他地方，再覆盖安装Arch Linux的`bash`：
 
 ```shell
 sudo mv /etc/bash.bashrc /etc/bash.bashrc.bak
@@ -71,7 +71,7 @@ sudo pacman -S bash
 sudo pacman -R bashrc-manjaro
 ```
 
-这样就不会有依赖错误和文件冲突了，但是这样的卸载操作可能会将Archlinux的bash软件包的`/etc/skel/.bashrc`保存为`/etc/skel/.bashrc.pacsave`，所以还需要执行：
+这样就不会有依赖错误和文件冲突了，但是这样的卸载操作可能会将Arch Linux的bash软件包的`/etc/skel/.bashrc`保存为`/etc/skel/.bashrc.pacsave`，所以还需要执行：
 
 ```shell
 sudo mv /etc/skel/.bashrc.pacsave /etc/skel/.bashrc
@@ -85,7 +85,7 @@ sudo rm /etc/bash.bashrc.bak /etc/skel/.bashrc.bak
 
 ### Linux内核
 
-Manjaro与Archlinux的内核打包机制也不一样，Manjaro是按版本打包发布，升级内核版本一般需要手动切换，包名一般为`linux5xx`、`linux5xx-header`这样的形式，而Archlinux的内核仍才采用滚动更新机制，最新稳定版内核包名为`linux`、`linux-headers`，LTS内核包名为`linux-lts`、`linux-lts-header`，因此切换后需要卸载掉Manjaro的内核再安装Archlinux的内核：
+Manjaro与Arch Linux的内核打包机制也不一样，Manjaro是按版本打包发布，升级内核版本一般需要手动切换，包名一般为`linux5xx`、`linux5xx-header`这样的形式，而Arch Linux的内核仍才采用滚动更新机制，最新稳定版内核包名为`linux`、`linux-headers`，LTS内核包名为`linux-lts`、`linux-lts-header`，因此切换后需要卸载掉Manjaro的内核再安装Arch Linux的内核：
 
 ```shell
 # 以安装了linux515与inux518内核的Manjaro系统为例
@@ -95,11 +95,11 @@ sudo pacman -R linux515 linux515-headers linux518 linux518-headers
 
 ### Manjaro特色软件
 
-Archlinux的软件源里面显然也不会有Manjaro的特色软件，因此这些软件也需要进行替换或者删除
+Arch Linux的软件源里面显然也不会有Manjaro的特色软件，因此这些软件也需要进行替换或者删除
 
 利用`pacman -Qqm`可以列出现在源中没有的本地软件包，有一些可能是AUR的或自己构建的，而其余的则是Manjaro的“前朝余孽”
 
-首先，需要将Manjaro的`pacman-mirrors`替换成Archlinux的`pacman-mirrorlist`，然而，直接采用`sudo pacman -S pacman-mirrorlist`并不可行，因为我们现在还没有移除Manjaro自身的包管理相关软件，这些软件依赖于Manjaro的`pacman-mirrors`，需要先行卸载：
+首先，需要将Manjaro的`pacman-mirrors`替换成Arch Linux的`pacman-mirrorlist`，然而，直接采用`sudo pacman -S pacman-mirrorlist`并不可行，因为我们现在还没有移除Manjaro自身的包管理相关软件，这些软件依赖于Manjaro的`pacman-mirrors`，需要先行卸载：
 
 ```shell
 sudo pacman -Rc libpamac python-manjaro-sdk
@@ -117,7 +117,7 @@ sudo pacman -S pacman-mirrorlist
 
 这个步骤完成后，就可以删除其他在`pacman -Qqm`中列出的Manjaro特色软件了
 
-一般来说，除了`manjaro-*`需要删除以外，因为Archlinux与Manjaro的硬件配置机制不同，`mhwd*`也需要删除，这一步建议手动排查，但是也可以进行直接删除：
+一般来说，除了`manjaro-*`需要删除以外，因为Arch Linux与Manjaro的硬件配置机制不同，`mhwd*`也需要删除，这一步建议手动排查，但是也可以进行直接删除：
 
 ```shell
 sudo pacman -R $(pacman -Qqm|grep manjaro)
@@ -126,9 +126,9 @@ sudo pacman -R $(pacman -Qqm|grep mhwd)
 
 其他残余软件也可以按需删除
 
-## 重新安装Archlinux的软件包
+## 重新安装Arch Linux的软件包
 
-很多Manjaro软件包的包名和版本号都与Archlinux一样，但是内容未必一样（最简单的例子：发行版信息`lsb-release`），所以建议切换后进行软件包的重新安装，执行完前几节的步骤后依赖问题已基本解决，可以继续执行：
+很多Manjaro软件包的包名和版本号都与Arch Linux一样，但是内容未必一样（最简单的例子：发行版信息`lsb-release`），所以建议切换后进行软件包的重新安装，执行完前几节的步骤后依赖问题已基本解决，可以继续执行：
 
 ```shell
 # 首先清除以前下载的Manjaro的软件包
@@ -149,9 +149,9 @@ Manjaro默认使用了自己的主题，而Manjaro的主题文件已经在之前
 
 ## Zsh
 
-Manjaro默认配置好了zsh，然而这些配置在Archlinux中并没有直接集成，需要自己进行
+Manjaro默认配置好了zsh，然而这些配置在Arch Linux中并没有直接集成，需要自己进行
 
-在Archlinux源及Archlinuxcn源中可以直接安装配置zsh所需要用到的`oh-my-zsh-git`、`oh-my-zsh-powerline-theme`
+在Arch Linux源及Archlinuxcn源中可以直接安装配置zsh所需要用到的`oh-my-zsh-git`、`oh-my-zsh-powerline-theme`
 
 ```shell
 sudo pacman -S oh-my-zsh-powerline-theme-git oh-my-zsh-git zsh-syntax-highlighting zsh-autosuggestions
@@ -190,7 +190,7 @@ sudo chsh -s /bin/zsh
 
 Manjaro通过依赖的方式在安装Fcitx5的时候向`/etc/xdg`添加`fcitx5`文件夹及配置文件自动启用了Fcitx5在软件中的输入功能（软件包`manjaro-asian-input-support-fcitx5`），因此安装了Fcitx5后开箱即用，不需要配置
 
-但是Archlinux软件源没有这一软件包，应当手动对Fcitx5进行配置，编辑`/etc/environment`，加入：
+但是Arch Linux软件源没有这一软件包，应当手动对Fcitx5进行配置，编辑`/etc/environment`，加入：
 
 ```shell
 GTK_IM_MODULE=fcitx
@@ -203,7 +203,7 @@ GLFW_IM_MODULE=ibus
 
 ## 类似Manjaro的GUI包管理器
 
-如果想要在Archlinux下面使用GUI的包管理器就不推荐pamac了（那还不如直接用Manjaro），这里推荐使用Octopi
+如果想要在Arch Linux下面使用GUI的包管理器就不推荐pamac了（那还不如直接用Manjaro），这里推荐使用Octopi
 
 ```
 yay -S octopi
@@ -225,11 +225,11 @@ yay -S octopi-notifier-qt5
 
 以上过程完成后，切换即基本完成（部分Manjaro的残留文件可以手动进行清理），我在使用过程中并没有发现由切换造成的bug
 
-最后贴上一张图，切换后`neofetch`与KDE信息中心的系统信息已经变成了Archlinux：
+最后贴上一张图，切换后`neofetch`与KDE信息中心的系统信息已经变成了Arch Linux：
 
 [![#~switch-manjaro-to-archlinux.webp](/img/switch-manjaro-to-archlinux.webp)](/img/switch-manjaro-to-archlinux.webp)
 
-不过由本文可以看到，由Manjaro切换Archlinux的过程仍然较为繁琐，仅推荐在需要将使用了很久、不便于迁移的Manjaro系统切换至Archlinux时使用，不推荐用这个方法通过安装Manjaro来安装Archlinux，如果需要直接安装Archlinux又想要避免安装的麻烦可以尝试[EndeavourOS](https://endeavouros.com/)
+不过由本文可以看到，由Manjaro切换Arch Linux的过程仍然较为繁琐，仅推荐在需要将使用了很久、不便于迁移的Manjaro系统切换至Arch Linux时使用，不推荐用这个方法通过安装Manjaro来安装Arch Linux，如果需要直接安装Arch Linux又想要避免安装的麻烦可以尝试[EndeavourOS](https://endeavouros.com/)
 
 ## 捐赠    
 
