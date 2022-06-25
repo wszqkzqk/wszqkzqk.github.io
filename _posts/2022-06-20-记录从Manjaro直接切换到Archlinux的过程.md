@@ -227,6 +227,8 @@ yay -S octopi-notifier-framework
 yay -S octopi-notifier-qt5
 ```
 
+不过我个人主要把Octopi当作一个查看是否有更新的工具，一般操作还是用命令实现
+
 ## 总结
 
 以上过程完成后，切换即基本完成（部分Manjaro的残留文件可以手动进行清理），我在使用过程中并没有发现由切换造成的bug
