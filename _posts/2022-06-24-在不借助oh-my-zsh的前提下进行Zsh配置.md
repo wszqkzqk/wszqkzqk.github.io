@@ -48,7 +48,7 @@ winget install msys2.msys2
 |D:\msys64\ucrt64\bin[^2] |
 |D:\msys64\usr\bin[^2]    |
 
-添加完成后，在MinTTY（如果添加了MSYS2可执行文件路径到`Path`环境变量，也可以在Windows终端的PowerShell或cmd环境中执行）中运行MSYS2终端，安装Zsh：
+添加完成后，在MinTTY中运行MSYS2终端（如果添加了MSYS2可执行文件路径到`Path`环境变量，也可以在Windows终端的PowerShell或cmd环境中执行），安装Zsh：
 
 ```bash
 pacman -S zsh
