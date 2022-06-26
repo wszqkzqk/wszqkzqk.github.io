@@ -77,6 +77,12 @@ zsh.exe --login
 你的MSYS2安装路径\msys2_shell.cmd -对应使用的MinGW环境(如-mingw64) -here -no-start -full-path -defterm
 ```
 
+例如：
+
+```cmd
+D:\msys64\msys2_shell.cmd -ucrt64 -here -no-start -full-path -defterm
+```
+
 ## oh-my-zsh的替代实现
 
 oh-my-zsh提供的便利主要是主题支持和插件支持，当然还有其他的操作绑定。这些我们都可以想办法去进行性能更优的替代实现。
