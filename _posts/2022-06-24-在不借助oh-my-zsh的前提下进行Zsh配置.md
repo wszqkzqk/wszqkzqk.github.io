@@ -178,7 +178,7 @@ eval "$(oh-my-posh init zsh --config 主题文件路径)"
 - 为了自动保存历史，我们还需要指定历史记录文件地址及读取、写入配置：
 
 ```zsh
-HISTFILE="$HOME/.zsh_history"
+HISTFILE="~/.zsh_history"
 HISTSIZE=100000000
 SAVEHIST=100000000
 
