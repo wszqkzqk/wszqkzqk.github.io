@@ -179,22 +179,22 @@ eval "$(oh-my-posh init zsh --config 主题文件路径)"
 
 ```zsh
 HISTFILE=~/.zsh_history
-HISTSIZE=100000000
-SAVEHIST=100000000
+HISTSIZE=100000000                  # 设置历史记录读取行数
+SAVEHIST=100000000                  # 设置历史记录读取行数
 
-setopt BANG_HIST
-setopt EXTENDED_HISTORY
-setopt INC_APPEND_HISTORY
-setopt SHARE_HISTORY
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_FIND_NO_DUPS
-setopt HIST_IGNORE_SPACE
-setopt HIST_SAVE_NO_DUPS
-setopt HIST_REDUCE_BLANKS、
-setopt HIST_VERIFY
-setopt HIST_BEEP
+setopt BANG_HIST                    # 在展开字符期间对"!"特殊处理
+setopt EXTENDED_HISTORY             # 生成详细的历史记录
+setopt INC_APPEND_HISTORY           # 立即写入历史文件，而不是退出时写入
+setopt SHARE_HISTORY                # 在各个终端窗口中共享历史记录
+setopt HIST_EXPIRE_DUPS_FIRST       # 修剪掉过量的历史记录时首先去重复
+setopt HIST_IGNORE_DUPS             # 不记录刚刚记录的内容
+setopt HIST_IGNORE_ALL_DUPS         # 如果新内容重复，则删除旧内容
+setopt HIST_FIND_NO_DUPS            # 不显示先前查找到的历史记录内容
+setopt HIST_IGNORE_SPACE            # 不记录以空格开头的内容
+setopt HIST_SAVE_NO_DUPS            # 不要在历史文件中写入重复的条目
+setopt HIST_REDUCE_BLANKS           # 在记录条目之前删除多余的空白
+setopt HIST_VERIFY                  # 在显示历史扩展时不要立即执行
+setopt HIST_BEEP                    # 访问不存在的历史记录时发出声音提示
 ```
 
 - 加载之前下载的插件（这里用的是Windows按照本文方法下载的路径，Arch Linux替换为对应的安装路径即可）：
