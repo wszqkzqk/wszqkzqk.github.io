@@ -156,8 +156,8 @@ yay -S zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search
 对Windows则较为麻烦，需要手动clone到本地：
 
 ```zsh
-mkdir ~/.zshconfig
-cd ~/.zshconfig
+mkdir ~/.zsh-config
+cd ~/.zsh-config
 git clone https://github.com/zsh-users/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
 git clone https://github.com/zsh-users/zsh-history-substring-search.git
