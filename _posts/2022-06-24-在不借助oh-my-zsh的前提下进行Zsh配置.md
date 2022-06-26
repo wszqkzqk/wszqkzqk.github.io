@@ -180,7 +180,15 @@ setopt HIST_VERIFY
 setopt HIST_BEEP
 ```
 
-- 还可以根据习惯指定相关快捷键绑定，比如搜索历史记录、逐词跳过等：
+- 加载之前下载的插件（这里用的是Windows按照本文方法下载的路径，Arch Linux替换为对应的安装路径即可）：
+
+```zsh
+source ~/.zsh-config/zsh-autosuggestions/zsh-autosuggestions.zsh                    # 加载自动补全插件
+source ~/.zsh-config/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh            # 加载语法高亮插件
+source ~/.zsh-config/zsh-history-substring-search/zsh-history-substring-search.zsh  # 加载历史搜索插件
+```
+
+- 最后可以根据习惯指定相关快捷键绑定，比如搜索历史记录、逐词跳过等：
 
 ```zsh
 bindkey "^[[A" history-substring-search-up      # Up 设置向前查找与此相关
@@ -191,13 +199,9 @@ bindkey ";5C" emacs-forward-word                # Ctrl-Right 向前跳过一个�
 bindkey ";5D" emacs-backward-word               # Ctrl-Left 向后跳过一个单词
 ```
 
-- 最后加载之前下载的插件（这里用的是Windows按照本文方法下载的路径，Arch Linux替换为对应的安装路径即可）：
-
-```zsh
-source ~/.zsh-config/zsh-autosuggestions/zsh-autosuggestions.zsh                    # 加载自动补全插件
-source ~/.zsh-config/zsh-history-substring-search/zsh-history-substring-search.zsh  # 加载历史搜索插件
-source ~/.zsh-config/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh            # 加载语法高亮插件
-```
+编辑`.zshrc`时应当注意`.zshrc`中配置项的逻辑顺序：
+- `bindkey`调用了历史记录子字符串查找插件，所以该插件必须在相关`bindkey`之前加载
+- 历史记录子字符串查找插件会自动高亮标出正在搜索的字串，这一语法高亮优先级应当高于一般基于命令本身的语法高亮，因此语法高亮插件应当在历史子字符串插件加载前加载
 
 ### 字体配置
 
