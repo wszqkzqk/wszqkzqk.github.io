@@ -1,7 +1,7 @@
 ---
 layout:       post
 title:        在不借助oh-my-zsh的前提下进行Zsh配置
-subtitle:     Windows(MSYS2)/Arch Linux平台下Zsh的配置
+subtitle:     Windows(MSYS2)或Arch Linux平台下Zsh的配置
 date:         2022-06-24
 author:       星外之神
 header-img:   img/shell-config-bg.webp
