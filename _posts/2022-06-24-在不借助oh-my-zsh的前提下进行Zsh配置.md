@@ -197,6 +197,7 @@ bindkey ";5A" history-beginning-search-backward # Ctrl-Up 向前查找以此开�
 bindkey ";5B" history-beginning-search-forward  # Ctrl-Down 向后查找以此开头
 bindkey ";5C" emacs-forward-word                # Ctrl-Right 向前跳过一个单词
 bindkey ";5D" emacs-backward-word               # Ctrl-Left 向后跳过一个单词
+bindkey "\e[3~" delete-char                     # Del键 删除后面的一个字符
 ```
 
 编辑`.zshrc`时应当注意`.zshrc`中配置项的逻辑顺序：
