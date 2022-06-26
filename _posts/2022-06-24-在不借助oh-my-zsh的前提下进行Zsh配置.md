@@ -68,6 +68,15 @@ cmd.exe /c set MSYSTEM=UCRT64 && set CHERE_INVOKING=enabled_from_arguments && D:
 zsh.exe --login
 ```
 
+以上命令依靠在cmd中配置MSYS2所需的特殊环境变量，再启动Zsh，如果不想这样手动写出要加载的环境变量，也可以直接调用MSYS2的cmd，但是在调用前需要手动编辑`MSYS2安装目录/msys2_shell.cmd`以切换系统Shell配置：
+- 将`set "LOGINSHELL=bash"`改为`set "LOGINSHELL=zsh"`
+
+然后在Windows终端中选择`添加新配置文件`-`新建空配置文件`，在`命令行`中填入：
+
+```cmd
+你的MSYS2安装路径\msys2_shell.cmd -对应使用的MinGW环境(如-mingw64) -here -no-start -full-path
+```
+
 ## oh-my-zsh的替代实现
 
 oh-my-zsh提供的便利主要是主题支持和插件支持，当然还有其他的操作绑定。这些我们都可以想办法去进行性能更优的替代实现。
