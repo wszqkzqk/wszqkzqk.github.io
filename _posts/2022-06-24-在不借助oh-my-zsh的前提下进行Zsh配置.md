@@ -74,7 +74,7 @@ zsh.exe --login
 然后在Windows终端中选择`添加新配置文件`-`新建空配置文件`，在`命令行`中填入：
 
 ```cmd
-你的MSYS2安装路径\msys2_shell.cmd -对应使用的MinGW环境(如-mingw64) -here -no-start -full-path
+你的MSYS2安装路径\msys2_shell.cmd -对应使用的MinGW环境(如-mingw64) -here -no-start -full-path -defterm
 ```
 
 ## oh-my-zsh的替代实现
