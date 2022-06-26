@@ -1,7 +1,7 @@
 ---
 layout:       post
 title:        在不借助oh-my-zsh的前提下进行Zsh配置
-subtitle:     Windows/Arch Linux Zsh配置日志：解决Zsh启动缓慢的问题
+subtitle:     Windows/Arch Linux平台下Zsh的配置
 date:         2022-06-24
 author:       星外之神
 header-img:   img/shell-config-bg.webp
