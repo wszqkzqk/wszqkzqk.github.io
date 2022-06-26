@@ -237,6 +237,12 @@ Windows下则需要手动下载并安装，官方推荐的字体是[Meslo LGM NF
 |:----:|
 |配置好字体以后的显示情况|
 
+## 捐赠    
+
+|  **支付宝**  |  **微信支付**  |
+|  :----:  |  :----:  |
+|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |
+
 [^1]: 指定MSYS2程序读取的环境变量类型，`inherit`表示将系统变量合并到MSYS2环境变量
 [^2]: 注意应当写成本地MSYS2可执行文件目录所在路径或本地使用的MSYS2的MINGW环境的所在路径，且应当保证MINGW环境的所在路径排在前面
 [^3]: 注意不要删除原来`Path`变量中就有的内容
