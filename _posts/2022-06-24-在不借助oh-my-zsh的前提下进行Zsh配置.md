@@ -43,7 +43,7 @@ winget install msys2.msys2
 
 - 将MSYS2的相关可执行文件路径添加到系统环境变量的一个示例：
 
-|   在`Path`变量中添加的内容[^3] |
+|在`Path`变量中添加的内容[^3]|
 |           ----          |
 |D:\msys64\ucrt64\bin[^2] |
 |D:\msys64\usr\bin[^2]    |
