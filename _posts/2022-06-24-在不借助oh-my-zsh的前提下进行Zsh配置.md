@@ -237,6 +237,22 @@ Windows下则需要手动下载并安装，官方推荐的字体是[Meslo LGM NF
 |:----:|
 |配置好字体以后的显示情况|
 
+## Arch Linux下的最简方法
+
+我经将这个简单的`.zshrc`文件打包并推送到了AUR，大大简化了安装流程，现在Arch Linux下安装只需要：
+
+```zsh
+yay -S easy-zsh-config
+```
+
+然后再复制配置文件即可使用：
+
+```zsh
+cp /etc/zsh/zshrc ~/.zshrc
+```
+
+安装完成后可以使用`chsh /bin/zsh`来切换默认Shell环境。
+
 ## 捐赠
 
 |  **支付宝**  |  **微信支付**  |

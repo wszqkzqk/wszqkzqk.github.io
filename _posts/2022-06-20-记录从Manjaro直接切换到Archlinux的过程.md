@@ -239,6 +239,10 @@ yay -S octopi-notifier-qt5
 
 不过由本文可以看到，由Manjaro切换Arch Linux的过程仍然较为繁琐，仅推荐在需要将使用了很久、不便于迁移的Manjaro系统切换至Arch Linux时使用，不推荐用这个方法通过安装Manjaro来安装Arch Linux，如果需要直接安装Arch Linux又想要避免安装的麻烦可以尝试[EndeavourOS](https://endeavouros.com/)
 
+## 稳定性
+
+感觉由Manjaro切换的Arch Linux的稳定性确实存在不少问题，我现在已经进行了一次全新安装，完全切换到了Arch Linux
+
 ## 捐赠    
 
 |  **支付宝**  |  **微信支付**  |
