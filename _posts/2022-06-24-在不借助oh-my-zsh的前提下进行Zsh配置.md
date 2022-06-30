@@ -236,7 +236,7 @@ Windows下则需要手动下载并安装，官方推荐的字体是[Meslo LGM NF
 
 ## Arch Linux下的最简方法
 
-我已经将这个简单的`.zshrc`文件打包并推送到了AUR，大大简化了安装流程，现在Arch Linux下安装只需要：
+我已经将这个简单的`.zshrc`文件打包并[推送到了AUR](https://aur.archlinux.org/packages/easy-zsh-config)，大大简化了安装流程，现在Arch Linux下安装只需要：
 
 ```zsh
 yay -S easy-zsh-config
