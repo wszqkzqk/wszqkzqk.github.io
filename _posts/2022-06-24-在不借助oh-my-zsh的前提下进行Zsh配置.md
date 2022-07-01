@@ -250,6 +250,12 @@ cp /etc/zsh/zshrc ~/.zshrc
 
 安装完成后可以使用`chsh /bin/zsh`来切换默认Shell环境。
 
+目前AUR中的`oh-my-posh-bin`存在权限设置bug，可能会导致oh-my-posh的主题设置失败，可以执行以下命令解决这一问题：
+
+```zsh
+sudo chmod -R +r /usr/share/oh-my-posh/themes/
+```
+
 ## 捐赠
 
 |  **支付宝**  |  **微信支付**  |
