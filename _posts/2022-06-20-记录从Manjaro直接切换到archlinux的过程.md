@@ -6,7 +6,7 @@ date:         2022-06-20
 author:       星外之神
 header-img:   img/switch-manjaro-to-archlinux-bg.webp
 catalog:      true
-tags:         Linux Manjaro ArchLinux Pacman 开源软件 系统配置
+tags:         Linux Manjaro archlinux Pacman 开源软件 系统配置
 ---
 
 <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=444356916&auto=1&height=66"></iframe>
@@ -28,7 +28,7 @@ Server = https://mirrors.aliyun.com/archlinux/$repo/os/$arch
 
 为了切换到Arch Linux,还需要编辑`/etc/pacman.conf`，在`HoldPkg = pacman glibc manjaro-system`中删除`manjaro-system`，同时，注释掉`SyncFirst = manjaro-system archlinux-keyring manjaro-keyring`一行，与Arch Linux保持一致
 
-## 添加Archlinuxcn源并安装yay
+## 添加archlinuxcn源并安装yay
 
 编辑`/etc/pacman.conf`，在文本后添加：
 
