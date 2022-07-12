@@ -44,7 +44,7 @@ Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
 sudo pacman -Syy archlinuxcn-keyring
 ```
 
-再从Archlinuxcn源中直接安装AUR助手yay：
+再从archlinuxcn源中直接安装AUR助手yay：
 
 ```shell
 sudo pacman -S yay
