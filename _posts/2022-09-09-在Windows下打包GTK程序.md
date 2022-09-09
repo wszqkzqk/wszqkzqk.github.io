@@ -117,9 +117,6 @@ valac --pkg gtk+3.0 -X -O2 helloworld.vala
 ```python
 #!/usr/bin/env python
 
-# MSYS2下的GTK3程序打包器（面向对象实现）
-# 依赖ntldd提供动态链接关系
-
 from fnmatch import fnmatch
 import os
 
