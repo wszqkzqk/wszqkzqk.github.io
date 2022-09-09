@@ -6,7 +6,7 @@ date:       2022-09-09
 author:     星外之神
 header-img: img/GTK-logo.webp
 catalog:    true
-tags:       GTK Python vala Windows 程序打包
+tags:       GTK Python Vala Windows 程序打包
 ---
 
 ***未经特殊说明，本文中包括的所有代码均采用LGPL v2.1协议公开***
