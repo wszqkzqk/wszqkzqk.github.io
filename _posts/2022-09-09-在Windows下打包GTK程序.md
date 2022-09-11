@@ -36,12 +36,14 @@ GTK是一个跨平台的部件工具库，然而，由于GTK的主要开发由Li
 这样就可以用Python简单实现一个GTK程序打包器：
 
 ```python
+#!/usr/bin/env python
+
 from sys import argv
-from fnmatch import fnmatch
+import re
 import os
 
 MINGW_ARCH = "ucrt64"
-MSYS2_PATH = "D:\\msys64\\"
+MSYS2_PATH = "D:\\msys64"
 
 if len(argv) == 3:
     path = argv[1]
@@ -60,11 +62,11 @@ def pathed(path):
 
 info = [i.split() for i in os.popen(f'ntldd -R "{pathed(path)}"')]
 dependencies = set()
+regex = re.compile(r".*(/|\\)"f"(usr|{MINGW_ARCH})"r"(/|\\).*") # 既想使用原意字符串又需要槽传递值的一个办法，Python会自动拼接
 if not os.path.exists(os.path.join(outdir, "bin")):
     os.makedirs(os.path.join(outdir, "bin"))
 for item in info:
-    if (fnmatch(item[2], '/usr/*') or fnmatch(item[2], f'/{MINGW_ARCH}/*')
-    or fnmatch(item[2], '*\\usr\\*')) or fnmatch(item[2], f'*\\{MINGW_ARCH}\\*'):
+    if regex.match(item[2]):
         if item[0] not in dependencies:
             os.system(f'cp "{item[2]}" "{os.path.join(outdir, "bin", item[0])}"')
             dependencies.add(item[0])
@@ -117,7 +119,7 @@ valac --pkg gtk+3.0 -X -O2 helloworld.vala
 ```python
 #!/usr/bin/env python
 
-from fnmatch import fnmatch
+import re
 import os
 
 class GtkPacker():
@@ -125,21 +127,22 @@ class GtkPacker():
         self.dependencies = set()
         self.mingw_arch = mingw_arch
         self.mingw_path = os.path.join(msys2_path, mingw_arch)
+        self.quote_regex = re.compile(r"""(".*")|('.*')""")
+        self.msys2_dep_regex = re.compile(r".*(/|\\)"f"(usr|{mingw_arch})"r"(/|\\).*")  # Python会自动拼接仅以空白符号分隔的字符串
         self.exe_file_path = self.clean_path(exe_file_path)
         self.outdir = outdir
 
     def clean_path(self, path):
-        if ((path[0] == "'") or (path[0] == '"')) and ((path[-1] == "'") or (path[-1] == '"')):
+        if self.quote_regex.match(path):
             return path[1:-1]
         else:
             return path
-
-    def is_msys2_dep(self, dep_path):
-        if (fnmatch(dep_path, "/usr/*") or fnmatch(dep_path, f"/{self.mingw_arch}/*")
-        or fnmatch(dep_path, "*\\usr\\*")) or fnmatch(dep_path, f"*\\{self.mingw_arch}\\*"):
-            return True
+    
+    def copy_operation(self, resource, target):
+        if not os.system(f'cp -r "{resource}" "{target}"'):
+            print(f"Successfully copied '{os.path.basename(resource)}'")
         else:
-            return False
+            print(f"Warning: failed to copy '{os.path.basename(resource)}'")
 
     def copy_bin_file(self):
         info = (i.split() for i in os.popen(f'ntldd -R "{self.exe_file_path}"'))
@@ -147,11 +150,11 @@ class GtkPacker():
         if not os.path.exists(bin_path):
             os.makedirs(bin_path)
         for item in info:
-            if self.is_msys2_dep(item[2]):
+            if self.msys2_dep_regex.match(item[2]):
                 if item[0] not in self.dependencies:
-                    os.system(f'cp "{item[2]}" "{os.path.join(bin_path, item[0])}"')
+                    self.copy_operation(item[2], os.path.join(bin_path, item[0]))
                     self.dependencies.add(item[0])
-        os.system(f'cp "{self.exe_file_path}" "{os.path.join(bin_path, os.path.basename(self.exe_file_path))}"')
+        self.copy_operation(self.exe_file_path, os.path.join(bin_path, os.path.basename(self.exe_file_path)))
 
     def copy_resource_file(self):
         copy_resource_file_dic = {
@@ -161,10 +164,10 @@ class GtkPacker():
             os.path.join(self.mingw_path, "share", "icons"): os.path.join(self.outdir, "share"),
             os.path.join(self.mingw_path, "lib", "gdk-pixbuf-2.0"): os.path.join(self.outdir, "lib"),
         }
-        for source, target in copy_resource_file_dic.items():
+        for resource, target in copy_resource_file_dic.items():
             if not os.path.exists(os.path.join(self.outdir, target)):
                 os.makedirs(os.path.join(self.outdir, target))
-            os.system(f'cp -r "{source}" "{target}"')
+            self.copy_operation(resource, target)
 
     def run(self):
         self.copy_bin_file()
