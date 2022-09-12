@@ -9,7 +9,7 @@ catalog:    true
 tags:       GTK Python Vala Windows 程序打包
 ---
 
-***未经特殊说明，本文中包括的所有代码均采用LGPL v2.1协议公开***
+***未经特殊说明，本文中包括的所有代码均采用[LGPL v2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)协议公开***
 
 ## 背景
 
