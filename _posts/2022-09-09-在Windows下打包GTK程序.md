@@ -62,7 +62,7 @@ def pathed(path):
 
 info = [i.split() for i in os.popen(f'ntldd -R "{pathed(path)}"')]
 dependencies = set()
-regex = re.compile(r".*(/|\\)"f"(usr|{MINGW_ARCH})"r"(/|\\).*") # 既想使用原意字符串又需要槽传递值的一个办法，Python会自动拼接
+regex = re.compile(r".*(/|\\)"f"(usr|{MINGW_ARCH})"r"(/|\\).*")
 if not os.path.exists(os.path.join(outdir, "bin")):
     os.makedirs(os.path.join(outdir, "bin"))
 for item in info:
@@ -128,7 +128,7 @@ class GtkPacker():
         self.mingw_arch = mingw_arch
         self.mingw_path = os.path.join(msys2_path, mingw_arch)
         self.quote_regex = re.compile(r"""(".*")|('.*')""")
-        self.msys2_dep_regex = re.compile(r".*(/|\\)"f"(usr|{mingw_arch})"r"(/|\\).*")  # Python会自动拼接仅以空白符号分隔的字符串
+        self.msys2_dep_regex = re.compile(r".*(/|\\)"f"(usr|{mingw_arch})"r"(/|\\).*")
         self.exe_file_path = self.clean_path(exe_file_path)
         self.outdir = outdir
 
