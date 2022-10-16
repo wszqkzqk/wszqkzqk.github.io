@@ -79,6 +79,8 @@ void main() {
 }
 ```
 
+Vala的中的`List`等容器也不需要手动指针清理，在离开其有效语段或手动将其赋值为`null`后即可自动释放。
+
 同时，Vala又与C#不同，Vala仍可以手动在任何地方使用指针，不需要特别包括在`unsafe{}`语段中，例如：
 ```vala
 uint int64_hash(double? v) {
