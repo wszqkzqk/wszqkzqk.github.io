@@ -104,9 +104,9 @@ void main() {
     var s1 = "123";
     var s2 = "456";
     var s3 = s1 + s2 + "\n";
+    print(s3);
     // Output:
     // 123456
-    print(s3);
 }
 ```
 
@@ -116,9 +116,9 @@ void main() {
     int n = 123456;
     uint m = 987654321;
     double pi = 3.141592653589;
+    print(@"$m + $n + pi = $(m + n + pi)\n");
     // Output:
     // 987654321 + 123456 + pi = 987777780.14159262
-    print(@"$m + $n + pi = $(m + n + pi)\n");
 }
 ```
 
@@ -130,9 +130,9 @@ void main() {
     int n = 123456;
     uint m = 987654321;
     double pi = 3.141592653589;
+    print("%u + %d + pi = %f\n", m, n, pi + m + n);
     // Output:
     // 987654321 + 123456 + pi = 987777780.141593
-    print("%u + %d + pi = %f\n", m, n, pi + m + n);
 }
 ```
 
