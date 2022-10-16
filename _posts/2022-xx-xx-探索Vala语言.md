@@ -140,6 +140,21 @@ void main() {
 
 Vala的模板字符串很多时候是简化输出代码的一大利器。
 
+除此之外，Vala还支持字符串切片、字符串中字符的提取，例如：
+```vala
+void main() {
+    var s1 = "abcdefg";
+    var s2 = s1[0:3];
+    var c = s1[3];
+    print(@"$(s2)\n$(c)\n");
+    // Output:
+    // abc
+    // d
+} 
+```
+
+python程序员注意：这里提取的单个字符数据类型是`char`而不是`string`，`char`在代码中表示时需要用用单引号，而`string`需要用双引号。
+
 #### 正则表达式
 
 ### Vala Scripts与Unix Shebang
