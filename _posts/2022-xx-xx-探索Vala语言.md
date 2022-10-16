@@ -157,6 +157,18 @@ Python程序员注意：这里提取的单个字符数据类型是`char`而不�
 
 Vala还支持原义字符串，类似于Python的`r-string`或C#的`@""`（然而C#的原义字符串在Vala中表示字符串模板），形如`"""xxx"""`（注意：Python中也有类似语法表达，但是意义为多行字符串；Vala语言与Python不同，不依赖换行符作为语句分隔，因此各种表达方式的字符串都能跨行，这里的`"""xxx"""`还特别表示了原义字符串）
 
+当然，很多语言都支持的相邻的以空白符分隔的字符串自动拼接Vala也支持。
+
+Vala的文字输入也较为方便。Vala除了可以使用C语言风格的`getc`、`scanf`等外，还有`read_line`函数可以读取一整行的内容，注意使用时是通过`FileStream`对象下的方法来进行的：
+```vala
+void main() {
+    var s = stdin.read_line();
+    print(@"Your input is: $(s)\n");
+    // Output:
+    // Your output is: xxx(your input)
+}
+```
+
 #### 正则表达式
 
 ### Vala Scripts与Unix Shebang
