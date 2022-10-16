@@ -2,7 +2,7 @@
 layout:     post
 title:      探索Vala语言
 subtitle:   Vala语言学习心得
-date:       2022-??-??
+date:       2022-xx-xx
 author:     星外之神
 header-img: img/Vala_Logo.webp
 catalog:    true
