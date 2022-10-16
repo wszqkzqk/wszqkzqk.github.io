@@ -101,7 +101,7 @@ uint int64_hash(double? v) {
 笔者非常喜欢Vala强大的字符串处理功能。
 
 Vala支持直接用`+`拼接字符串：
-```
+```vala
 void main() {
     var s1 = "123";
     var s2 = "456";
