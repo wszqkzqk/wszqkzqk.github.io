@@ -61,7 +61,7 @@ Vala语言
 
 ### Vala Scripts与Unix Shebang
 
-Vala语言支持将源代码第一行写为Unix Shebang的形式：
+Vala语言支持将源代码**第一行**写为Unix Shebang的形式：
 ```vala
 #!/usr/bin/env vala
 ```
