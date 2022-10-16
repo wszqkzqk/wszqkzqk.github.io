@@ -55,6 +55,8 @@ Vala语言
 
 Vala对整数变量类型的命名较为简洁，没有使用啰嗦冗长的`unsigned long long`这样的形式。Vala中`char`、`int`、`long`等拼写简单的类型名仍然不变，但是对两个单词及以上的类型名进行了调整，仅简单指出其符号与位数来表示，如：没有`usigned int`，而是使用`uint`；没有`long long`，而是使用`int64`；没有`usigned long long`，而是使用`uint64`。这使得代码更加简洁，既方便编写，又方便阅读。
 
+此外，Vala给各种长度的整数都给出了跨平台的保证位数的实现，例如：`long`在64位Linux下为64位，但在64位Windows下为32位，这时如果有必要可以考虑使用保证长度的`int64`或`int32`实现。
+
 #### lambda
 
 #### main函数的灵活性
