@@ -169,6 +169,8 @@ void main() {
 }
 ```
 
+由于Vala背靠强大的GLib库，对字符串的高级处理也有很好的支持。诸如`split`、`find`、`replace`、`has_prefix`、`has_suffix`、`ascii_down`、`ascii_up`、`_strip`等较高级的处理函数在内置的`string`对象中均有实现，可以方便地实现字符串的高级处理。
+
 #### 正则表达式
 
 ### Vala Scripts与Unix Shebang
