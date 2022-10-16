@@ -97,6 +97,8 @@ void main() {
 }
 ```
 
+Vala的模板字符串很多时候是简化输出代码的一大利器。
+
 #### 正则表达式
 
 ### Vala Scripts与Unix Shebang
