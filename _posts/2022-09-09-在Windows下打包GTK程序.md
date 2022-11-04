@@ -196,3 +196,9 @@ if __name__ == "__main__":
 ```
 
 使用方式与之前的版本类似，但是可以作为库被其他Python程序调用（比如用于进行编译前预处理及调用编译的程序，或者是调用NSIS的程序，可提供完整的构建方案），并且对路径的改动只需要在`if __name__ == "__main__"`后对`GtkPacker`的传参中进行，维护更加方便。
+
+## 捐赠
+
+|  **支付宝**  |  **微信支付**  |
+|  :----:  |  :----:  |
+|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |
