@@ -118,11 +118,11 @@ friends: [
         title: "Arch Linux",
         href: "https://archlinux.org/"
     },{
-        title: "Manjaro",
-        href: "https://www.manjaro.org"
-    },{
         title: "MSYS2",
         href: "https://www.msys2.org/"
+    },{
+        title: "Vala Programming Language",
+        href: "https://vala.dev/"
     },{
         title: "竹林里有冰的博客",
         href: "https://blog.zhullyb.top/"
