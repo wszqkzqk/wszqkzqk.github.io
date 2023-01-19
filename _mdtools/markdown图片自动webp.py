@@ -2,6 +2,7 @@
 import os
 from platform import system
 import sys
+import re
 
 def pathed(path):
     while len(path) > 1 and ((path[0] == "'" and path[-1] == "'") or (path[0] == '"' and path[-1] == '"')):
@@ -145,17 +146,20 @@ def autowebp(imgfile):  # 仅对本地图片使用
     else:
         return '/img/' + imgfile
 
+regex = re.compile(rf"{re.escape(localimg) if system() != 'Windows' else re.escape(localimg).lower()}/(?P<name>.*)")
 while 1:
     print('请输入图片地址（默认在./img下，也可输入绝对网址、带有/img的完整地址或指向./img的本地绝对路径）：')
     url = pathed(input())
     if url:
-        url = url.replace('\\', '/')
         if '://' not in url:
+            if system() == 'Windows':
+                url = url.replace('\\', '/').lower()
             if '/img/' not in url:
                 url = autowebp(url)
             else:
-                if os.path.dirname(url) == localimg:
-                    url = autowebp(os.path.basename(url))
+                info = regex.match(url)
+                if info:
+                    url = autowebp(info.group("name"))
                 else:
                     url = ''
                     print('该文件既不是网络文件，又不是./img目录下的文件！请检查输入！')

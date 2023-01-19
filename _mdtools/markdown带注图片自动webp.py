@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import os
+import re
+from platform import system
 import sys
 
 def unixpath(path):
@@ -120,11 +122,13 @@ picline = '|'
 neckline = '|' + ':----:|'*n
 tailline = '|'
 
+regex = re.compile(r"{re.escape(localimg)}/(?P<name>.*)")
 for i in range(n):
     print('请输入第{}张图片的地址（默认在./img下，也可输入绝对网址、绝对路径或带有/img的完整地址）：'.format(i+1))
     url = pathed(input())
     if '://' not in url:
-        url = url.replace('\\', '/')
+        if system() == 'Windows':
+            url = url.replace('\\', '/').lower()
         if '/img/' not in url:
             if url:
                 url = autowebp(url)
@@ -135,8 +139,9 @@ for i in range(n):
                     tailline += '    |'
                     continue
         else:
-            if os.path.dirname(url) == localimg:
-                url = autowebp(os.path.basename(url))
+            info = regex.match(url)
+            if info:
+                url = autowebp(info.group("name"))
             else:
                 url = ''
                 print('该文件既不是网络文件，又不是./img目录下的文件！请检查输入！')
