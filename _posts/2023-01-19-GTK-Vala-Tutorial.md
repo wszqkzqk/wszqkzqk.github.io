@@ -1,0 +1,221 @@
+---
+layout:     post
+title:      GTK/Vala开发教程
+subtitle:   基础教程
+date:       2023-01-19
+author:     星外之神
+header-img: img/GTK-logo.webp
+catalog:    true
+tags:       开源软件 GTK Vala
+---
+
+本文采用[**CC-BY-SA-3.0**](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，但本文代码采用[**LGPL v2.1+**](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)协议公开
+
+# 前言
+
+本文假设读者已经掌握Vala语言的基本语法。如果对Vala的基本语法仍然不熟悉，推荐首先阅读[Vala语言官方教程](https://wiki.gnome.org/Projects/Vala/Tutorial)；如果在学习Vala语言前有C#、Java、C、C++等其他语言的开发经验，也可以阅读[面向C#程序员的Vala教程](https://wiki.gnome.org/Projects/Vala/ValaForCSharpProgrammers)或者[面向Java程序员的Vala教程](https://wiki.gnome.org/Projects/Vala/ValaForJavaProgrammers)。
+
+本教程不对开发环境安装作介绍。
+
+# GTK概述
+
+GTK是一个用于创建图形用户界面的库。它可以在多种类UNIX平台、Windows和macOS上使用。GTK根据[GNU Library General Public License](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)条款发布，较为灵活，允许闭源的动态链接。GTK库本身由C语言编写，采用了面向对象的设计，拥有很大的灵活性和可移植性。
+
+GTK可以在多种语言中使用，例如C、Vala、C++、Objective-C、Guile/Scheme、Perl、 Python、JavaScript、Rust、Go、 TOM 、Ada95、Free Pascal和Eiffel。其中，Vala语言专门面向GTK所采用的GObject设计，并且没有使用C语言以外的ABI，与GTK集成良好；同时，Vala又具有大量现代语言的特征，能够大大简化代码结构。使用GTK/Vala技术栈开发GUI程序，是一个高效的选择。
+
+GTK依赖于以下库：
+
+* GLib：通用的实用程序库，不局限于图形用户界面。GLib提供了许多有用的数据类型、宏、类型转换、字符串实用程序、文件实用程序、主循环抽象等，可以在[GLib网站](https://developer.gnome.org/glib/stable/)上找到更多信息。
+* GObeject：提供类型系统的库，一个含有包括对象类型和信号系统等基本类型结构的集合，可以在[GObject网站](https://developer.gnome.org/gobject/stable/)上找到更多信息。
+* GIO：现代的、易于使用的VFS API，包括文件、驱动器、卷、流的IO的抽象，也包括网络编程IPC和总线，可以在[GIO网站](https://developer.gnome.org/gio/stable/)上找到更多信息。
+* Cairo：二维图形库，支持多设备输出，可以在[Cairo网站](https://www.cairographics.org/manual/)上找到更多信息。
+* OpenGL：用于开发可移植、交互式的2D和3D图形应用程序的库，可以在[Khronos网站](https://www.opengl.org/about/)上找到更多信息。
+* Pango：用于国际化文本处理的库，可以在[Pango](https://pango.gnome.org/)上找到更多信息。
+* gdk-pixbuf：小型可移植库，用于由图像数据或图像文件创建`GdkPixbuf`对象，可以在[gdk-pixbuf网站](https://developer.gnome.org/gdk-pixbuf/stable/)上找到更多信息。
+* graphene：提供向量和矩阵数据类型和操作的小型库。graphene提供使用各种SIMD指令集优化实现，可以在[graphene网站](https://ebassi.github.io/graphene/)上找到更多信息。
+
+GTK 分为三个部分：
+* GDK：支持多个视窗系统的抽象层。GDK在Wayland、X11、微软Windows和苹果macOS上可用。
+* GSK：用于通过绘图操作创建场景图的API，并使用不同的后端渲染它。GSK使用OpenGL、Vulkan和Cairo的渲染器。
+* GTK：GUI工具包，包含UI元素、布局管理器、数据等在应用程序中可高效使用的存储类型，用于直接编写GUI。
+
+# 教程
+
+## 基本
+
+我们从一个非常简单的程序开始：创建一个200 × 200像素的空窗口：
+
+[![#~/img/GTK-examples/window-default.webp](/img/GTK-examples/window-default.webp)](/img/GTK-examples/window-default.webp)
+
+创建一个包含以下内容的新文件，命名为`example-0.vala`：
+
+```vala
+int main (string[] args) {
+    var app = new Gtk.Application (
+        "org.gtk.example",
+        ApplicationFlags.DEFAULT_FLAGS
+    );
+
+    app.activate.connect (() => {
+        var win = new Gtk.ApplicationWindow (app) {
+            title = "Window",
+            default_width = 400,
+            default_height = 200
+        };
+        win.present ();
+    });
+    return app.run (args);
+}
+```
+
+使用`valac`命令编译以上程序：
+```bash
+valac --pkg gtk4 example-0.vala
+```
+
+在GTK/Vala应用程序中，主函数`main ()`功能是创建一个`Gtk.Application`对象并运行它。在这个例子中，我们通过`new`关键字创建了一个`Gtk.Application`对象并完成了初始化，命名为`app`。
+
+创建`Gtk.Application`时，您需要选择一个应用程序标识符名称并将其传递给`Gtk.Application ()`的创建函数作为参数。在这个例子中，我们使用了`org.gtk.example`这个名称。应用程序标识符名称的选择问题可以参阅[相关指南](https://developer.gnome.org/documentation/tutorials/application-id.html)。最后，`Gtk.Application ()`创建函数需要传递`Gtk.ApplicationFlags`作为参数，如果您的应用程序有特殊需要，可以更改默认行为。
+
+接下来，我们将应用程序的激活信号连接到了一个匿名函数中。在本教程中，我们先看完程序的整体结构，再来说明此处的匿名函数中的内容。激活信号将在程序运行`Gtk.Application`对象的`run ()`函数（这个例子中是`app.run ()`）时发出。`Gtk.Application`对象的`run ()`函数也会处理命令行参数（即通过`main ()`函数传递的`args`）。GTK应用程序可以覆盖命令行处理，例如打开通过命令行传递的文件。
+
+然后，`app.run ()`发送激活信号，程序进入之前连接的匿名函数。这是我们构建GTK窗口的地方。用`new`关键字新建一个`Gtk.ApplicationWindow`窗口。这个窗口将含有框架、标题栏和平台依赖的窗口控件。
+
+在创建窗口时，我们使用大括号对`Gtk.ApplicationWindow`对象的属性进行初始化。`title = "Window"`指定了窗口的标题为`Window`，`default_width = 400`与`default_height = 200`则分别指定了窗口的宽和高。最后，调用`win.present ()`函数显示窗口。
+
+触发关闭窗口时（例如按下`X`按钮），`app.run ()`函数将返回表示程序的运行状态的整数，并退出程序。
+
+当程序运行时，GTK会等待接收*事件（events）*。*事件*通常是用户与程序交互产生的输入事件，但也可能是窗口管理器或者其他应用程序发出的信息。当GTK接收到这些事件时，GTK部件可能会发出*信号（signals）*。一般来说，我们通过将这些信号与*信号处理函数（handlers）*相*连接（connect）*让程序按照一定的方式相应用户的输入。
+
+接下来的示例稍微复杂一些，并尝试展示GTK的一些功能。 
+
+## Hello, World
+
+*Hello, World*是编程语言与库中的经典示例程序。
+
+[![#~/img/GTK-examples/hello-world.webp](/img/GTK-examples/hello-world.webp)](/img/GTK-examples/hello-world.webp)
+
+创建一个包含以下内容的新文件，命名为`example-1.vala`：
+
+```vala
+int main (string[] args) {
+    var app = new Gtk.Application (
+        "org.gtk.example",
+        ApplicationFlags.DEFAULT_FLAGS
+    );
+
+    app.activate.connect (() => {
+        var win = new Gtk.ApplicationWindow (app) {
+            title = "Hello",
+            default_width = 300,
+            default_height = 100
+        };
+        
+        var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
+            halign = Gtk.Align.CENTER,
+            valign = Gtk.Align.CENTER
+        };
+        win.child = box;
+        
+        var button = new Gtk.Button.with_label ("Hello World");
+        button.clicked.connect (() => print ("Hello World\n"));
+        button.clicked.connect_after (win.destroy);
+        box.append (button);
+        
+        win.present ();
+    });
+    return app.run (args);
+}
+```
+
+使用`valac`命令编译以上程序：
+```bash
+valac --pkg gtk4 example-1.vala
+```
+
+如上所示，`example-1.vala`建立在`example-0.vala`的基础上，添加了一个标签为*Hello World*的按钮。我们使用`Gtk.Box`与`Gtk.Button`实现添加，以便控制按钮的大小和布局。
+
+`Gtk.Box`部件在创建时需要传递一个`Gtk.Orientation`枚举值作为参数指定容器的布局方式。`Gtk.Box`可以水平或者竖直布置，但因为我们只有一个按钮，所以在这个例子中，水平与竖直并不重要。`halign = Gtk.Align.CENTER`与`valign = Gtk.Align.CENTER`两个属性设置表示令其中的子部件居中，不填充整个空间。创建完成后，使用`win.child = box`语句指定我们新创建的`Gtk.Box`对象为窗口的子部件。
+
+接下来新建一个`Gtk.Button`变量并初始化，`Gtk.Button.with_label ()`将返回一个指定了标签内容的按钮。
+
+然后，我们指定了`button`被点击时的响应函数，其中一个是用于在终端中打印`Hello World\n`的匿名函数，另一个是关闭窗口的响应函数。这里推荐使用`connect_after ()`而不是`connect ()`连接用于关闭窗口的`win.destroy`函数，这样可以保证`win.destroy`在其他所有连接的函数都调用完成后再调用，无关于在代码中连接的顺序，更加安全。随后，将按钮添加到`box`中。
+
+可以在[GTK](https://wiki.gnome.org/HowDoI/Buttons)与[Vala](https://valadoc.org/gtk4/Gtk.Button.html)的相关文档中查看更多关于按钮创建的信息。
+
+其余在`example-1.vala`中的代码均在`example-0.vala`中有所说明。下一个部分将进一步说明如何添加多个GTK部件到GTK应用程序。 
+
+## 包装
+
+创建程序时，我们可能需要在一个窗口中放多个部件。此时，控制每个部件的位置与大小的方式尤其重要——而这就是包装的用武之地。
+
+GTK包含了多种布局容器，可以用于控制子部件的布局，例如：
+
+* `Gtk.Box`
+* `Gtk.Grid`
+* `Gtk.Revealer`
+* `Gtk.Stack`
+* `Gtk.Overlay`
+* `Gtk.Paned`
+* `Gtk.Expander`
+* `Gtk.Fixed`
+
+以下实例展示了用`Gtk.Grid`包装多个按钮：
+
+[![#~/img/GTK-examples/grid-packing.webp](/img/GTK-examples/grid-packing.webp)](/img/GTK-examples/grid-packing.webp)
+
+创建一个包含以下内容的新文件，命名为`example-2.vala`：
+
+```vala
+void print_hello () {
+    print ("Hello World\n");
+}
+
+int main (string[] args) {
+    var app = new Gtk.Application (
+        "org.gtk.example",
+        ApplicationFlags.DEFAULT_FLAGS
+    );
+
+    app.activate.connect (() => {
+        // 创建新窗口
+        var win = new Gtk.ApplicationWindow (app) {
+            title = "Grid",
+        };
+
+        // 创建包装按钮的网格容器
+        var grid = new Gtk.Grid ();
+        // 将`grid`设定为`win`的子部件
+        win.child = grid;
+
+        var button = new Gtk.Button.with_label ("Button 1");
+        button.clicked.connect (print_hello);
+        // 将第1个按钮放在网格的(0, 0)位置，并占据(1 × 1)的大小
+        grid.attach (button, 0, 0, 1, 1);
+        
+        button = new Gtk.Button.with_label ("Button 2");
+        button.clicked.connect (print_hello);
+        // 将第2个按钮放在网格的(1, 0)位置，并占据(1 × 1)的大小
+        grid.attach (button, 1, 0, 1, 1);
+
+        button = new Gtk.Button.with_label ("Quit");
+        button.clicked.connect (win.destroy);
+        // 将第3个按钮放在网格的(0, 1)位置，并占据(2 * 1)的大小
+        grid.attach (button, 0, 1, 2, 1);
+        
+        win.present ();
+    });
+    return app.run (args);
+}
+```
+
+使用`valac`命令编译以上程序：
+```bash
+valac --pkg gtk4 example-2.vala
+```
+
+# 捐赠
+
+|  **支付宝**  |  **微信支付**  |
+|  :----:  |  :----:  |
+|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |
