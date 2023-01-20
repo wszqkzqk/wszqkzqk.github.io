@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      GTK/Vala开发教程
+title:      GTK/Vala开发基础教程
 subtitle:   基础教程
 date:       2023-01-19
 author:     星外之神
@@ -13,7 +13,7 @@ tags:       开源软件 GTK Vala
 
 # 前言
 
-本文假设读者已经掌握Vala语言的基本语法。如果对Vala的基本语法仍然不熟悉，推荐首先阅读[Vala语言官方教程](https://wiki.gnome.org/Projects/Vala/Tutorial)；如果在学习Vala语言前有C#、Java、C、C++等其他语言的开发经验，也可以阅读[面向C#程序员的Vala教程](https://wiki.gnome.org/Projects/Vala/ValaForCSharpProgrammers)或者[面向Java程序员的Vala教程](https://wiki.gnome.org/Projects/Vala/ValaForJavaProgrammers)。
+本文假设读者已经掌握Vala语言的基本语法。如果对Vala的基本语法仍然不熟悉，推荐首先阅读[Vala语言官方教程](https://wiki.gnome.org/Projects/Vala/Tutorial)；如果在学习Vala语言前有C#、Java、C、C++等其他语言的开发经验，也可以阅读[面向C#程序员的Vala教程](https://wiki.gnome.org/Projects/Vala/ValaForCSharpProgrammers)或者[面向Java程序员的Vala教程](https://wiki.gnome.org/Projects/Vala/ValaForJavaProgrammers)，阅读笔者的[相关介绍性博客](/2022/10/17/探索Vala语言/)对快速了解Vala语言的部分特点也有帮助。
 
 本教程不对开发环境安装作介绍。
 
@@ -25,16 +25,17 @@ GTK可以在多种语言中使用，例如C、Vala、C++、Objective-C、Guile/S
 
 GTK依赖于以下库：
 
-* GLib：通用的实用程序库，不局限于图形用户界面。GLib提供了许多有用的数据类型、宏、类型转换、字符串实用程序、文件实用程序、主循环抽象等，可以在[GLib网站](https://developer.gnome.org/glib/stable/)上找到更多信息。
-* GObeject：提供类型系统的库，一个含有包括对象类型和信号系统等基本类型结构的集合，可以在[GObject网站](https://developer.gnome.org/gobject/stable/)上找到更多信息。
-* GIO：现代的、易于使用的VFS API，包括文件、驱动器、卷、流的IO的抽象，也包括网络编程IPC和总线，可以在[GIO网站](https://developer.gnome.org/gio/stable/)上找到更多信息。
-* Cairo：二维图形库，支持多设备输出，可以在[Cairo网站](https://www.cairographics.org/manual/)上找到更多信息。
-* OpenGL：用于开发可移植、交互式的2D和3D图形应用程序的库，可以在[Khronos网站](https://www.opengl.org/about/)上找到更多信息。
-* Pango：用于国际化文本处理的库，可以在[Pango](https://pango.gnome.org/)上找到更多信息。
-* gdk-pixbuf：小型可移植库，用于由图像数据或图像文件创建`GdkPixbuf`对象，可以在[gdk-pixbuf网站](https://developer.gnome.org/gdk-pixbuf/stable/)上找到更多信息。
-* graphene：提供向量和矩阵数据类型和操作的小型库。graphene提供使用各种SIMD指令集优化实现，可以在[graphene网站](https://ebassi.github.io/graphene/)上找到更多信息。
+* [GLib](https://developer.gnome.org/glib/stable/)：通用的实用程序库，不局限于图形用户界面。GLib提供了许多有用的数据类型、宏、类型转换、字符串实用程序、文件实用程序、主循环抽象等。
+* [GObeject](https://developer.gnome.org/gobject/stable/)：提供类型系统的库，一个含有包括对象类型和信号系统等基本类型结构的集合。
+* [GIO](https://developer.gnome.org/gio/stable/)：现代的、易于使用的VFS API，包括文件、驱动器、卷、流的IO的抽象，也包括网络编程IPC和总线。
+* [Cairo](https://www.cairographics.org/manual/)：二维图形库，支持多设备输出。
+* [OpenGL](https://www.opengl.org/about/)：用于开发可移植、交互式的2D和3D图形应用程序的库。
+* [Pango](https://pango.gnome.org/)：用于国际化文本处理的库。
+* [gdk-pixbuf](https://developer.gnome.org/gdk-pixbuf/stable/)：小型可移植库，用于由图像数据或图像文件创建`GdkPixbuf`对象。
+* [graphene](https://ebassi.github.io/graphene/)：提供向量和矩阵数据类型和操作的小型库。graphene提供使用各种SIMD指令集优化实现。
 
 GTK 分为三个部分：
+
 * GDK：支持多个视窗系统的抽象层。GDK在Wayland、X11、微软Windows和苹果macOS上可用。
 * GSK：用于通过绘图操作创建场景图的API，并使用不同的后端渲染它。GSK使用OpenGL、Vulkan和Cairo的渲染器。
 * GTK：GUI工具包，包含UI元素、布局管理器、数据等在应用程序中可高效使用的存储类型，用于直接编写GUI。
@@ -69,15 +70,16 @@ int main (string[] args) {
 ```
 
 使用`valac`命令编译以上程序：
+
 ```bash
 valac --pkg gtk4 example-0.vala
 ```
 
 在GTK/Vala应用程序中，主函数`main ()`功能是创建一个`Gtk.Application`对象并运行它。在这个例子中，我们通过`new`关键字创建了一个`Gtk.Application`对象并完成了初始化，命名为`app`。
 
-创建`Gtk.Application`时，您需要选择一个应用程序标识符名称并将其传递给`Gtk.Application ()`的创建函数作为参数。在这个例子中，我们使用了`org.gtk.example`这个名称。应用程序标识符名称的选择问题可以参阅[相关指南](https://developer.gnome.org/documentation/tutorials/application-id.html)。最后，`Gtk.Application ()`创建函数需要传递`Gtk.ApplicationFlags`作为参数，如果您的应用程序有特殊需要，可以更改默认行为。
+创建`Gtk.Application`时，您需要选择一个应用程序标识符名称并将其传递给`Gtk.Application ()`的创建函数作为参数。在这个例子中，我们使用了`org.gtk.example`这个名称。应用程序标识符名称的选择问题可以参阅[相关指南](https://developer.gnome.org/documentation/tutorials/application-id.html)。最后，`Gtk.Application ()`创建函数需要传递`Gtk.ApplicationFlags`枚举值作为参数，如果您的应用程序有特殊需要，可以更改默认行为。
 
-接下来，我们将应用程序的激活信号连接到了一个匿名函数中。在本教程中，我们先看完程序的整体结构，再来说明此处的匿名函数中的内容。激活信号将在程序运行`Gtk.Application`对象的`run ()`函数（这个例子中是`app.run ()`）时发出。`Gtk.Application`对象的`run ()`函数也会处理命令行参数（即通过`main ()`函数传递的`args`）。GTK应用程序可以覆盖命令行处理，例如打开通过命令行传递的文件。
+接下来，我们将应用程序的激活信号连接到了一个匿名函数中，这也是Vala语言中非常常见的信号连接方式。在本教程中，我们先看完程序的整体结构，再来说明此处的匿名函数中的内容。激活信号将在程序运行`Gtk.Application`对象的`run ()`函数（这个例子中是`app.run ()`）时发出。`Gtk.Application`对象的`run ()`函数也会处理命令行参数（即通过`main ()`函数传递的`args`）。GTK应用程序可以覆盖命令行处理，例如打开通过命令行传递的文件。
 
 然后，`app.run ()`发送激活信号，程序进入之前连接的匿名函数。这是我们构建GTK窗口的地方。用`new`关键字新建一个`Gtk.ApplicationWindow`窗口。这个窗口将含有框架、标题栏和平台依赖的窗口控件。
 
@@ -129,6 +131,7 @@ int main (string[] args) {
 ```
 
 使用`valac`命令编译以上程序：
+
 ```bash
 valac --pkg gtk4 example-1.vala
 ```
@@ -202,7 +205,7 @@ int main (string[] args) {
         button.clicked.connect (win.destroy);
         // 将第3个按钮放在网格的(0, 1)位置，并占据(2 * 1)的大小
         grid.attach (button, 0, 1, 2, 1);
-        
+
         win.present ();
     });
     return app.run (args);
@@ -210,8 +213,111 @@ int main (string[] args) {
 ```
 
 使用`valac`命令编译以上程序：
+
 ```bash
 valac --pkg gtk4 example-2.vala
+```
+
+这段代码中，信号的连接没有采用Vala中常用的定义匿名函数的方式，而是直接定义了一个另外的函数，这是因为本示例中向终端打印`Hello World`的函数被调用了2次，如果用匿名函数，将会重复定义，较为繁琐，不便于阅读，也不便于维护。
+
+## 自定义绘图
+
+许多小部件，如按钮，会自动绘制所有内容。在代码中只需要传递我们所需要的标签即可，部件会自动按照默认方案设置所需的字体、绘制部件轮廓、焦点矩形等。但是在另一些应用场景下，我们可能仍然需要自定义绘图。此时，我们可能需要使用`Gtk.DrawingArea`部件。该部件提供了一个画布，可以设置其绘制函数来进行绘制。
+
+部件的内容也经常需要部分或全部重绘，例如：当另一个窗口移动，露出一部分部件时，或者当包含部件的窗口被调整大小时，往往需要重绘部件。GTK中也可以调用`Gtk.Widget.queue_draw ()`显式地重绘部件。
+
+以下示例展示了如何使用`Gtk.DrawingArea`绘图。这个示例比前面的例子稍微复杂一点，因为它也展示了使用事件控制器处理输入事件。 
+
+[![#~/img/GTK-examples/drawing.webp](/img/GTK-examples/drawing.webp)](/img/GTK-examples/drawing.webp)
+
+创建一个包含以下内容的新文件，命名为`example-2.vala`：
+
+```vala
+static Cairo.Surface surface = null;
+static double start_x;
+static double start_y;
+
+static void clear_surface () {
+    var cr = new Cairo.Context (surface);
+    cr.set_source_rgb (1, 1, 1);
+    cr.paint ();
+}
+
+static void draw_brush (Gtk.Widget widget, double x, double y) {
+    var cr = new Cairo.Context (surface);
+    cr.rectangle (x - 3, y - 3, 6, 6);
+    cr.fill ();
+    widget.queue_draw ();
+}
+
+static int main (string[] args) {
+    var app = new Gtk.Application (
+        "org.gtk.example",
+        ApplicationFlags.DEFAULT_FLAGS
+    );
+
+    app.activate.connect (() => {
+        var win = new Gtk.ApplicationWindow (app) {
+            title = "Drawing Area"
+        };
+
+        var frame = new Gtk.Frame (null);
+        win.child = frame;
+
+        var drawing_area = new Gtk.DrawingArea () {
+            width_request = 400,
+            height_request = 300
+        };
+        frame.child = drawing_area;
+        
+        drawing_area.set_draw_func ((area, context, width, height) => {
+            context.set_source_surface (surface, 0, 0);
+            context.paint ();
+        });
+        drawing_area.resize.connect_after ((widget, width, height) => {
+            if (surface != null) {
+                surface = null;
+            }
+            var next_surface = (widget.get_native ()).get_surface ();
+            if (next_surface != null) {
+                surface = next_surface.create_similar_surface (
+                    Cairo.Content.COLOR,
+                    width,
+                    height
+                );
+                clear_surface ();
+            }
+        });
+        
+        var drag = new Gtk.GestureDrag ();
+        drag.set_button (Gdk.BUTTON_PRIMARY);
+        drawing_area.add_controller (drag);
+        drag.drag_begin.connect ((drag, x, y) => {
+            start_x = x;
+            start_y = y;
+            draw_brush (drawing_area, x, y);
+        });
+        drag.drag_update.connect ((drag, x, y) => draw_brush (drawing_area, start_x + x, start_y + y));
+        drag.drag_end.connect ((drag, x, y) => draw_brush (drawing_area, start_x + x, start_y + y));
+        
+        var press = new Gtk.GestureClick ();
+        press.set_button (Gdk.BUTTON_SECONDARY);
+        drawing_area.add_controller (press);
+        press.pressed.connect (() => {
+            clear_surface ();
+            drawing_area.queue_draw ();
+        });
+
+        win.present ();
+    });
+    return app.run (args);
+}
+```
+
+使用`valac`命令编译以上程序：
+
+```bash
+valac --pkg gtk4 example-3.vala
 ```
 
 # 捐赠
