@@ -31,7 +31,7 @@ GTK依赖于以下库：
 * [Cairo](https://www.cairographics.org/manual/)：二维图形库，支持多设备输出。
 * [OpenGL](https://www.opengl.org/about/)：用于开发可移植、交互式的2D和3D图形应用程序的库。
 * [Pango](https://pango.gnome.org/)：用于国际化文本处理的库。
-* [gdk-pixbuf](https://developer.gnome.org/gdk-pixbuf/stable/)：小型可移植库，用于由图像数据或图像文件创建`GdkPixbuf`对象。
+* [gdk-pixbuf](https://developer.gnome.org/gdk-pixbuf/stable/)：小型可移植库，用于由图像数据或图像文件创建`Gdk.Pixbuf`对象。
 * [graphene](https://ebassi.github.io/graphene/)：提供向量和矩阵数据类型和操作的小型库。graphene提供使用各种SIMD指令集优化实现。
 
 GTK 分为三个部分：
@@ -230,7 +230,7 @@ valac --pkg gtk4 example-2.vala
 
 [![#~/img/GTK-examples/drawing.webp](/img/GTK-examples/drawing.webp)](/img/GTK-examples/drawing.webp)
 
-创建一个包含以下内容的新文件，命名为`example-2.vala`：
+创建一个包含以下内容的新文件，命名为`example-3.vala`：
 
 ```vala
 static Cairo.Surface surface = null;
@@ -319,6 +319,98 @@ static int main (string[] args) {
 ```bash
 valac --pkg gtk4 example-3.vala
 ```
+
+## 构建用户界面
+
+有时，我们需要构建的界面较为复杂，或者我们需要分离应用程序的前端界面与后端逻辑。在这样的场景下，我们可能需要使用`GtkBuilder`的xml格式的UI描述功能。
+
+### 使用`Gtk.Builder`打包按钮
+
+创建一个包含以下内容的新文件，命名为`example-4.vala`：
+
+```vala
+static void print_hello () {
+    print ("Hello World\n");
+}
+
+static int main (string[] args) {
+    var app = new Gtk.Application (
+        "org.gtk.example",
+        ApplicationFlags.DEFAULT_FLAGS
+    );
+
+    app.activate.connect (() => {
+        var builder = new Gtk.Builder ();
+        builder.add_from_file ("builder.ui");
+        
+        var win = builder.get_object ("window") as Gtk.Window;
+        win.application = app;
+        
+        var button = builder.get_object ("button1") as Gtk.Button;
+        button.clicked.connect (print_hello);
+        
+        button = builder.get_object ("button2") as Gtk.Button;
+        button.clicked.connect (print_hello);
+        
+        button = builder.get_object ("quit") as Gtk.Button;
+        button.clicked.connect (win.close);
+        
+        win.present ();
+    });
+    return app.run (args);
+}
+```
+
+使用`valac`命令编译以上程序：
+
+```bash
+valac --pkg gtk4 example-4.vala
+```
+
+在所得的二进制文件所在目录下创建一个包含以下内容的新文件，命名为`builder.ui`：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object id="window" class="GtkWindow">
+    <property name="title">Grid</property>
+    <child>
+      <object id="grid" class="GtkGrid">
+        <child>
+          <object id="button1" class="GtkButton">
+            <property name="label">Button 1</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object id="button2" class="GtkButton">
+            <property name="label">Button 2</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object id="quit" class="GtkButton">
+            <property name="label">Quit</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">1</property>
+              <property name="column-span">2</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
+```
+
+呈现效果与[本教程第三个示例](#包装)一样，但本例子中可以将前端界面与后端逻辑分开。这对小型项目意义或许不大，但是对于大型项目可以提高开发效率。此外，xml格式的ui描述文件可以用[Glade（不再积极开发）](https://glade.gnome.org/)或[Cambalache](https://gitlab.gnome.org/jpu/cambalache)等工具由“所见即所得”的方式自动生成，也可以快速查看界面预览，进一步提高开发的效率。
 
 # 捐赠
 
