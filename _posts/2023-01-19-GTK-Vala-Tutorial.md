@@ -44,7 +44,7 @@ GTK 分为三个部分：
 
 ## 基本
 
-我们从一个非常简单的程序开始：创建一个200 × 200像素的空窗口：
+我们从一个非常简单的程序开始：创建一个400 × 200像素的空窗口：
 
 [![#~/img/GTK-examples/window-default.webp](/img/GTK-examples/window-default.webp)](/img/GTK-examples/window-default.webp)
 
