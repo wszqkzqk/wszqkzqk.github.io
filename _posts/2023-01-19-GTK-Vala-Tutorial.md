@@ -410,7 +410,19 @@ valac --pkg gtk4 example-4.vala
 </interface>
 ```
 
-呈现效果与[本教程第三个示例](#包装)一样，但本例子中可以将前端界面与后端逻辑分开。这对小型项目意义或许不大，但是对于大型项目可以提高开发效率。此外，xml格式的ui描述文件可以用[Glade（不再积极开发）](https://glade.gnome.org/)或[Cambalache](https://gitlab.gnome.org/jpu/cambalache)等工具由“所见即所得”的方式自动生成，也可以快速查看界面预览，进一步提高开发的效率。
+[![#~/img/GTK-examples/grid-packing.webp](/img/GTK-examples/grid-packing.webp)](/img/GTK-examples/grid-packing.webp)
+
+这个例子呈现效果与[本教程第三个示例](#包装)一样，但本例子中可以将前端界面与后端逻辑分开。这对小型项目意义或许不大，但是对于大型项目可以提高开发效率。此外，xml格式的ui描述文件可以用[Glade（不再积极开发）](https://glade.gnome.org/)或[Cambalache](https://gitlab.gnome.org/jpu/cambalache)等工具由“所见即所得”的方式自动生成，也可以快速查看界面预览，进一步提高开发的效率。
+
+`Gtk.Builder`也可以构造非Gtk部件的对象，例如树模型与调校等。`Gtk.Builder.get_object ()`函数实际上返回的是一个`GLib.Object`对象。
+
+一般来说，我们可以将UI文件的完整参数传递到`Gtk.Builder.add_from_file ()`函数中，导入非当前目录下的UI文件。在Linux平台下，安装UI文件的目录通常是`/usr/share/[应用程序名称]`。也可以将UI文件嵌入源代码，作为字符串，传递到`Gtk.Builder.add_from_string ()`函数加载。但单独将UI描述保存为单独文件还具有以下优点：
+
+* 对UI进行微调时往往不需要重新编译程序
+* UI描述与后端逻辑分离更彻底
+* 使用复合部件模板将界面重组为单独的类时更加方便
+
+使用`GResource`可能是一个更加折衷的办法：在源代码中，UI文件与代码能够分离，但编译后的程序中则已经嵌入了UI文件，无需另外分发或指定，也不用担心平台相关的路径问题。
 
 # 捐赠
 
