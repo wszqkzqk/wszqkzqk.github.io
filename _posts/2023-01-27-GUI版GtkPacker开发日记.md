@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      GUI版GtkPacker开发日记
+title:      GUI版GtkPacker开发日记（一）
 subtitle:   开发概要简记
 date:       2023-01-27
 author:     星外之神
