@@ -155,6 +155,13 @@ locale-gen
 
 创建主系统下的`/mnt/etc/hostname`（即U盘系统下的`/etc/hostname`），其中的内容为设定的主机名称。
 
+为U盘中的系统启用DM和网络管理器，以LightDM为例：
+
+```bash
+systemctl enable lightdm.service
+systemctl enable NetworkManager.service
+```
+
 设定root密码：
 
 ```bash
@@ -186,13 +193,6 @@ EDITOR=nano visudo
 ```
 
 在编辑时取消`%wheel      ALL=(ALL): ALL`一行的注释即可。
-
-为U盘中的系统启用DM和网络管理器，以LightDM为例：
-
-```bash
-systemctl enable lightdm.service
-systemctl enable NetworkManager.service
-```
 
 ## 引导配置
 
