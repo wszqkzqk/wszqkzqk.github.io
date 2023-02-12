@@ -130,7 +130,7 @@ sudo su
 genfstab -U /mnt >> /mnt/etc/fstab
 ```
 
-注意，`genfstab`命令必须直接在root账户下运行，`sudo genfstab -U /mnt >> /mnt/etc/fstab`会提示权限错误。生成完后，可能需要手动编辑，移除本地的swap分区，因为本地的swap分区并不保证在U盘系统中可用。
+注意，`genfstab`命令必须直接在root账户下运行，`sudo genfstab -U /mnt >> /mnt/etc/fstab`会提示权限错误。生成完后，需要手动编辑，移除本地的swap分区，因为本地的swap分区并不保证在U盘系统中可用。此外，还建议给Btrfs分区加上`noatime`和`compress-force=zstd:6`两个挂载参数，分别用于减小读写量与强制启用等级为6的zstd压缩。
 
 接下来，使用`arch-chroot`命令切换到U盘系统的目录下：
 
