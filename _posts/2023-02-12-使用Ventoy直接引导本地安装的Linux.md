@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      使用Ventoy直接引导本地安装的Linux
-subtitle:   高级Linux安装及引导方式
+subtitle:   高级U盘Linux安装及引导方式
 date:       2023-02-12
 author:     星外之神
 header-img: img/ventoy/ventoy_bg.webp
