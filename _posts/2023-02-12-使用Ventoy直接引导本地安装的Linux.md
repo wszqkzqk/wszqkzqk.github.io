@@ -89,7 +89,7 @@ sudo btrfs property set /mnt compression zstd
 
 ## Arch Linux系统安装
 
-本部分遵照[Arch Wiki: 安装指南](https://wiki.archlinuxcn.org/wiki/%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97)的方法进行操作即可。
+本部分遵照[Arch Wiki: 安装指南](https://wiki.archlinuxcn.org/wiki/%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97)的方法进行操作即可，但不用进行通常的引导配置。
 
 由于前一部分已经完成了分区、格式化与挂载到`/mnt`目录的操作，我们可以直接用`pacstrap`命令进行安装；由于U盘空间较小，且主系统往往存在大量可利用的软件包缓存，我们还可以传递`-c`参数以利用主系统的缓存安装包
 
