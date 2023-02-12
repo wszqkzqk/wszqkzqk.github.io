@@ -216,7 +216,7 @@ menuentry '<-- Return to previous menu [Esc]' --class=vtoyret VTOY_RET {
 
 `set root=($vtoydev,gpt3)`语句用来设定U盘内安装的系统的位置，`$vtoydev`表示Ventoy所在存储设备，而由于Ventoy固定前面了两个分区的内容，故安装位置一般为`gpt3`。此外，需要将`root=UUID=`后面的内容**替换**为安装分区的**实际UUID**。
 
-引导配置完成后，重启进入Ventoy启动盘引导，按`F6`即可进入自定义的grub设定菜单，按下`Enter`启动系统，使用方法与经典的引导、安装方式基本一致，此处不再赘述。
+引导配置完成后，重启进入Ventoy启动盘引导，按`F6`即可进入自定义的grub设定菜单，按下`Enter`启动系统，使用方法与经典的引导、安装的系统基本一致，此处不再赘述。
 
 ## 捐赠
 
