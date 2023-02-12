@@ -69,7 +69,7 @@ yay -S ventoy-bin
 
 制作完成的Ventoy启动盘分为3个部分：第一部分是Ventoy的数据空间，可以用来保存日常数据以及为Ventoy提供的启动镜像；第二部分是Ventoy的引导分区，大小较小，仅32 MB；第三部分即为我们的保留空间。制作完成以后，Ventoy的保留空间尚未分区或格式化，我们需要手动分区。由于我们现在在GUI的环境下，可以直接用GParted或者KDE分区管理器进行分区。
 
-由于安装在U盘中，为了减少对U盘闪存的磨损，我们可以采用对闪存特别优化的文件系统。除了经典的ext4和XFS文件系统之外，我们还有F2FS和Btrfs这两个主流选择。虽然F2FS被部分手机厂商宣传得神乎其神，但在笔者的测试中性能并不突出，而且功能性、可扩展性和稳定性均较其他现代主流Linux文件系统差，笔者首先将其排除。Btrfs则具有写时复制、快照、配额、**可释放空间的**透明压缩等大量高级功能[^1]。近几年来，Btrfs主要功能稳定性已经得到保证，在大型企业级服务器上的应用表现也较为优秀，在近两年的Linux内核更新中，Btrfs性能提升巨大，笔者一直在NVMe固态硬盘与机械硬盘中使用Btrfs，其性能在简单测试下可与XFS比肩，较显著地超过ext4（使用Linux 6.1内核），[高级测试方法也有类似的结论](https://openbenchmarking.org/result/2107263-IB-2107261IB78)，因此笔者使用了Btrfs文件系统。
+由于安装在U盘中，为了减少对U盘闪存的磨损，我们可以采用对闪存特别优化的文件系统。除了经典的ext4和XFS文件系统之外，我们还有F2FS和Btrfs这两个主流选择。虽然F2FS被部分手机厂商宣传得神乎其神，但在笔者的测试中性能并不突出，而且功能性、可扩展性和稳定性均较其他现代主流Linux文件系统差，笔者首先将其排除[^5]。Btrfs则具有写时复制、快照、配额、**可释放空间的**透明压缩等大量高级功能[^10]。近几年来，Btrfs主要功能稳定性已经得到保证，在大型企业级服务器上的应用表现也较为优秀，在近两年的Linux内核更新中，Btrfs性能提升巨大，笔者一直在NVMe固态硬盘与机械硬盘中使用Btrfs，其性能在简单测试下可与XFS比肩，较显著地超过ext4（使用Linux 6.1内核），[高级测试方法也有类似的结论](https://openbenchmarking.org/result/2107263-IB-2107261IB78)，因此笔者使用了Btrfs文件系统。
 
 U盘中的操作系统可能并没有必要使用快照等功能，笔者在这里没有建立子卷，直接在Btrfs的默认子卷下安装。由于U盘上的IO瓶颈较为显著，笔者建议在U盘上启用较为激进的透明压缩。挂载时，推荐启用压缩参数，假设创建的分区在`/dev/sdb3`：
 
@@ -85,7 +85,7 @@ sudo mount /dev/sdb3 -o compress-force=zstd:6 /mnt
 sudo btrfs property set /mnt compression zstd
 ```
 
-以上命令表示在`/mnt`下创建的文件将默认尝试用zstd算法压缩（即使在无挂载参数时仍会尝试，但没有`compress-force`选项时不会对“不可压缩文件”[^2]尝试压缩）。
+以上命令表示在`/mnt`下创建的文件将默认尝试用zstd算法压缩（即使在无挂载参数时仍会尝试，但没有`compress-force`选项时不会对“不可压缩文件”[^20]尝试压缩）。
 
 ## Arch Linux系统安装
 
@@ -224,7 +224,8 @@ menuentry '<-- Return to previous menu [Esc]' --class=vtoyret VTOY_RET {
 |  :----:  |  :----:  |
 |  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |
 
+[^5]: 参见[Arch Wiki: F2FS#Known issues](https://wiki.archlinux.org/title/F2FS#Known_issues)
 
-[^1]: Btrfs等文件系统的透明压缩可以用于节约空间与减小写入量，但F2FS的透明压缩节省的空间并不可利用，仅能用来减小写入量。
+[^10]: Btrfs等文件系统的透明压缩可以用于节约空间与减小写入量，但F2FS的透明压缩节省的空间并不可利用，仅能用来减小写入量，参见[Arch Wiki: F2FS#Compression](https://wiki.archlinux.org/title/F2FS#Compression)。
 
-[^2]: 参见[Btrfs Wiki对不可压缩文件处理方式的介绍](https://btrfs.wiki.kernel.org/index.php/Compression#What_happens_to_incompressible_files.3F)
+[^20]: 参见[Btrfs Wiki对不可压缩文件处理方式的介绍](https://btrfs.wiki.kernel.org/index.php/Compression#What_happens_to_incompressible_files.3F)
