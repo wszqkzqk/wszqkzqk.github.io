@@ -45,6 +45,8 @@ Ventoy还支持将`.vhd`虚拟机磁盘作为本地系统启动，但是这种�
 
 笔者以主流发行版中安装流程较复杂的Arch Linux为例，在此梳理在U盘中安装Linux并由Ventoy引导的过程。笔者在本地安装的另一个Arch Linux中运行Ventoy与Arch Linux的安装过程，不需要另外下载Arch Linux的ISO。虽然还是在Ventoy的数据分区下存储了一个，以备以后不时之需。（（（
 
+当然，本方法同样适用于移动硬盘等设备，移动硬盘往往具有更大的存储空间与更强的性能，更加适合安装额外的本地Linux系统。
+
 ## Ventoy启动盘制作
 
 ### Ventoy软件安装
