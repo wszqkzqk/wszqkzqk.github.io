@@ -3,7 +3,7 @@ layout:     post
 title:      GTK/Vala开发基础教程
 subtitle:   基础教程
 date:       2023-01-19
-author:     星外之神
+author:     wszqkzqk
 header-img: img/GTK-logo.webp
 catalog:    true
 tags:       开源软件 GTK Vala

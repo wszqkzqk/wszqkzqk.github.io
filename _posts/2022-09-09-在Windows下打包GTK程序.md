@@ -3,7 +3,7 @@ layout:     post
 title:      在Windows下打包GTK程序
 subtitle:   一个简单的程序打包脚本
 date:       2022-09-09
-author:     星外之神
+author:     wszqkzqk
 header-img: img/GTK-logo.webp
 catalog:    true
 tags:       GTK Python Vala Windows 程序打包 开源软件

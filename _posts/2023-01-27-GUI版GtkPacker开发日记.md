@@ -3,7 +3,7 @@ layout:     post
 title:      GUI版GtkPacker开发日记（一）
 subtitle:   开发概要简记
 date:       2023-01-27
-author:     星外之神
+author:     wszqkzqk
 header-img: img/GTK-logo.webp
 catalog:    true
 tags:       开源软件 GTK Vala

@@ -3,7 +3,7 @@ layout:     post
 title:      科廷–哈米特定律
 subtitle:   Wikipedia条目推荐
 date:       2020-07-01
-author:     星外之神
+author:     wszqkzqk
 header-img: img/post-1122px-Wikipedia-logo-v2.svg-dark.webp
 catalog:    true
 tags:       Wikipedia 化学 有机化学  物理化学

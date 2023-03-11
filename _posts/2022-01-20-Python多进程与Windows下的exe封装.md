@@ -3,7 +3,7 @@ layout:     post
 title:      Python多进程与Windows下exe封装的踩坑实践
 subtitle:   multiprocessing、pyinstaller、nuitka的尝试
 date:       2022-01-20
-author:     星外之神
+author:     wszqkzqk
 header-img: img/nuitka-pyinstaller.webp
 catalog:    true
 tags:       Python 程序打包
