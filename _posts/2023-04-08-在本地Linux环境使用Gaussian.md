@@ -15,7 +15,7 @@ tags:       化学 计算化学 有机化学
 
 由于段错误一般是程序设计缺陷导致的，笔者之前一直以为Gaussian的Linux版程序有问题。
 
-Gaussian的文件架构设计很容易让人联想到这点：Gaussian在Linux下的二进制文件具有`.exe`的后缀名，但是却真的是elf格式；都2023年了Gaussian的Linux版的shell脚本居然仍然基于csh；这个软件整体就给人一种很不靠谱的感觉。因此，笔者长期以来均没有在本地的Linux下运行过Gaussian。然而，在一次社团聚会中，学长告诉笔者Gaussian的段错误是自己raise的，实际上很有可能是环境没有配置正确，或者输入文件有问题。笔者这才开始重新在本地的Linux下配置Gaussian。
+Gaussian的文件架构设计很容易让人联想到这点：Gaussian在Linux下的二进制文件具有`.exe`的后缀名，但是却真的是elf格式；都2023年了Gaussian的Linux版的shell脚本居然仍然基于csh；Linux版软件的文件命名居然叫`bsd`；这个软件整体就给人一种很不靠谱的感觉。因此，笔者长期以来均没有在本地的Linux下运行过Gaussian。然而，在一次社团聚会中，学长告诉笔者Gaussian的段错误是自己raise的，实际上很有可能是环境没有配置正确，或者输入文件有问题。笔者这才开始重新在本地的Linux下配置Gaussian。
 
 ## 配置
 
