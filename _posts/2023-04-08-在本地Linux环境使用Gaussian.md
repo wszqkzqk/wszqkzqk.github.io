@@ -35,7 +35,7 @@ source $g16root/g16/bsd/g16.profile # 加载Gaussian自己的环境配置文件
 
 ```bash
 source /home/wszqkzqk/Downloads/g16/1-gaussian.profile
-/home/wszqkzqk/Downloads/g16/g16 < input.com > output.log
+/home/wszqkzqk/Downloads/g16/g16 <input.com> output.log
 ```
 
 ## 报错原因
