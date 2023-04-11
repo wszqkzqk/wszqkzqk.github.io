@@ -27,7 +27,7 @@ Gaussian的配置教程在网上并不少，但是大多都是面向不懂Linux�
 
 ```bash
 export g16root=/home/wszqkzqk/Downloads # 按需替换为Gaussian文件夹实际所在位置
-export GAUSS_SCRDIR=/tmp # 无意义的临时文件，建议直接选择内存盘
+export GAUSS_SCRDIR=/tmp # 无意义的临时文件，可以直接选择内存盘
 source $g16root/g16/bsd/g16.profile # 加载Gaussian自己的环境配置文件
 ```
 
