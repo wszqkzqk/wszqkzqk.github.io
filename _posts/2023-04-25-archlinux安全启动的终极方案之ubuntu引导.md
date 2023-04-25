@@ -102,6 +102,46 @@ menuentry "Arch Linux" {
 
 然后执行`sudo update-grub`，重启即可。
 
+## 后续整理
+
+如果我们~~不怕折腾~~想要干净统一的子卷布局，也可以用类似的方法，将Ubuntu的子卷移动到`subsystems`子卷下。
+
+首先当然是移动Ubuntu子卷，这个过程可以在已经安装好的Arch Linux下进行，也可以在其他Linux系统或者Live CD中进行。
+
+```bash
+sudo mount /dev/sdXn /mnt
+sudo mv /mnt/@ /mnt/subsystems/@ubuntu
+sudo mv /mnt/@home /mnt/subsystems/@ubuntu-home
+...（（移动其他所需子卷）...
+```
+
+然后编辑Ubuntu的`fstab`文件，将子卷改为新的位置：
+
+```bash
+UUID=0F0F-0F0F /boot/efi vfat rw,noatime 0 0 # 这里的efi分区不需要改变
+UUID=0f0f0f0f-0f0f-0f0f-0f0f-0f0f0f0f0f0f / btrfs rw,noatime,subvol=/subsystems/@ubuntu 0 0
+UUID=0f0f0f0f-0f0f-0f0f-0f0f-0f0f0f0f0f0f /home btrfs rw,noatime,subvol=/subsystems/@ubuntu-home 0 0
+...（挂载其他所需子卷）...
+```
+
+卸载`/mnt`下的分区，并重新挂载为Ubuntu所在的子卷：
+    
+```bash
+sudo umount /mnt
+sudo mount /dev/sdXn -o subvol=subsystems/@ubuntu /mnt
+sudo mount /dev/sdXn -o subvol=subsystems/@ubuntu-home /mnt/home
+...（挂载其他所需子卷）...
+```
+
+然后使用Arch Linux自带的`arch-install-scripts`工具`chroot`到Ubuntu子卷中，重新构建Ubuntu的grub引导，如果没有安装`arch-install-scripts`，可以使用`sudo pacman -S arch-install-scripts`安装。
+
+```bash
+sudo arch-chroot /mnt
+sudo update-grub
+```
+
+最后重启即可。
+
 ## 捐赠
 
 |  **支付宝**  |  **微信支付**  |
