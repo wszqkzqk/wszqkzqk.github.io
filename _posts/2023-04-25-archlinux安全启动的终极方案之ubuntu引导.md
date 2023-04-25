@@ -38,7 +38,7 @@ sudo mount /dev/sdXn -o subvol=subsystems/@arch-tmp /mnt/var/tmp
 
 ### 引导配置
 
-在Arch Linux安装完成后，我们需要配置Ubuntu的grub引导来引导Arch Linux。我们需要在Ubuntu下编辑`/etc/grub.d/40_custom`文件，添加如下内容：
+在Arch Linux安装完成后，我们需要配置Ubuntu的grub引导来引导Arch Linux。我们需要在Ubuntu下编辑`/etc/grub.d/40_custom`文件，在末尾添加如下内容：
 
 ```bash
 menuentry "Arch Linux" {
