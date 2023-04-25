@@ -137,10 +137,15 @@ sudo mount /dev/sdXn -o subvol=subsystems/@ubuntu-home /mnt/home
 
 ```bash
 sudo arch-chroot /mnt
-sudo update-grub
 ```
 
-最后重启即可。
+在`chroot`环境中执行：
+
+```bash
+update-grub
+```
+
+以更新Ubuntu的引导信息，最后重启即可。
 
 ## 捐赠
 
