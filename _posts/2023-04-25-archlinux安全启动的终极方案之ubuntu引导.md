@@ -118,7 +118,7 @@ sudo mv /mnt/@home /mnt/subsystems/@ubuntu-home
 然后编辑Ubuntu的`fstab`文件，将子卷改为新的位置：
 
 ```bash
-UUID=0F0F-0F0F /boot/efi vfat rw,noatime 0 0 # 这里的efi分区不需要改变
+UUID=0F0F-0F0F /boot/efi vfat rw,noatime,umask=0077 0 0 # 这里的efi分区不需要改变
 UUID=0f0f0f0f-0f0f-0f0f-0f0f-0f0f0f0f0f0f / btrfs rw,noatime,subvol=/subsystems/@ubuntu 0 0
 UUID=0f0f0f0f-0f0f-0f0f-0f0f-0f0f0f0f0f0f /home btrfs rw,noatime,subvol=/subsystems/@ubuntu-home 0 0
 ...（挂载其他所需子卷）...
