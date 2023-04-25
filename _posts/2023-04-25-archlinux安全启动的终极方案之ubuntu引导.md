@@ -142,7 +142,7 @@ sudo arch-chroot /mnt
 在`chroot`环境中执行：
 
 ```bash
-update-grub
+/sbin/update-grub
 ```
 
 以更新Ubuntu的引导信息，最后重启即可。
