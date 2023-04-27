@@ -4,7 +4,7 @@ title:      Arch Linux安全启动的终极方案
 subtitle:   共享分区下Ubuntu引导的Arch Linux系统
 date:       2023-04-25
 author:     wszqkzqk
-header-img: img/bg-sunrise.webp
+header-img: img/Linux-distro-logo/archlinux.webp
 catalog:    true
 tags:       开源软件 系统引导 系统配置 系统安装
 ---
