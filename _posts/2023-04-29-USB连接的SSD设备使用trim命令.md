@@ -86,7 +86,7 @@ ACTION=="add|change", ATTRS{idVendor}=="174c", ATTRS{idProduct}=="2362", SUBSYST
 sudo udevadm control --reload-rules
 ```
 
-这样，就可以使用`trim`命令了。
+这样USB存储设备就有`trim`支持了。
 
 ## 捐赠
 
