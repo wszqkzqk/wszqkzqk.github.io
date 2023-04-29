@@ -9,7 +9,7 @@ mirrorrepoinfo="wszqkzqk/wszqkzqk.git"
 echo "正在添加变更文件……"
 git add *
 git add .gitignore
-git commit -m 'Updated by update.sh'
+git commit -S -m 'Updated by update.sh'
 
 # 合并远端更改
 echo "正在合并远端更改……"
