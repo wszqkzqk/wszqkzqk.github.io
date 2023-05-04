@@ -15,7 +15,15 @@ tags:       开源软件 系统安装 系统配置 系统引导
 > 笔者实现了完全在Windows可以直接访问的分区上安装完整的Arch Linux操作系统
 > 仅使用FAT与NTFS文件系统实现Linux的文件系统布局
 
-**警告：本文内容混乱邪恶，仅供学习交流，不建议用于生产环境**
+笔者在Linux下使用NTFS时无意中发现现在的ntfs3似乎已经支持了较为完整的Linux权限，也支持软链接等特性：
+
+[![#~/img/ventoy/ntfs-usermod.webp](/img/ventoy/ntfs-usermod.webp)](/img/ventoy/ntfs-usermod.webp)
+
+因此想到了：现在在NTFS分区上是不是已经可以直接安装Linux了😋😋😋。
+
+* **警告：本文的方法混乱邪恶，仅供学习交流，不建议用于生产环境**
+* Linux中有许多文件系统（例如Btrfs、XFS等）**性能、功能都毫不逊色甚至远远强于NTFS**，完全没有必要将Linux安装到NTFS中
+* 本文纯粹在笔者好奇心驱使下写出
 
 ## 准备
 
@@ -23,7 +31,7 @@ tags:       开源软件 系统安装 系统配置 系统引导
 
 首先需要制作一个Ventoy启动盘，可以参考[使用Ventoy直接引导本地安装的Linux的启动盘制作部分](https://wszqkzqk.github.io/2023/02/12/%E4%BD%BF%E7%94%A8Ventoy%E7%9B%B4%E6%8E%A5%E5%BC%95%E5%AF%BC%E6%9C%AC%E5%9C%B0%E5%AE%89%E8%A3%85%E7%9A%84Linux/#ventoy%E5%90%AF%E5%8A%A8%E7%9B%98%E5%88%B6%E4%BD%9C)。
 
-Ventoy启动盘默认会分为两个分区，第一个是我们的数据分区，第二个为约16 MB的引导分区，**不要对引导分区进行任何操作**。数据分区的默认格式为exfat，我们需要手动将其格式化为NTFS，可以使用`sudo mkfs.ntfs /dev/sdXn`命令，其中`/dev/sdXn`是分区设备名。（需要安装`ntfs-3g`）
+Ventoy启动盘默认会分为两个分区，第一个是我们的数据分区，第二个为约16 MB的FAT引导分区，**不要对引导分区进行任何操作**。数据分区的默认格式为exfat，我们需要手动将其格式化为NTFS，可以使用`sudo mkfs.ntfs /dev/sdXn`命令，其中`/dev/sdXn`是分区设备名。（需要安装`ntfs-3g`）
 
 ## 安装
 
@@ -198,3 +206,9 @@ menuentry '<-- Return to previous menu [Esc]' --class=vtoyret VTOY_RET {
 目前看来系统功能均可以正常使用，未发现明显问题。
 
 [![#~/img/ventoy/linux-on-ntfs.webp](/img/ventoy/linux-on-ntfs.webp)](/img/ventoy/linux-on-ntfs.webp)
+
+## 捐赠
+
+|  **支付宝**  |  **微信支付**  |
+|  :----:  |  :----:  |
+|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |
