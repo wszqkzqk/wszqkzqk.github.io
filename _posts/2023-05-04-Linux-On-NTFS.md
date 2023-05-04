@@ -108,7 +108,7 @@ echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 设置主机名：
 
 ```bash
-echo 'loongarch' > /etc/hostname
+echo 主机名 > /etc/hostname
 ```
 
 设置root密码：
