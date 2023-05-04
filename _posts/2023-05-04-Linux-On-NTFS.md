@@ -181,7 +181,12 @@ menuentry '<-- Return to previous menu [Esc]' --class=vtoyret VTOY_RET {
 }
 ```
 
-注意将`$vtoydev,gptX`中的`X`替换为实际的编号，将`XXXXXXXXXXXXXXXX`替换为实际的NTFS分区UUID。该配置的关键在于指定了`rootfstype=ntfs3`，否则在启动时会出现根分区的挂载错误。
+注意将`$vtoydev,gptX`中的`X`替换为实际的编号，将`XXXXXXXXXXXXXXXX`替换为实际的NTFS分区UUID。该配置的关键在于：
+
+* 使用`insmod ntfs`加载`ntfs`模块
+  * 使得gurb能够进入NTFS分区访问`vmlinuz`与`initramfs`镜像
+* 指定`rootfstype=ntfs3`
+  * 否则在启动时会出现根分区的挂载错误
 
 ## Ventoy镜像搜索配置
 
