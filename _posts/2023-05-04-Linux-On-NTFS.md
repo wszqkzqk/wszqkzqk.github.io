@@ -19,11 +19,11 @@ tags:       开源软件 系统安装 系统配置 系统引导
 
 [![#~/img/ventoy/ntfs-usermod.webp](/img/ventoy/ntfs-usermod.webp)](/img/ventoy/ntfs-usermod.webp)
 
-因此想到了：现在在NTFS分区上是不是已经可以直接安装Linux了😋😋😋。
+因此意识到：现在在NTFS分区上是不是已经可以直接安装Linux了🤔🤔🤔。笔者尝试了一下，发现确实可以😋😋😋。
 
 * **警告：本文的方法混乱邪恶，仅供学习交流，不建议用于生产环境**
 * Linux中有许多文件系统（例如Btrfs、XFS等）**性能、功能都毫不逊色甚至远远强于NTFS**，完全没有必要将Linux安装到NTFS中
-* 本文纯粹在笔者好奇心驱使下写出
+* 本文纯粹在笔者好奇心驱使下写出，不一定具有应用上的意义
 
 ## 准备
 
