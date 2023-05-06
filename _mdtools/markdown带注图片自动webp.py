@@ -21,7 +21,7 @@ def autowebp(imgfile):  # 仅对本地图片使用
     
     # 检查该本地文件是否存在
     if not os.path.exists("{0}/{1}".format(localimg, imgfile)):
-        print('该文件既不是网络文件，又不是./img目录下的文件！请检查输入！')
+        print('该文件既不是网络文件又不是./img目录下的文件！请检查输入！')
         return
 
     appendname = imgfile.split('.')[-1].lower()

@@ -150,7 +150,7 @@ EDITOR=nano visudo
 
 在编辑时取消`%wheel      ALL=(ALL): ALL`一行的注释即可。
 
-这里安装其实已经完成，但是由于Linux下没有NTFS的fsck支持，我们还需要编辑`/etc/mkinitcpio.conf`，在`HOOKS`中去掉`fsck`
+这里安装其实已经完成，但是由于Linux下没有NTFS的fsck支持，我们还需要编辑`/etc/mkinitcpio.conf`，在`HOOKS`中去掉`fsck`。
 
 如果需要更混乱邪恶地将**这个设备整体放到QEMU下作为虚拟机启动**，还需要在`/etc/mkinitcpio.conf`中添加几个内核模块：
 
