@@ -64,7 +64,7 @@ sudo pacstrap -c -K /mnt --needed \
 然后再选择一个DM安装，以在不同桌面环境间较通用LightDM为例：
 
 ```bash
-sudo pacstrap -c -K /mnt --needed lightdm
+sudo pacstrap -c -K /mnt --needed lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
 ```
 
 再选择一个桌面环境，以Xfce为例：
@@ -170,12 +170,7 @@ menuentry 'Arch Linux on NTFS' --class arch --class gnu-linux --class gnu --clas
         insmod gzio
         insmod part_gpt
         insmod ntfs
-        set root=($vtoydev,gptX)
-        if [ x$feature_platform_search_hint = xy ]; then
-          search --no-floppy --fs-uuid --set=root --hint-bios=$vtoydev,gptX --hint-efi=$vtoydev,gptX --hint-baremetal=ahci0,gpt4 XXXXXXXXXXXXXXXX
-        else
-          search --no-floppy --fs-uuid --set=root XXXXXXXXXXXXXXXX
-        fi
+        search --no-floppy --fs-uuid --set=root XXXXXXXXXXXXXXXX
         echo    'Loading Linux kernel...'
         linux   /boot/vmlinuz-linux rootfstype=ntfs3 root=UUID=XXXXXXXXXXXXXXXX rw
         echo    'Loading initramfs...'
