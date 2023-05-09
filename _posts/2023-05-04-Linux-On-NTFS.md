@@ -154,7 +154,9 @@ EDITOR=nano visudo
 
 如果需要更混乱邪恶地将**这个设备整体放到QEMU下作为虚拟机启动**，还需要在`/etc/mkinitcpio.conf`中添加几个内核模块：
 
+```
 MODULES=(ntfs3 virtio virtio_blk virtio_pci virtio_net)
+```
 
 然后再执行`mkinitcpio -P`，以生成新的initramfs。
 
