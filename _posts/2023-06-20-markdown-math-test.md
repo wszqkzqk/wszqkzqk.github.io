@@ -38,6 +38,8 @@ $$
 
 效果如下：
 
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
 $$
 \begin{aligned}
 \frac{\partial \mathcal{L}}{\partial \mathbf{w}} &= \frac{\partial}{\partial \mathbf{w}} \left( \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \sum_{i=1}^n \xi_i - \sum_{i=1}^n \alpha_i \left( y_i \mathbf{w}^T \mathbf{x}_i - 1 + \xi_i \right) - \sum_{i=1}^n \mu_i \xi_i \right) \\
@@ -67,6 +69,9 @@ $$
 ```
 
 效果如下：
+
+<link rel="stylesheet" href="https://cdn.bootcss.com/KaTeX/0.10.0/katex.min.css">
+<script src="https://cdn.bootcss.com/KaTeX/0.10.0/katex.min.js"></script>
 
 $$
 \begin{aligned}
