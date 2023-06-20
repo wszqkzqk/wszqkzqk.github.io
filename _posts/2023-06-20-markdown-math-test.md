@@ -12,7 +12,6 @@ tags:       开源软件
 ## 前言
 
 > 本文主要讨论在Markdown中使用数学公式的方法
-> $\Gamma$、$\iota$、$\sigma$、$\phi$、$\upsilon$、$\Pi$、$\Bbbk$、$\heartsuit$、$\int$、$\oint$
 
 ## 方法
 
