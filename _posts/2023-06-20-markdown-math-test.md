@@ -79,3 +79,36 @@ $$
 &= \mathbf{w} - \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i = 0
 \end{aligned}
 $$
+
+## 部分符号及其含义
+
+* 指数：`^`
+  * 例如：`x^2`
+  * 效果：$x^2$
+* 下标：`_`
+  * 例如：`x_1`
+  * 效果：$x_1$
+* 分数：`\frac{分子}{分母}`
+  * 例如：`\frac{1}{2}`
+  * 效果：$\frac{1}{2}$
+* 开方：`\sqrt{被开方数}`
+  * 例如：`\sqrt{2}`
+  * 效果：$\sqrt{2}$
+* 累加：`\sum_{下标}^{上标}`
+  * 例如：`\sum_{i=1}^n`
+  * 效果：$\sum_{i=1}^n$
+* 累乘：`\prod_{下标}^{上标}`
+  * 例如：`\prod_{i=1}^n`
+  * 效果：$\prod_{i=1}^n$
+* 累积：`\int_{下标}^{上标}`
+  * 例如：`\int_{0}^1`
+  * 效果：$\int_{0}^1$
+* 矩阵：`\begin{aligned}...\end{aligned}`
+  * 例如：`\begin{aligned}...\end{aligned}`
+  * 效果：$\begin{aligned}...\end{aligned}$
+* 函数：`\sin`、`\cos`、`\tan`、`\cot`、`\sec`、`\csc`、`\arcsin`、`\arccos`、`\arctan`、`\sinh`、`\cosh`、`\tanh`、`\coth`、`\log`、`\ln`、`\lg`、`\arg`、`\min`、`\max`、`\lim`、`\liminf`、`\limsup`、`\exp`、`\det`、`\dim`、`\mod`、`\gcd`、`\deg`、`\hom`、`\ker`、`\Pr`、`\sup`、`\inf`
+  * 例如：`\sin`
+  * 效果：$\sin$
+* n次方根：`\sqrt[n]{被开方数}`
+  * 例如：`\sqrt[3]{2}`
+  * 效果：$\sqrt[3]{2}$
