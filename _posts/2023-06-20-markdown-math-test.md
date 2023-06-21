@@ -105,7 +105,7 @@ $$
 <script>
   window.MathJax = {
     tex: {
-      // inlineMath: [['$', '$'], ['\\(', '\\)']],
+      inlineMath: [['$', '$']],
       packages: {'[+]': ['mhchem']}
     },
     loader: {load: ['[tex]/mhchem']},
@@ -116,6 +116,8 @@ $$
 </script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 ```
+
+其中`svg:{...}`的内容是指定 svg 字体缓存为全局模式，减少开销。
 
 * 化学符号：`\ce{化学式}`
   * 例如：`\ce{H2O}`
