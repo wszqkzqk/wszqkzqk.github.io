@@ -13,16 +13,20 @@ tags:       开源软件
 
 > 本文主要讨论在Markdown中使用数学公式的方法
 
-## 方法
-
-Markdown中使用数学公式的方法有很多，这里主要介绍两种方法。
-
-### 使用MathJax
+## MathJax
 
 在Markdown中使用MathJax的方法是在Markdown文件的头部添加以下内容：
 
 ```markdown
-<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+        }
+    });
+</script>
 ```
 
 然后就可以在Markdown中使用MathJax了，例如：
@@ -38,8 +42,6 @@ $$
 
 效果如下：
 
-<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
 $$
 \begin{aligned}
 \frac{\partial \mathcal{L}}{\partial \mathbf{w}} &= \frac{\partial}{\partial \mathbf{w}} \left( \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \sum_{i=1}^n \xi_i - \sum_{i=1}^n \alpha_i \left( y_i \mathbf{w}^T \mathbf{x}_i - 1 + \xi_i \right) - \sum_{i=1}^n \mu_i \xi_i \right) \\
@@ -47,38 +49,21 @@ $$
 \end{aligned}
 $$
 
+## 默认化配置
 
-### 使用KaTeX
+如果不想在每篇博客中都添加MathJax的配置，可以在`_include/head.html`的`<head>`与`</head>`之间插入以下内容：
 
-在Markdown中使用KaTeX的方法是在Markdown文件的头部添加以下内容：
-
-```markdown
-<link rel="stylesheet" href="https://cdn.bootcss.com/KaTeX/0.10.0/katex.min.css">
-<script src="https://cdn.bootcss.com/KaTeX/0.10.0/katex.min.js"></script>
+```html
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+        }
+    });
+</script>
 ```
-
-然后就可以在Markdown中使用KaTeX了，例如：
-
-```markdown
-$$
-\begin{aligned}
-\frac{\partial \mathcal{L}}{\partial \mathbf{w}} &= \frac{\partial}{\partial \mathbf{w}} \left( \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \sum_{i=1}^n \xi_i - \sum_{i=1}^n \alpha_i \left( y_i \mathbf{w}^T \mathbf{x}_i - 1 + \xi_i \right) - \sum_{i=1}^n \mu_i \xi_i \right) \\
-&= \mathbf{w} - \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i = 0
-\end{aligned}
-$$
-```
-
-效果如下：
-
-<link rel="stylesheet" href="https://cdn.bootcss.com/KaTeX/0.10.0/katex.min.css">
-<script src="https://cdn.bootcss.com/KaTeX/0.10.0/katex.min.js"></script>
-
-$$
-\begin{aligned}
-\frac{\partial \mathcal{L}}{\partial \mathbf{w}} &= \frac{\partial}{\partial \mathbf{w}} \left( \frac{1}{2} \mathbf{w}^T \mathbf{w} + C \sum_{i=1}^n \xi_i - \sum_{i=1}^n \alpha_i \left( y_i \mathbf{w}^T \mathbf{x}_i - 1 + \xi_i \right) - \sum_{i=1}^n \mu_i \xi_i \right) \\
-&= \mathbf{w} - \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i = 0
-\end{aligned}
-$$
 
 ## 部分符号及其含义
 
