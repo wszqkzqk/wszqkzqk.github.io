@@ -92,10 +92,28 @@ $$
   * 例如：`\begin{aligned}...\end{aligned}`
   * 效果：$\begin{aligned}...\end{aligned}$
 * 函数等符号：`\sin`、`\cos`、`\tan`、`\cot`、`\sec`、`\csc`、`\arcsin`、`\arccos`、`\arctan`、`\sinh`、`\cosh`、`\tanh`、`\coth`、`\log`、`\ln`、`\lg`、`\arg`、`\min`、`\max`、`\lim`、`\liminf`、`\limsup`、`\exp`、`\det`、`\dim`、`\mod`、`\gcd`、`\deg`、`\hom`、`\ker`、`\Pr`、`\sup`、`\inf`
-  * 效果：$\sin$、$\cos$、$\tan$、$\cot$、$\sec$、$\csc$、$\arcsin$、$\arccos$、$\arctan$、$\sinh$、$\cosh$、$\tanh$、$\coth$、$\log$、$\ln$、$\lg$、$\arg$、$\min$、$\max$、$\lim$、$\liminf$、$\limsup$、$\exp$、$\det$、$\dim$、$\mod$、$\gcd$、$\deg$、$\hom$、$\ker$、$\Pr$、$\sup$、$\inf$
+  * 效果：$\sin$、$\cos$、$\tan$、$\cot$、$\sec$、$\csc$、$\arcsin$、$\arccos$、$\arctan$、$\sinh$、$\cosh$、$\tanh$、$\coth$、$\log$、$\ln$、$\lg$、$\arg$、$\min$、$\max$、$\lim$、$\liminf$、$\limsup$、$\exp$、$\det$、$\dim$、$\gcd$、$\deg$、$\hom$、$\ker$、$\Pr$、$\sup$、$\inf$
 * n次方根：`\sqrt[n]{被开方数}`
   * 例如：`\sqrt[3]{2}`
   * 效果：$\sqrt[3]{2}$
+
+## 化学式支持
+
+使用拓展的MathJax，可以方便地支持化学式的显示，只需要将插入内容换成：
+
+```html
+<script>
+  window.MathJax = {
+    tex: {
+      // inlineMath: [['$', '$'], ['\\(', '\\)']],
+      packages: {'[+]': ['mhchem']}
+    },
+    loader: {load: ['[tex]/mhchem']},
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+```
+
 * 化学符号：`\ce{化学式}`
   * 例如：`\ce{H2O}`
   * 效果：$\ce{H2O}$
@@ -103,7 +121,7 @@ $$
   * 效果：$\ce{^{227}_{90}Th}$
   * 例如：`\ce{2 Cr^{2+} + 4 CH_{3}COO^{−} + 2 H_{2}O -> Cr_{2}(CH_{3}COO)_{4}·2H_{2}O↓`
   * 效果：$\ce{2 Cr^{2+} + 4 CH_{3}COO^{−} + 2 H_{2}O -> Cr_{2}(CH_{3}COO)_{4}·2H_{2}O↓}$
-  * 例如：`\ce{3 [Re(CN)8]^2- + 2 [Co(NH3)6]^3+ -> [Co(NH3)6]2[Re(CN)8]3↓}
+  * 例如：`\ce{3 [Re(CN)8]^2- + 2 [Co(NH3)6]^3+ -> [Co(NH3)6]2[Re(CN)8]3↓}`
   * 效果：$\ce{3 [Re(CN)8]^2- + 2 [Co(NH3)6]^3+ -> [Co(NH3)6]2[Re(CN)8]3↓}$
   * 例如：`\ce{2 Co(CO)4− + 2 NO + 2 H2O -> 2 Co(NO)(CO)3 + 2 Co + 2 OH− + H2}`
   * 效果：$\ce{2 Co(CO)4− + 2 NO + 2 H2O -> 2 Co(NO)(CO)3 + 2 Co + 2 OH− + H2}$
