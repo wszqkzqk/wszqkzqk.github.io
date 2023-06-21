@@ -91,9 +91,8 @@ $$
 * 矩阵：`\begin{aligned}...\end{aligned}`
   * 例如：`\begin{aligned}...\end{aligned}`
   * 效果：$\begin{aligned}...\end{aligned}$
-* 函数：`\sin`、`\cos`、`\tan`、`\cot`、`\sec`、`\csc`、`\arcsin`、`\arccos`、`\arctan`、`\sinh`、`\cosh`、`\tanh`、`\coth`、`\log`、`\ln`、`\lg`、`\arg`、`\min`、`\max`、`\lim`、`\liminf`、`\limsup`、`\exp`、`\det`、`\dim`、`\mod`、`\gcd`、`\deg`、`\hom`、`\ker`、`\Pr`、`\sup`、`\inf`
-  * 例如：`\sin`
-  * 效果：$\sin$
+* 函数等符号：`\sin`、`\cos`、`\tan`、`\cot`、`\sec`、`\csc`、`\arcsin`、`\arccos`、`\arctan`、`\sinh`、`\cosh`、`\tanh`、`\coth`、`\log`、`\ln`、`\lg`、`\arg`、`\min`、`\max`、`\lim`、`\liminf`、`\limsup`、`\exp`、`\det`、`\dim`、`\mod`、`\gcd`、`\deg`、`\hom`、`\ker`、`\Pr`、`\sup`、`\inf`
+  * 效果：$\sin$、$\cos$、$\tan$、$\cot$、$\sec$、$\csc$、$\arcsin$、$\arccos$、$\arctan$、$\sinh$、$\cosh$、$\tanh$、$\coth$、$\log$、$\ln$、$\lg$、$\arg$、$\min$、$\max$、$\lim$、$\liminf$、$\limsup$、$\exp$、$\det$、$\dim$、$\mod$、$\gcd$、$\deg$、$\hom$、$\ker$、$\Pr$、$\sup$、$\inf$
 * n次方根：`\sqrt[n]{被开方数}`
   * 例如：`\sqrt[3]{2}`
   * 效果：$\sqrt[3]{2}$
