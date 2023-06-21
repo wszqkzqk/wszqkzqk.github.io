@@ -179,3 +179,6 @@ $$
 * 科学记数法
   * `\pu{6.02e23}` $\pu{6.02e23}$
   * `\pu{6.02E23}` $\pu{6.02E23}$
+* 性质描述
+  * `\ce{Hg^2+ ->[I-]  $\underset{\mathrm{red}}{\ce{HgI2}}$  ->[I-]  $\underset{\mathrm{red}}{\ce{[Hg^{II}I4]^2-}}$}`
+  * $\ce{Hg^2+ ->[I-]  $\underset{\mathrm{red}}{\ce{HgI2}}$  ->[I-]  $\underset{\mathrm{red}}{\ce{[Hg^{II}I4]^2-}}$}$
