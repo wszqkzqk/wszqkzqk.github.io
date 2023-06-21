@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      Markdown Math 测试
-subtitle:   在Markdown中使用数学公式
+title:      Markdown Math 拓展测试
+subtitle:   在Markdown中使用数学公式及化学式
 date:       2023-06-20
 author:     wszqkzqk
 header-img: img/bg-mountain-darken.webp
@@ -137,3 +137,40 @@ $$
   * 例如：`\ce{MnO4− + OH− → MnO4^2− + 1/2O2 ^ + H2O}`
     * 可以用` ^`表示气体
   * 效果：$\ce{MnO4− + OH− → MnO4^2− + 1/2O2 ^ + H2O}$
+
+其他有趣的例子：
+* 热化学：
+  * `\C_p[\ce{H2O(l)}] = \pu{75.3 J // mol K}`
+  * $\C_p[\ce{H2O(l)}] = \pu{75.3 J // mol K}$
+  * `\ce{$K = \frac{[\ce{Hg^2+}][\ce{Hg}]}{[\ce{Hg2^2+}]}$}`
+  * $\ce{$K = \frac{[\ce{Hg^2+}][\ce{Hg}]}{[\ce{Hg2^2+}]}$}$
+* 各种箭头：
+  * `\ce{A -> B}` $\ce{A -> B}$
+  * `\ce{A <- B}` $\ce{A <- B}$
+  * `\ce{A <=> B}` $\ce{A <=> B}$
+  * `\ce{A <--> B}` $\ce{A <--> B}$
+  * `\ce{A <<=> B}` $\ce{A <<=> B}$
+  * `\ce{A <=>> B}` $\ce{A <=>> B}$
+  * `\ce{A ->[{text above}][{text below}] B}` $\ce{A ->[{text above}][{text below}] B}$
+  * `\ce{A ->[$x$][$x_i$] B}` $\ce{A ->[$x$][$x_i$] B}$
+* 相态标注：
+  * `\ce{NaOH_{(aq,$\infty$)}}` $\ce{NaOH_{(aq,$\infty$)}}$
+* 配位化学：
+  * `\ce{[Pt(\eta^2-C2H4)Cl3]-}` $\ce{[Pt(\eta^2-C2H4)Cl3]-}$
+  * `\ce{$cis${-}[PtCl2(NH3)2]}` $\ce{$cis${-}[PtCl2(NH3)2]}$
+* 核化学：
+  * `\ce{^40_18Ar + \gamma{} + \nu_e}` $\ce{^40_18Ar + \gamma{} + \nu_e}$
+* 键合：
+  * `\ce{A-B=C#D}` $\ce{A-B=C#D}$
+  * `\ce{A\bond{~}B\bond{~-}C}` $\ce{A\bond{~}B\bond{~-}C}$
+  * `\ce{A\bond{~--}B\bond{~=}C\bond{-~-}D}` $\ce{A\bond{~--}B\bond{~=}C\bond{-~-}D}$
+  * `\ce{A\bond{...}B\bond{....}C}` $\ce{A\bond{...}B\bond{....}C}$
+  * `\ce{A\bond{->}B\bond{<-}C}` $\ce{A\bond{->}B\bond{<-}C}$
+* 氧化态
+  * `\ce{Fe^{II}Fe^{III}2O4}` $\ce{Fe^{II}Fe^{III}2O4}$
+* 自由基等
+  * `\ce{NO^{(2.)-}}` $\ce{NO^{(2.)-}}$
+* 复杂组成
+  * `\ce{Li^x_{Li,1-2x}Mg^._{Li,x}$V$'_{Li,x}Cl^x_{Cl}}` $\ce{Li^x_{Li,1-2x}Mg^._{Li,x}$V$'_{Li,x}Cl^x_{Cl}}$
+* 有机基团
+  * `\ce{n-Pr}` $\ce{n-Pr}$
