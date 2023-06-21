@@ -140,8 +140,8 @@ $$
 
 其他有趣的例子：
 * 热化学：
-  * `\C_p[\ce{H2O(l)}] = \pu{75.3 J // mol K}`
-  * $\C_p[\ce{H2O(l)}] = \pu{75.3 J // mol K}$
+  * `C_p[\ce{H2O(l)}] = \pu{75.3 J // mol K}`
+  * $C_p[\ce{H2O(l)}] = \pu{75.3 J // mol K}$
   * `\ce{$K = \frac{[\ce{Hg^2+}][\ce{Hg}]}{[\ce{Hg2^2+}]}$}`
   * $\ce{$K = \frac{[\ce{Hg^2+}][\ce{Hg}]}{[\ce{Hg2^2+}]}$}$
 * 各种箭头：
