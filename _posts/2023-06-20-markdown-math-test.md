@@ -134,6 +134,6 @@ $$
   * 例如：`\ce{C2B7H11^2- + Re(CO)5Br ->[\ce{THF}] [(π-C2B7H11)Re(CO)3]− + Br− + 2 CO}`
     * 在`->`后面加上`\ce{}`可以表示反应条件
   * 效果：$\ce{C2B7H11^2- + Re(CO)5Br ->[\ce{THF}] [(π-C2B7H11)Re(CO)3]− + Br− + 2 CO}$
-  * 例如：`\ce{MnO4− + OH− → MnO42− + 1/2O2 ^ + H2O}`
+  * 例如：`\ce{MnO4− + OH− → MnO4^2− + 1/2O2 ^ + H2O}`
     * 可以用` ^`表示气体
-  * 效果：$\ce{MnO4− + OH− → MnO42− + 1/2O2 ^ + H2O}$
+  * 效果：$\ce{MnO4− + OH− → MnO4^2− + 1/2O2 ^ + H2O}$
