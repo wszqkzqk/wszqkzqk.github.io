@@ -121,12 +121,19 @@ $$
   * 例如：`\ce{H2O}`
   * 效果：$\ce{H2O}$
   * 例如： `\ce{^{227}_{90}Th}`
+    * 手动上下标
   * 效果：$\ce{^{227}_{90}Th}$
   * 例如：`\ce{2 Cr^2+ + 4 CH3COO^− + 2 H2O -> Cr2(CH3COO)4·2H2O↓`
+    * `->`表示反应箭头
   * 效果：$\ce{2 Cr^2+ + 4 CH3COO^− + 2 H2O -> Cr2(CH3COO)4·2H2O↓}$
   * 例如：`\ce{3 [Re(CN)8]^2- + 2 [Co(NH3)6]^3+ -> [Co(NH3)6]2[Re(CN)8]3 v}`
+    * 可以用` v`表示沉淀
   * 效果：$\ce{3 [Re(CN)8]^2- + 2 [Co(NH3)6]^3+ -> [Co(NH3)6]2[Re(CN)8]3 v}$
   * 例如：`\ce{2 Co(CO)4− + 2 NO + 2 H2O -> 2 Co(NO)(CO)3 + 2 Co + 2 OH− + H2}`
   * 效果：$\ce{2 Co(CO)4− + 2 NO + 2 H2O -> 2 Co(NO)(CO)3 + 2 Co + 2 OH− + H2}$
-  * 例如：`\ce{C2B7H11^2- + Re(CO)5Br -> [(π-C2B7H11)Re(CO)3]− + Br− + 2 CO}`
-  * 效果：$\ce{C2B7H11^2- + Re(CO)5Br -> [(π-C2B7H11)Re(CO)3]− + Br− + 2 CO}$
+  * 例如：`\ce{C2B7H11^2- + Re(CO)5Br ->[\ce{THF}] [(π-C2B7H11)Re(CO)3]− + Br− + 2 CO}`
+    * 在`->`后面加上`\ce{}`可以表示反应条件
+  * 效果：$\ce{C2B7H11^2- + Re(CO)5Br ->[\ce{THF}] [(π-C2B7H11)Re(CO)3]− + Br− + 2 CO}$
+  * 例如：`\ce{MnO4− + OH− → MnO42− + 1/2O2 ^ + H2O}`
+    * 可以用` ^`表示气体
+  * 效果：$\ce{MnO4− + OH− → MnO42− + 1/2O2 ^ + H2O}$
