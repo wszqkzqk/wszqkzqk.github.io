@@ -171,6 +171,6 @@ $$
 * 自由基等
   * `\ce{NO^{(2.)-}}` $\ce{NO^{(2.)-}}$
 * 复杂组成
-  * `\ce{Li^x_{Li,1-2x}Mg^._{Li,x}$V$'_{Li,x}Cl^x_{Cl}}` $\ce{Li^x_{Li,1-2x}Mg^._{Li,x}$V$'_{Li,x}Cl^x_{Cl}}$
+  * `\ce{Li^x_{Li,1-2x}Mg^._{Li,x}V'_{Li,x}Cl^x_{Cl}}` $\ce{Li^x_{Li,1-2x}Mg^._{Li,x}V'_{Li,x}Cl^x_{Cl}}$
 * 有机基团
   * `\ce{n-Pr}` $\ce{n-Pr}$
