@@ -1,21 +1,21 @@
 ---
 layout:     post
-title:      Markdown Math 拓展测试
+title:      Markdown Math 及 mhchem 测试
 subtitle:   在Markdown中使用数学公式及化学式
 date:       2023-06-20
 author:     wszqkzqk
 header-img: img/bg-mountain-darken.webp
 catalog:    true
-tags:       开源软件
+tags:       开源软件 化学
 ---
 
 ## 前言
 
-> 本文主要讨论在Markdown中使用数学公式的方法
+> 本文主要讨论在 Markdown 中使用数学公式及化学式的方法
 
 ## MathJax
 
-在Markdown中使用MathJax的方法是在Markdown文件的头部添加以下内容：
+在 Markdown 中使用 MathJax 的方法是在 Markdown 文件的头部添加以下内容：
 
 ```markdown
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
@@ -29,7 +29,7 @@ tags:       开源软件
 </script>
 ```
 
-然后就可以在Markdown中使用MathJax了，例如：
+然后就可以在 Markdown 中使用 MathJax 了，例如：
 
 ```markdown
 $$
@@ -51,7 +51,7 @@ $$
 
 ## 默认化配置
 
-如果不想在每篇博客中都添加MathJax的配置，可以在`_include/head.html`的`<head>`与`</head>`之间插入以下内容：
+如果不想在每篇博客中都添加 MathJax 的配置，可以在`_include/head.html`的`<head>`与`</head>`之间插入以下内容：
 
 ```html
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
@@ -99,7 +99,7 @@ $$
 
 ## 化学式支持
 
-使用拓展的MathJax，可以方便地支持化学式的显示，只需要将插入内容换成：
+使用拓展的 MathJax，可以方便地支持化学式的显示，只需要将插入内容换成：
 
 ```html
 <script>
