@@ -122,10 +122,10 @@ $$
   * 效果：$\ce{H2O}$
   * 例如： `\ce{^{227}_{90}Th}`
   * 效果：$\ce{^{227}_{90}Th}$
-  * 例如：`\ce{2 Cr^{2+} + 4 CH_{3}COO^{−} + 2 H_{2}O -> Cr_{2}(CH_{3}COO)_{4}·2H_{2}O↓`
-  * 效果：$\ce{2 Cr^{2+} + 4 CH_{3}COO^{−} + 2 H_{2}O -> Cr_{2}(CH_{3}COO)_{4}·2H_{2}O↓}$
-  * 例如：`\ce{3 [Re(CN)8]^2- + 2 [Co(NH3)6]^3+ -> [Co(NH3)6]2[Re(CN)8]3↓}`
-  * 效果：$\ce{3 [Re(CN)8]^2- + 2 [Co(NH3)6]^3+ -> [Co(NH3)6]2[Re(CN)8]3↓}$
+  * 例如：`\ce{2 Cr^2+ + 4 CH3COO^− + 2 H2O -> Cr2(CH3COO)4·2H2O↓`
+  * 效果：$\ce{2 Cr^2+ + 4 CH3COO^− + 2 H2O -> Cr2(CH3COO)4·2H2O↓}$
+  * 例如：`\ce{3 [Re(CN)8]^2- + 2 [Co(NH3)6]^3+ -> [Co(NH3)6]2[Re(CN)8]3 v}`
+  * 效果：$\ce{3 [Re(CN)8]^2- + 2 [Co(NH3)6]^3+ -> [Co(NH3)6]2[Re(CN)8]3 v}$
   * 例如：`\ce{2 Co(CO)4− + 2 NO + 2 H2O -> 2 Co(NO)(CO)3 + 2 Co + 2 OH− + H2}`
   * 效果：$\ce{2 Co(CO)4− + 2 NO + 2 H2O -> 2 Co(NO)(CO)3 + 2 Co + 2 OH− + H2}$
   * 例如：`\ce{C2B7H11^2- + Re(CO)5Br -> [(π-C2B7H11)Re(CO)3]− + Br− + 2 CO}`
