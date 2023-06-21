@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Markdown Math 及 mhchem 测试
-subtitle:   在Markdown中使用数学公式及化学式
+subtitle:   在 Markdown 中使用数学公式及化学式
 date:       2023-06-20
 author:     wszqkzqk
 header-img: img/bg-mountain-darken.webp
