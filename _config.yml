@@ -123,6 +123,9 @@ friends: [
         title: "Vala Programming Language",
         href: "https://vala.dev/"
     },{
+        title: "北京大学 Linux 俱乐部",
+        href: "https://lcpu.club/wiki/"
+    },{
         title: "竹林里有冰的博客",
         href: "https://blog.zhullyb.top/"
     }
