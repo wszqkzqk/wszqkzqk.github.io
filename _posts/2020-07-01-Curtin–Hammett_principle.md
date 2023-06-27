@@ -87,7 +87,7 @@ K是A和B异构化平衡的平衡常数，k<sub>1</sub>和k<sub>2</sub>则是A�
 由于氢原子的1,3-烯丙位张力要小，所以该异构体在基态时比例达到99%。然而，过渡态能量同时取决于1,3-烯丙位张力的存在和甲基进攻时的空间位阻。此时，这两个因素作用的结果是相反的，过渡态的能量差要比基态的能量差要小。结果差的整体选择性就被观测到了。  
 ![](/img/C-H原理述图13.webp)
 
-本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，来自Wikipedia条目[科廷–哈米特定律](https://zh.wikipedia.org/wiki/%E7%A7%91%E5%BB%B7%E2%80%93%E5%93%88%E7%B1%B3%E7%89%B9%E5%AE%9A%E5%BE%8B)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
+本文采用[CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/)协议发布，来自Wikipedia条目[科廷–哈米特定律](https://zh.wikipedia.org/wiki/%E7%A7%91%E5%BB%B7%E2%80%93%E5%93%88%E7%B1%B3%E7%89%B9%E5%AE%9A%E5%BE%8B)，由于个人水平限制，本条目难免会有知识谬误以及描述不清等情况，欢迎读者在维基条目中编辑修改或对本网站在[GitHub上的源代码](https://github.com/wszqkzqk/wszqkzqk.github.io)提供Pull request，也欢迎在评论区多多指教。
 
 ## 参考文献
 

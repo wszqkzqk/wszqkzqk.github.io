@@ -125,4 +125,4 @@ tags:       化学 HMO 分子轨道理论 计算化学 有机化学
 
 [用于直观说明HOMO能量高不一定亲电反应活性强的例子](https://raw.githubusercontent.com/wszqkzqk/HMOcalculations/master/HMOTheory/pdf/用于直观说明HOMO能量高不一定亲电反应活性强的例子.pdf)
 
-本文采用[CC-BY-SA-3.0](https://creativecommons.org/licenses/by-sa/3.0/)协议发布
+本文采用[CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/)协议发布
