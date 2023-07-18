@@ -46,8 +46,22 @@ menuentry "Arch Linux" {
     insmod btrfs
     set root='(hd0,gpt3)' # 这里的gpt3是Arch Linux所在的分区
     search --no-floppy --fs-uuid --set=root 0f0f0f0f-0f0f-0f0f-0f0f-0f0f0f0f0f0f # 这里的UUID是Arch Linux所在分区的UUID
-    linux /subsystems/@arch/boot/vmlinuz-linux root=UUID=0f0f0f0f-0f0f-0f0f-0f0f-0f0f0f0f0f0f rw rootflags=subvol=subsystems/@arch # vmlinuz-linux应当替换为实际内核文件名
-    initrd /subsystems/@arch/boot/initramfs-linux.img # initramfs-linux.img应当替换为实际initramfs镜像文件名
+    linux /subsystems/@arch/boot/vmlinuz-linux root=UUID=0f0f0f0f-0f0f-0f0f-0f0f-0f0f0f0f0f0f rw rootflags=subvol=subsystems/@arch # vmlinuz-linux应当替换为实际内核文件名，可以用通配符`*`表示
+    initrd /subsystems/@arch/boot/initramfs-linux.img # initramfs-linux.img应当替换为实际initramfs镜像文件名，可以用通配符`*`表示
+}
+```
+
+如果还要引导更多以这种方式安装的操作系统，为了方便，可以将`UUID`设置为一个变量，例如：
+
+```bash
+mainuuid=0f0f0f0f-0f0f-0f0f-0f0f-0f0f0f0f0f0f
+menuentry "Arch Linux" {
+    insmod part_gpt
+    insmod btrfs
+    set root='(hd0,gpt3)' # 这里的gpt3是Arch Linux所在的分区
+    search --no-floppy --fs-uuid --set=root ${mainuuid} # 这里的UUID是Arch Linux所在分区的UUID
+    linux /subsystems/@arch/boot/vmlinuz-linux root=UUID=${mainuuid} rw rootflags=subvol=subsystems/@arch # vmlinuz-linux应当替换为实际内核文件名，可以用通配符`*`表示
+    initrd /subsystems/@arch/boot/initramfs-linux.img # initramfs-linux.img应当替换为实际initramfs镜像文件名，可以用通配符`*`表示
 }
 ```
 
