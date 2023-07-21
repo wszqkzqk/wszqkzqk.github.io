@@ -158,6 +158,12 @@ EDITOR=nano visudo
 MODULES=(ntfs3 virtio virtio_blk virtio_pci virtio_net)
 ```
 
+如果还要在USB设备中启动，则还需要添加`usbhid`和`xhci_hcd`：
+  
+```
+MODULES=(ntfs3 virtio virtio_blk virtio_pci virtio_net usbhid xhci_hcd）
+```
+
 然后再执行`mkinitcpio -P`，以生成新的initramfs。
 
 ## Ventoy引导配置
