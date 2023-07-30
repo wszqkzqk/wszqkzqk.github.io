@@ -63,8 +63,3 @@ Gaussian的`chk`文件是一个平台相关的二进制文件。很多人可能�
   * Linux版显著更快
 * 主要使用Linux的用户不用重启到Windows下使用Gaussian
 
-## 捐赠
-
-|  **支付宝**  |  **微信支付**  |
-|  :----:  |  :----:  |
-|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |

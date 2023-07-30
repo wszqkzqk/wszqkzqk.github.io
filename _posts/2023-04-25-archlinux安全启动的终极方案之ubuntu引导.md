@@ -161,8 +161,3 @@ sudo arch-chroot /mnt
 
 以更新Ubuntu的引导信息，最后重启即可。
 
-## 捐赠
-
-|  **支付宝**  |  **微信支付**  |
-|  :----:  |  :----:  |
-|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |

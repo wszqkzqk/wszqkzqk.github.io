@@ -426,10 +426,3 @@ valac --pkg gtk4 example-4.vala
 
 ## 构建应用
 
-
-
-# 捐赠
-
-|  **支付宝**  |  **微信支付**  |
-|  :----:  |  :----:  |
-|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |

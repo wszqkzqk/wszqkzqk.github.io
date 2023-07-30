@@ -243,8 +243,4 @@ yay -S octopi-notifier-qt5
 
 感觉由Manjaro切换的Arch Linux的稳定性确实存在不少问题，我现在已经进行了一次全新安装，完全切换到了Arch Linux
 
-## 捐赠    
 
-|  **支付宝**  |  **微信支付**  |
-|  :----:  |  :----:  |
-|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |

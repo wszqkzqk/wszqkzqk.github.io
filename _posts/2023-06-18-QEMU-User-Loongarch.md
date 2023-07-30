@@ -53,8 +53,3 @@ sudo pacman -S arch-install-scripts
 sudo arch-chroot ~/loongarch
 ```
 
-## 捐赠
-
-|  **支付宝**  |  **微信支付**  |
-|  :----:  |  :----:  |
-|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |

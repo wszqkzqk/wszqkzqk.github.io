@@ -220,11 +220,6 @@ menuentry '<-- Return to previous menu [Esc]' --class=vtoyret VTOY_RET {
 
 引导配置完成后，重启进入Ventoy启动盘引导，按`F6`即可进入自定义的grub设定菜单，按下`Enter`启动系统，使用方法与经典的引导、安装的系统基本一致，此处不再赘述。
 
-## 捐赠
-
-|  **支付宝**  |  **微信支付**  |
-|  :----:  |  :----:  |
-|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |
 
 [^5]: 参见[Arch Wiki: F2FS#Known issues](https://wiki.archlinux.org/title/F2FS#Known_issues)
 

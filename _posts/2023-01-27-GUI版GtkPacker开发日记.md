@@ -31,8 +31,3 @@ xml格式的UI描述文件具有层次分明的优点，可以清晰地看出控
 
 不可用选项可以有隐藏（设置属性`visible = false`）与禁用（设置属性`sensitive = false`）两种方式。由于隐藏/呈现过程可能导致窗口大小变化，而默认情况下GTK只会自动调大窗口，而不会自动缩小窗口，因此显示/隐藏之后窗口大小将无法复原。所以在非`Gtk.ScrolledWindow`部件的情况下，最好不要用部件隐藏。
 
-## 捐赠
-
-|  **支付宝**  |  **微信支付**  |
-|  :----:  |  :----:  |
-|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |

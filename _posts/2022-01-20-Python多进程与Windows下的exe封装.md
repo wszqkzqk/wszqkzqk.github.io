@@ -835,8 +835,3 @@ if __name__ == '__main__':
         input('\n请按回车键退出...')
 ```
 
-## 捐赠
- 
-|  **支付宝**  |  **微信支付**  |
-|  :----:  |  :----:  |
-|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |

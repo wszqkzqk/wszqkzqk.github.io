@@ -221,8 +221,3 @@ menuentry '<-- Return to previous menu [Esc]' --class=vtoyret VTOY_RET {
 
 [![#~/img/ventoy/linux-on-ntfs.webp](/img/ventoy/linux-on-ntfs.webp)](/img/ventoy/linux-on-ntfs.webp)
 
-## 捐赠
-
-|  **支付宝**  |  **微信支付**  |
-|  :----:  |  :----:  |
-|  [![](/img/donate-alipay.webp)](/img/donate-alipay.webp)  |  [![](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp)  |
