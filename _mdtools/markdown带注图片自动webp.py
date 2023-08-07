@@ -122,7 +122,7 @@ picline = '|'
 neckline = '|' + ':----:|'*n
 tailline = '|'
 
-regex = re.compile(r"{re.escape(localimg)}/(?P<name>.*)")
+regex = re.compile(rf"{re.escape(localimg)}/(?P<name>.*)")
 for i in range(n):
     print('请输入第{}张图片的地址（默认在./img下，也可输入绝对网址、绝对路径或带有/img的完整地址）：'.format(i+1))
     url = pathed(input())
