@@ -101,7 +101,7 @@ sudo pacman -Syu stellarium
 
 即使我们关闭了大气层，但是月球仍然会被地平线遮挡。此时，我们可以使用`地面`开关，将地面隐藏，这样就可以看见地平线下的月球了！
 
-|![](../img/stellarium/ground-on.webp)|![](/img/stellarium/ground-off.webp)|
+|![](/img/stellarium/ground-on.webp)|![](/img/stellarium/ground-off.webp)|
 |:-:|:-:|
 |地面开关打开|地面开关关闭|
 
