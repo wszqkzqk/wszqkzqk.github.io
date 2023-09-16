@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      使用Stellarium观月观星
+title:      使用Stellarium观月
 subtitle:   LCPU中秋游园会活动
 date:       2023-09-16
 author:     wszqkzqk
-header-img: /img/stellarium/stellarium-bg.webp
+header-img: img/stellarium/stellarium-bg.webp
 catalog:    true
 tags:       开源软件 社团活动
 ---
