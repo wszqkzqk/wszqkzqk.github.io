@@ -25,7 +25,7 @@ Ubuntu等发行版的官方源中自带了Stellarium，可以使用以下命令�
 sudo apt install stellarium
 ```
 
-Arch Linux则需要添加archlinuxcn源，在`/etc/pacman.conf`中添加以下内容：
+Arch Linux则需要添加archlinuxcn源，在`/etc/pacman.conf`末尾中添加以下内容：
 
 ```bash
 [archlinuxcn]
