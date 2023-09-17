@@ -101,7 +101,7 @@ sudo btrfs property set /mnt compression zstd
 sudo pacman -S --needed arch-install-scripts
 ```
 
-然后执行
+然后执行：
 
 ```bash
 sudo pacstrap -c -K /mnt --needed \
@@ -112,6 +112,13 @@ sudo pacstrap -c -K /mnt --needed \
         nano vim man-db man-pages texinfo \
         noto-fonts-cjk noto-fonts-emoji
 ```
+
+* `-c`参数表示使用**主系统**的缓存
+  * 如果是在Arch ISO中安装，则**不应当**给`pacstrap`命令加上`-c`参数，否则很可能因为Union mount的内存盘空间不足而报错；下同。
+* `-K`参数表示使用主系统的密钥环
+* `--needed`参数表示只安装缺失的软件包
+* `base`与`base-devel`是Arch Linux的基本软件包，`linux`与`linux-firmware`是内核与固件，`amd-ucode`与`intel-ucode`是AMD与Intel的CPU微码，`btrfs-progs`、`xfsprogs`、`f2fs-tools`、`nilfs-utils`、`dosfstools`、`exfatprogs`、`ntfs-3g`与`lvm2`是文件系统工具，`sof-firmware`是声卡固件，`networkmanager`是网络管理器，`nano`与`vim`是编辑器，`man-db`、`man-pages`与`texinfo`是手册，`noto-fonts-cjk`与`noto-fonts-emoji`是字体
+  * 除了`base`和`linux`以外，其他的软件包可以选择性安装
 
 然后再选择一个DM安装，以在不同桌面环境间较通用LightDM为例：
 
