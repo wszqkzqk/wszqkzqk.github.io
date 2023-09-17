@@ -160,7 +160,7 @@ hwclock --systohc
 locale-gen
 ```
 
-创建主系统下的`/mnt/etc/locale.conf`（即U盘系统下的`/etc/locale.conf`），内容可以设定为`LANG=zh_CN.UTF-8`
+创建主系统下的`/mnt/etc/locale.conf`（即U盘系统下的`/etc/locale.conf`），内容可以设定为`LANG=zh_CN.UTF-8`，如果担心tty显示或者不需要使用中文，也可以设定为`LANG=en_US.UTF-8`。
 
 创建主系统下的`/mnt/etc/hostname`（即U盘系统下的`/etc/hostname`），其中的内容为设定的主机名称。
 
