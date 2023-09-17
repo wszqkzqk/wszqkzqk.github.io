@@ -44,7 +44,7 @@ sudo pacman -Syu stellarium
 
 打开Stellarium后，鼠标划往左侧，会出现一个菜单栏：
 
-![Stellarium菜单栏](/img/stellarium/basic-left-end.webp)
+[![Stellarium菜单栏](/img/stellarium/basic-left-end.webp)](/img/stellarium/basic-left-end.webp)
 
 该菜单栏由上至下分别是`所在地点`、`日期/时间`、`搜索`、`设置`、`天文计算`和`说明`。
 
@@ -67,13 +67,13 @@ sudo pacman -Syu stellarium
 
 对于初次使用的用户，可以首先关注下图圈出的这组开关：
 
-|![](/img/stellarium/basic-bottom3.webp)|
+|[![](/img/stellarium/basic-bottom3.webp)](/img/stellarium/basic-bottom3.webp)|
 |:-:|
 |从左到右：`地面`、`大气层`、`方位基点`|
 
 以及最右侧的这组用于控制时间流逝速度的开关：
 
-|![](/img/stellarium/basic-bottom4.webp)|
+|[![](/img/stellarium/basic-bottom4.webp)](/img/stellarium/basic-bottom4.webp)|
 |:-:|
 |从左到右：`减缓时间流逝`、`正常时间流逝速度`、`切换至当前时间`、`加快时间流逝`|
 
@@ -87,13 +87,13 @@ sudo pacman -Syu stellarium
 
 回到刚刚的界面介绍部分，找到下方工具栏的`大气层`开关，将其关闭，然后你会发现一个新的世界：
 
-|![](/img/stellarium/atm-off.webp)|
+|[![](/img/stellarium/atm-off.webp)](/img/stellarium/atm-off.webp)|
 |:-:|
 |关闭大气层后的天空|
 
 太阳仍然耀眼，但是月球和繁星已经可以看见了。此时，你可以放大视野，观察月球的表面细节。
 
-|![](/img/stellarium/atm-off2.webp)|
+|[![](/img/stellarium/atm-off2.webp)](/img/stellarium/atm-off2.webp)|
 |:-:|
 |白天关闭大气显示后观测到的娥眉月|
 
@@ -101,7 +101,7 @@ sudo pacman -Syu stellarium
 
 即使我们关闭了大气层，但是月球仍然会被地平线遮挡。此时，我们可以使用`地面`开关，将地面隐藏，这样就可以看见地平线下的月球了！
 
-|![](/img/stellarium/ground-on.webp)|![](/img/stellarium/ground-off.webp)|
+|[![](/img/stellarium/ground-on.webp)](/img/stellarium/ground-on.webp)|[![](/img/stellarium/ground-off.webp)](/img/stellarium/ground-off.webp)|
 |:-:|:-:|
 |地面开关打开|地面开关关闭|
 
@@ -109,7 +109,7 @@ sudo pacman -Syu stellarium
 
 Stellarium提供了一个`日期/时间`的菜单，可以用于调整时间。在这个菜单中，你可以调整年、月、日、时、分、秒。所以，我们只要切换到满月、新月、上弦月、下弦月的日期，就可以在Stellarium中观测到这些月相了。
 
-|![](/img/stellarium/time.webp)|
+|[![](/img/stellarium/time.webp)](/img/stellarium/time.webp)|
 |:-:|
 |日期/时间菜单|
 
@@ -121,15 +121,15 @@ Stellarium提供了一个`日期/时间`的菜单，可以用于调整时间。�
 
 更方便的是，计算完成后，双击你想观看的月食/日食，Stellarium就会自动跳转到该月食/日食的时间。
 
-|![](/img/stellarium/lunar-eclipse.webp)|
+|[![](/img/stellarium/lunar-eclipse.webp)](/img/stellarium/lunar-eclipse.webp)|
 |:-:|
 |月全食|
 
-|![](/img/stellarium/solar-eclipse.webp)
+|[![](/img/stellarium/solar-eclipse.webp)](/img/stellarium/solar-eclipse.webp)|
 |:-:|
 |日环食|
 
-|![](/img/stellarium/solar-eclipse-full.webp)|
+|[![](/img/stellarium/solar-eclipse-full.webp)](/img/stellarium/solar-eclipse-full.webp)|
 |:-:|
 |日全食|
 
@@ -139,19 +139,19 @@ Stellarium提供了一个`日期/时间`的菜单，可以用于调整时间。�
 
 在`所在地点`菜单中，将`行星`这一项切换到`月球`（虽然月球并不是行星），然后你就可以在月球上观测地球了！
 
-|![](/img/stellarium/location-moon.webp)|
+|[![](/img/stellarium/location-moon.webp)](/img/stellarium/location-moon.webp)|
 |:-:|
 |将地点切换到月球|
 
 或许你会觉得切换之后月球的地面不太逼真，我们也可以进行设置：从左侧菜单栏中选择`星空及显示`，选择`地景`-`月`，这样就可以将地景切换为月球了。
 
-|![](/img/stellarium/landscape-moon.webp)|
+|[![](/img/stellarium/landscape-moon.webp)](/img/stellarium/landscape-moon.webp)|
 |:-:|
 |将地景切换为月球|
 
 然而，身处北京的我们可能会发现，这样直接切换后，无论怎么调整时间，都无法从月球上看到地球。这是因为月球已经被地球潮汐锁定，所以月球的一面永远朝向地球，而另一面永远背向地球。而直接切换到月球的操作保留了原始位置（即北京）的经纬度，月球的这一位置恰好永远背对地球，如果我们想在月球上看地球，还需要切换我们在月球上的具体地点：
 
-|![](/img/stellarium/see-earth-from-moon.webp)|
+|[![](/img/stellarium/see-earth-from-moon.webp)](/img/stellarium/see-earth-from-moon.webp)|
 |:-:|
 |选择月球正面的地点就能看见地球了|
 
