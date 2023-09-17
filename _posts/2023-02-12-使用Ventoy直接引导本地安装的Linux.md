@@ -51,7 +51,7 @@ Ventoy还支持将`.vhd`虚拟机磁盘作为本地系统启动，但是这种�
 
 ### Ventoy软件安装
 
-在本地系统上安装Ventoy，对于Arch Linux，可以添加archlinuxcn等第三方源，也可以直接从AUR安装，Manjaro等基于Arch Linux的发行版则可能直接在官方源中继承了Ventoy，可以直接安装。总之，可以运行安装命令：
+在本地系统上安装Ventoy，对于Arch Linux，可以添加archlinuxcn等第三方源，也可以直接从AUR安装，Manjaro等基于Arch Linux的发行版则可能直接在官方源中集成了Ventoy，可以直接安装。总之，可以运行安装命令：
 
 ```bash
 yay -S ventoy-bin
