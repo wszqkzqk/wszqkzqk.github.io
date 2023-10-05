@@ -106,6 +106,8 @@ $ echo $CMD_DURATION
 cwebp -preset photo -q 80 '/run/media/wszqkzqk/D/OneDrive - 北京大学/Pictures/Camera Roll/2023/10/IMG_20231001_163030.jpg' -metadata all -segments 1 -o /tmp/test.webp
 ```
 
+不过，目前Windows版的`cwebp`仅支持保留ICC元数据，不支持保留EXIF元数据，因此在Windows下使用`cwebp`转码时，无法保留原图的拍摄时间、拍摄设备等信息；Linux版的`cwebp`则可以保留原图的所有元数据。
+
 ## 总结
 
 在转码2亿像素的大图片时，`cwebp`需要将`-segments`选项的值调整为1才能够成功转码；对于大图片，将`-partition_limit`选项的值调整为100可以大幅提升编码速度，而对于编码后的图片体积影响不大；如果需要保留原图的元数据，可以使用`-metadata all`选项。
