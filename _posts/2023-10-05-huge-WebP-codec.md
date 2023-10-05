@@ -52,7 +52,7 @@ To reduce the size of this partition, try using less segments with the -segments
 笔者首先使用`-segments`选项尝试调整分区数量，减小在sns算法分割期间更改要使用的分区数，使得控制分区能够满足512 k的限制。`-segments`选项的默认值为4，接受的范围是1-4，笔者发现，只有将`-segments`选项的值调整为1时，才能够成功将2亿像素的照片转码为WebP格式，例如：
 
 ```
-cwebp -q 80 '/run/media/wszqkzqk/D/OneDrive - 北京大学/Pictures/Camera Roll/2023/10/IMG_20231001_163030.jpg' -segments 1 -o /tmp/test2.webp
+cwebp -q 80 [...] -segments 1 -o [...]
 ```
 
 笔者又尝试了单独调整`-partition_limit`选项，发现如果不将`-segments`选项的值调整为1，将`-partition_limit`选项的值调整为多少都无法成功将2亿像素的照片转码为WebP格式。
@@ -103,7 +103,7 @@ $ echo $CMD_DURATION
 在默认的转码中，`cwebp`并不会保留原图的元数据，例如拍摄时间、拍摄设备等信息。如果需要保留原图的元数据，可以使用`-metadata`选项，例如：
 
 ```bash
-cwebp -preset photo -q 80 '/run/media/wszqkzqk/D/OneDrive - 北京大学/Pictures/Camera Roll/2023/10/IMG_20231001_163030.jpg' -metadata all -segments 1 -o /tmp/test.webp
+cwebp [...] -metadata all -segments 1 -o [...]
 ```
 
 不过，目前Windows版的`cwebp`仅支持保留ICC元数据，不支持保留EXIF元数据，因此在Windows下使用`cwebp`转码时，无法保留原图的拍摄时间、拍摄设备等信息；Linux版的`cwebp`则可以保留原图的所有元数据。
