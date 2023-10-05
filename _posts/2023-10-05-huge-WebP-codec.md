@@ -97,3 +97,15 @@ $ echo $CMD_DURATION
 ```
 
 而对于2亿像素的大图片，两者体积差别却非常小，分别为`19675582`和`19799116`，差别仅为`0.12`MB，占原图体积的`0.6%`，而两者的PSNR值也几乎没有区别。可见，编码较大的图片时，将`-partition_limit`选项的值调整为100可以大幅提升编码速度，而对于编码后的图片体积影响不大。
+
+## 保留元数据
+
+在默认的转码中，`cwebp`并不会保留原图的元数据，例如拍摄时间、拍摄设备等信息。如果需要保留原图的元数据，可以使用`-metadata`选项，例如：
+
+```bash
+cwebp -preset photo -q 80 '/run/media/wszqkzqk/D/OneDrive - 北京大学/Pictures/Camera Roll/2023/10/IMG_20231001_163030.jpg' -metadata all -segments 1 -o /tmp/test.webp
+```
+
+## 总结
+
+在转码2亿像素的大图片时，`cwebp`需要将`-segments`选项的值调整为1才能够成功转码；对于大图片，将`-partition_limit`选项的值调整为100可以大幅提升编码速度，而对于编码后的图片体积影响不大；如果需要保留原图的元数据，可以使用`-metadata all`选项。
