@@ -108,6 +108,14 @@ cwebp [...] -metadata all -segments 1 -o [...]
 
 不过，目前Windows版的`cwebp`仅支持保留ICC元数据，不支持保留EXIF元数据，因此在Windows下使用`cwebp`转码时，无法保留原图的拍摄时间、拍摄设备等信息；Linux版的`cwebp`则可以保留原图的所有元数据。
 
+## 多线程编码
+
+`cwebp`默认使用单线程编码，可以使用`-mt`选项开启多线程编码，例如：
+
+```bash
+cwebp [...] -mt -metadata all -segments 1 -o [...]
+```
+
 ## 总结
 
 在转码2亿像素的大图片时，`cwebp`需要将`-segments`选项的值调整为1才能够成功转码；对于大图片，将`-partition_limit`选项的值调整为100可以大幅提升编码速度，而对于编码后的图片体积影响不大；如果需要保留原图的元数据，可以使用`-metadata all`选项。
