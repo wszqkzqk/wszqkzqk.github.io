@@ -4,7 +4,7 @@ title:      KDE Plasma的Wayland现状
 subtitle:   在KDE Plasma 5.27中使用Wayland
 date:       2023-12-27
 author:     wszqkzqk
-header-img: img/KDE-bg.webp
+header-img: img/KDE/KDE-bg.webp
 catalog:    true
 tags:       开源软件 系统配置 KDE 系统维护
 ---
