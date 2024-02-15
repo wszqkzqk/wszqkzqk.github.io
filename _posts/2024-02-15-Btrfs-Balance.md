@@ -55,7 +55,7 @@ Btrfs的数据平衡功能是通过`btrfs balance`命令实现的。`btrfs balan
 sudo btrfs balance start -v -musage=50 /
 ```
 
-这样，我们就可以只对`Metadata`占用在50%以下的数据进行平衡，而不用对整个文件系统进行平衡。有时候，一次的平衡可能并不能完全解决问题，我们还可以反复运行这一命令，往往可以得到更好的效果。
+这样，我们就可以只对`Metadata`占用在50%以下的数据进行平衡，而不用对整个文件系统进行平衡。有时候，一次的平衡可能并不能完全解决问题，我们还可以反复运行这一命令，这往往可以得到更好的效果。
 
 笔者2次运行后，结果如下：
 
@@ -70,7 +70,6 @@ Done, had to relocate 25 out of 477 chunks
 平衡以后，`Metadata`的分配空间更加合理，从`96 GiB`减小到了`5 GiB`。
 
 ```bash
-wszqkzqk@wszqkzqk-pc ~/p/wszqkzqk.github.io (master)> sudo btrfs filesystem usage /
 Overall:
     Device size:                 953.67GiB
     Device allocated:            504.07GiB
