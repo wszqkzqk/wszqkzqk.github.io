@@ -15,7 +15,7 @@ tags:       开源软件 系统安装 系统配置 系统引导
 > 笔者实现了完全在Windows可以直接访问的分区上安装完整的Arch Linux操作系统
 > 仅使用FAT与NTFS文件系统实现Linux的文件系统布局
 
-笔者在Linux下使用NTFS时无意中发现现在的ntfs3似乎已经支持了较为完整的Linux权限，也支持软链接等特性：
+笔者在Linux下使用NTFS时无意中发现现在的ntfs3似乎已经支持了较为完整的Linux权限，也支持软/硬链接等特性，还有ACL、透明压缩支持：
 
 [![#~/img/ventoy/ntfs-usermod.webp](/img/ventoy/ntfs-usermod.webp)](/img/ventoy/ntfs-usermod.webp)
 
@@ -35,7 +35,7 @@ Ventoy启动盘默认会分为两个分区，第一个是我们的数据分区�
 
 ## 安装
 
-指定以`ntfs3`为挂载类型，挂载数据分区：
+指定以`ntfs3`为挂载类型，挂载数据分区；注意不要添加`windows_names`挂载选项，否则会导致文件名大小写不敏感且文件名不可包含`<>|:?*\`等字符，这会导致某些不符合Windows文件名要求的软件包无法写入到文件系统内（NTFS设计上是大小写敏感的，但是Windows大小写不敏感，`windows_names`挂载选项是考虑与Windows的兼容性设计的）。
 
 ```bash
 sudo mount -t ntfs3 /dev/sdXn /mnt
@@ -221,3 +221,9 @@ menuentry '<-- Return to previous menu [Esc]' --class=vtoyret VTOY_RET {
 
 [![#~/img/ventoy/linux-on-ntfs.webp](/img/ventoy/linux-on-ntfs.webp)](/img/ventoy/linux-on-ntfs.webp)
 
+
+## 踩坑
+
+目前Linux下的`ntfs3`软件并没有用户空间程序，包括`fsck`。而`ntfs3`挂载的文件系统如果遇到突然断电、强制关机等情况，可能会将文件系统标记为脏，导致下次启动时按照默认参数无法挂载。此外，Linux下支持的`ntfs-3g`的`fsck`程序也**无法修正**标记为脏的`ntfs3`文件系统。
+
+因此，如果遇到这种情况，可能需要在Windows下使用`chkdsk`命令修复文件系统。然而，由于Windows下的文件名有诸多限制，字符`<>|:?*\`等字符在Windows下是不允许出现在文件名中的，对于Linux下写入的含这些字符的文件，Windows的修复策略是**直接删除**。十分不巧的是，Arch Linux的**pacman包管理器将`:`用作手动处理的包版本的分隔符**，因此在Windows下修复文件系统时可能会导致pacman丢失某些已经安装的包的信息，在更新系统或者安装新的软件包时，由于包管理器不知道已经安装了这些包，会提示文件冲突的错误。此时只能手动向包管理器的cli传递`--overwrite '*'`参数，以强制覆盖文件。总的来说，比较麻烦。
