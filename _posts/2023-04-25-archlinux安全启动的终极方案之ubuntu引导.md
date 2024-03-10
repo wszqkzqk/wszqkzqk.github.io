@@ -192,3 +192,6 @@ sudo arch-chroot /mnt
 
 以更新Ubuntu的引导信息，最后重启即可。
 
+## 风险
+
+这样做可能会遇到部分Arch Linux的内核模块无法加载的情况，最好要`/etc/mkinitcpio.conf`文件的`MODULES=(...)`项中添加`uinput mousedev`，以确保鼠标和键盘的正常使用。
