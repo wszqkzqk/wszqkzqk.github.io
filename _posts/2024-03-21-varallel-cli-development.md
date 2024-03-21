@@ -175,6 +175,14 @@ endif
 
 实际上，这是Windows的`cmd.exe`、`powershell.exe`和`pwsh.exe`自身的问题，如果在Windows下指定shell为msys2或其他程序提供的`bash.exe`、`zsh.exe`、`fish.exe`等，均可以正确处理UTF-8参数。如果既需要传递Unicode参数，又需要使用shell的语法，可以考虑使用这些shell代替Windows自带的shell。
 
+### Vala语言的Bug：以`ref`传参的数组在有`[CCode (array_length = false, array_null_terminated = true)]`标记的函数中的长度
+
+由于C语言绑定中数组的长度有多种获取形式，有的是单独声明一个变量来存储数组的长度（例如`char** argv`，`int argc`），有的仅通过`null`来标记数组的结束而没有附加的长度信息。因此，为了实现与C语言库的兼容，Vala语言对于`array.length`也有多种C实现形式，一般是通过在生成的C代码中声明`array_length`来保存数组的长度，如果该函数声明时用``[CCode (array_length = false, array_null_terminated = true)]`修饰了数组参数则是遍历数组来获取数组的长度。
+
+Vala在一般情况下能够正确处理数组长度的相关问题，例如在增加或删除数组元素时，Vala会自动更新数组的长度；在以`ref`的方式传递数组时，Vala也会自动将数组的长度传递给函数。然而，当数组以`ref`的形式传递给具有`[CCode (array_length = false, array_null_terminated = true)]`标记的函数时，在C语言层面上该函数事实上并不会接收到`array_length`这一参数，也无法对其进行修改。因此，如果在这样的函数中修改了数组的长度，Vala语言并不会更新数组的长度，从而导致了数组的长度与实际不符。
+
+在`varallel`开发中，笔者是在适配Winsows下的Unicode参数传递方式时遇到了这一问题。直接在`main`函数中获取的参数实际上在C语言层面上是一个`char**`类型的数组外加一个`int`类型的长度，接收这一参数的`OptionContext.parse`函数也会接收这两个参数。当`OptionContext.parse`函数解析参数时，将已解析的选项移除时也会同时修改数组的长度，不会出现任何问题。然而，为了在Windows下正确处理Unicode参数，笔者需要获得一份具有所有权的数组（Windows通过`Win32.get_command_line`获得，Linux则调用`strdupv`复制以便保证一致性），而处理这一数组的函数是一个具有`[CCode (array_length = false, array_null_terminated = true)]`标记的`OptionContext.parse_strv`函数，这一函数在C语言层面上并不会接收到数组的长度，也无法对其进行修改。因此，当`OptionContext.parse_strv`函数解析参数时，将已解析的选项移除时也不会修改数组的长度，从而导致了数组的长度与实际不符。
+
 ## 总结
 
 唉，Windows！🤮🤮🤮
