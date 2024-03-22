@@ -4,7 +4,7 @@ title:      varallel开发踩坑
 subtitle:   一个用于并行执行命令的Vala命令行工具
 date:       2024-03-21
 author:     wszqkzqk
-header-img: img/input-method/abstract-bg.webp
+header-img: img/media/bg-modern-img-comp.webp
 catalog:    true
 tags:       Vala 开源软件
 ---
