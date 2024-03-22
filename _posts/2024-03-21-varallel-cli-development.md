@@ -181,7 +181,12 @@ endif
 
 Vala在一般情况下能够正确处理数组长度的相关问题，例如在增加或删除数组元素时，Vala会自动更新数组的长度；在以`ref`的方式传递数组时，Vala也会自动将数组的长度传递给函数。然而，当数组以`ref`的形式传递给具有`[CCode (array_length = false, array_null_terminated = true)]`标记的函数时，在C语言层面上该函数事实上并不会接收到`array_length`这一参数，也无法对其进行修改。因此，如果在这样的函数中修改了数组的长度，Vala语言并不会更新数组的长度，从而导致了数组的长度与实际不符。
 
-在`varallel`开发中，笔者是在适配Winsows下的Unicode参数传递方式时遇到了这一问题。直接在`main`函数中获取的参数实际上在C语言层面上是一个`char**`类型的数组外加一个`int`类型的长度，接收这一参数的`OptionContext.parse`函数也会接收这两个参数。当`OptionContext.parse`函数解析参数时，将已解析的选项移除时也会同时修改数组的长度，不会出现任何问题。然而，为了在Windows下正确处理Unicode参数，笔者需要获得一份具有所有权的数组（Windows通过`Win32.get_command_line`获得，Linux则调用`strdupv`复制以便保证一致性），而处理这一数组的函数是一个具有`[CCode (array_length = false, array_null_terminated = true)]`标记的`OptionContext.parse_strv`函数，这一函数在C语言层面上并不会接收到数组的长度，也无法对其进行修改。因此，当`OptionContext.parse_strv`函数解析参数时，将已解析的选项移除时也不会修改数组的长度，从而导致了数组的长度与实际不符。
+在`varallel`开发中，笔者是在适配Winsows下的Unicode参数传递方式时遇到了这一问题。直接在`main`函数中获取的参数实际上在C语言层面上是一个`char**`类型的数组外加一个`int`类型的长度，接收这一参数的`OptionContext.parse`函数也会接收这两个参数。当`OptionContext.parse`函数解析参数时，将已解析的选项移除时也会同时修改数组的长度，不会出现任何问题。然而，为了在Windows下正确处理Unicode参数，笔者需要采用一份具有所有权的数组（Windows通过`Win32.get_command_line`获得，Linux则调用`strdupv`复制以便保证一致性），而处理这一数组的函数是一个具有`[CCode (array_length = false, array_null_terminated = true)]`标记的`OptionContext.parse_strv`函数，这一函数在C语言层面上并不会接收到数组的长度，也无法对其进行修改。因此，当`OptionContext.parse_strv`函数解析参数时，将已解析的选项移除时也不会修改数组的长度，从而导致了数组的长度与实际不符。
+
+对于这一问题，有一些Woraround：
+
+* 对于循环遍历数组的情况，可以更改判断条件，例如将`for (var i = 2; i < array.length; i += 1)`改为`for (var i = 2; array[i] != null; i += 1)`
+* 对于后续使用的函数，如果需要访问`array.length`，可以同样地为传入的数组参数加上`[CCode (array_length = false, array_null_terminated = true)]`修饰，这样在访问`array.length`时Vala会自动调用函数遍历数组来获取数组的长度。
 
 ## 总结
 
