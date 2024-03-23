@@ -21,6 +21,12 @@ tags:       Vala 开源软件
 
 ### 使用方法
 
+* Arch Linux用户可以直接从AUR安装体验：
+
+```bash
+paru -S varallel
+```
+
 这一部分内容也可见于[`varallel`项目GitHub主页](https://github.com/wszqkzqk/varallel)。
 
 ```
