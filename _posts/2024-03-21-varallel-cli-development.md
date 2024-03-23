@@ -15,7 +15,7 @@ tags:       Vala 开源软件
 
 ## 设计
 
-`varallel`在CLI上基本上与`parallel`一致，但也有一些不同：`parallel`默认会按照shell的规则处理替换字符串中的空白字符，而`varallel`为了实现在各shell间的兼容性，不会额外处理替换字符串中的空白字符，仅作直接的替换。
+`varallel`在CLI上基本上与`parallel`一致，但也有一些不同：`parallel`默认会按照shell的规则处理替换字符串中的空白字符，而`varallel`为了实现在各shell间的兼容性，不会额外处理替换字符串中的空白字符，仅作直接的替换，因此在某些情况下需要自行在命令模板中添加引号。
 
 笔者选择用Vala语言开发`varallel`主要是因为Vala语言与GLib库的结合使得开发命令行工具变得十分简单，而且跨平台性也较好。
 
