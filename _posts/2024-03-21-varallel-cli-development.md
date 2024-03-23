@@ -23,7 +23,7 @@ tags:       Vala 开源软件
 
 这一部分内容也可见于[`varallel`项目GitHub主页](https://github.com/wszqkzqk/varallel)。
 
-```bash
+```
 Usage:
   varallel [OPTION?] command [:::|::::] [arguments]
 
