@@ -125,7 +125,7 @@ For more information, or to report bugs, please visit:
 
 ### Vala语言的Bug：lambda函数访问内容的生命周期
 
-Vala编译器是将Vala代码编译为C代码，然后再由C编诩器编译为机器码。本质上，Vala语言中的lambda函数仍然是用C语言实现的。为了实现lambda函数，Vala编译器会生成一个结构体，结构体中包含了lambda函数可访问的本地变量等信息。
+Vala编译器是将Vala代码编译为C代码，然后再由C编译器编译为机器码。本质上，Vala语言中的lambda函数仍然是用C语言实现的。为了实现lambda函数，Vala编译器会生成一个结构体，结构体中包含了lambda函数可访问的本地变量等信息。
 
 然而，目前Vala编译器在生成的C代码中，对于lambda函数访问的内容的生命周期有一些问题。我们预期的行为是，lambda函数访问的内容应当在lambda函数本身不可访问后才释放，但实际上，lambda函数访问的内容在lambda函数声明的作用域结束后就会被释放。这会导致在调用lambda函数时，访问的内容已经被释放，从而导致程序崩溃。
 
