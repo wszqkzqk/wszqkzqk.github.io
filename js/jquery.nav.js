@@ -7,8 +7,6 @@
  * Uses the same license as jQuery, see:
  * http://jquery.org/license
  *
- * @version 3.0.0
- *
  * Example usage:
  * $('#nav').onePageNav({
  *   currentClass: 'current',
