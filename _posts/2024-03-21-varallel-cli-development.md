@@ -132,6 +132,7 @@ Vala编译器是将Vala代码编译为C代码，然后再由C编译器编译为�
 因此，我们需要将lambda函数的定义与调用放到同一个作用域中，以避免访问内容被释放。
 
 * 参见提交[fix: fix the problem that the memory has been cleared when the lambda of ThreadPool accesses the fields of ParallelManager](https://github.com/wszqkzqk/varallel/commit/01855343bb5fb0037bceb428e34f2020f83cef39)
+* 奇怪的是，笔者构造的demo均无法复现这一问题，因此笔者目前尚未向上游提交这一问题。
 
 ### 跨平台进度条与彩色输出的实现
 
