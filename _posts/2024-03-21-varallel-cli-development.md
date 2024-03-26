@@ -123,16 +123,15 @@ For more information, or to report bugs, please visit:
 
 ## 踩坑
 
-### Vala语言的Bug：lambda函数访问内容的生命周期
+### `ThreadPool<T>.with_owned_data`中`ThreadPoolFunc<T> func`访问内容的生命周期
 
 Vala编译器是将Vala代码编译为C代码，然后再由C编译器编译为机器码。本质上，Vala语言中的lambda函数仍然是用C语言实现的。为了实现lambda函数，Vala编译器会生成一个结构体，结构体中包含了lambda函数可访问的本地变量等信息。
 
-然而，目前Vala编译器在生成的C代码中，对于lambda函数访问的内容的生命周期有一些问题。我们预期的行为是，lambda函数访问的内容应当在lambda函数本身不可访问后才释放，但实际上，lambda函数访问的内容在lambda函数声明的作用域结束后就会被释放。这会导致在调用lambda函数时，访问的内容已经被释放，从而导致程序崩溃。
+`ThreadPool<T>.with_owned_data`所接受的参数是`ThreadPoolFunc<T> func`而非`(owned) ThreadPoolFunc<T> func`，因此新建的进程池对象仅会引用`func`，而不会增加`func`的引用计数；如果`func`中访问了某个对象，当`func`所在的scope结束后，`func`可访问的内容可能已经被释放，从而导致访问错误。
 
 因此，我们需要将lambda函数的定义与调用放到同一个作用域中，以避免访问内容被释放。
 
 * 参见提交[fix: fix the problem that the memory has been cleared when the lambda of ThreadPool accesses the fields of ParallelManager](https://github.com/wszqkzqk/varallel/commit/01855343bb5fb0037bceb428e34f2020f83cef39)
-* 笔者向上游提交了这一问题的[issue (#1537)](https://gitlab.gnome.org/GNOME/vala/-/issues/1537)
 
 ### 跨平台进度条与彩色输出的实现
 
