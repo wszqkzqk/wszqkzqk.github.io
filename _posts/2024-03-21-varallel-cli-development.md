@@ -194,7 +194,7 @@ Vala在一般情况下能够正确处理数组长度的相关问题，例如在�
 * 对于循环遍历数组的情况，可以更改判断条件，例如将`for (var i = 2; i < array.length; i += 1)`改为`for (var i = 2; array[i] != null; i += 1)`
 * 对于后续使用的函数，如果需要访问`array.length`，可以同样地为传入的数组参数加上`[CCode (array_length = false, array_null_terminated = true)]`修饰，这样在访问`array.length`时Vala会自动调用函数遍历数组来获取数组的长度。
 
-笔者已经在Vala项目的issue中反馈这一问题（[#1536](https://gitlab.gnome.org/GNOME/vala/-/issues/1536)），目前还没有想好具体如何实现修复。
+笔者已经在Vala项目的issue中反馈这一问题（[#1536](https://gitlab.gnome.org/GNOME/vala/-/issues/1536)），Vala项目维护者Rico Tzschichholz目前已经修复了这一问题，这一修复([codegen: Update array length variable passed to null-terminated ref parameter](https://gitlab.gnome.org/GNOME/vala/-/commit/43a348b1eebd57a427275ca58a84cd32d30ebb0d)和[codegen: Properly pass through a null-terminated out argument](https://gitlab.gnome.org/GNOME/vala/-/commit/86984c59734f975c9778251dddf80d247ade28a7))将会在Vala 0.58版本中发布。
 
 ## 总结
 
