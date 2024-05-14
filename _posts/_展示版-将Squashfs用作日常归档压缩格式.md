@@ -32,7 +32,6 @@ Squashfs支持多种压缩算法，包括：
 * `lz4`：`-comp lz4`
 * `xz`：`-comp xz`
 * `zstd`：`-comp zstd`
-* `zstd`：`-comp zstd`
 
 在不追求极致压缩率的场景下，笔者推荐使用`zstd:3`的压缩算法，这样可以节省空间，而且压缩速度非常快、CPU占用很小。根据`zstd`算法的特性，使用较高压缩等级的`zstd`算法可以在牺牲一定创建压缩的速度的情况下获得更高的压缩率，但是并不会明显降低透明的解压缩的速度，因此，如果需要更高的压缩率，可以考虑使用更高等级的`zstd`压缩算法，例如将压缩等级设置为`6`或者`15`。
 
@@ -101,7 +100,7 @@ sudo mksquashfs - /XXX/example/backup.sfs -p "backup.img f 0644 root root dd if=
 
 然而，这样做会解压产生很多**中间文件**，占用大量的**空间**，而且需要花费大量的**IO时间**。
 
-笔者在这里推荐充分利用**管道**，直接将归档文件的解压缩输出作为`mksquashfs`的输入流。这样，我们可以在不产生中间文件的情况下，将归档文件转换为Squashfs。
+笔者在这里推荐充分利用**管道**，直接将归档文件的解压缩输出作为`mksquashfs`的输入流，在不产生中间文件的情况下，将归档文件转换为Squashfs。
 
 ### 转化`tar.xxx`到Squashfs
 
@@ -126,8 +125,6 @@ gzip -cd zircon_images_V14.0.8.0.TNOCNXM_20231129.0000.00_13.0_cn_f63a143fa2.tgz
 * `-comp zstd -Xcompression-level 6`表示使用`zstd`压缩，压缩等级为`6`
 
 另外需要注意的是，解压命令需要与原压缩包的压缩格式相匹配，例如，如果原压缩包是`tar.xz`格式，那么解压命令应该是`xz -cd`，如果原压缩包是`tar.zst`格式，那么解压命令应该是`zstd -cd`。
-
-这样，我们就在不产生中间文件的情况下，将`tar.xxx`格式的线刷包转换为了Squashfs，可以直接挂载使用。
 
 当然，对于本身即未压缩的tar数据，我们也可以直接使用`mksquashfs`的`-tar`参数，直接用`cat`传入即可，例如：
 
@@ -162,9 +159,7 @@ bsdtar -c @test.zip | mksquashfs - test.sfs -tar -p "/ d 0755 0 0" -comp zstd -X
 * `-p`表示定义Squashfs中的文件组织
 * `/ d 0755 0 0`表示添加根目录
 * `d`表示类型为目录，后面跟有权限信息
-* `-comp zstd -Xcompression-level 6`表示使用`zstd`压缩，压缩等级为`6`。
-
-这样，我们就在不产生中间文件的情况下，将`zip`格式的归档文件转换为了Squashfs，可以直接挂载使用。
+* `-comp zstd -Xcompression-level 6`表示使用`zstd`压缩，压缩等级为`6`
 
 `bsdtar`直接读取归档的特性不仅仅适用于`zip`格式的归档文件，还适用于`tar`, `pax`, `cpio`, `jar`, `ar`, `xar`, **`rpm`**, **`7z`**, `ISO 9660 CDROM`，以上格式均可利用类似方法转换为Squashfs。
 
@@ -191,6 +186,6 @@ unsquashfs -pf - source.sfs | mksquashfs - output.sfs -pf - -comp zstd -Xcompres
 * `|`表示管道，`mksquashfs -`表示将标准输入流作为`mksquashfs`的输入流
 * `-pf -`表示从标准输入流读取文件组织的结构、权限等信息
 * `-comp zstd -Xcompression-level 6`表示使用`zstd`压缩，压缩等级为`6`
-* `-b 16K`表示块大小为`16K`。
+* `-b 16K`表示块大小为`16K`
 
-这样，我们就在不产生中间文件的情况下，利用`unsquashfs`更优秀的IO性能，将原来的Squashfs快速转换为了新的Squashfs，并重新指定了压缩算法、块大小、压缩等级等参数。
+由此，我们在不产生中间文件的情况下，利用`unsquashfs`更优秀的IO性能，将原来的Squashfs快速转换为了新的Squashfs，并重新指定了压缩算法、块大小、压缩等级等参数。
