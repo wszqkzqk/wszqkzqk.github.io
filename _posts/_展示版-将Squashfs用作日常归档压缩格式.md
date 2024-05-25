@@ -191,3 +191,67 @@ unsquashfs -pf - source.sfs | mksquashfs - output.sfs -pf - -comp zstd -Xcompres
 * `-b 16K`表示块大小为`16K`
 
 由此，我们在不产生中间文件的情况下，利用`unsquashfs`更优秀的IO性能，将原来的Squashfs快速转换为了新的Squashfs，并重新指定了压缩算法、块大小、压缩等级等参数。
+
+## 展望
+
+Squashfs是一个非常实用的只读文件系统，然而，这一文件系统创建于2009年，今天看来它的某些特性已经不是那么合适：Squashfs对**随机访问**的性能仍然有很大的提升空间。
+
+EROFS是一个较新的只读文件系统，已广泛应用于Android的系统分区，它特别针对读取性能进行了优化，对随机访问有更好的支持。
+
+* Squashfs文件系统最多由九个部分组成
+  * 超级块`superblock`
+  * 压缩类型`compression options`
+  * 数据块/片段`datablocks & fragments`
+  * 索引节点表`inode table`
+  * 目录表`directory table`
+  * 片段表`fragment table`
+  * 导出表`export table`
+  * uid/gid查找表`uid/gid lookup table`
+  * 扩展属性表`xattr table`
+* 这些部分按照**字节对齐**，结构**紧凑**
+* **数据块**并没有对齐，不利于随机访问
+
+访问未对齐的数据块往往会被迫读取多个数据块，造成额外的IO开销。而注重随机访问性能的一般文件系统，例如ext4、XFS、Btrfs、F2FS等，都会对数据块进行**块对齐**，以减少随机访问时的IO开销。EROFS也默认采用了**块对齐**的设计，对随机访问有更好的支持。
+
+|[![#~/img/storage-device/erofs-design-comparison.svg](/img/storage-device/erofs-design-comparison.svg)](/img/storage-device/erofs-design-comparison.svg)|
+|:----:|
+|Squashfs等未采用块对齐的文件系统与EROFS等采用块对齐的文件系统设计对比|
+
+块对齐的优势在于提高了I/O操作的效率，减少了不必要的内存占用，增强了数据缓存的灵活性和效率，特别是在内存有限的设备上。
+
+此外，EROFS还支持了Squashfs所不支持的块级去重、ACL等功能：[^1]
+
+| Feature (as of Linux 6.6) | EROFS | SquashFS |
+| --- | --- | --- |
+| Minimal block size | 512 B | Unaligned |
+| Inode size | 32/64 B | Varied |
+| Limitation of total UIDs/GIDs | No | Yes (64k) |
+| Pre-1970 / ns timestamps | Yes | No |
+| Filesystem UUID | Yes | No |
+| Filesystem label (Volume label) | Yes | No |
+| Inline data | Yes | No |
+| Data compression | Yes | Yes |
+| Largest compression granularity | 1 MiB | 1 MiB |
+| Default compression granularity | 1 Block | 128 KiB |
+| Fragments | Yes | Yes |
+| Metadata compression | No | Yes |
+| Multiple compression algorithms | Per-file | No |
+| Data deduplication | Extent-based | File-based |
+| Extended attribute support | Yes | Yes |
+| File-based distribution | Yes | No |
+| External data (multi-devices) | Yes | No |
+| POSIX.1e ACL support | Yes | No |
+| Direct I/O support | Yes | No |
+| FIEMAP support | Yes | No |
+| FSDAX support | Yes | No |
+| Large folio support | Yes | No |
+
+然而，由于EROFS社区开发者有限，且主要开发力量集中于内核空间，以及向前移植，目前EROFS的用户空间程序（EROFS文件系统制作程序）完善程度仍然不足：
+
+* **一切操作**，包括IO、**压缩**等均在**一个线程**中完成，创建很慢
+* 块级去重仍为实验性功能
+  * 去重的**速度太慢**
+
+用户空间程序的不完善，使得EROFS在日常备份应用中的普及受到了一定的限制。不过，随着EROFS的不断发展，相信它会逐渐成为Squashfs的替代品。
+
+[^1]: https://erofs.docs.kernel.org/en/latest/features.html
