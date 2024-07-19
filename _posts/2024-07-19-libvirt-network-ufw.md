@@ -104,4 +104,16 @@ sudo systemctl restart dnsmasq
 
 这样，`libvirt`的虚拟机就可以正常连接到外网了。
 
+## 其他
+
+启用`ufw`之后，笔者还遇到了KDE Connect无法连接的问题，同样可以设置`ufw`的规则：
+
+```bash
+sudo ufw allow 1714:1764/udp
+sudo ufw allow 1714:1764/tcp
+sudo ufw reload
+```
+
+这样，在同一局域网下，搭载KDE的电脑和装有KDE Connect APP的手机就可以正常连接了。
+
 [^1]: [libvirt: Virtual network 'default' has not been started](https://wiki.libvirt.org/Virtual_network_default_has_not_been_started.html)
