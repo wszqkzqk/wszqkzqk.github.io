@@ -6,7 +6,7 @@ date:       2024-07-26
 author:     wszqkzqk
 header-img: img/bg-mountain-darken.webp
 catalog:    true
-tags:       开源软件 系统配置 Linux archlinux
+tags:       开源软件 系统配置 Linux archlinux 文件系统
 ---
 
 ## 前言
