@@ -6,7 +6,7 @@ date:       2024-07-19
 author:     wszqkzqk
 header-img: img/bg-sunrise.webp
 catalog:    true
-tags:       系统配置 虚拟化 网络
+tags:       系统配置 虚拟化 网络 Linux
 ---
 
 ## 问题
