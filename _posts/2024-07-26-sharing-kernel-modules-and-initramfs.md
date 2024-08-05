@@ -99,6 +99,6 @@ Arch Linux使用的`mkinitcpio`默认会创建两个`initramfs`镜像，一个�
 
 当然，如果不想修改`HOOKS`变量，也可以直接将GRUB引导项中的`initramfs-linux*.img`替换为`initramfs-linux*-fallback.img`，以便默认使用包含所有模块的`initramfs`镜像。
 
-除了可以在不同设备上工作外，使用完整的`initramfs`镜像还可以在一定程度上避免在Arch Linux内核**滚动升级后出现部分模块无法加载的问题**，可以在更新内核后不立即重启。不过，这样的`initramfs`镜像会比较大，会**增加启动时间**；但是在笔者的设备上，即使是完整的`initramfs`镜像加载也非常快速，因此笔者已经直接在`/etc/mkinitcpio.conf`中去掉了`autodetect`钩子。
+不过，这样的`initramfs`镜像会比较大，会**增加启动时间**；但是在笔者的设备上，即使是完整的`initramfs`镜像加载也非常快速。
 
 Ubuntu等发行版使用的`initramfs-tools`默认`MODULES=most`，即包含了大部分模块，因此不需要额外配置。
