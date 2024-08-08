@@ -77,7 +77,7 @@ extra-loong64-build
    * 缺点是`keys`下的密钥一般是`devtools`的`export-pkgbuild-keys`自动导出的，可能会有一些问题
 3. 考虑到Arch Linux官方上游会对软件包的PGP密钥进行验证，而在我们的构建环境中使用hash验证已经可以基本保证源的完整性与可靠性，因此我们可以考虑在构建流程中**跳过**PGP验证
    * `extra-loong64-build`参数组中在`--`后的参数会传递给`makechrootpkg`，而`makechrootpkg`参数组中在`--`后的参数会传递给`makepkg`
-   * 因此使用`extra-loong64-build -- --skippgpcheck`可以跳过PGP验证
+   * 因此使用`extra-loong64-build -- -- --skippgpcheck`可以跳过PGP验证
 
 ### QEMU的性能问题
 
