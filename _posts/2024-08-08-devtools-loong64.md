@@ -17,7 +17,7 @@ Arch Linux主要使用devtools来构建软件包。为了方便拥有x86设备�
 
 相比于原来的`devtools`龙芯移植，`devtools-loong64`保留了Arch Linux官方原版的`devtools`作为依赖，通过patch的方式增加了部分LoongArch专属的文件，简化了维护的潜在工作量。
 
-在x86平台上，`devtools-loong64`还依赖`qemu-user-static`软件包，以便在x86平台上使用QEMU用户模式模拟LoongArch的环境。通过在binfmt_misc的注册中额外添加`C`标志，`devtools-loong64`可以在x86平台上构建LoongArch的软件包，并避免了binfmt下的提权问题。
+在x86平台上，`devtools-loong64`还依赖`qemu-user-static`软件包，以便在x86平台上使用QEMU用户模式模拟LoongArch的环境。通过在binfmt_misc的注册中额外添加`C`标志，`devtools-loong64`可以在x86平台上构建LoongArch的软件包，[并避免了 QEMUbinfmt下的提权问题](/2024/03/28/qemu-user-binfmt-flag/)。
 
 ## 准备工作
 
