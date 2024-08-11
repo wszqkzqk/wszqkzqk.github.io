@@ -20,3 +20,9 @@ tags:       开源软件 系统配置 Linux archlinux
 ```bash
 echo "pts/0" >> /etc/securetty
 ```
+
+### 说明
+
+这一方法存在风险，因为`/etc/securetty`文件中的终端会被视为安全终端，允许root用户登录。因此，如果容器中的终端被其他用户控制，可能会导致安全问题。
+
+一般来说，使用`systemd-nspawn`容器时，仍然建议使用`machinectl login`或者`machinectl shell`等命令登录容器。
