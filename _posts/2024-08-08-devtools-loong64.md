@@ -56,9 +56,9 @@ sudo pacman-key --lsign-key 65D4986C7904C6DBF2C4DD9A4E4E02B70BA5C468
 paru -S devtools-loong64
 ```
 
-### `binfmt_misc` FLAGS说明（针对在容器中运行x86 Arch Linux的用户）
+### `binfmt_misc` FLAGS说明（仅针对在容器中运行x86 Arch Linux的用户）
 
-* 只要**不是**在容器中运行x86 Arch Linux的用户，`devtools-loong64`完全**开箱即用**，可以**忽略**这一部分
+* 只要**不是**在容器中运行x86 Arch Linux的用户，`devtools-loong64`完全**开箱即用**，可以**忽略**这一部分，请**继续阅读[测试打包](#测试打包)**一节
 * 更多知识介绍见笔者的另一篇博客：[`binfmt_misc` flags与QEMU用户模式下的跨架构构建环境](/2024/03/28/qemu-user-binfmt-flag/)
 * 无论如何**宿主**都需要安装**`qemu-user-static`**软件包
 
