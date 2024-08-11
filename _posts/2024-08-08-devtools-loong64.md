@@ -27,7 +27,7 @@ Arch Linux主要使用devtools来构建软件包。为了方便拥有x86设备�
 
 ## PGP Key的导入
 
-由于目前的LoongArchLinux移植主要由龙芯的武老师维护，签名所用的PGP密钥并不在Arch Linux的`archlinux-keyring`密钥环中，因此需要导入签名密钥。以下导入方法二选一即可。
+由于目前的LoongArchLinux移植主要由龙芯的武老师维护，签名所用的PGP密钥并不在Arch Linux的`archlinux-keyring`密钥环中，因此需要导入签名密钥。以下导入方法**二选一**即可。
 
 ### 安装[`archlinux-lcpu-keyring`](https://github.com/lcpu-club/archlinux-lcpu-keyring)
 
