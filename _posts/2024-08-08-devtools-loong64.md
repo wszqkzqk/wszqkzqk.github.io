@@ -109,6 +109,8 @@ echo -1 | sudo tee /proc/sys/fs/binfmt_misc/qemu-loongarch64 && cat "/usr/lib/bi
 echo -1 | sudo tee /proc/sys/fs/binfmt_misc/qemu-loongarch64 && echo ":qemu-loongarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x02\x01:\xff\xff\xff\xff\xff\xff\xff\xfc\x00\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-loongarch64-static:FPC" | sudo tee /proc/sys/fs/binfmt_misc/register
 ```
 
+* 为了方便，可以自行编写脚本，以便实现在启动容器时自动注册binfmt规则
+
 #### 测试`binfmt_misc`注册结果
 
 执行以下命令，观察输出中`flags`的内容是否含有`C`标志：
