@@ -11,13 +11,13 @@ tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 
 
 # 前言
 
-Arch Linux主要使用devtools来构建软件包。为了方便拥有x86设备的开发者构建LoongArch的软件包，笔者制作了一个[`devtools-loong64`](https://github.com/lcpu-club/devtools-loong)的[AUR软件包](https://aur.archlinux.org/packages/devtools-loong64)，可以在龙芯或者x86设备上构建LoongArch的软件包。
+Arch Linux主要使用devtools来构建软件包。为了方便拥有x86_64设备的开发者构建LoongArch的软件包，笔者制作了一个[`devtools-loong64`](https://github.com/lcpu-club/devtools-loong)的[AUR软件包](https://aur.archlinux.org/packages/devtools-loong64)，可以在龙芯或者x86_64设备上构建LoongArch的软件包。
 
 # 特点
 
 相比于原来的`devtools`龙芯移植，`devtools-loong64`保留了Arch Linux官方原版的`devtools`作为依赖，通过patch的方式增加了部分LoongArch专属的文件，简化了维护的潜在工作量。
 
-在x86平台上，`devtools-loong64`还依赖`qemu-user-static`软件包，以便在x86平台上使用QEMU用户模式模拟LoongArch的环境。通过在binfmt_misc的注册中额外添加`C`标志，`devtools-loong64`可以在x86平台上构建LoongArch的软件包，[并避免了QEMU binfmt下的提权问题](/2024/03/28/qemu-user-binfmt-flag/)。
+在x86_64平台上，`devtools-loong64`还依赖`qemu-user-static`软件包，以便在x86_64平台上使用QEMU用户模式模拟LoongArch的环境。通过在binfmt_misc的注册中额外添加`C`标志，`devtools-loong64`可以在x86_64平台上构建LoongArch的软件包，[并避免了QEMU binfmt下的提权问题](/2024/03/28/qemu-user-binfmt-flag/)。
 
 # 准备工作
 
@@ -177,3 +177,7 @@ extra-loong64-build
 考虑到当前QEMU下16线程的多核性能都明显不如龙芯3A6000，单线程性能更是远远落后，因此在构建时可能会出现性能瓶颈，导致打包耗时较长。
 
 [^1]: x86原生及QEMU测试所用的CPU为AMD Ryzen 7 5800H (16) @ 4.46 GHz，所用的软件为`p7zip`，测试命令为`7z b`，表中列出的是多线程性能。
+
+## 维护参与
+
+欢迎大家参与北京大学Linux俱乐部的[LoongArch Linux移植工作](https://github.com/lcpu-club/loongarch-packages)！
