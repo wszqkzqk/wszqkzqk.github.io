@@ -15,7 +15,7 @@ tags:       开源软件 系统配置 文件系统
 
 然而，笔者最近却发现，笔者使用的Btrfs文件系统`Metadata`不知为什么，分配空间达到了`96 GiB`（加上默认的`DUP`就是`192 GiB`），而实际却仅使用了不到`4 GiB`（`DUP`后也不到`7 GiB`）。分配给`Metadata`的空间是无法给`Data`使用的，因此文件系统实际可用空间浪费严重。
 
-```bash
+```log
 Overall:
     Device size:                 953.67GiB
     Device allocated:            638.07GiB
@@ -59,7 +59,7 @@ sudo btrfs balance start -v -musage=50 /
 
 笔者2次运行后，结果如下：
 
-```bash
+```log
 wszqkzqk@wszqkzqk-pc ~> sudo btrfs balance start -v -musage=50 /
 Dumping filters: flags 0x6, state 0x0, force is off
   METADATA (flags 0x2): balancing, usage=50
@@ -69,7 +69,7 @@ Done, had to relocate 25 out of 477 chunks
 
 平衡以后，`Metadata`的分配空间更加合理，从`96 GiB`减小到了`5 GiB`。
 
-```bash
+```log
 Overall:
     Device size:                 953.67GiB
     Device allocated:            504.07GiB

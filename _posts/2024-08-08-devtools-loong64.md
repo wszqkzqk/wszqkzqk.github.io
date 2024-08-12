@@ -121,8 +121,9 @@ cat /proc/sys/fs/binfmt_misc/qemu-loongarch64
 
 如果输出中含有`flags: POCF`，则表明目前已经启用了`C`标志；如果仅含有`flags: PF`，则表明目前没有启用`C`标志，后续的构建过程将会出现提权问题：
 
-```
-sudo: effective uid is not 0, is /usr/sbin/sudo on a file system with the 'nosuid' option set or an NFS file system without root privileges?
+```log
+sudo: effective uid is not 0, is /usr/bin/sudo on a file system with the 'nosuid' option set or an NFS file system without root privileges?
+==> ERROR: 'pacman' failed to install missing dependencies.
 ```
 
 这一报错极具迷惑性，实际上如果`binfmt_misc`的标志没有设置正确，无论文件系统、挂载参数如何都会提示这一错误。如果在实际构建过程中出现了如上问题，可以通过[本节内容](#binfmt_misc-flags说明仅针对在容器中运行x86-arch-linux的用户)中的方法解决。

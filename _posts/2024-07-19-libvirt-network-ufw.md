@@ -25,7 +25,7 @@ sudo ufw status
 
 如果`ufw`是启用的，可以看到类似如下的输出：
 
-```bash
+```log
 Status: active
 
 To                         Action      From
@@ -63,7 +63,7 @@ sudo ufw enable
 
 在使用`virsh net-start default`启用网桥的时候，可能会遇到类似如下的错误：
 
-```bash
+```log
 internal error: Child process (VIR_BRIDGE_NAME=virbr0 /usr/bin/dnsmasq --conf-file=/var/lib/libvirt/dnsmasq/default.conf --leasefile-ro --dhcp-script=/usr/lib/libvirt/libvirt_leaseshelper) unexpected exit status 2: 
 dnsmasq: failed to create listening socket for 192.168.122.1: Address already in use
 ```
@@ -90,7 +90,7 @@ sudo systemctl disable dnsmasq
 
 如果确实需要`dnsmasq`，可以编辑`/etc/dnsmasq.conf`，将`bind-interfaces`和`listen-address`注释掉：
 
-```
+```conf
 bind-interfaces
 interface=[some physical interface name, e.g. eth0]
 listen-address=[ip address of the interface you want, e.g. 192.168.1.1]

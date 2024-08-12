@@ -21,7 +21,7 @@ QEMU主要有两种模式，一种是全系统模拟，另一种是用户模式�
 
 在笔者的测试中，如果在用户模式下使用QEMU，在容器中从root切换到普通用户再提权时，会出现如下错误：
 
-```
+```log
 sudo: effective uid is not 0, is /usr/sbin/sudo on a file system with the 'nosuid' option set or an NFS file system without root privileges?
 ```
 
@@ -40,7 +40,7 @@ sudo: effective uid is not 0, is /usr/sbin/sudo on a file system with the 'nosui
 
 根据`binfmt_misc`的[文档](https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.htm)，注册的二进制类型的基本格式为：
 
-```
+```conf
 :name:type:offset:magic:mask:interpreter:flags
 ```
 
@@ -70,7 +70,7 @@ sudo: effective uid is not 0, is /usr/sbin/sudo on a file system with the 'nosui
 
 因此，为了解决`sudo`提权失败的问题，需要在`binfmt_misc`的注册中添加`C`标志。即，编辑`/usr/lib/binfmt.d/qemu-loongarch64-static.conf`，在末尾添加`C`：
 
-```bash
+``conf
 :qemu-loongarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x02\x01:\xff\xff\xff\xff\xff\xff\xff\xfc\x00\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-loongarch64-static:FPC
 ```
 

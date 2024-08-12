@@ -29,7 +29,7 @@ paru -S varallel
 
 这一部分内容也可见于[`varallel`项目GitHub主页](https://github.com/wszqkzqk/varallel)。
 
-```
+```log
 Usage:
   varallel [OPTION?] command [:::|::::] [arguments]
 
@@ -173,7 +173,7 @@ endif
 
 然而，笔者在Windows下指定`cmd.exe`、`powershell.exe`和`pwsh.exe`作为shell时，发现参数中含有Unicode字符时会出现乱码。这是因为这些shell将传入的UTF-8参数额外作了转化，导致了乱码，例如如果执行的命令是`echo 你好`：
 
-```cmd
+```log
 [Invalid UTF-8] \xc4\xe3\xba\xc3
 ```
 
