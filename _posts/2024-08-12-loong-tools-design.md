@@ -68,8 +68,6 @@ paru -S devtools-loong64
 * `patches`：目录，存放的是其他针对**上游软件**代码的patch组，以及龙芯特定的**配置文件**
 * `spec`：bash配置文件，存放软件包的元数据，**至少**包含以下信息：
   * `VER`：**上游**版本号，即软件包在Arch Linux官方仓库中的**完整**版本号`$pkgver-$pkgrel`，如`1:1.2.3-1`
-  * `REL`：龙芯移植构建版本号，只能为自然数，如`1`、`2`、`3`等
-    * 可被工具在构建时合并到`PKGBUILD`中的`pkgrel`中，得到如`1:1.2.3-1.1`的版本号
 
 # 工作流程
 
@@ -146,8 +144,7 @@ gpg --detach-sign --use-agent *.pkg.tar.zst
 
 1. 将克隆的上游仓库切换到补丁维护仓库对应的`spec`文件的`VER`变量记录的上游版本号
 2. 对`PKGBUILD`应用`loong.patch`
-3. 将`spec`文件中的龙芯移植构建版本号字段`REL`合并到`PKGBUILD`中的`pkgrel`字段中
-4. 将补丁维护仓库对应目录下的`patches`子目录复制到软件包目录下
+3. 将补丁维护仓库对应目录下的`patches`子目录复制到软件包目录下
 
 这些过程可以手动使用命令完成，也可以封装一些脚本来实现：
 
@@ -199,12 +196,8 @@ else
   exit 1
 fi
 
-# 修改PKGBUILD中的pkgrel
-echo "Updating pkgrel in PKGBUILD..."
-sed -i "s/^pkgrel=\([0-9]*\)/pkgrel=\1.${REL}/" PKGBUILD
-
 # 复制patch目录
-PATCH_DIR="$PATCH_REPO/$PACKAGE_NAME/patch"
+PATCH_DIR="$PATCH_REPO/$PACKAGE_NAME/patches"
 if [ -d "$PATCH_DIR" ]; then
   echo "Copying patch directory..."
   cp -r "$PATCH_DIR" .
@@ -217,10 +210,15 @@ echo "Done."
 
 ```bash
 ./get-loong64-pkg <package-name>
+cd <package-name>
 extra-loong64-build -- -- -A
 ```
 
+构建成功后的测试流程与不需要patch的软件包相同，这里不再赘述。
+
 ### patch导出流程
+
+
 
 * **TODO:** 确定结构后的自动化工具
 * **TODO:** 开发者修改后的patch导出流程
