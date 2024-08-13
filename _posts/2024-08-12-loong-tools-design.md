@@ -17,16 +17,16 @@ tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 
 
 Loong Arch Linux是Arch Linux的龙芯移植版本，目前龙芯Linux社区较普遍地认为，为龙芯Linux生态圈维护一个滚动更新的Arch Linux发行版具有重要意义，目前[北京大学Linux俱乐部](https://github.com/lcpu-club)有计划接手维护。
 
-由于社区维护力量较为有限，Loong Arch Linux将会尽可能地实现上游化，来减少维护工作量。
+由于社区维护力量较为有限，Loong Arch Linux将会尽可能地实现**上游化**，来减少维护工作量。
 
 # 预备工作
 
 ## 基本条件
 
-本文默认读者至少已经满足以下**两个条件中的一个**：
+本文默认读者至少已经满足以下**条件中的一个**（建议读者预先大致阅读笔者的另一篇博客[在x86设备上跨架构构建LoongArch的Arch Linux软件包](/2024/08/08/devtools-loong64/)）：
 
 1. 拥有x86_64设备且可以在设备上运行x86_64的Arch Linux操作系统或者容器
-2. 拥有原生的龙芯编译机器
+2. 拥有原生的龙芯编译机器，或者可以运行LoongArch的QEMU System虚拟机
 
 如果对本文中涉及的某些基本概念不熟悉，可以参考[ArchWiki](https://wiki.archlinux.org/)。
 
@@ -60,20 +60,16 @@ paru -S devtools-loong64
 
 # 维护仓库
 
-* **TODO:** 补丁维护仓库结构待议
+* **TODO:** 补丁维护仓库结构仍可能会有变化
 
-我们的补丁维护仓库位于[GitHub lcpu-club/loongarch-packages](https://github.com/lcpu-club/loongarch-packages)下，每个需要额外patch的软件包都有一个对应于包名的目录。
+我们的补丁维护仓库位于[GitHub lcpu-club/loongarch-packages](https://github.com/lcpu-club/loongarch-packages)下，每个需要额外patch的软件包都有一个对应于包名的目录。该目录仅用于存放patch或龙芯特有的配置文件,**不直接存放`PKGBUILD`等直接用于构建的文件**。
 
-* 该目录仅用于存放patch或龙芯特有的配置文件,**不直接存放`PKGBUILD`等直接用于构建的文件**
-* 目录下的`loong.patch`存放的是针对`PKGBUILD`的patch
-* 子目录`patches`存放的是其他patch和龙芯特定的配置文件
-
-除了目录外，对于每个软件包，还记录了元数据，包含3个信息：
-
-* 包名
-* **上游**版本号，即软件包在Arch Linux官方仓库中的**完整**版本号`$pkgver-$pkgrel`，如`1:1.2.3-1`
-* 龙芯移植构建版本号，只能为自然数，如`1`、`2`、`3`等
-  * 可被工具在构建时合并到`PKGBUILD`中的`pkgrel`中，得到如`1:1.2.3-1.1`的版本号
+* `loong.patch`：针对`PKGBUILD`的patch文件
+* `patches`：目录，存放的是其他针对**上游软件**代码的patch组，以及龙芯特定的**配置文件**
+* `spec`：bash配置文件，存放软件包的元数据，**至少**包含以下信息：
+  * `VER`：**上游**版本号，即软件包在Arch Linux官方仓库中的**完整**版本号`$pkgver-$pkgrel`，如`1:1.2.3-1`
+  * `REL`：龙芯移植构建版本号，只能为自然数，如`1`、`2`、`3`等
+    * 可被工具在构建时合并到`PKGBUILD`中的`pkgrel`中，得到如`1:1.2.3-1.1`的版本号
 
 # 工作流程
 
@@ -138,20 +134,22 @@ gpg --detach-sign --use-agent *.pkg.tar.zst
 
 软件包的测试可以使用龙芯物理机、`qemu-system-loongarch64`虚拟机、使用QEMU User Mode Emulation的龙芯容器等方式进行，具体方法不再赘述。
 
-* **TODO:** 软件包手动上传流程待议
+#### TODO: 软件包手动上传流程待议
 
 ## 需要patch的软件包
 
-本项目始终以上游化为目标，因此我们的软件包构建过程中，尽量不对软件包进行patch；对于共性问题，应当视具体情况提交到软件上游或者Arch Linux上游。但是，由于龙芯平台的特殊性，有些软件包可能不可避免地需要patch才能在龙芯平台上正常运行。
+本项目始终以上游化为目标，因此我们的软件包构建过程中，**尽量**不对软件包进行patch；对于共性问题，应当视具体情况提交到软件上游或者Arch Linux上游。但是，由于龙芯平台的特殊性，有些软件包可能不可避免地需要patch才能在龙芯平台上正常运行,而上游可能并不能够及时接收这些修复，此时我们不得不在我们的[补丁维护仓库](https://github.com/lcpu-club/loongarch-packages)中**暂时**维护patch。
 
-### 概述
+### 构建测试流程
 
-需要额外patch的软件包仍然需要从上游拉取Arch Linux官方仓库，然后从我们的补丁维护仓库中获取patch。
+有额外patch的软件包仍然需要从上游拉取Arch Linux官方仓库，然后从我们的补丁维护仓库中获取patch。大致流程如下：
 
-* 首先需要将克隆的上游仓库切换到补丁维护仓库对应的元数据中记录的上游版本号
-* 然后对`PKGBUILD`应用`loong.patch`
-* 将元数据中的龙芯移植构建版本号字段合并到`PKGBUILD`中的`pkgrel`字段中
-* 最后将补丁维护仓库对应目录下的`patches`子目录复制到软件包目录下
+1. 将克隆的上游仓库切换到补丁维护仓库对应的`spec`文件的`VER`变量记录的上游版本号
+2. 对`PKGBUILD`应用`loong.patch`
+3. 将`spec`文件中的龙芯移植构建版本号字段`REL`合并到`PKGBUILD`中的`pkgrel`字段中
+4. 将补丁维护仓库对应目录下的`patches`子目录复制到软件包目录下
+
+
 
 * **TODO:** 确定结构后的自动化工具
 * **TODO:** 开发者修改后的patch导出流程
