@@ -4,7 +4,7 @@ title:      LoongArch的Arch Linux移植工作流程
 subtitle:   Loong Arch Linux软件包开发者维护工具设计
 date:       2024-08-12
 author:     wszqkzqk
-header-img: img/bg-sunrise.webp
+header-img: img/bg-mountain-darken.webp
 catalog:    true
 tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 虚拟化
 ---
