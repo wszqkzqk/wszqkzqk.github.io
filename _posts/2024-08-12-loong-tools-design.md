@@ -64,10 +64,8 @@ paru -S devtools-loong64
 
 我们的补丁维护仓库位于[GitHub lcpu-club/loongarch-packages](https://github.com/lcpu-club/loongarch-packages)下，每个需要额外patch的软件包都有一个对应于包名的目录。该目录仅用于存放patch或龙芯特有的配置文件,**不直接存放`PKGBUILD`等直接用于构建的文件**。
 
-* `loong.patch`：针对`PKGBUILD`的patch文件
-* `patches`：目录，存放的是其他针对**上游软件**代码的patch组，以及龙芯特定的**配置文件**
-* `spec`：bash配置文件，存放软件包的元数据，**至少**包含以下信息：
-  * `VER`：**上游**版本号，即软件包在Arch Linux官方仓库中的**完整**版本号`$pkgver-$pkgrel`，如`1:1.2.3-1`
+* `loong.patch`是针对`PKGBUILD`的patch文件
+* 其他文件则可能是针对软件包的其他patch文件或者特别适用于龙芯的的配置文件
 
 # 工作流程
 
@@ -142,9 +140,8 @@ gpg --detach-sign --use-agent *.pkg.tar.zst
 
 有额外patch的软件包仍然需要从上游拉取Arch Linux官方仓库，然后从我们的补丁维护仓库中获取patch。大致流程如下：
 
-1. 将克隆的上游仓库切换到补丁维护仓库对应的`spec`文件的`VER`变量记录的上游版本号
+1. 将补丁维护仓库对应目录下所有文件复制到软件包目录下
 2. 对`PKGBUILD`应用`loong.patch`
-3. 将补丁维护仓库对应目录下的`patches`子目录复制到软件包目录下
 
 这些过程可以手动使用命令完成，也可以封装一些脚本来实现：
 
@@ -172,35 +169,29 @@ else
   git clone "$PATCH_GIT" "$PATCH_REPO"
 fi
 
-# 检查并读取spec文件
-SPEC_FILE="$PATCH_REPO/$PACKAGE_NAME/spec"
-if [ -f "$SPEC_FILE" ]; then
-  source "$SPEC_FILE"
-else
-  echo "Spec file not found for package $PACKAGE_NAME"
-  exit 1
-fi
-
 # 克隆官方软件包
 echo "Cloning official package repository..."
 pkgctl repo clone --protocol=https --switch "$VER" "$PACKAGE_NAME"
 
+# 复制patch
+PATCH_DIR="$PATCH_REPO/$PACKAGE_NAME"
+if [ -d "$PATCH_DIR" ]; then
+  echo "Copying patch directory..."
+  cp "$PATCH_DIR"/* .
+else
+  echo "No patch of $PACKAGE_NAME found."
+  exit 1
+fi
+
 # 应用补丁
 cd "$PACKAGE_NAME" || exit
-PATCH_FILE="$PATCH_REPO/$PACKAGE_NAME/loong.patch"
+PATCH_FILE="loong.patch"
 if [ -f "$PATCH_FILE" ]; then
   echo "Applying patch $PATCH_FILE..."
   patch -p1 < "$PATCH_FILE"
 else
-  echo "Patch file not found: $PATCH_FILE"
+  echo "No 'loong.patch' found."
   exit 1
-fi
-
-# 复制patch目录
-PATCH_DIR="$PATCH_REPO/$PACKAGE_NAME/patches"
-if [ -d "$PATCH_DIR" ]; then
-  echo "Copying patch directory..."
-  cp -r "$PATCH_DIR" .
 fi
 
 echo "Done."
@@ -218,7 +209,54 @@ extra-loong64-build -- -- -A
 
 ### patch导出流程
 
+patch导出是应用patch流程的逆过程。对于需要patch适配的软件包，开发者在适配完成后，需要将适配的patch导出，并添加到我们的[补丁维护仓库](https://github.com/lcpu-club/loongarch-packages)中。
 
+导出的内容包括针对`PKGBUILD`的patch和软件包的其他patch或特别适用于龙芯的配置文件。除了`loong.patch`外，其他需要用到的patch文件或者其他配置应当注意添加到`PKGBUILD`中的`source`数组中，并且更新好`PKGBUILD`中的哈希值，具体操作可以参考ArchWiki的[PKGBUILD条目](https://wiki.archlinux.org/title/PKGBUILD)。
 
-* **TODO:** 确定结构后的自动化工具
-* **TODO:** 开发者修改后的patch导出流程
+此外其他文件应当尽可能地命名得更具体，以便于其他开发者理解。
+
+如果开发者觉得手动的patch导出流程过于繁琐，可以尝试自己开发脚本来简化这个过程，并且欢迎分享给[北京大学Linux俱乐部](https://github.com/lcpu-club)。如果不想自己开发，可以使用笔者提供的简单脚本：
+
+```bash
+#!/bin/bash
+
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+  echo "Usage: export-loong64-patches [package-path] [destination-directory]"
+  exit 0
+fi
+
+if [[ $# -gt 2 ]]; then
+  echo "Error: Too many arguments."
+  exit 1
+fi
+
+PATCH_DIR="loong64-patches"
+if [[ $# -eq 2 ]]; then
+  cd "$1" || exit
+  PATCH_DIR="$2"
+elif [[ $# -eq 1 ]]; then
+  PATCH_DIR="$1"
+fi
+
+mkdir -p "$PATCH_DIR"
+
+git diff > "$PATCH_DIR/loong.patch"
+
+source=$(awk '/^source=\(/,/\)/' PKGBUILD | sed -e 's/source=(//' -e 's/)//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+
+untracked_files=$(git ls-files --others --exclude-standard)
+
+for file in $source; do
+  if [ -f "$file" ]; then
+    if [ -n "$(grep -F "$file" <<<"$untracked_files")" ]; then
+      cp "$file" "$PATCH_DIR"
+    fi
+  fi
+done
+```
+
+这个脚本可以将软件包的patch导出过程简化为：
+
+```bash
+./export-loong64-patches <package-path> <destination-directory>
+```
