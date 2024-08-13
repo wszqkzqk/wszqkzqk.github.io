@@ -149,7 +149,78 @@ gpg --detach-sign --use-agent *.pkg.tar.zst
 3. 将`spec`文件中的龙芯移植构建版本号字段`REL`合并到`PKGBUILD`中的`pkgrel`字段中
 4. 将补丁维护仓库对应目录下的`patches`子目录复制到软件包目录下
 
+这些过程可以手动使用命令完成，也可以封装一些脚本来实现：
 
+```bash
+#!/bin/bash
+
+PATCH_GIT="https://github.com/lcpu-club/loongarch-packages.git"
+
+# 检查输入参数
+if [ -z "$1" ]; then
+  echo "Usage: get-loong64-pkg <package-name>"
+  exit 1
+fi
+
+PACKAGE_NAME=$1
+PATCH_REPO=${PATCH_REPO:-~/projects/loongarch-packages}
+
+# 检查并克隆或更新PATCH_REPO
+if [ -d "$PATCH_REPO" ]; then
+  echo "Updating existing PATCH_REPO..."
+  git -C "$PATCH_REPO" fetch --all
+else
+  echo "Cloning PATCH_REPO to $PATCH_REPO..."
+  mkdir -p "$(dirname "$PATCH_REPO")"
+  git clone "$PATCH_GIT" "$PATCH_REPO"
+fi
+
+# 检查并读取spec文件
+SPEC_FILE="$PATCH_REPO/$PACKAGE_NAME/spec"
+if [ -f "$SPEC_FILE" ]; then
+  source "$SPEC_FILE"
+else
+  echo "Spec file not found for package $PACKAGE_NAME"
+  exit 1
+fi
+
+# 克隆官方软件包
+echo "Cloning official package repository..."
+pkgctl repo clone --protocol=https --switch "$VER" "$PACKAGE_NAME"
+
+# 应用补丁
+cd "$PACKAGE_NAME" || exit
+PATCH_FILE="$PATCH_REPO/$PACKAGE_NAME/loong.patch"
+if [ -f "$PATCH_FILE" ]; then
+  echo "Applying patch $PATCH_FILE..."
+  patch -p1 < "$PATCH_FILE"
+else
+  echo "Patch file not found: $PATCH_FILE"
+  exit 1
+fi
+
+# 修改PKGBUILD中的pkgrel
+echo "Updating pkgrel in PKGBUILD..."
+sed -i "s/^pkgrel=\([0-9]*\)/pkgrel=\1.${REL}/" PKGBUILD
+
+# 复制patch目录
+PATCH_DIR="$PATCH_REPO/$PACKAGE_NAME/patch"
+if [ -d "$PATCH_DIR" ]; then
+  echo "Copying patch directory..."
+  cp -r "$PATCH_DIR" .
+fi
+
+echo "Done."
+```
+
+这个脚本可以将软件包的测试构建过程简化为：
+
+```bash
+./get-loong64-pkg <package-name>
+extra-loong64-build -- -- -A
+```
+
+### patch导出流程
 
 * **TODO:** 确定结构后的自动化工具
 * **TODO:** 开发者修改后的patch导出流程
