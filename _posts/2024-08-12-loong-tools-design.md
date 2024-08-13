@@ -268,3 +268,6 @@ done
 * [在x86设备上跨架构构建LoongArch的Arch Linux软件包](/2024/08/08/devtools-loong64/)
 * [Arch RISC-V Port Wiki - 我们的工作习惯](https://github.com/felixonmars/archriscv-packages/wiki/%E6%88%91%E4%BB%AC%E7%9A%84%E5%B7%A5%E4%BD%9C%E4%B9%A0%E6%83%AF)
 * [Arch RISC-V Port Wiki - 完全新人指南](https://github.com/felixonmars/archriscv-packages/wiki/%E5%AE%8C%E5%85%A8%E6%96%B0%E4%BA%BA%E6%8C%87%E5%8D%97)
+* [北京大学Linux俱乐部Arch Linux for Loongarch64项目维护网页](https://loongarchlinux.lcpu.dev/)
+* [北京大学Linux俱乐部Arch Linux for Loongarch64项目 - 构建状态列表](https://loongarchlinux.lcpu.dev/status)
+* [原Loong Arch Linux项目](https://github.com/loongarchlinux)
