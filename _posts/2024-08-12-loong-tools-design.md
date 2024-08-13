@@ -145,12 +145,11 @@ gpg --detach-sign --use-agent *.pkg.tar.zst
 
 这些过程可以手动使用命令完成，也可以封装一些脚本来实现：
 
-```bash
+```
 #!/bin/bash
 
 PATCH_GIT="https://github.com/lcpu-club/loongarch-packages.git"
 
-# 检查输入参数
 if [ -z "$1" ]; then
   echo "Usage: get-loong64-pkg <package-name>"
   exit 1
@@ -159,7 +158,6 @@ fi
 PACKAGE_NAME=$1
 PATCH_REPO=${PATCH_REPO:-~/projects/loongarch-packages}
 
-# 检查并克隆或更新PATCH_REPO
 if [ -d "$PATCH_REPO" ]; then
   echo "Updating existing PATCH_REPO..."
   git -C "$PATCH_REPO" fetch --all
@@ -169,11 +167,9 @@ else
   git clone "$PATCH_GIT" "$PATCH_REPO"
 fi
 
-# 克隆官方软件包
 echo "Cloning official package repository..."
 pkgctl repo clone --protocol=https --switch "$VER" "$PACKAGE_NAME"
 
-# 复制patch
 PATCH_DIR="$PATCH_REPO/$PACKAGE_NAME"
 if [ -d "$PATCH_DIR" ]; then
   echo "Copying patch directory..."
@@ -183,7 +179,6 @@ else
   exit 1
 fi
 
-# 应用补丁
 cd "$PACKAGE_NAME" || exit
 PATCH_FILE="loong.patch"
 if [ -f "$PATCH_FILE" ]; then
@@ -217,7 +212,7 @@ patch导出是应用patch流程的逆过程。对于需要patch适配的软件�
 
 如果开发者觉得手动的patch导出流程过于繁琐，可以尝试自己开发脚本来简化这个过程，并且欢迎分享给[北京大学Linux俱乐部](https://github.com/lcpu-club)。如果不想自己开发，可以使用笔者提供的简单脚本：
 
-```bash
+```
 #!/bin/bash
 
 if [[ "$1" == "--help" || "$1" == "-h" ]]; then
@@ -242,11 +237,11 @@ mkdir -p "$PATCH_DIR"
 
 git diff > "$PATCH_DIR/loong.patch"
 
-source=$(awk '/^source=\(/,/\)/' PKGBUILD | sed -e 's/source=(//' -e 's/)//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+sources=$(awk '/^source=\(/,/\)/' PKGBUILD | sed -e 's/source=(//' -e 's/)//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 
 untracked_files=$(git ls-files --others --exclude-standard)
 
-for file in $source; do
+for file in $sources; do
   if [ -f "$file" ]; then
     if [ -n "$(grep -F "$file" <<<"$untracked_files")" ]; then
       cp "$file" "$PATCH_DIR"
