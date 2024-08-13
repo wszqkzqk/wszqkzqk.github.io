@@ -11,7 +11,7 @@ tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 
 
 * 注：在近期，本文内容可能会随着北京大学Linux俱乐部的内部讨论而发生变化
 
-本文将介绍目前笔者规划的LoongArch的Arch Linux移植的**最小**维护架构（**不包括**CI工具）和参与[北京大学Linux俱乐部](https://github.com/lcpu-club)的Arch Linux龙芯移植工作的可能方式。但是目前笔者尚未完成完善的开发者维护工具，欢迎大家帮助开发，写出更加方便、易用、完善的工具。
+本文将介绍目前LoongArch的Arch Linux移植的**最小**维护架构（**不包括**CI工具）和参与[北京大学Linux俱乐部](https://github.com/lcpu-club)的Arch Linux龙芯移植工作的可能方式。
 
 # 前言
 
@@ -62,7 +62,7 @@ paru -S devtools-loong64
 
 * **TODO:** 补丁维护仓库结构仍可能会有变化
 
-我们的补丁维护仓库位于[GitHub lcpu-club/loongarch-packages](https://github.com/lcpu-club/loongarch-packages)下，每个需要额外patch的软件包都有一个对应于包名的目录。该目录仅用于存放patch或龙芯特有的配置文件,**不直接存放`PKGBUILD`等直接用于构建的文件**。
+我们的补丁维护仓库位于[GitHub lcpu-club/loongarch-packages](https://github.com/lcpu-club/loongarch-packages)下，每个需要额外patch的软件包都有一个对应于包名的目录。该目录仅用于存放patch或龙芯特有的配置文件,**不直接存放`PKGBUILD`或上游软件源代码文件**。
 
 * `loong.patch`是针对`PKGBUILD`的patch文件
 * 其他文件则可能是针对软件包的其他patch文件或者特别适用于龙芯的的配置文件
@@ -255,3 +255,16 @@ done
 ```bash
 ./export-loong64-patches <package-path> <destination-directory>
 ```
+
+软件包的patch提交流程与要求详见[补丁维护仓库自述文件](https://github.com/lcpu-club/loongarch-packages)。
+
+### TODO: patch维护示例
+
+# 更多阅读材料
+
+* [ArchWiki](https://wiki.archlinux.org/)
+* [Arch Linux Packaging Standards](https://wiki.archlinux.org/title/Arch_packaging_standards)
+* [Arch RISC-V Port Wiki](https://github.com/felixonmars/archriscv-packages/wiki)
+* [在x86设备上跨架构构建LoongArch的Arch Linux软件包](/2024/08/08/devtools-loong64/)
+* [Arch RISC-V Port Wiki - 我们的工作习惯](https://github.com/felixonmars/archriscv-packages/wiki/%E6%88%91%E4%BB%AC%E7%9A%84%E5%B7%A5%E4%BD%9C%E4%B9%A0%E6%83%AF)
+* [Arch RISC-V Port Wiki - 完全新人指南](https://github.com/felixonmars/archriscv-packages/wiki/%E5%AE%8C%E5%85%A8%E6%96%B0%E4%BA%BA%E6%8C%87%E5%8D%97)
