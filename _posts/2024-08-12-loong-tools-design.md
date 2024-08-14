@@ -64,7 +64,10 @@ paru -S devtools-loong64
 
 我们的补丁维护仓库位于[GitHub lcpu-club/loongarch-packages](https://github.com/lcpu-club/loongarch-packages)下，每个需要额外patch的软件包都有一个对应于包名的目录。该目录仅用于存放patch或龙芯特有的配置文件,**不直接存放`PKGBUILD`或上游软件源代码文件**。
 
-* `loong.patch`是针对`PKGBUILD`的patch文件
+* `loong.patch`是主要针对`PKGBUILD`的patch文件
+  * 也可能包含其他Arch Linux**官方**软件包仓库**git跟踪**的文件
+    * 但是**不能**包括新的补丁文件
+  * 使用`git diff`导出
 * 其他文件则可能是针对软件包的其他patch文件或者特别适用于龙芯的的配置文件
 
 # 工作流程
