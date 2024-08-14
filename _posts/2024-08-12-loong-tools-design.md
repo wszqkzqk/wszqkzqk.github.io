@@ -253,9 +253,11 @@ untracked_files=$(git ls-files --others --exclude-standard)
 
 for file in $sources; do
   if [ -f "$file" ]; then
-    if [ -n "$(grep -F "$file" <<<"$untracked_files")" ]; then
-      cp "$file" "$PATCH_DIR"
-    fi
+    for untracked_file in $untracked_files; do
+      if [ "$file" == "$untracked_file" ]; then
+        cp "$file" "$PATCH_DIR"
+      fi
+    done
   fi
 done
 ```
