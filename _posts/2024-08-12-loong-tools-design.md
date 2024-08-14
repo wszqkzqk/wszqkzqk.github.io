@@ -250,6 +250,16 @@ for file in $sources; do
 done
 ```
 
+这个脚本的逻辑是：
+
+1. 将软件包目录下`git diff`的结果写入`loong.patch`
+   * 对原有仓库git跟踪的内容只能修改`PKGBUILD`，因此`looong.patch`即为`PKGBUILD`的patch
+2. 查找需要复制的其他文件
+   * 需要复制的文件一定在`PKGUILD`的`source`数组中
+   * 需要复制的文件一定在本地存在
+   * 需要复制的文件一定不在Arch Linux官方软件包git仓库的跟踪文件中
+   * 同时满足以上三个条件的文件一定需要复制，为充要条件
+
 这个脚本可以将软件包的patch导出过程简化为：
 
 ```bash
