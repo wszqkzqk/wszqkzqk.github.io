@@ -23,7 +23,7 @@ Loong Arch Linux是Arch Linux的龙芯移植版本，目前龙芯Linux社区较�
 
 ## 基本条件
 
-本文默认读者至少已经满足以下**条件中的一个**（建议读者预先大致阅读笔者的另一篇博客[在x86设备上跨架构构建LoongArch的Arch Linux软件包](/2024/08/08/devtools-loong64/)）：
+本文默认读者至少已经满足以下**条件中的一个**（建议读者预先大致阅读笔者的另一篇博客[在x86设备上跨架构构建LoongArch的Arch Linux软件包](https://wszqkzqk.github.io/2024/08/08/devtools-loong64/)）：
 
 1. 拥有x86_64设备且可以在设备上运行x86_64的Arch Linux操作系统或者容器
 2. 拥有原生的龙芯编译机器，或者可以运行LoongArch的QEMU System虚拟机
@@ -56,7 +56,7 @@ makepkg -si
 paru -S devtools-loong64
 ```
 
-对于在容器中运行x86_64 Arch Linux的用户，还需要参考笔者在另一篇博客中的[`binfmt_misc` FLAGS说明](/2024/08/08/devtools-loong64/#binfmt_misc-flags说明仅针对在容器中运行x86-arch-linux的用户)一节进行设置。其他用户可以忽略。
+对于在容器中运行x86_64 Arch Linux的用户，还需要参考笔者在另一篇博客中的[`binfmt_misc` FLAGS说明](https://wszqkzqk.github.io/2024/08/08/devtools-loong64/#binfmt_misc-flags说明仅针对在容器中运行x86-arch-linux的用户)一节进行设置。其他用户可以忽略。
 
 # 维护仓库
 
@@ -317,7 +317,7 @@ Bootstrap问题相对而言比较特殊，而且就一般的“构建失败优�
 * [ArchWiki](https://wiki.archlinux.org/)
 * [Arch Linux Packaging Standards](https://wiki.archlinux.org/title/Arch_packaging_standards)
 * [Arch RISC-V Port Wiki](https://github.com/felixonmars/archriscv-packages/wiki)
-* [在x86设备上跨架构构建LoongArch的Arch Linux软件包](/2024/08/08/devtools-loong64/)
+* [在x86设备上跨架构构建LoongArch的Arch Linux软件包](https://wszqkzqk.github.io/2024/08/08/devtools-loong64/)
 * [Arch RISC-V Port Wiki - 我们的工作习惯](https://github.com/felixonmars/archriscv-packages/wiki/%E6%88%91%E4%BB%AC%E7%9A%84%E5%B7%A5%E4%BD%9C%E4%B9%A0%E6%83%AF)
 * [Arch RISC-V Port Wiki - 完全新人指南](https://github.com/felixonmars/archriscv-packages/wiki/%E5%AE%8C%E5%85%A8%E6%96%B0%E4%BA%BA%E6%8C%87%E5%8D%97)
 * [北京大学Linux俱乐部Arch Linux for Loongarch64项目维护网页](https://loongarchlinux.lcpu.dev/)

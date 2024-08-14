@@ -190,7 +190,7 @@ sudo chsh -s /bin/zsh
 
 ### 不基于oh-my-zsh的配置
 
-Zsh的配置也可以不依赖于oh-my-zsh而直接进行，具体内容见我的另一篇博客：[在不借助oh-my-zsh的前提下进行Zsh配置](/2022/06/24/在不借助oh-my-zsh的前提下进行Zsh配置)
+Zsh的配置也可以不依赖于oh-my-zsh而直接进行，具体内容见我的另一篇博客：[在不借助oh-my-zsh的前提下进行Zsh配置](https://wszqkzqk.github.io/2022/06/24/在不借助oh-my-zsh的前提下进行Zsh配置)
 
 ## Fcitx5
 

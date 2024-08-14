@@ -17,7 +17,7 @@ Arch Linux主要使用devtools来构建软件包。为了方便拥有x86_64设�
 
 相比于原来的`devtools`龙芯移植，`devtools-loong64`保留了Arch Linux官方原版的`devtools`作为依赖，通过patch的方式增加了部分LoongArch专属的文件，简化了维护的潜在工作量。
 
-在x86_64平台上，`devtools-loong64`还依赖`qemu-user-static`软件包，以便在x86_64平台上使用QEMU用户模式模拟LoongArch的环境。通过在binfmt_misc的注册中额外添加`C`标志，`devtools-loong64`可以在x86_64平台上构建LoongArch的软件包，[并避免了QEMU binfmt下的提权问题](/2024/03/28/qemu-user-binfmt-flag/)。
+在x86_64平台上，`devtools-loong64`还依赖`qemu-user-static`软件包，以便在x86_64平台上使用QEMU用户模式模拟LoongArch的环境。通过在binfmt_misc的注册中额外添加`C`标志，`devtools-loong64`可以在x86_64平台上构建LoongArch的软件包，[并避免了QEMU binfmt下的提权问题](https://wszqkzqk.github.io/2024/03/28/qemu-user-binfmt-flag/)。
 
 # 准备工作
 
@@ -59,7 +59,7 @@ paru -S devtools-loong64
 ### `binfmt_misc` FLAGS说明（仅针对在容器中运行x86 Arch Linux的用户）
 
 * 只要**不是**在容器中运行x86 Arch Linux的用户，`devtools-loong64`完全**开箱即用**，可以**忽略**这一部分，请**继续阅读[测试打包](#测试打包)**一节
-* 更多知识介绍见笔者的另一篇博客：[`binfmt_misc` flags与QEMU用户模式下的跨架构构建环境](/2024/03/28/qemu-user-binfmt-flag/)
+* 更多知识介绍见笔者的另一篇博客：[`binfmt_misc` flags与QEMU用户模式下的跨架构构建环境](https://wszqkzqk.github.io/2024/03/28/qemu-user-binfmt-flag/)
 * 无论如何**宿主**都需要安装**`qemu-user-static`**软件包
 
 笔者打包的`devtools-loong64`软件包在x86平台上使用QEMU用户模式模拟LoongArch的环境，笔者附加了`z-qemu-loong64-static-for-archpkg.conf`这一文件，该文件在`/usr/lib/binfmt.d/`下，特意以`z`开头以便最后注册`qemu-loong64-static`的binfmt_misc规则，附加了`C`标志，以避免QEMU binfmt下的提权问题。

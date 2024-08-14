@@ -13,7 +13,7 @@ tags:       开源软件 GTK Vala
 
 # 前言
 
-本文假设读者已经掌握Vala语言的基本语法。如果对Vala的基本语法仍然不熟悉，推荐首先阅读[Vala语言官方教程](https://wiki.gnome.org/Projects/Vala/Tutorial)；如果在学习Vala语言前有C#、Java、C、C++等其他语言的开发经验，也可以阅读[面向C#程序员的Vala教程](https://wiki.gnome.org/Projects/Vala/ValaForCSharpProgrammers)或者[面向Java程序员的Vala教程](https://wiki.gnome.org/Projects/Vala/ValaForJavaProgrammers)，阅读笔者的[相关介绍性博客](/2022/10/17/探索Vala语言/)对快速了解Vala语言的部分特点也有帮助。
+本文假设读者已经掌握Vala语言的基本语法。如果对Vala的基本语法仍然不熟悉，推荐首先阅读[Vala语言官方教程](https://wiki.gnome.org/Projects/Vala/Tutorial)；如果在学习Vala语言前有C#、Java、C、C++等其他语言的开发经验，也可以阅读[面向C#程序员的Vala教程](https://wiki.gnome.org/Projects/Vala/ValaForCSharpProgrammers)或者[面向Java程序员的Vala教程](https://wiki.gnome.org/Projects/Vala/ValaForJavaProgrammers)，阅读笔者的[相关介绍性博客](https://wszqkzqk.github.io/2022/10/17/探索Vala语言/)对快速了解Vala语言的部分特点也有帮助。
 
 本教程不对开发环境安装作介绍。
 
