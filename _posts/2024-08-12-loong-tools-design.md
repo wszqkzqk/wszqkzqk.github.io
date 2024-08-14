@@ -165,8 +165,9 @@ PACKAGE_NAME=$1
 PATCH_REPO=${PATCH_REPO:-~/projects/loongarch-packages}
 
 if [ -d "$PATCH_REPO" ]; then
-  echo "Updating existing PATCH_REPO..."
+  echo "Updating existing $PATCH_REPO..."
   git -C "$PATCH_REPO" fetch --all
+  git -C "$PATCH_REPO" reset --hard origin/$(git -C "$PATCH_REPO" rev-parse --abbrev-ref HEAD)
 else
   echo "Cloning PATCH_REPO to $PATCH_REPO..."
   mkdir -p "$(dirname "$PATCH_REPO")"
@@ -174,12 +175,12 @@ else
 fi
 
 echo "Cloning official package repository..."
-pkgctl repo clone --protocol=https --switch "$VER" "$PACKAGE_NAME"
+pkgctl repo clone --protocol=https "$PACKAGE_NAME"
 
 PATCH_DIR="$PATCH_REPO/$PACKAGE_NAME"
 if [ -d "$PATCH_DIR" ]; then
-  echo "Copying patch directory..."
-  cp "$PATCH_DIR"/* .
+  echo "Copying patches..."
+  cp "$PATCH_DIR"/* "$PACKAGE_NAME"
 else
   echo "No patch of $PACKAGE_NAME found."
   exit 1
