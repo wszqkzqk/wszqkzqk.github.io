@@ -125,7 +125,10 @@ extra-loong64-build -- -- -A
 如果读者是北京大学Linux俱乐部Arch Linux用户组的成员且在`archlinux-lcpu-keyring`中有签名密钥，可以手动对软件包进行签名：
 
 ```bash
-gpg --detach-sign --use-agent *.pkg.tar.zst
+for file in *.pkg.tar.zst
+do
+  gpg --detach-sign --use-agent "$file"
+done
 ```
 
 软件包的测试可以使用龙芯物理机、`qemu-system-loongarch64`虚拟机、使用QEMU User Mode Emulation的龙芯容器等方式进行，具体方法不再赘述。
