@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      在x86设备上跨架构构建LoongArch的Arch Linux软件包
+title:      在x86设备上跨架构构建龙芯的Arch Linux软件包
 subtitle:   devtools-loong64的应用
 date:       2024-08-08
 author:     wszqkzqk
