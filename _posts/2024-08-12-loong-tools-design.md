@@ -256,6 +256,7 @@ for file in $sources; do
     for untracked_file in $untracked_files; do
       if [ "$file" == "$untracked_file" ]; then
         cp "$file" "$PATCH_DIR"
+        break
       fi
     done
   fi
@@ -322,7 +323,7 @@ extra-loong64-build -- -- -A
 
 Bootstrap问题相对而言比较特殊，而且就一般的“构建失败优先修改代码而非编译参数”的原则来说，这种情况的解决方式可能也并不是那么直观。这可能要求包维护者需要对上游情况有一定的了解，如果遇到问题，可以从上游的issues等内容中找到解决方案。
 
-#### TODO: 龙芯现状妥协：重新指定上游以减少本地维护的patch（`linux`）
+#### TODO
 
 # 更多阅读材料
 
