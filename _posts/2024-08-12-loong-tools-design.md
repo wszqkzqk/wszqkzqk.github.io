@@ -329,3 +329,4 @@ Bootstrap问题相对而言比较特殊，而且就一般的“构建失败优�
 * [北京大学Linux俱乐部Arch Linux for Loongarch64项目维护网页](https://loongarchlinux.lcpu.dev/)
 * [北京大学Linux俱乐部Arch Linux for Loongarch64项目 - 构建状态列表](https://loongarchlinux.lcpu.dev/status)
 * [原Loong Arch Linux项目](https://github.com/loongarchlinux)
+* 可能的补丁参考源：[AOSC Code Tracking Project](https://github.com/AOSC-Tracking)
