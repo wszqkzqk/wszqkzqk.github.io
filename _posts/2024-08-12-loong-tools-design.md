@@ -66,6 +66,9 @@ paru -S devtools-loong64
 
 * `loong.patch`是主要针对`PKGBUILD`的patch文件
   * 也可能包含其他Arch Linux**官方**软件包仓库**git跟踪**的文件
+    * 具体是否可以包含Arch Linux**官方**软件包仓库中**git跟踪**的文件由移植包维护者自行决定
+      * 有的维护者可能要求使用独立的patch并在makepkg中应用
+      * 有的维护者可能允许直接编辑并一并导出到`loong.patch`
     * 但是**不能**包括新的补丁文件
   * 使用`git diff`导出
 * 其他文件则可能是针对软件包的其他patch文件或者特别适用于龙芯的的配置文件
