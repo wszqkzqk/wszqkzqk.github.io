@@ -245,9 +245,10 @@ fi
 
 mkdir -p "$PATCH_DIR"
 
+echo "Exporting: loong.patch..."
 git diff > "$PATCH_DIR/loong.patch"
 
-sources=$(awk '/^source=\(/,/\)/' PKGBUILD | sed -e 's/source=(//' -e 's/)//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+sources=$(. PKGBUILD && echo "${source[@]}")
 
 untracked_files=$(git ls-files --others --exclude-standard)
 
@@ -255,6 +256,7 @@ for file in $sources; do
   if [ -f "$file" ]; then
     for untracked_file in $untracked_files; do
       if [ "$file" == "$untracked_file" ]; then
+        echo "Copying: $file..."
         cp "$file" "$PATCH_DIR"
         break
       fi
