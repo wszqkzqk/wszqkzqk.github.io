@@ -136,7 +136,7 @@ sudo: effective uid is not 0, is /usr/bin/sudo on a file system with the 'nosuid
 
 ## 首次运行
 
-首先，进入软件包的目录，然后进行测试构建：
+首先，进入软件包的目录，然后进行构建：
 
 ```bash
 extra-loong64-build
@@ -144,7 +144,7 @@ extra-loong64-build
 
 首次运行时，程序会在`/var/lib/archbuild/`下创建目录`extra-loong64`，如果是Btrfs文件系统，会在`extra-loong64`下创建一个名为`root`的子卷，用于存放LoongArch Linux的基本chroot环境，在后续每次运行构建时，将会对这一子卷中的环境进行升级同步，并创建一个新的快照子卷进行构建。（其他文件系统则是创建普通目录、复制目录）
 
-此时如果在同步数据库阶段就提示PGP签名错误，可能是因为没有导入PGP密钥，请自行按照上文[PGP签名的导入](#PGP签名的导入)一节进行检查。如果仅有下载的部分软件包提示签名校验失败，可能是网络问题，重试即可。首次运行无论是否失败，均会在`/var/lib/archbuild/extra-loong64`下创建一个名为`root`的子卷，如果创建并没有成功，在重试时会提示该路径并非Arch Linux的chroot环境，此时请手动删除`/var/lib/archbuild/extra-loong64`下的所有子卷以及`/var/lib/archbuild/extra-loong64`目录本身，然后再次运行。
+此时如果在同步数据库阶段就提示PGP签名错误，可能是因为没有导入PGP密钥，请自行按照上文[PGP签名的导入](#PGP签名的导入)一节进行检查。如果仅有下载的部分软件包提示签名校验失败，可能是网络问题，重试即可。首次运行无论是否失败，均会在`/var/lib/archbuild/extra-loong64`下创建一个名为`root`的子卷，如果创建并没有成功，在重试时会提示该路径并非Arch Linux的chroot环境，此时请运行`extra-loong64-build -c`清理环境，或者手动删除`/var/lib/archbuild/extra-loong64`下的所有子卷以及`/var/lib/archbuild/extra-loong64`目录本身，然后再次运行。
 
 当基本的chroot环境创建成功后，后续的构建均无需从头创建环境，应该能够顺利进行。
 
