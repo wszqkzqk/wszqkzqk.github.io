@@ -11,21 +11,67 @@ tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 
 
 # 需要重新构建的软件查找
 
-多数时候，如果遇到上游软件包的soname变更，往往需要重新构建链接到这些库的软件包。
+多数时候，如果遇到上游软件包的soname变更，**必须**要重新构建链接到这些库的软件包。
 
-软件包所包含的`.so`文件可以通过以下命令列出：
-
-```bash
-pkgfile -l <package> | grep -F .so
-```
-
-在得知发生了soname变更的文件之后，可以通过以下命令列出链接到这些库的软件包：
+当开发者使用`devtools`/`devtools-loong`构建软件包时（例如`extra-loong64-build`），会自动运行`checkpkg`来检查soname变化，例如，我们将`llvm`（pkgbase）从`16.0.6-2`升级到`18.1.8-4`，`checkpkg`会输出如下信息：
 
 ```bash
-sogrep <repo-name> <soname>
+......
+==> No soname differences for llvm.
+usr/lib/libLLVM-16.0.6.so                                     | usr/lib/libLLVM-18.so
+usr/lib/libLLVM-16.so                                         <
+                                                              > usr/lib/libLLVM.so.18.1
+usr/lib/libLTO.so.16                                          | usr/lib/libLTO.so.18.1
+usr/lib/libRemarks.so.16                                      | usr/lib/libRemarks.so.18.1
+==> Sonames differ in llvm-libs!
+libLLVM-16.so=libLLVM-16.so-64                                | libLLVM.so=18.1-64
+libLTO.so=16-64                                               | libLTO.so=18.1-64
+libRemarks.so=16-64                                           | libRemarks.so=18.1-64
 ```
 
-注意这里的`<soname>`是文件名而非完整路径。列出的软件包因为链接到了soname发生变更的库，所以需要重新构建。
+* 关注**`==> Sonames differ in <package>!`**之后列出的内容！
+
+其中给出了发生soname变化的软件包名`llvm-libs`，以及变化的soname：`libLLVM.so`、`libLTO.so`、`libRemarks.so`。
+
+我们可以在获得了变化的soname后，通过`sogrep`来查找链接到这些库的软件包：
+
+* Bash/Zsh
+
+```bash
+for lib in libLLVM.so libLTO.so libRemarks.so
+do
+    sogrep -r all $lib
+done | sort | uniq
+```
+
+* Fish
+
+```fish
+for lib in libLLVM.so libLTO.so libRemarks.so
+    sogrep -r all $lib
+end | sort | uniq
+```
+
+这样我们就可以找到需要重新构建的软件包列表。
+
+考虑到一般情况下，同一软件的多个`.so`文件的soname变化是同时发生的，我们有时候也可以通过对软件包查找来获取所有需要重新构建的软件包：
+
+* Bash/Zsh
+
+```bash
+for lib in $(find-libprovides <path-to-your-pkg> | sed 's/=.*//g')
+do
+    sogrep -r all $lib
+done | sort | uniq
+```
+
+* Fish
+
+```fish
+for lib in $(find-libprovides <path-to-your-pkg> | sed 's/=.*//g')
+    sogrep -r all $lib
+end | sort | uniq
+```
 
 # 一般的Bootstrap方法
 
@@ -33,7 +79,7 @@ sogrep <repo-name> <soname>
 
 ```bash
 cd <package>
-extra-testing-loong64-build -- -I
+extra-testing-loong64-build -- -I <package1> -I <package2> ...
 ```
 
 # TODO
