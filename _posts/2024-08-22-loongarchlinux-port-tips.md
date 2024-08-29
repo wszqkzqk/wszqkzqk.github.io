@@ -9,7 +9,9 @@ catalog:    true
 tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 虚拟化
 ---
 
-# 需要重新构建的软件查找
+# 需要重新构建的软件
+
+## soname变更
 
 多数时候，如果遇到上游软件包的soname变更，**必须**要重新构建链接到这些库的软件包。
 
@@ -71,6 +73,14 @@ done | sort | uniq
 for lib in $(find-libprovides <path-to-your-pkg> | sed 's/=.*//g')
     sogrep -r all $lib
 end | sort | uniq
+```
+
+## 构建顺序
+
+获得了需要重新构建的软件包列表后，我们需要按照依赖关系的顺序来构建这些软件包。目前，肥猫的[`genrebuild`脚本](https://github.com/felixonmars/archlinux-futils/blob/master/genrebuild)可以帮助我们生成构建顺序。
+
+```bash
+genrebuild <package1> <package2> ...
 ```
 
 # 一般的Bootstrap方法
