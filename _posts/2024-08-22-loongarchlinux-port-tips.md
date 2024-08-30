@@ -235,6 +235,21 @@ sudo mount -t 9p host0 <mount-point>
     sudo systemd-nspawn -aD <mount-point> --bind <path-to-your-sharing-directory>:<mount-point>
     ```
 
+修复完成后，卸载分区和nbd设备：
+
+```bash
+sudo umount <mount-point>
+# 或者，如果用的是udisksctl
+udisksctl unmount -b /dev/nbd0p2
+```
+
+```bash
+sudo qemu-nbd --disconnect /dev/nbd0
+sudo rmmod nbd
+```
+
+然后即可重新启动QEMU System虚拟机进行测试。
+
 # TODO
 
 # 更多阅读材料
