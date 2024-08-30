@@ -94,7 +94,7 @@ extra-testing-loong64-build -- -I <package1> -I <package2> ...
 
 # 软件包的手动上传
 
-在打包完成后，如果具有上传权限，开发者可以将软件包上传。一般来说，没有处理好依赖或者没有重新构建完所有需要重新构建的软件包时只能上传到`extra-staging`或者`core-staging`。（一般能够使用本文介绍的[Bootstrap方法](#一般的Bootstrap方法)来解决问题时不用上传到`staging`）当软件包没有依赖和重构建问题时，可以上传到`extra-testing`或者`core-testing`。如果软件包很简单稳定，完全不需要测试，才可以上传到`extra`或者`core`。
+在打包完成后，如果具有上传权限，开发者可以将软件包上传。一般来说，没有处理好依赖或者没有重新构建完所有需要重新构建的软件包时**只能**上传到`extra-staging`或者`core-staging`。（一般能够使用本文介绍的[**Bootstrap方法**](#一般的Bootstrap方法)来解决问题时**不用上传**到`staging`）当软件包没有依赖和重构建问题时，可以上传到`extra-testing`或者`core-testing`。如果软件包很简单稳定，完全不需要测试，才可以上传到`extra`或者`core`。
 
 需要注意的是，如果软件包存在需要一并上传的依赖或者需要重新构建的软件包，应当**一并上传，不要遗漏**。
 
@@ -110,8 +110,10 @@ if [[ $# -lt 2 ]]; then
     exit 1
 fi
 
-TIER0SERVER="" # Fill it with your username@hostname
-PORT="" # Fill it with your ssh port
+# Set the server information "username@hostname"
+TIER0SERVER=""
+# Set the port of the server
+PORT=""
 _remote_path=/srv/http/loongarch/archlinux/
 
 REPO=$1
