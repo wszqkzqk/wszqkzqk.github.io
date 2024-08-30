@@ -92,4 +92,82 @@ cd <package>
 extra-testing-loong64-build -- -I <package1> -I <package2> ...
 ```
 
+# 软件包的手动上传
+
+在打包完成后，如果具有上传权限，开发者可以将软件包上传。一般来说，没有处理好依赖或者没有重新构建完所有需要重新构建的软件包时只能上传到`extra-staging`或者`core-staging`。（一般能够使用本文介绍的[Bootstrap方法](#一般的Bootstrap方法)来解决问题时不用上传到`staging`）当软件包没有依赖和重构建问题时，可以上传到`extra-testing`或者`core-testing`。如果软件包很简单稳定，完全不需要测试，才可以上传到`extra`或者`core`。
+
+需要注意的是，如果软件包存在需要一并上传的依赖或者需要重新构建的软件包，应当**一并上传，不要遗漏**。
+
+上传可以使用一些脚本来简化，例如：
+
+```bash
+#!/bin/bash
+
+if [[ $# -lt 2 ]]; then
+    echo "Usage: ${0##*/} <repo-name> <pkg-file> [option]"
+    echo "Option:"
+    echo "  --sign Sign the database file."
+    exit 1
+fi
+
+TIER0SERVER="" # Fill it with your username@hostname
+PORT="" # Fill it with your ssh port
+_remote_path=/srv/http/loongarch/archlinux/
+
+REPO=$1
+PKG_PATH=$2
+PKG=$(basename $2)
+shift
+shift
+
+# get pkgname and version infor from $PKG
+TEMP=${PKG%-*}
+REL=${TEMP##*-}
+TEMP2=${TEMP%-*}
+VER=${TEMP2##*-}
+NAME=${TEMP2%-*}
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --sign)
+            SIGN=-s
+            shift
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+if [[ ! -e $PKG_PATH.sig ]]; then
+    gpg --detach-sign --use-agent $PKG_PATH
+    if [[ ! -e $PKG_PATH.sig ]]; then
+        echo "$PKG_PATH.sig not found! Exiting..."
+        exit 1
+    fi
+fi
+
+rsync -e "ssh -p ${PORT}" -p '--chmod=ug=rw,o=r' -c -h -L --progress --partial -y $PKG_PATH{,.sig} $TIER0SERVER:$_remote_path/$REPO/os/loong64/
+ssh -tt $TIER0SERVER -p $PORT "cd $_remote_path/$REPO/os/loong64/; flock /tmp/loong-repo-$REPO.lck repo-add $SIGN -R $REPO.db.tar.gz $PKG; curl -X POST http://127.0.0.1/op/uploong/$NAME --data-urlencode 'ver=$VER-$REL'"
+```
+
+然后对脚本进行修改，填入服务器信息，就可以使用这个脚本来上传软件包了：
+
+* Bash/Zsh
+
+```bash
+for pkg in <pkg1> <pkg2> ...
+do
+    loong-repo-add <repo> $pkg
+done
+```
+
+* Fish
+
+```fish
+for pkg in <pkg1> <pkg2> ...
+    loong-repo-add <repo> $pkg
+end
+```
+
 # TODO
