@@ -171,3 +171,13 @@ end
 ```
 
 # TODO
+
+# 更多阅读材料
+
+* [龙芯的Arch Linux移植工作流程 by wszqkzqk](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)
+* [ArchWiki](https://wiki.archlinux.org/)
+* [Arch Linux Packaging Standards](https://wiki.archlinux.org/title/Arch_packaging_standards)
+* [Arch RISC-V Port Wiki](https://github.com/felixonmars/archriscv-packages/wiki)
+* [在x86设备上跨架构构建LoongArch的Arch Linux软件包](https://wszqkzqk.github.io/2024/08/08/devtools-loong64/)
+* [Arch RISC-V Port Wiki - 我们的工作习惯](https://github.com/felixonmars/archriscv-packages/wiki/%E6%88%91%E4%BB%AC%E7%9A%84%E5%B7%A5%E4%BD%9C%E4%B9%A0%E6%83%AF)
+* [Arch RISC-V Port Wiki - 完全新人指南](https://github.com/felixonmars/archriscv-packages/wiki/%E5%AE%8C%E5%85%A8%E6%96%B0%E4%BA%BA%E6%8C%87%E5%8D%97)

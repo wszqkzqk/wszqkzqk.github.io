@@ -327,7 +327,9 @@ extra-loong64-build -- -- -A
 
 Bootstrap问题相对而言比较特殊，而且就一般的“构建失败优先修改代码而非编译参数”的原则来说，这种情况的解决方式可能也并不是那么直观。这可能要求包维护者需要对上游情况有一定的了解，如果遇到问题，可以从上游的issues等内容中找到解决方案。
 
-#### TODO
+# 软件包的手动上传
+
+参见[龙芯Arch Linux移植技巧 #软件包的手动上传](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/#软件包的手动上传)一节
 
 # 更多阅读材料
 
@@ -341,3 +343,4 @@ Bootstrap问题相对而言比较特殊，而且就一般的“构建失败优�
 * [北京大学Linux俱乐部Arch Linux for Loongarch64项目 - 构建状态列表](https://loongarchlinux.lcpu.dev/status)
 * [原Loong Arch Linux项目](https://github.com/loongarchlinux)
 * 可能的补丁参考源：[AOSC Code Tracking Project](https://github.com/AOSC-Tracking)
+* [龙芯Arch Linux移植技巧 by wszqkzqk](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)
