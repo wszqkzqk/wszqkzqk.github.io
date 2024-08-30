@@ -245,6 +245,8 @@ sudo rmmod nbd
 
 然后即可重新启动QEMU System虚拟机进行测试。
 
+* 需要注意的是，如果虚拟机的`/etc/mkinitcpio.conf`中的`HOOKS`中包含`autodetect`，则默认镜像如果在与虚拟机硬件环境不同的宿主机下生成，可能会导致缺少必要的模块而无法启动。这时候可以先使用`linux-*fallback`镜像启动虚拟机，然后在虚拟机中重新生成镜像。
+
 # TODO
 
 # 更多阅读材料
