@@ -183,7 +183,7 @@ qemu-system-loongarch64 \
     -m 6G \
     -cpu la464-loongarch-cpu \
     -machine virt \
-    -smp 8 \
+    -smp 16 \
     -bios ./QEMU_EFI_9.0.fd \
     -serial stdio \
     -device virtio-gpu-pci \
@@ -198,7 +198,7 @@ qemu-system-loongarch64 \
 其中：
 
 * `-m 6G`：分配6 GB内存
-* `-smp 8`：使用8个CPU核心
+* `-smp 16`：使用16个CPU核心
 * `-bios ./QEMU_EFI_9.0.fd`：指定QEMU使用的EFI固件
 * `-hda <path-to-your-image>`：指定虚拟机使用的qcow2镜像
 * `-virtfs local,path=<path-to-your-sharing-directory>,mount_tag=host0,security_model=passthrough,id=host0`：将宿主机的目录目录共享给虚拟机
@@ -225,10 +225,7 @@ sudo mount -t 9p host0 <mount-point>
         ```
     * 挂载分区：
         ```bash
-        # 直接使用mount命令挂载
         sudo mount /dev/nbd0p2 <mount-point>
-        # 或者使用udisksctl挂载
-        udisksctl mount -b /dev/nbd0p2
         ```
 * 然后可以在挂载的目录下进行修复，例如：
     ```bash
@@ -239,8 +236,6 @@ sudo mount -t 9p host0 <mount-point>
 
 ```bash
 sudo umount <mount-point>
-# 或者，如果用的是udisksctl
-udisksctl unmount -b /dev/nbd0p2
 ```
 
 ```bash
