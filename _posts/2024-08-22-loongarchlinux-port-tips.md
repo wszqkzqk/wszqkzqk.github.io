@@ -172,6 +172,69 @@ for pkg in <pkg1> <pkg2> ...
 end
 ```
 
+# 使用QEMU System测试
+
+QEMU User模式下的容器没有自己的内核，显然无法用于内核测试。因此，我们需要在龙芯实体机或者QEMU System模式下进行内核测试。在实体机下的测试相对比较好理解，这里主要介绍QEMU System模式下的内核测试。
+
+在获取或者自己构建了Loong Arch Linux的qcow2镜像后，我们可以使用`qemu-system-loongarch64`来启动虚拟机，例如：
+
+```bash
+qemu-system-loongarch64 \
+    -m 6G \
+    -cpu la464-loongarch-cpu \
+    -machine virt \
+    -smp 8 \
+    -bios ./QEMU_EFI_9.0.fd \
+    -serial stdio \
+    -device virtio-gpu-pci \
+    -net nic -net user \
+    -device nec-usb-xhci,id=xhci,addr=0x1b \
+    -device usb-tablet,id=tablet,bus=xhci.0,port=1 \
+    -device usb-kbd,id=keyboard,bus=xhci.0,port=2 \
+    -hda <path-to-your-image> \
+    -virtfs local,path=<path-to-your-sharing-directory>,mount_tag=host0,security_model=passthrough,id=host0
+```
+
+其中：
+
+* `-m 6G`：分配6 GB内存
+* `-smp 8`：使用8个CPU核心
+* `-bios ./QEMU_EFI_9.0.fd`：指定QEMU使用的EFI固件
+* `-hda <path-to-your-image>`：指定虚拟机使用的qcow2镜像
+* `-virtfs local,path=<path-to-your-sharing-directory>,mount_tag=host0,security_model=passthrough,id=host0`：将宿主机的目录目录共享给虚拟机
+
+对于需要传递给虚拟机的软件包，可以复制或者`bind mount`到共享目录下，供虚拟机使用。
+
+在虚拟机中，可以使用以下命令挂载共享目录：
+
+```bash
+sudo mount -t 9p host0 <mount-point>
+```
+
+然后即可访问共享目录中的内容，可以使用`pacman -U`来安装软件包。
+
+## 修复无法启动的QEMU System虚拟机
+
+如果内核存在问题，可能会使得QEMU System虚拟机无法启动，这时候可以通过以下方法来修复：
+
+* 在宿主机中挂载qcow2镜像：
+    * 加载nbd模块，挂载qcow2镜像：
+        ```bash
+        sudo modprobe nbd max_part=8
+        sudo qemu-nbd --connect=/dev/nbd0 <path-to-your-image>
+        ```
+    * 挂载分区：
+        ```bash
+        # 直接使用mount命令挂载
+        sudo mount /dev/nbd0p2 <mount-point>
+        # 或者使用udisksctl挂载
+        udisksctl mount -b /dev/nbd0p2
+        ```
+* 然后可以在挂载的目录下进行修复，例如：
+    ```bash
+    sudo systemd-nspawn -aD <mount-point> --bind <path-to-your-sharing-directory>:<mount-point>
+    ```
+
 # TODO
 
 # 更多阅读材料
