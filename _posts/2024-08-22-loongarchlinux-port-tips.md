@@ -76,6 +76,8 @@ for lib in $(find-libprovides <path-to-your-pkg> | sed 's/=.*//g')
 end | sort | uniq
 ```
 
+* 有时候**脚本会出错**，不要迷信其给出的结果，可能会包含很多不必要的重构
+
 ## 构建顺序
 
 获得了需要重新构建的软件包列表后，我们需要按照依赖关系的顺序来构建这些软件包。目前，肥猫的[`genrebuild`脚本](https://github.com/felixonmars/archlinux-futils/blob/master/genrebuild)可以帮助我们生成构建顺序。
