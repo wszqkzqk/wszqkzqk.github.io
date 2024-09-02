@@ -152,6 +152,10 @@ done
 有额外patch的软件包仍然需要从上游拉取Arch Linux官方仓库，然后从我们的补丁维护仓库中获取patch。大致流程如下：
 
 1. 将补丁维护仓库对应目录下所有文件复制到软件包目录下
+   * 特殊情况1：如果没有对应的补丁，但软件包名在`update_config`文件中，需要对`PKGBUILD`进行修改
+     * 需要对`config.sub`和`config.guess`进行更新
+   * 特殊情况2：如果软件包使用`cargo fetch`，需要将`$CARCH`替换为`uname -m`，并且将
+     * 硬编码的`x86_64`也要替换为`uname -m`
 2. 对`PKGBUILD`应用`loong.patch`
 
 这些过程可以手动使用命令完成，也可以封装一些脚本来实现：
@@ -186,22 +190,31 @@ PATCH_DIR="$PATCH_REPO/$PACKAGE_NAME"
 if [ -d "$PATCH_DIR" ]; then
   echo "Copying patches..."
   cp "$PATCH_DIR"/* "$PACKAGE_NAME"
+  cd "$PACKAGE_NAME"
+  PATCH_FILE="loong.patch"
+  if [ -f "$PATCH_FILE" ]; then
+    echo "Applying patch $PATCH_FILE..."
+    patch -p1 < "$PATCH_FILE"
+  else
+    echo "No 'loong.patch' found."
+    exit 1
+  fi
+
+  echo "Done."
 else
   echo "No patch of $PACKAGE_NAME found."
+  if grep -Fxq "$PACKAGE_NAME" "$PATCH_REPO/update_config"; then
+    sed -i '/^build()/,/configure/ {/^[[:space:]]*cd[[:space:]]\+/ { s/$/\n  for c_s in $(find -type f -name config.sub -o -name configure.sub); do cp -f \/usr\/share\/automake-1.1?\/config.sub "$c_s"; done\n  for c_g in $(find -type f -name config.guess -o -name configure.guess); do cp -f \/usr\/share\/automake-1.1?\/config.guess "$c_g"; done/; t;};}' "$PACKAGE_NAME/PKGBUILD"
+    echo "Added config.sub and config.guess update to PKGBUILD."
+  fi
+
+  if grep -Eq 'cargo fetch.*(x86_64|\$CARCH)' "$PACKAGE_NAME/PKGBUILD"; then
+    sed -i '/cargo fetch/s/\$CARCH/`uname -m`/' PKGBUILD
+    sed -i '/cargo fetch/s/\x86_64/`uname -m`/' PKGBUILD
+    echo "Automatically changed 'cargo fetch' to use `uname -m`."
+  fi
   exit 1
 fi
-
-cd "$PACKAGE_NAME" || exit
-PATCH_FILE="loong.patch"
-if [ -f "$PATCH_FILE" ]; then
-  echo "Applying patch $PATCH_FILE..."
-  patch -p1 < "$PATCH_FILE"
-else
-  echo "No 'loong.patch' found."
-  exit 1
-fi
-
-echo "Done."
 ```
 
 这个脚本可以将软件包的测试构建过程简化为：
@@ -284,6 +297,9 @@ done
 ```
 
 软件包的patch提交流程与要求详见[补丁维护仓库自述文件](https://github.com/lcpu-club/loongarch-packages)。
+
+注意：
+* 如果patch文件**仅包含**对`config.sub`和`config.guess`的更新，不需要额外维护`loong.patch`，而是将包名添加到`update_config`文件中
 
 ### patch维护建议及示例
 
