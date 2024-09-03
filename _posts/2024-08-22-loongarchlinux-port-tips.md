@@ -278,6 +278,27 @@ sudo rmmod nbd
 COMMENT_SEPARATOR
 ```
 
+# Patch的获取
+
+不一定所有需要Patch的软件包都需要自己手动编写Patch，有时候可以从其他地方获取Patch，例如：
+
+* 其他支持loongarch发行版
+  * [Gentoo/Loongson Support Overlay](https://github.com/xen0n/loongson-overlay)
+  * [ABBS/ACBS tree for AOSC OS package metadata, build configuration, scripts, and patches](https://github.com/AOSC-Dev/aosc-os-abbs)
+  * [AOSC Code Tracking Project](https://github.com/AOSC-Tracking)
+  * [原Loong Arch Linux项目](https://github.com/loongarchlinux)
+* 上游软件包
+  * 如果上游已经修复但是没有发布，可以从上游的Git仓库中获取Patch
+
+此外，其他Arch Linux移植项目的Patch也可以参考，例如：
+
+* [Modified Arch Linux packages for archriscv ](https://github.com/felixonmars/archriscv-packages)
+  * 其中不针对于RISC-V架构的Patch可能可以直接参考使用，例如：
+    * 禁用了仅适用于x86的功能
+    * 禁用了仅x86下存在的依赖
+    * 禁用了仅x86下存在的编译选项
+  * 对于RISC-V架构的Patch，可以参考其Patch的内容，参照维护自己的Patch
+
 # TODO
 
 # 更多阅读材料
