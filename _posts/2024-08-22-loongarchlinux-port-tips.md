@@ -260,6 +260,24 @@ sudo rmmod nbd
 
 如果软件包的修复补丁**仅包含**`config.guess`和`config.sub`的更新，**不要**在[Patch仓库](https://github.com/lcpu-club/loongarch-packages)中单独维护其补丁，而是在仓库的[`update_conifg`文件](https://github.com/lcpu-club/loongarch-packages/blob/master/update_config)中添加对应的软件包名。
 
+# Patch维护技巧：对需要大段删除的内容
+
+有时候，由于某个功能整体不支持loong64，需要删除`PKGBUILD`中的大段代码；然而，如果这些被删除的代码在Arch Linux官方的维护中存在频繁更改，那么在以后应用`loong.patch`时就很可能会出现冲突。
+
+为了避免这样的情况，我们可以将直接删除改为写成多行注释，例如，如果我们想要删除掉opencv的PKGBUILD中的`package_opencv-cuda()`函数，我们可以在其前面插入`: <<'COMMENT_SEPARATOR'`，在其后面插入`COMMENT_SEPARATOR`，这样就可以在一定程度上避免上游对这个函数的修改导致的冲突。
+
+```bash
+  # Use a "multi-line comment" to keep patch from rotting
+  : <<'COMMENT_SEPARATOR'
+  CFLAGS="${CFLAGS} -fno-lto" CXXFLAGS="${CXXFLAGS} -fno-lto" LDFLAGS="${LDFLAGS} -fno-lto" \
+  cmake -B build-cuda -S $pkgname $_opts \
+      -DBUILD_WITH_DEBUG_INFO=OFF \
+      -DCUDA_ARCH_BIN='52-real;53-real;60-real;61-real;62-real;70-real;72-real;75-real;80-real;86-real;87-real;89-real;90-real;90-virtual' \
+      -DCUDA_ARCH_PTX='90-virtual'
+  cmake --build build-cuda
+COMMENT_SEPARATOR
+```
+
 # TODO
 
 # 更多阅读材料
