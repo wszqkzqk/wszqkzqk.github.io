@@ -266,7 +266,7 @@ sudo rmmod nbd
 
 为了避免这样的情况，我们可以将直接删除改为写成多行注释，例如，如果我们想要删除掉opencv的PKGBUILD中的`package_opencv-cuda()`函数，我们可以在其前面插入`: <<'COMMENT_SEPARATOR'`，在其后面插入`COMMENT_SEPARATOR`，这样就可以在一定程度上避免上游对这个函数的修改导致的冲突。
 
-```bash
+```PKGBUILD
   # Use a "multi-line comment" to keep patch from rotting
   : <<'COMMENT_SEPARATOR'
   CFLAGS="${CFLAGS} -fno-lto" CXXFLAGS="${CXXFLAGS} -fno-lto" LDFLAGS="${LDFLAGS} -fno-lto" \
