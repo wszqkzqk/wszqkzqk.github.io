@@ -260,7 +260,7 @@ sudo rmmod nbd
 
 如果软件包的修复补丁**仅包含**`config.guess`和`config.sub`的更新，**不要**在[Patch仓库](https://github.com/lcpu-club/loongarch-packages)中单独维护其补丁，而是在仓库的[`update_conifg`文件](https://github.com/lcpu-club/loongarch-packages/blob/master/update_config)中添加对应的软件包名。
 
-# Patch维护技巧：对需要大段删除的内容
+# Patch维护技巧：避免冲突
 
 有时候，由于某个功能整体不支持loong64，需要删除`PKGBUILD`中的大段代码；然而，如果这些被删除的代码在Arch Linux官方的维护中存在频繁更改，那么在以后应用`loong.patch`时就很可能会出现冲突。
 
@@ -276,6 +276,15 @@ sudo rmmod nbd
       -DCUDA_ARCH_PTX='90-virtual'
   cmake --build build-cuda
 COMMENT_SEPARATOR
+```
+
+此外，由于“主要矛盾”不同，语句插入的原则也发生了变化。比如，一般按照字母顺序来插入新的依赖或者新的选项，但是在这种情况下，我们可以将新的依赖或者新的选项插入到**上下文最不容易被上游修改的地方**，这样可以减少冲突的发生。
+
+由于`PKGBUILD`本质上是一个bash文件，对于新加入的`source`和哈希值等数组的内容，如果要最大程度地避免上游修改带来的冲突，我们可以使用`+=`来添加新的元素，而不是直接修改数组的内容。
+
+```PKGBUILD
+source+=(...)
+sha256sums+=(...)
 ```
 
 # Patch的获取
