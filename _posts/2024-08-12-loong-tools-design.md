@@ -154,11 +154,28 @@ done
 有额外patch的软件包仍然需要从上游拉取Arch Linux官方仓库，然后从我们的补丁维护仓库中获取patch。大致流程如下：
 
 1. 将补丁维护仓库对应目录下所有文件复制到软件包目录下
-   * 特殊情况1：如果没有对应的补丁，但软件包名在`update_config`文件中，需要对`PKGBUILD`进行修改
-     * 需要对`config.sub`和`config.guess`进行更新
-   * 特殊情况2：如果没有对应的补丁，但软件包使用`cargo fetch`，需要将`$CARCH`替换为`uname -m`，并且将
-     * 硬编码的`x86_64`也要替换为`uname -m`
 2. 对`PKGBUILD`应用`loong.patch`
+
+<details>
+<summary> 特殊情况 </summary>
+
+部分软件包由于补丁内容非常一致、简单，而且有大量的软件包系统性地需要这些补丁，在这种时候，我们为了简洁与维护方便，并没有创建这些软件包的补丁维护目录。目前的这样特殊情况主要分为两种：
+
+* 特殊情况1：`config.sub`和`config.guess`
+  * 开发不活跃的软件`config.sub`和`config.guess`过旧，需要更新才能在龙芯平台上正常构建
+  * **仅**需要更新`config.sub`和`config.guess`而**不用其他任何修改**就能成功构建
+* 特殊情况2：使用`cargo fetch`的软件包的架构指定问题
+  * `cargo fetch`在`PKGBUILD`中使用了硬编码的`x86_64`，需要替换为`uname -m`（`loongarch64`）
+  * `cargo fetch`在`PKGBUILD`中使用了`$CARCH`（在本发行版是`loong64`），需要替换为`uname -m`（`loongarch64`）
+
+因此对这两种特殊情况：
+
+* 特殊情况1：如果没有对应的补丁，但软件包名在`update_config`文件中，需要对`PKGBUILD`进行修改
+ * 需要对`config.sub`和`config.guess`进行更新
+* 特殊情况2：如果没有对应的补丁，但软件包使用`cargo fetch`，需要将`$CARCH`替换为`uname -m`，并且将
+ * 硬编码的`x86_64`也要替换为`uname -m`
+
+</details>
 
 这些过程可以手动使用命令完成，也可以封装一些脚本来实现：
 
