@@ -285,7 +285,7 @@ done
 这个脚本的逻辑是：
 
 1. 将软件包目录下`git diff`的结果写入`loong.patch`
-   * 对原有仓库git跟踪的内容只能修改`PKGBUILD`，因此`looong.patch`即为`PKGBUILD`的patch
+   * 对原有仓库git跟踪的内容只能修改`PKGBUILD`，因此`loong.patch`即为`PKGBUILD`的patch
 2. 查找需要复制的其他文件
    * 需要复制的文件一定在`PKGUILD`的`source`数组中
    * 需要复制的文件一定在本地存在
