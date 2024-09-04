@@ -71,7 +71,7 @@ paru -S devtools-loong64
   * 使用`git diff`导出
 * 其他文件则可能是针对软件包的其他patch文件或者特别适用于龙芯的的配置文件
 
-此外，仓库下还有`update_config`文件，用于存放需要更新`config.guess`和`config.sub`且不需要其他patch的软件包名。
+此外，仓库下还有`update_config`文件，用于存放需要更新`config.guess`和`config.sub`且不需要其他patch的软件包名。详见[后文](#特殊情况)。
 
 # 工作流程
 
@@ -168,9 +168,9 @@ done
 因此对这两种特殊情况：
 
 * 特殊情况1：如果没有对应的补丁，但软件包名在`update_config`文件中，需要对`PKGBUILD`进行修改
- * 需要对`config.sub`和`config.guess`进行更新
+  * 需要对`config.sub`和`config.guess`进行更新
 * 特殊情况2：如果没有对应的补丁，但软件包使用`cargo fetch`，需要将`$CARCH`替换为`uname -m`，并且将
- * 硬编码的`x86_64`也要替换为`uname -m`
+  * 硬编码的`x86_64`也要替换为`uname -m`
 
 这些过程可以手动使用命令完成，也可以封装一些脚本来实现：
 
