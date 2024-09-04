@@ -76,7 +76,7 @@ for lib in $(find-libprovides <path-to-your-pkg> | sed 's/=.*//g')
 end | sort | uniq
 ```
 
-* 有时候**脚本会出错**，不要迷信其给出的结果，可能会包含很多不必要的重构
+* `find-libprovides`给出的是软件包提供的**所有**soname，包含了没有变化的soname，可能会包含很多不必要的重构
 * 很多时候还是需要手动找出需要重构的软件包：
   * 手动找到发生soname变化的`.so`文件
   * 使用`sogrep`找到链接到这些`.so`文件的软件包
