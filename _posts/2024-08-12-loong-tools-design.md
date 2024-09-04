@@ -9,8 +9,6 @@ catalog:    true
 tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 虚拟化
 ---
 
-* 注：在近期，本文内容可能会随着北京大学Linux俱乐部的内部讨论而发生变化
-
 本文将介绍目前LoongArch的Arch Linux移植的**最小**维护架构（**不包括**CI工具）和参与[北京大学Linux俱乐部](https://github.com/lcpu-club)的Arch Linux龙芯移植工作的可能方式。
 
 # 前言
@@ -60,7 +58,7 @@ paru -S devtools-loong64
 
 # 维护仓库
 
-* **TODO:** 补丁维护仓库结构仍可能会有变化
+* **TODO:** 补丁维护仓库结构仍可能会有微调
 
 我们的补丁维护仓库位于[GitHub lcpu-club/loongarch-packages](https://github.com/lcpu-club/loongarch-packages)下，每个需要额外patch的软件包都有一个对应于包名的目录。该目录仅用于存放patch或龙芯特有的配置文件,**不直接存放`PKGBUILD`或上游软件源代码文件**。
 
@@ -142,8 +140,6 @@ done
 ```
 
 软件包的测试可以使用龙芯物理机、`qemu-system-loongarch64`虚拟机、使用QEMU User Mode Emulation的龙芯容器等方式进行，具体方法不再赘述。
-
-#### TODO: 软件包手动上传流程待议
 
 ## 需要patch的软件包
 
