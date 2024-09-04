@@ -27,9 +27,9 @@ Arch Linux主要使用devtools来构建软件包。为了方便拥有x86_64设�
 
 ## PGP Key的导入
 
-由于目前的LoongArchLinux移植主要由龙芯的武老师维护，签名所用的PGP密钥并不在Arch Linux的`archlinux-keyring`密钥环中，因此需要导入签名密钥。可以直接安装[`archlinux-lcpu-keyring`](https://github.com/lcpu-club/archlinux-lcpu-keyring)。
+由于目前的LoongArchLinux移植签名所用的PGP密钥并不在Arch Linux的`archlinux-keyring`密钥环中，因此需要导入签名密钥。
 
-目前笔者打包了[北京大学Linux俱乐部](https://github.com/lcpu-club)Arch Linux用户组的密钥环[`archlinux-lcpu-keyring`](https://github.com/lcpu-club/archlinux-lcpu-keyring)，其中包含了武老师的PGP密钥。但这一软件包尚未上传到AUR，可以通过以下方式安装：
+目前笔者打包了[北京大学Linux俱乐部](https://github.com/lcpu-club)Arch Linux用户组的密钥环[`archlinux-lcpu-keyring`](https://github.com/lcpu-club/archlinux-lcpu-keyring)。但这一软件包尚未上传到AUR，可以通过以下方式安装：
 
 ```bash
 git clone https://github.com/lcpu-club/archlinux-lcpu-keyring.git
