@@ -121,7 +121,7 @@ sudo: effective uid is not 0, is /usr/bin/sudo on a file system with the 'nosuid
 
 ## PKGBUILD的获取
 
-准备工作完成后，可以准备一个包含PKGBUILD的软件包进行测试，PKGBUILD可以自己通过`pkgctl repo clone xxx`下载并自行移植，也可以从目前武老师维护的[LoongArch Linux仓库](https://github.com/loongarchlinux/)中获取。如果是新手第一次测试，不熟悉PKGBUILD的编写，建议从LoongArch Linux仓库的[core](https://github.com/loongarchlinux/core)或者[extra](https://github.com/loongarchlinux/extra)中选择一个简单的软件包进行测试。
+准备工作完成后，可以准备一个包含PKGBUILD的软件包进行测试，PKGBUILD可以自己通过`pkgctl repo clone xxx`下载并自行移植，也可以先从Arch Linux官方克隆仓库，再从目前北京大学Linux俱乐部维护的[补丁仓库](https://github.com/lcpu-club/loongarch-packages)中获取补丁。
 
 ## 首次运行
 
