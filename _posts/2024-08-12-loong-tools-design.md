@@ -15,7 +15,7 @@ tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 
 
 # 前言
 
-Loong Arch Linux是Arch Linux的龙芯移植版本，目前龙芯Linux社区较普遍地认为，为龙芯Linux生态圈维护一个滚动更新的Arch Linux发行版具有重要意义，目前[北京大学Linux俱乐部](https://github.com/lcpu-club)有计划接手维护。
+Loong Arch Linux是Arch Linux的龙芯移植版本，目前龙芯Linux社区较普遍地认为，为龙芯Linux生态圈维护一个滚动更新的Arch Linux发行版具有重要意义，目前[北京大学Linux俱乐部](https://github.com/lcpu-club)计划接手维护。
 
 由于社区维护力量较为有限，Loong Arch Linux将会尽可能地实现**上游化**，来减少维护工作量。
 
@@ -72,6 +72,8 @@ paru -S devtools-loong64
     * 但是**不能**包括新的补丁文件
   * 使用`git diff`导出
 * 其他文件则可能是针对软件包的其他patch文件或者特别适用于龙芯的的配置文件
+
+此外，仓库下还有`update_config`文件，用于存放需要更新`config.guess`和`config.sub`且不需要其他patch的软件包名。
 
 # 工作流程
 
@@ -154,7 +156,7 @@ done
 1. 将补丁维护仓库对应目录下所有文件复制到软件包目录下
    * 特殊情况1：如果没有对应的补丁，但软件包名在`update_config`文件中，需要对`PKGBUILD`进行修改
      * 需要对`config.sub`和`config.guess`进行更新
-   * 特殊情况2：如果软件包使用`cargo fetch`，需要将`$CARCH`替换为`uname -m`，并且将
+   * 特殊情况2：如果没有对应的补丁，但软件包使用`cargo fetch`，需要将`$CARCH`替换为`uname -m`，并且将
      * 硬编码的`x86_64`也要替换为`uname -m`
 2. 对`PKGBUILD`应用`loong.patch`
 
