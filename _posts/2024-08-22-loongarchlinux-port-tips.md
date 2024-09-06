@@ -310,7 +310,7 @@ sha256sums+=(...)
 
 # FAQ
 
-## `relocation R_LARCH_B26 out of range`/``relocation R_LARCH_B26 overflow`错误
+## `relocation R_LARCH_B26 out of range`/`relocation R_LARCH_B26 overflow`错误
 
 这个错误信息一般来自链接器，它表示在处理文件时，发生了`R_LARCH_B26`重定位溢出错误。`R_LARCH_B26`是LoongArch架构的一种重定位类型，通常用于跳转指令。它要求目标地址必须在跳转指令可达的范围内（±128 MB），即它只允许一定范围内的偏移量。
 
