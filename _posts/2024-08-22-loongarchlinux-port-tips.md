@@ -308,6 +308,34 @@ sha256sums+=(...)
     * 禁用了仅x86下存在的编译选项
   * 对于RISC-V架构的Patch，可以参考其Patch的内容，参照维护自己的Patch
 
+# FAQ
+
+## `relocation R_LARCH_B26 out of range`/``relocation R_LARCH_B26 overflow`错误
+
+这个错误信息一般来自链接器，它表示在处理文件时，发生了`R_LARCH_B26`重定位溢出错误。`R_LARCH_B26`是LoongArch架构的一种重定位类型，通常用于跳转指令。它要求目标地址必须在跳转指令可达的范围内（±128 MB），即它只允许一定范围内的偏移量。
+
+这个错误通常发生在编译Chromium、Firefox等大型软件包时，链接器无法找到合适的位置来放置跳转指令。
+
+解决这个问题的方法一般为在编译参数中加入`-mcmodel=medium`来扩大地址空间，使得链接器可以找到合适的位置来放置跳转指令。[^1]
+
+[^1]: [GitHub/Rust PR#120661](https://github.com/rust-lang/rust/pull/120661)
+
+例如，可以在`PKGBUILD`中的`prepare()`或者`build()`函数中加入以下内容：
+
+```bash
+prapre() {
+    ......
+
+    # Add ` -mcmodel=medium` to CFLAGS etc.
+    # to avoid `relocation R_LARCH_B26 overflow`
+    export CFLAGS="${CFLAGS} -mcmodel=medium"
+    export CXXFLAGS="${CXXFLAGS} -mcmodel=medium"
+    export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"
+
+    ......
+}
+```
+
 # TODO
 
 # 更多阅读材料
