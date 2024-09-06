@@ -107,7 +107,7 @@ extra-testing-loong64-build -- -I <package1> -I <package2> ...
 
 上传可以使用一些脚本来简化，例如：
 
-```bash
+```
 #!/bin/bash
 
 if [[ $# -lt 2 ]]; then
