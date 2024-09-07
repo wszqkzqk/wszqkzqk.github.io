@@ -359,6 +359,7 @@ prapre() {
 
   Process terminated due to timeout
   ```
+  * 状态为`Sleeping`，CPU占用为0%
   * 不过需要注意的是，如果修改`gn`配置的patch有误也可能会导致这个问题
 
 （待补充）
