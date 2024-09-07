@@ -336,6 +336,53 @@ prapre() {
 }
 ```
 
+## QEMU User特异性问题
+
+由于QEMU User的实现问题，使用QEMU User模式构建软件包时可能会遇到一些特异性问题，目前已知的问题有：
+
+* 运行过于缓慢导致某些`check`超时报错
+* 调用`python`的`multiprocessing`模块的程序**大概率**会**卡死**
+  * 也有**可能**发生**内存泄漏**
+* `go`语言程序编译有一定概率卡死
+* `rustc`在**编译并行线程非常多时**且**项目本身非常大**时可能会卡死
+  * 模式触发条件：
+    * 48核，磁盘IOPS仅1000，QEMU User编译Firefox
+  * 卡死时一般会发现进程中剩下一个`rustc`进程，吃满单核性能，且内存占用较一般的`rustc`进程高（约7GB）
+* `gn`在部分场景下有概率卡死并报错
+  ```log
+  -- GN Done. Made ... targets from ... files in ...ms
+
+  ......
+
+  -- GN FAILED
+
+  Process terminated due to timeout
+  ```
+  * 不过需要注意的是，如果修改`gn`配置的patch有误也可能会导致这个问题
+
+（待补充）
+
+### QEMU User典型失败内容列举
+
+* `opus`构建
+  * `check`严重超时（>50倍）
+* `gimp-help`构建（似乎用到了python的`multiprocessing`模块）
+  * 内存泄漏
+* `gdk-pixbuf2`构建
+  * 内存泄漏
+* `wayland`的`check`阶段
+  ```log
+  sanity-test: ../wayland-1.23.0/tests/sanity-test.c:92: sanity_fd_leak: Assertion `fd_leak_check_enabled' failed.
+  qemu: uncaught target signal 6 (Aborted) - core dumped
+  Client 'sanity_fd_leak' was killed by signal 6
+  Client 'sanity_fd_leak' failed
+  1 child(ren) failed
+  qemu: uncaught target signal 6 (Aborted) - core dumped
+  test "tc_client_fd_leaks":	signal 6, pass.
+  ```
+
+（待补充）
+
 # TODO
 
 # 更多阅读材料
