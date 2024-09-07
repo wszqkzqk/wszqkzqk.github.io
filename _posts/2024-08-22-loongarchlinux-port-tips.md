@@ -36,14 +36,14 @@ libRemarks.so=16-64                                           | libRemarks.so=18
 
 其中给出了发生soname变化的软件包名`llvm-libs`，以及变化的soname：`libLLVM.so`、`libLTO.so`、`libRemarks.so`。
 
-我们可以在获得了变化的soname后，通过`sogrep`来查找链接到这些库的软件包：
+我们可以在获得了变化的soname后，通过`sogrep-loong64`来查找链接到这些库的软件包：
 
 * Bash/Zsh
 
 ```bash
 for lib in libLLVM.so libLTO.so libRemarks.so
 do
-    sogrep -r all $lib
+    sogrep-loong64 -r all $lib
 done | sort | uniq
 ```
 
@@ -51,7 +51,7 @@ done | sort | uniq
 
 ```fish
 for lib in libLLVM.so libLTO.so libRemarks.so
-    sogrep -r all $lib
+    sogrep-loong64 -r all $lib
 end | sort | uniq
 ```
 
@@ -64,7 +64,7 @@ end | sort | uniq
 ```bash
 for lib in $(find-libprovides <path-to-your-pkg> | sed 's/=.*//g')
 do
-    sogrep -r all $lib
+    sogrep-loong64 -r all $lib
 done | sort | uniq
 ```
 
@@ -72,14 +72,14 @@ done | sort | uniq
 
 ```fish
 for lib in $(find-libprovides <path-to-your-pkg> | sed 's/=.*//g')
-    sogrep -r all $lib
+    sogrep-loong64 -r all $lib
 end | sort | uniq
 ```
 
 * `find-libprovides`给出的是软件包提供的**所有**soname，包含了没有变化的soname，可能会包含很多不必要的重构
 * 很多时候还是需要手动找出需要重构的软件包：
   * 手动找到发生soname变化的`.so`文件
-  * 使用`sogrep`找到链接到这些`.so`文件的软件包
+  * 使用`sogrep-loong64`找到链接到这些`.so`文件的软件包
   * 少数情况下还有其他需要重构的软件包
 
 ## 构建顺序
