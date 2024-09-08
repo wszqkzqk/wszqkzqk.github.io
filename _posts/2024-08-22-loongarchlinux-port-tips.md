@@ -384,6 +384,26 @@ prapre() {
 
 （待补充）
 
+## `pkgctl`从官方`clone`软件包时要求输入用户名和密码
+
+如果使用`pkgctl`从官方克隆软件包时要求输入用户名和密码：
+
+```log
+==> Cloning <package-name> ...
+Cloning into '<package-name>'...
+Username for 'https://gitlab.archlinux.org': 
+```
+
+这个时候说明Arch Linux官方**并不存在**这一软件包仓库，一般有以下几种情况：
+
+* 这个软件是仅相关于Loong Arch Linux的软件包，没有由Arch Linux维护
+  * 例如`archlinux-lcpu-keyring`，`devtools-loong64`
+* 未以`basename`来克隆软件包仓库
+  * 注意上游的软件包仓库名是`basename`，而**不一定**是`pkgname`
+  * 同一`basename`可能会包括多个`pkgname`的软件包
+    * 例如`rust`提供了`rust`、`rust-musl`、`rust-src`、`rust-wasm`等软件包，这些软件包都在`rust`这一仓库中
+* 单纯把软件包名敲错了
+
 # TODO
 
 # 更多阅读材料
