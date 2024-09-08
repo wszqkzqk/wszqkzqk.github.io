@@ -148,12 +148,10 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+gpg --detach-sign --use-agent $PKG_PATH
 if [[ ! -e $PKG_PATH.sig ]]; then
-    gpg --detach-sign --use-agent $PKG_PATH
-    if [[ ! -e $PKG_PATH.sig ]]; then
-        echo "$PKG_PATH.sig not found! Exiting..."
-        exit 1
-    fi
+    echo "$PKG_PATH.sig not found! Exiting..."
+    exit 1
 fi
 
 rsync -e "ssh -p ${PORT}" -p '--chmod=ug=rw,o=r' -c -h -L --progress --partial -y $PKG_PATH{,.sig} $TIER0SERVER:$_remote_path/$REPO/os/loong64/
