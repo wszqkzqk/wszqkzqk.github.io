@@ -398,9 +398,9 @@ Username for 'https://gitlab.archlinux.org':
 
 * 这个软件是仅相关于Loong Arch Linux的软件包，没有由Arch Linux维护
   * 例如`archlinux-lcpu-keyring`，`devtools-loong64`
-* 未以`basename`来克隆软件包仓库
-  * 注意上游的软件包仓库名是`basename`，而**不一定**是`pkgname`
-  * 同一`basename`可能会包括多个`pkgname`的软件包
+* 未以`pkgbase`来克隆软件包仓库
+  * 注意上游的软件包仓库名是`pkgbase`，而**不一定**是`pkgname`
+  * 同一`pkgbase`可能会包括多个`pkgname`的软件包
     * 例如`rust`提供了`rust`、`rust-musl`、`rust-src`、`rust-wasm`等软件包，这些软件包都在`rust`这一仓库中
 * 单纯把软件包名敲错了
 
