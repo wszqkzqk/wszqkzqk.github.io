@@ -371,16 +371,18 @@ prapre() {
   * 内存泄漏
 * `gdk-pixbuf2`构建
   * 内存泄漏
-* `wayland`的`check`阶段
-  ```log
-  sanity-test: ../wayland-1.23.0/tests/sanity-test.c:92: sanity_fd_leak: Assertion `fd_leak_check_enabled' failed.
-  qemu: uncaught target signal 6 (Aborted) - core dumped
-  Client 'sanity_fd_leak' was killed by signal 6
-  Client 'sanity_fd_leak' failed
-  1 child(ren) failed
-  qemu: uncaught target signal 6 (Aborted) - core dumped
-  test "tc_client_fd_leaks":	signal 6, pass.
+* 部分测试仅在QEMU User下失败
+  * `wayland`的`check`阶段
+    ```log
+    sanity-test: ../wayland-1.23.0/tests/sanity-test.c:92: sanity_fd_leak: Assertion `fd_leak_check_enabled' failed.
+    qemu: uncaught target signal 6 (Aborted) - core dumped
+    Client 'sanity_fd_leak' was killed by signal 6
+    Client 'sanity_fd_leak' failed
+    1 child(ren) failed
+    qemu: uncaught target signal 6 (Aborted) - core dumped
+    test "tc_client_fd_leaks":	signal 6, pass.
   ```
+  * `vim`
 
 （待补充）
 
