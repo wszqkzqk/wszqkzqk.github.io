@@ -369,8 +369,6 @@ prapre() {
   * `check`严重超时（>50倍）
 * `gimp-help`构建（似乎用到了python的`multiprocessing`模块）
   * 内存泄漏
-* `gdk-pixbuf2`构建
-  * 内存泄漏
 * 部分测试仅在QEMU User下失败
   * `wayland`的`check`阶段
     ```log
@@ -383,6 +381,7 @@ prapre() {
     test "tc_client_fd_leaks":	signal 6, pass.
   ```
   * `vim`
+  * `gdk-pixbuf2`
 
 （待补充）
 
