@@ -314,9 +314,10 @@ sha256sums+=(...)
 
 这个错误通常发生在编译Chromium、Firefox等大型软件包时，链接器无法找到合适的位置来放置跳转指令。
 
-解决这个问题的方法一般为在编译参数中加入`-mcmodel=medium`来扩大地址空间，使得链接器可以找到合适的位置来放置跳转指令。[^1]
+解决这个问题的方法一般为在编译参数中加入`-mcmodel=medium`来扩大地址空间，使得链接器可以找到合适的位置来放置跳转指令。[^1] [^2]
 
 [^1]: [GitHub/Rust PR#120661](https://github.com/rust-lang/rust/pull/120661)
+[^2]: [GCC Doc: LoongArch Options](https://gcc.gnu.org/onlinedocs/gcc/gcc-command-options/machine-dependent-options/loongarch-options.html#cmdoption-LoongArch-mcmodel)
 
 例如，可以在`PKGBUILD`中的`prepare()`或者`build()`函数中加入以下内容：
 
@@ -329,6 +330,24 @@ prapre() {
     export CFLAGS="${CFLAGS} -mcmodel=medium"
     export CXXFLAGS="${CXXFLAGS} -mcmodel=medium"
     export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"
+
+    ......
+}
+```
+
+`-mcmodel=medium`会使得编译器使用`medium`模型，这样可以扩大地址空间，允许更大的跳转范围（2 GiB）。
+
+如果在添加了`-mcmodel=medium`后仍然出现`relocation R_LARCH_B26 out of range`错误，且已知该二进制文件真的非常非常大，可以考虑使用`-mcmodel=extreme`，不限制地址空间大小。
+
+```bash
+prapre() {
+    ......
+
+    # Add ` -mcmodel=extreme` to CFLAGS etc.
+    # to avoid `relocation R_LARCH_B26 overflow`
+    export CFLAGS="${CFLAGS} -mcmodel=extreme"
+    export CXXFLAGS="${CXXFLAGS} -mcmodel=extreme"
+    export RUSTFLAGS="${RUSTFLAGS} -C code-model=extreme"
 
     ......
 }
