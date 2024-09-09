@@ -425,6 +425,32 @@ Username for 'https://gitlab.archlinux.org':
     * 例如`rust`提供了`rust`、`rust-musl`、`rust-src`、`rust-wasm`等软件包，这些软件包都在`rust`这一仓库中
 * 单纯把软件包名敲错了
 
+## 我想保存/查看某一次的构建环境怎么办？
+
+### 保存
+
+默认情况下，每次运行针对相同仓库的构建命令时，`devtools`会自动清理上一次的构建环境。如果需要保存某一次的构建环境，可以对上一次构建环境的子卷进行快照，例如：
+
+```bash
+sudo btrfs subvolume snapshot /var/lib/archbuild/extra-testing-loong64-build/<user-name> <path-to-your-snapshot>
+```
+
+如果不再需要这个快照，可以通过以下命令删除：
+
+```bash
+sudo btrfs subvolume delete <path-to-your-snapshot>
+```
+
+### 进入环境查看
+
+可以使用`systemd-nspawn`进入构建环境，例如：
+
+```bash
+sudo systemd-nspawn -aD /var/lib/archbuild/extra-testing-loong64-build/<user-name>
+```
+
+* 注意：**切勿**进入`/var/lib/archbuild/<repo-name>-loong64-build/root`环境中，这是保留的**干净环境**，不要在这个环境中进行任何操作。如果对这个环境进行了修改，下次运行`<repo-name>-loong64-build`时请添加`-c`参数以清理环境。
+
 # TODO
 
 # 更多阅读材料
