@@ -451,6 +451,52 @@ sudo systemd-nspawn -aD /var/lib/archbuild/extra-testing-loong64-build/<user-nam
 
 * 注意：**切勿**进入`/var/lib/archbuild/<repo-name>-loong64-build/root`环境中，这是保留的**干净环境**，不要在这个环境中进行任何操作。如果对这个环境进行了修改，下次运行`<repo-name>-loong64-build`时请添加`-c`参数以清理环境。
 
+## 网络环境不稳定导致下载失败
+
+有时候我们的网络环境不稳定，导致构建所需的源代码下载失败，而如果反复运行构建命令，又存在重新创建环境等资源开销，较为缓慢。
+
+此时，我们可以安装`pacman-contrib`包，使用`updpkgsums`来下载源代码：
+
+* Bash/Zsh
+  ```bash
+  while ! updpkgsums
+  done
+  ```
+* Fish
+  ```fish
+  while not updpkgsums
+  end
+  ```
+
+在下载完成之后，再手动检查一下`PKGBUILD`中的哈希是否变动，如果没有变动，再运行构建命令即可。
+
+## 我为什么经常遇到`(invalid or corrupted package (checksum))`错误？
+
+对于这样的错误：
+
+```log
+:: File /var/cache/pacman/pkg/<package> is corrupted (invalid or corrupted package (checksum)).                                                                                                                              
+Do you want to delete it? [Y/n]
+```
+
+这表示的是软件包的校验和不匹配，一般来说**重新运行命令**，尝试**重新下载**软件包即可解决。
+
+由于目前项目正处于Bootstrap阶段，在`testing`和`staging`中可能会存在名称完全相同的的包，但是内容不同，这时候如果运行命令在`extra-testing-loong64-build`和`extra-staging-loong64-build`中反复切换，就可能一直遇到这个问题。
+
+如果不愿意被重试困扰，可以在运行的构建命令中向`makechrootpkg`传递`-d`参数，为`staging`和`testing`环境分别指定不同的缓存目录，例如：
+
+```bash
+mkdir ~/testing-cache
+extra-testing-loong64-build -- -d "~/testing-cache:/var/cache/pacman/pkg/" -- -A
+```
+
+```bash
+mkdir ~/staging-cache
+extra-staging-loong64-build -- -d "~/staging-cache:/var/cache/pacman/pkg/" -- -A
+```
+
+这样就可以避免`testing`与`staging`环境的软件包在现阶段内的冲突。不过原则上，`testing`和`staging`中的软件包应该用不同的`pkgrel`来区分，当前是因为项目处于Bootstrap阶段，还没有完全规范化。
+
 # TODO
 
 # 更多阅读材料
