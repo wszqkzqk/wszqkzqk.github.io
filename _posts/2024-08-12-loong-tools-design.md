@@ -234,9 +234,9 @@ else
   fi
 
   if grep -Eq 'cargo fetch.*(x86_64|\$CARCH)' "$PACKAGE_NAME/PKGBUILD"; then
-    sed -i '/cargo fetch/s/\$CARCH/`uname -m`/' PKGBUILD
-    sed -i '/cargo fetch/s/\x86_64/`uname -m`/' PKGBUILD
-    echo "Automatically changed 'cargo fetch' to use `uname -m`."
+    sed -i '/cargo fetch/s/\$CARCH/`uname -m`/' "$PACKAGE_NAME/PKGBUILD"
+    sed -i '/cargo fetch/s/\x86_64/`uname -m`/' "$PACKAGE_NAME/PKGBUILD"
+    echo "Automatically changed 'cargo fetch' to use 'uname -m'."
   fi
   exit 1
 fi
