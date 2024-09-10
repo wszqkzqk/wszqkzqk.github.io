@@ -337,22 +337,6 @@ prapre() {
 
 `-mcmodel=medium`会使得编译器使用`medium`模型，这样可以扩大地址空间，允许更大的跳转范围（2 GiB）。
 
-如果在添加了`-mcmodel=medium`后仍然出现`relocation R_LARCH_B26 out of range`错误，且已知该二进制文件真的非常非常大，可以考虑使用`-mcmodel=extreme`，不限制地址空间大小。
-
-```bash
-prapre() {
-    ......
-
-    # Add ` -mcmodel=extreme` to CFLAGS etc.
-    # to avoid `relocation R_LARCH_B26 overflow`
-    export CFLAGS="${CFLAGS} -mcmodel=extreme"
-    export CXXFLAGS="${CXXFLAGS} -mcmodel=extreme"
-    export RUSTFLAGS="${RUSTFLAGS} -C code-model=extreme"
-
-    ......
-}
-```
-
 ## QEMU User特异性问题
 
 由于QEMU User的实现问题，使用QEMU User模式构建软件包时可能会遇到一些特异性问题，目前已知的问题有：
