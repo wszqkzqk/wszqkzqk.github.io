@@ -471,12 +471,12 @@ Do you want to delete it? [Y/n]
 
 ```bash
 mkdir ~/testing-cache
-extra-testing-loong64-build -- -d "~/testing-cache:/var/cache/pacman/pkg/" -- -A
+extra-testing-loong64-build -- -d ~/"testing-cache>:/var/cache/pacman/pkg/" -- -A
 ```
 
 ```bash
 mkdir ~/staging-cache
-extra-staging-loong64-build -- -d "~/staging-cache:/var/cache/pacman/pkg/" -- -A
+extra-staging-loong64-build -- -d ~/"staging-cache>:/var/cache/pacman/pkg/" -- -A
 ```
 
 这样就可以避免`testing`与`staging`环境的软件包在现阶段内的冲突。不过原则上，`testing`和`staging`中的软件包应该用不同的`pkgrel`来区分，当前是因为项目处于Bootstrap阶段，还没有完全规范化。
