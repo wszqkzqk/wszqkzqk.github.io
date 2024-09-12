@@ -46,7 +46,7 @@ Linux的kernel config非常复杂，Loong Arch Linux作为Arch Linux的龙芯移
 
 笔者在`PKGBUILD`的`prepare()`函数中，插入了一段逻辑，用于将`loong-addition.config`合并到`config`的末尾：
 
-```bash
+```
    echo "Setting config..."
    cp ../config .config
 +  if [ $CARCH == loong64 ]; then
