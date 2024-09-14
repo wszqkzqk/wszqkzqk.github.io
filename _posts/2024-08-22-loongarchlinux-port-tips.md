@@ -373,6 +373,10 @@ prapre() {
   * `check`严重超时（>50倍）
 * `gimp-help`构建（似乎用到了python的`multiprocessing`模块）
   * 内存泄漏
+* `pyside6`构建
+  ```log
+  ImportError: /build/pyside6/src/build/sources/shiboken6/Shiboken.cpython-312-loongarch64-linux-gnu.so: file too short
+  ```
 * 部分测试仅在QEMU User下失败
   * `wayland`的`check`阶段
     ```log
