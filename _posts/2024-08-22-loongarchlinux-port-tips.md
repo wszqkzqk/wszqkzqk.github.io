@@ -337,6 +337,29 @@ prapre() {
 
 `-mcmodel=medium`会使得编译器使用`medium`模型，这样可以扩大地址空间，允许更大的跳转范围（2 GiB）。
 
+### `binutils`的Bug：设置`-mcmodel=medium`后仍然链接失败
+
+目前（2024.9.14）的`binutils`版本（`2.43+r4+g7999dae6961-1`）存在问题，`relax`时对指令进行了错误的优化，导致即使设置了`-mcmodel=medium`也会出现`relocation R_LARCH_B26 out of range`问题。这一问题即将修复，但是尚未发布。
+
+如果遇到这一问题，可以通过在`LDFLAGS`中加入`-Wl,--no-relax`来避免这一问题。
+
+```bash
+prapre() {
+    ......
+
+    # Add ` -mcmodel=medium` to CFLAGS etc.
+    # to avoid `relocation R_LARCH_B26 overflow`
+    export CFLAGS="${CFLAGS} -mcmodel=medium"
+    export CXXFLAGS="${CXXFLAGS} -mcmodel=medium"
+    export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"
+    export LDFLAGS="${LDFLAGS} -Wl,--no-relax"
+
+    ......
+}
+```
+
+待`binutils`修复后，应当将这一修改去除。
+
 ## QEMU User特异性问题
 
 由于QEMU User的实现问题，使用QEMU User模式构建软件包时可能会遇到一些特异性问题，目前已知的问题有：
