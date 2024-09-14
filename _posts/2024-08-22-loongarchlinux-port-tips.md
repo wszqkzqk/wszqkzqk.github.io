@@ -401,7 +401,7 @@ prapre() {
   ImportError: /build/pyside6/src/build/sources/shiboken6/Shiboken.cpython-312-loongarch64-linux-gnu.so: file too short
   ```
 * 部分测试仅在QEMU User下失败
-  * `wayland`的`check`阶段
+  * `wayland`
     ```log
     sanity-test: ../wayland-1.23.0/tests/sanity-test.c:92: sanity_fd_leak: Assertion `fd_leak_check_enabled' failed.
     qemu: uncaught target signal 6 (Aborted) - core dumped
@@ -413,8 +413,8 @@ prapre() {
   ```
   * `vim`
   * `gdk-pixbuf2`
-* 部分包在QEMU下的测试构建一切正常，但仍不能用QEMU打包
-  * `rust`在QEMU下可以正常打包并运行，但是打包出来的文件在真机下会因为页大小错误而无法运行
+* 部分包在QEMU下的测试构建一切正常，但仍**不能**用QEMU打包
+  * `rust`在QEMU下可以正常打包并运行，但是打包出来的文件在**真机下**会因为**页大小错误**而**无法运行**
 
 （待补充）
 
