@@ -25,7 +25,7 @@ Linux的kernel config非常复杂，Loong Arch Linux作为Arch Linux的龙芯移
   * 直接生成的`diff`文件几乎每次在上游更新时都会有大量的冲突，导致维护困难。
 3. 先使用`make olddefconfig`根据上游的kernel config生成一个新的config，维护维护Loong Arch Linux的kernel config与这一新config的`diff`。
   * 仍然会有大量的冲突，导致维护困难。
-4. 先使用`make savedefconfig`根据上游的kernel config生成一个新的config，再使用`make olddefconfig`根据这一新config生成一个新的config，维护Loong Arch Linux的kernel config与这一新config的`diff`。
+4. 先使用`make savedefconfig`根据上游的kernel config生成一个新的config，再添加龙芯架构相关选项与硬件支持，维护Loong Arch Linux的kernel config与这一新config的`diff`。
   * 内容相比之前大大简化，但仍然有冲突风险。
 
 ## 新方法
