@@ -523,6 +523,16 @@ extra-staging-loong64-build -- -d ~/"staging-cache>:/var/cache/pacman/pkg/" -- -
 
 这样就可以避免`testing`与`staging`环境的软件包在现阶段内的冲突。不过原则上，`testing`和`staging`中的软件包应该用不同的`pkgrel`来区分，当前是因为项目处于Bootstrap阶段，还没有完全规范化。
 
+## 如何指定`sogrep-loong64`的镜像站
+
+自`devtools-loong64`的`1.2.1.patch9-1`版本开始，`archbuild`默认使用`/etc/pacman.d/mirrorlist-loong64`这一镜像列表。在`loong64`上，由发行版的默认镜像列表软件包`pacman-mirrorlist-loong64`提供，在其他架构上，由`devtools-loong64`本身提供。
+
+然而，`sogrep-loong64`工具本身不会读取`mirrorlist-loong64`文件，而是读取环境变量`SOLINKS_MIRROR`来获取镜像站。如果需要指定镜像站，可以在运行命令时指定环境变量，例如：
+
+```bash
+SOLINKS_MIRROR=https://loongarchlinux.lcpu.dev/loongarch/archlinux sogrep-loong64 <repo> <lib>
+```
+
 # TODO
 
 # 更多阅读材料
