@@ -285,8 +285,17 @@ fi
 
 mkdir -p "$PATCH_DIR"
 
+original_pkgrel=$(grep '^pkgrel=' "PKGBUILD")
+if [[ $original_pkgrel =~ pkgrel=([0-9]+)\.([0-9]+) ]]; then
+    echo "Ignore to export change of pkgrel to patch."
+    num1=${BASH_REMATCH[1]}
+    sed -i "s/pkgrel=[0-9]\+\.[0-9]\+/pkgrel=$num1/" "PKGBUILD"
+fi
+
 echo "Exporting: loong.patch..."
 git diff > "$PATCH_DIR/loong.patch"
+
+sed -i "s/pkgrel=[0-9]\+/$original_pkgrel/" "PKGBUILD"
 
 sources=$(. PKGBUILD && echo "${source[@]}")
 
@@ -314,6 +323,9 @@ done
   * 需要复制的文件一定在本地存在
   * 需要复制的文件一定不在Arch Linux官方软件包git仓库的跟踪文件中
   * 同时满足以上三个条件的文件一定需要复制，为充要条件
+3. 对`PKGBUILD`的`pkgrel`字段的小版本号进行忽略
+  * `pkgrel`字段的小版本号是我们在维护时用于版本控制的，不应当导出到patch中
+  * patch中不能包含对`pkgver`和`pkgrel`的修改
 
 这个脚本可以将软件包的patch导出过程简化为：
 
