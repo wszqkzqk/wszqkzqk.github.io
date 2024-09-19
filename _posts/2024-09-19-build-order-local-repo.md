@@ -152,3 +152,10 @@ end
 ```
 
 如果**全部**构建都顺利完成，再将**所有**的软件包**一次性**上传。（用脚本处理的注意不要把debug包直接上传了）
+
+建议在一轮构建与上传完成后，清空本地仓库，以免下一轮构建时出现问题：
+
+```bash
+rm -rf /srv/local-repo/*
+repo-add /srv/local-repo/local-repo.db.tar.gz
+```
