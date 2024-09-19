@@ -45,7 +45,7 @@ repo-add local-repo.db.tar.gz package.pkg.tar.zst
 
 当然，为了简化这一过程，可以封装一些脚本来实现：
 
-```bash
+```
 #!/bin/bash
 
 if [ -z "$1" ]; then
@@ -119,7 +119,7 @@ sudo ln -s /usr/bin/archbuild /usr/bin/local-testing-loong64-build
 
 * Bash
 
-```bash
+```
 for pkg in package1 package2 package3 ...; do
     cd ~/loongpack
     ~/loongpack/get-loong64-pkg "$pkg"
