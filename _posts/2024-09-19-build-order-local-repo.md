@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      利用本地仓库实现有依赖关系的软件包的顺序构建
-subtitle:   Loong Arch Linux
+subtitle:   Loong Arch Linux下要求同步升级的软件包的构建方法
 date:       2024-09-19
 author:     wszqkzqk
 header-img: img/bg-sunrise.webp
