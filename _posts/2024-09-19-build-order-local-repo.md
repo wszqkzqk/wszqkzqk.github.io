@@ -66,7 +66,7 @@ for pkg in "$@"; do
     continue
   fi
 
-  cp "$pkg" "$DB_DIR"
+  cp -f "$pkg" "$DB_DIR"
   cd "$DB_DIR"
   repo-add "$DB_FILE" "$pkg_basename"
   cd "$CURRENT_DIR"
