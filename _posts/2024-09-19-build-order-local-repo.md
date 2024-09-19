@@ -117,6 +117,25 @@ sudo ln -s /usr/bin/archbuild /usr/bin/local-testing-loong64-build
 
 然后，按顺序进行打包并添加到本地仓库的流程，假设我们的构建目录在`~/loongpack`下且存在[`get-loong64-pkg`](https://wszqkzqk.github.io/2024/08/12/loong-tools-design/#脚本化)和[`add-to-local`](#添加软件包)脚本，本地仓库数据库的路径为`/srv/local-repo/local-repo.db.tar.gz`：
 
+* Bash
+
+```bash
+for pkg in package1 package2 package3 ...; do
+    cd ~/loongpack
+    ~/loongpack/get-loong64-pkg "$pkg"
+    cd ~/loongpack/"$pkg"
+
+    local-testing-loong64-build -- -- -A 2>&1 | tee build-log-all.log
+    if [ $? -ne 0 ]; then
+        break
+    fi
+
+    ~/loongpack/add-to-local /srv/local-repo/local-repo.db.tar.gz *.pkg.tar.zst
+
+    cd ~/loongpack
+done
+```
+
 * Fish
 
 ```fish
