@@ -159,3 +159,5 @@ end
 rm -rf /srv/local-repo/*
 repo-add /srv/local-repo/local-repo.db.tar.gz
 ```
+
+此外，当`devtools-loong64`的`conf`更新后，需要重新编辑`local-testing-loong64.conf`文件，**同步上游的变化**。
