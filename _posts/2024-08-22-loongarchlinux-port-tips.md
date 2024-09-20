@@ -507,7 +507,7 @@ Do you want to delete it? [Y/n]
 
 这表示的是软件包的校验和不匹配，一般来说**重新运行命令**，尝试**重新下载**软件包即可解决。
 
-由于目前项目正处于Bootstrap阶段，在`testing`和`staging`中可能会存在名称完全相同的的包，但是内容不同，这时候如果运行命令在`extra-testing-loong64-build`和`extra-staging-loong64-build`中反复切换，就可能一直遇到这个问题。
+由于目前项目正处于Bootstrap阶段，在`testing`和`staging`中可能会存在名称完全相同的的包，但是内容不同，这时候如果运行命令在`extra-testing-loong64-build`和`extra-staging-loong64-build`中反复切换，就可能一直遇到这个问题。此外，对于架构为`any`的包， 用户自行在x86下载的更新包与龙芯的包可能同名但是构建环境与签名者不同，也会出现这个错误。
 
 如果不愿意被重试困扰，可以在运行的构建命令中向`makechrootpkg`传递`-d`参数，为`staging`和`testing`环境分别指定不同的缓存目录，例如：
 
