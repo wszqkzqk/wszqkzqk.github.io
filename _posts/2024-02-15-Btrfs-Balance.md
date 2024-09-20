@@ -60,7 +60,7 @@ sudo btrfs balance start -v -musage=50 /
 笔者2次运行后，结果如下：
 
 ```log
-wszqkzqk@wszqkzqk-pc ~> sudo btrfs balance start -v -musage=50 /
+~> sudo btrfs balance start -v -musage=50 /
 Dumping filters: flags 0x6, state 0x0, force is off
   METADATA (flags 0x2): balancing, usage=50
   SYSTEM (flags 0x2): balancing, usage=50
@@ -95,7 +95,7 @@ System,DUP: Size:32.00MiB, Used:80.00KiB (0.24%)
 
 Unallocated:
    /dev/nvme0n1p2        449.60GiB
-wszqkzqk@wszqkzqk-pc ~/p/wszqkzqk.github.io (master)> sudo btrfs filesystem usage /
+~ > sudo btrfs filesystem usage /
 Overall:
     Device size:                 953.67GiB
     Device allocated:            456.07GiB
