@@ -206,12 +206,20 @@ PATCH_DIR="$PATCH_REPO/$PACKAGE_NAME"
 
 echo "Cloning official package repository..."
 if [[ -d "$PATCH_DIR" && ! -e "$PATCH_DIR/$PATCH_FILE" ]]; then
-    echo "$PATCH_DIR exists, but $PATCH_DIR/$PATCH_FILE does not exist."
-    echo "It's a full package repository, not a patch repository."
-    cp -r "$PATCH_DIR" .
-    exit 0
+  echo "$PATCH_DIR exists, but $PATCH_DIR/$PATCH_FILE does not exist."
+  echo "It's a full package repository, not a patch repository."
+  cp -r "$PATCH_DIR" .
+  exit 0
 else
-    pkgctl repo clone --protocol=https "$PACKAGE_NAME"
+  pkgctl repo clone --protocol=https "$PACKAGE_NAME"
+
+  cd "$PACKAGE_NAME"
+  git_status=$(LC_ALL=C git status 2>&1)
+  if [[ $git_status =~ "modified:" ]]; then
+    git stash
+  fi
+  git pull
+  cd ..
 fi
 
 if [ -d "$PATCH_DIR" ]; then
