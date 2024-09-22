@@ -62,6 +62,16 @@ Unmap command supported (LBPU): 1
 
 ## 映射`trim`命令到`unmap`命令
 
+### 手动映射
+
+如果设备支持`unmap`命令，可以手动映射`trim`命令到`unmap`命令：
+
+```bash
+echo unmap | sudo tee /sys/block/sda/device/scsi_disk/*/provisioning_mode
+```
+
+### 设置`udev`规则
+
 如果设备支持`unmap`命令但不支持`trim`命令，可以设定udev规则，将`trim`命令映射到`unmap`命令。
 
 首先，应当获取设备的`idVendor`和`idProduct`，可以使用`lsusb`命令获取，可以得到类似的输出：
