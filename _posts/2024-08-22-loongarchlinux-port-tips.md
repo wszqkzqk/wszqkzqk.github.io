@@ -427,6 +427,10 @@ prapre() {
   * `vim`
   * `gdk-pixbuf2`
   * `glib2`中`GSubprocess`的测试
+  * `mold`
+    ```
+    211 - loongarch64-section-order (Failed)
+    ```
 * 部分包在QEMU下的测试构建一切正常，但仍**不能**用QEMU打包
   * `rust`在QEMU下可以正常打包并运行，但是打包出来的文件在**真机下**会因为**页大小错误**而**无法运行**
 
