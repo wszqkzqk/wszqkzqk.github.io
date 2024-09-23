@@ -538,6 +538,20 @@ extra-staging-loong64-build -- -d ~/staging-cache:/var/cache/pacman/pkg/ -- -A
 SOLINKS_MIRROR=https://loongarchlinux.lcpu.dev/loongarch/archlinux sogrep-loong64 <repo> <lib>
 ```
 
+## LTO提示磁盘空间不足：`lto: fatal error: write: No space left on device`
+
+参考自[archriscv wiki](https://github.com/felixonmars/archriscv-packages/wiki/%E6%88%91%E4%BB%AC%E7%9A%84%E5%B7%A5%E4%BD%9C%E4%B9%A0%E6%83%AF#%E7%A3%81%E7%9B%98%E5%8D%A0%E7%94%A8%E6%BB%A1%E4%BA%86)
+
+> 很有可能不是真的吃满了，是因为 devtools 使用了 systemd-nspawn，而后者默认用参数 `size=10%`挂载在 `/tmp` 目录上。
+>
+> 可以尝试调整 `SYSTEMD_NSPAWN_TMPFS_TMP` 这个变量的值来拒绝挂载 tmpfs
+>
+> ```bash
+> sudo SYSTEMD_NSPAWN_TMPFS_TMP=0 extra-testing-loong64-build -- -- -A
+> ```
+>
+> 记得需要加上 sudo 用 root 跑，不然 devtools 自己 sudo 了之后，这个环境变量就没了。
+
 # TODO
 
 # 更多阅读材料
