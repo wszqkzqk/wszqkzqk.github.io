@@ -42,6 +42,8 @@ UUID=0f0f0f0f-0f0f-0f0f-0f0f-0f0f0f0f0f0f /usr/lib/modules btrfs lazytime,subvol
 
 然后正常在`/mnt`挂载点处执行`pacstrap`等[Arch Linux的一般安装过程](https://wiki.archlinuxcn.org/wiki/%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97)，（同样要记得挂载`@moudules`子卷）完成Arch Linux的基本安装。这样安装的Arch Linux不必再安装内核，直接使用Ubuntu的内核即可。
 
+此外，还需要注意，由于我们将`/usr/lib/modules`中的内容移动到了`@modules`子卷下，因此在Arch Linux中，**需要在`/etc/mkinitcpio.conf`的`HOOKS`中添加`usr`钩子**，使得内核模块得以正常加载。
+
 ### 引导配置
 
 在Arch Linux安装完成后，我们需要配置Ubuntu的grub引导来引导Arch Linux。我们需要在Ubuntu下编辑`/etc/grub.d/40_custom`文件，在末尾添加如下内容：
@@ -191,7 +193,3 @@ sudo arch-chroot /mnt
 ```
 
 以更新Ubuntu的引导信息，最后重启即可。
-
-## 风险
-
-这样做可能会遇到部分Arch Linux的内核模块无法加载的情况，最好要`/etc/mkinitcpio.conf`文件的`MODULES=(...)`项中添加`uinput mousedev`，以确保鼠标和键盘的正常使用。
