@@ -60,7 +60,12 @@ Unmap command supported (LBPU): 1
 
 如果设备不支持，可以查询设备的主控是否能够实现`unmap`命令，并找售后更新固件解决问题。
 
-* 补充：后来笔者发现`JMS583`主控的硬盘盒用这一方法查看`unmap`命令支持是不准确的，实际上硬盘盒支持`unmap`命令，但是`sg_vpd`命令并没有输出`Unmap command supported`，然而在后续映射`trim`命令到`unmap`命令后，可以正常使用`trim`命令。
+* 补充
+  * 后来笔者发现`JMS583`主控的硬盘盒用这一方法查看`unmap`命令支持是不准确的
+  * 实际上硬盘盒支持`unmap`命令
+    * Windows下“驱动器优化”可以正常使用
+  * 但是`sg_vpd`命令并没有输出`Unmap command supported`
+    * 然而在后续映射`trim`命令到`unmap`命令后，可以正常使用`trim`命令。
 
 ## 映射`trim`命令到`unmap`命令
 
