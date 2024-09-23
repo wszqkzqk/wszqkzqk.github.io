@@ -76,18 +76,28 @@ echo unmap | sudo tee /sys/block/sda/device/scsi_disk/*/provisioning_mode
 
 如果设备支持`unmap`命令但不支持`trim`命令，可以设定udev规则，将`trim`命令映射到`unmap`命令。
 
-首先，应当获取设备的`idVendor`和`idProduct`，可以使用`lsusb`命令获取，可以得到类似的输出：
+首先，应当获取设备的`idVendor`和`idProduct`，可以使用`lsusb`命令获取，可以得到类似的输出（这里的示例是`asm2362`）：
 
-```
+```log
 Bus 004 Device 006: ID 174c:2362 ASMedia Technology Inc. wszqkzqk storage by ZQK
 ```
 
 这里的`idVendor`为`174c`，`idProduct`为`2362`。
 
+同理，对于`jsm583`主控的硬盘盒则是：
+
+```log
+Bus 004 Device 004: ID 152d:0583 JMicron Technology Corp. / JMicron USA Technology Corp. JMS583Gen 2 to PCIe Gen3x2 Bridge
+```
+
+这里的`idVendor`为`152d`，`idProduct`为`0583`。
+
 然后创建`/etc/udev/rules.d/51-usb-ssd-trim.rules`文件，添加以下内容：
 
 ```
 ACTION=="add|change", ATTRS{idVendor}=="174c", ATTRS{idProduct}=="2362", SUBSYSTEM=="scsi_disk", ATTR{provisioning_mode}="unmap"
+
+ACTION=="add|change", ATTRS{idVendor}=="152d", ATTRS{idProduct}=="0583", SUBSYSTEM=="scsi_disk", ATTR{provisioning_mode}="unmap"
 ```
 
 这里的`ATTRS{idVendor}`和`ATTRS{idProduct}`应当替换为实际的`idVendor`和`idProduct`。
