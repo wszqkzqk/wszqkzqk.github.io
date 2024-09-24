@@ -528,6 +528,10 @@ extra-staging-loong64-build -- -d ~/staging-cache:/var/cache/pacman/pkg/ -- -A
 
 这样就可以避免`testing`与`staging`环境的软件包在现阶段内的冲突。不过原则上，`testing`和`staging`中的软件包应该用不同的`pkgrel`来区分，当前是因为项目处于Bootstrap阶段，还没有完全规范化。
 
+* 这一方法可以避免在**构建子环境**中可能遇到的冲突问题，却不能避免**干净chroot模板环境**在构建前的升级过程中可能遇到的冲突问题
+  * 因为`-d`参数只会传递给从模板环境（`root`子卷）新建的构建子环境，而不会传递给模板环境本身
+* 不过干净chroot模板环境中仅存在`base-devel`及其依赖包，其中的包升级不那么频繁，因此这一问题的发生概率较低
+
 ## 如何指定`sogrep-loong64`的镜像站
 
 自`devtools-loong64`的`1.2.1.patch9-1`版本开始，`archbuild`默认使用`/etc/pacman.d/mirrorlist-loong64`这一镜像列表。在`loong64`上，由发行版的默认镜像列表软件包`pacman-mirrorlist-loong64`提供，在其他架构上，由`devtools-loong64`本身提供。
