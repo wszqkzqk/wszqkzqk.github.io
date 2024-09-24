@@ -540,6 +540,8 @@ SOLINKS_MIRROR=https://loongarchlinux.lcpu.dev/loongarch/archlinux sogrep-loong6
 
 ## LTO提示磁盘空间不足：`lto: fatal error: write: No space left on device`
 
+* **该方法已失效！**
+
 参考自[archriscv wiki](https://github.com/felixonmars/archriscv-packages/wiki/%E6%88%91%E4%BB%AC%E7%9A%84%E5%B7%A5%E4%BD%9C%E4%B9%A0%E6%83%AF#%E7%A3%81%E7%9B%98%E5%8D%A0%E7%94%A8%E6%BB%A1%E4%BA%86)
 
 > 很有可能不是真的吃满了，是因为 devtools 使用了 systemd-nspawn，而后者默认用参数 `size=10%`挂载在 `/tmp` 目录上。
