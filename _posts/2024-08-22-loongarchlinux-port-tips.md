@@ -542,6 +542,10 @@ extra-staging-loong64-build -- -d ~/staging-cache:/var/cache/pacman/pkg/ -- -A
 SOLINKS_MIRROR=https://loongarchlinux.lcpu.dev/loongarch/archlinux sogrep-loong64 <repo> <lib>
 ```
 
+## 如何指定构建环境的镜像站
+
+构建环境会自动读取宿主的镜像站配置并写入到构建环境的`/etc/pacman.d/mirrorlist`中。然而，我们真正使用的`mirrorlist`是`/etc/pacman.d/mirrorlist-loong64`，这一文件不会从宿主环境中读取。如果我们想要修改，可以在模板环境中修改`/etc/pacman.d/mirrorlist-loong64`。（但是注意不应该对模板环境进行任何污染，确保模板环境是干净的）
+
 ## LTO提示磁盘空间不足：`lto: fatal error: write: No space left on device`
 
 * **该方法已失效！**
