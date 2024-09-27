@@ -562,7 +562,10 @@ SOLINKS_MIRROR=https://loongarchlinux.lcpu.dev/loongarch/archlinux sogrep-loong6
 >
 > 记得需要加上 sudo 用 root 跑，不然 devtools 自己 sudo 了之后，这个环境变量就没了。
 
-# TODO
+
+## 如何从GitHub的PR/Commit中获取Patch
+
+GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的PR/Commit页面下，只需要在PR或者Commit号后面加上`.patch`或者`.diff`即可跳转到对应的Patch页面，该Patch可以直接放到`PKGBUILD`的`source`中，但是建议用`::`分隔来指定Patch的名字。
 
 # 更多阅读材料
 
