@@ -224,7 +224,7 @@ fi
 
 if [ -d "$PATCH_DIR" ]; then
   echo "Copying patches..."
-  cp "$PATCH_DIR"/* "$PACKAGE_NAME"
+  cp -f "$PATCH_DIR"/* "$PACKAGE_NAME"
   cd "$PACKAGE_NAME"
   PATCH_FILE="loong.patch"
   if [ -f "$PATCH_FILE" ]; then
