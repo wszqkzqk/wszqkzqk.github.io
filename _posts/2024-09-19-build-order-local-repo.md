@@ -20,7 +20,7 @@ tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 
 首先，建立本地仓库目录并初始化（具体路径可以自行指定）：
 
 ```bash
-mkdir -p /srv/local-repo
+sudo mkdir -p /srv/local-repo
 sudo chown -R $USER:alpm /srv/local-repo
 repo-add /srv/local-repo/local-repo.db.tar.gz
 ```
