@@ -482,6 +482,34 @@ sudo systemd-nspawn -aD /var/lib/archbuild/extra-testing-loong64-build/<user-nam
 
 * 注意：**切勿**进入`/var/lib/archbuild/<repo-name>-loong64-build/root`环境中，这是保留的**干净环境**，不要在这个环境中进行任何操作。如果对这个环境进行了修改，下次运行`<repo-name>-loong64-build`时请添加`-c`参数以清理环境。
 
+这样进入环境以后的用户是`root`，一般我们需要切换到构建用户。Arch Linux构建环境中的构建用户统一都是`builduser`，可以用以下命令切换：
+
+```bash
+sudo -u builduser bash
+```
+
+`builduser`的家目录是`/build`，这同时也是构建环境的工作目录。其中的`<pkgbase>`目录就是软件包的构建目录。一般编译的中间文件都在`/build/<pkgbase>/src`的子目录中。
+
+#### 在构建环境中进行`makepkg`操作（不推荐）
+
+`/build/<pkgbase>/`目录下并不存在`PKGBUILD`文件，而且原`PKGBUILD`中直接指定的`source`在这里也只有**不可直接访问的**软链接。因此，我们并不能够直接在这里进行`makepkg`的相关操作。
+
+如果必须要在这里进行操作，可以将`PKGBUILD`文件复制到这里。因为一般在这个环境中进行的`makepkg`操作可能已经完成了编译（例如：因为直接构建时`check`没有通过，修改了`check`的逻辑，但是又不想重新构建，所以尝试在构建环境中先测试修改后的`check`能否通过），一般需要执行的只有`check`或者`package`部分。如果要跑`check`函数，可以执行：
+
+```bash
+makepkg --check
+```
+
+如果要打包，可以执行：
+
+```bash
+makepkg -R
+```
+
+这样打包生成的文件会存放在**构建环境容器**的**`/srcpkgdest`**目录下。
+
+然而，**笔者并不推荐这种做法**，笔者仍然建议按照官方的流程来运行构建命令。此外，校内具有上传权限的开发者请注意，由这样的方式得到的软件包**一律禁止上传**，只能用于本地的Bootstrap用途。
+
 ## 网络环境不稳定导致下载失败
 
 有时候我们的网络环境不稳定，导致构建所需的源代码下载失败，而如果反复运行构建命令，又存在重新创建环境等资源开销，较为缓慢。
