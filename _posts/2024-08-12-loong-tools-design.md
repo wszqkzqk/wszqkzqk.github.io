@@ -118,8 +118,8 @@ extra-loong64-build -- -- -A
 
 * 如果需要`core-testing`和`extra-testing`中的包，请使用`extra-testing-loong64-build`。
 * 如果需要`core-staging`和`extra-staging`中的包，请使用`extra-staging-loong64-build`。
-  * 目前（2024.09.05）我们的工作进度仍存放于`testing`与`staging`中
-  * 如果要针对最新的维护状况构建，请使用`extra-testing-loong64-build`或者`extra-staging-loong64-build`
+  * 目前（2024.09.05）我们的工作进度**仍存放于`testing`与`staging`中**
+  * 如果要针对最新的维护状况构建，请使用**`extra-testing-loong64-build`**或者`extra-staging-loong64-build`
 
 #### 首次构建可能问题
 
