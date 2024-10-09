@@ -594,6 +594,14 @@ GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的P
 > 关注gpr宽度是否为64，用`__loongarch_grlen == 64`
 > 关注调用约定是否为LP64系，用`__loongarch_lp64`
 
+## 上游已合并但未发布的Commit/未合并的PR导出的Patch在`source`中优先写链接还是写本地Patch文件
+
+优先级：
+
+1. 如果上游已经存在相关Commit，且软件本身使用git仓库进行构建，**优先使用`git cherry-pick`**应用补丁
+2. 上游尚未存在相关Commit，或者本身使用tarball构建，并非git仓库，**优先在`source`中添加[指向上游Patch的链接](#如何从GitHub的PR/Commit中获取Patch)**
+3. 相关PR变动过于频繁，以上两种情况均不可行时，才考虑将Patch文件**拉到本地并放入`source`中**
+
 # 更多阅读材料
 
 * [龙芯的Arch Linux移植工作流程 by wszqkzqk](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)
