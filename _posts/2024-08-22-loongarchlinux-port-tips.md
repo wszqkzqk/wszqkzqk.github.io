@@ -595,6 +595,13 @@ SOLINKS_MIRROR=https://loongarchlinux.lcpu.dev/loongarch/archlinux sogrep-loong6
 
 GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的PR/Commit页面下，只需要在PR或者Commit号后面加上`.patch`或者`.diff`即可跳转到对应的Patch页面，该Patch可以直接放到`PKGBUILD`的`source`中，但是建议用`::`分隔来指定Patch的名字。
 
+## 有关LoongArch64的编译器预定义宏
+
+以下指导原则来自[xen0n](https://github.com/xen0n/)：
+
+> 关注gpr宽度是否为64，用`__loongarch_grlen == 64`
+> 关注调用约定是否为LP64系，用`__loongarch_lp64`
+
 # 更多阅读材料
 
 * [龙芯的Arch Linux移植工作流程 by wszqkzqk](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)
