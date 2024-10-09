@@ -380,13 +380,6 @@ prapre() {
 * 调用`python`的`multiprocessing`模块的程序**大概率**会**卡死**
   * 也有**可能**发生**内存泄漏**
 * `go`语言程序编译有一定概率卡死
-* `rustc`在**编译并行线程非常多时**且**项目本身非常大**时可能会卡死
-  * 模式触发条件：
-    * 48核，磁盘IOPS仅1000，QEMU User编译Firefox/Thunderbird
-    * 似乎16核就不会触发（至少不太容易触发）
-  * 卡死时一般会发现进程中剩下一个`rustc`进程，吃满单核性能，且内存占用较一般的`rustc`进程高（约7GB）
-    * 不知道因果（是因为卡死导致内存占用高还是编译的对象复杂诱发卡死）
-      * 似乎Firefox编译时`rustc`经常会占用约7GB内存
 * `gn`在部分场景下有概率卡死并报错
   ```log
   -- GN Done. Made ... targets from ... files in ...ms
@@ -397,7 +390,6 @@ prapre() {
 
   Process terminated due to timeout
   ```
-  * 状态为`Sleeping`，CPU占用为0%
   * 不太能总结出触发条件
   * 不过需要注意的是，如果修改`gn`配置的patch有误也可能会导致这个问题
 
