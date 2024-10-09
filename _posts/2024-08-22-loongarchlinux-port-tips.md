@@ -299,13 +299,15 @@ sha256sums+=(...)
 
 不一定所有需要Patch的软件包都需要自己手动编写Patch，有时候可以从其他地方获取Patch，例如：
 
+* 上游软件仓库
+  * 如果上游已经修复但是没有发布，可以从**上游的Git仓库**中获取Patch
+    * 未合并的PR也可以作为我们临时修复的Patch
+  * 善用GitHub的检索功能，关键字一般可以选择`loongarch`、`loong`、`loongson`等
 * 其他支持loongarch发行版
   * [Gentoo/Loongson Support Overlay](https://github.com/xen0n/loongson-overlay)
   * [ABBS/ACBS tree for AOSC OS package metadata, build configuration, scripts, and patches](https://github.com/AOSC-Dev/aosc-os-abbs)
   * [AOSC Code Tracking Project](https://github.com/AOSC-Tracking)
   * [原Loong Arch Linux项目](https://github.com/loongarchlinux)
-* 上游软件包
-  * 如果上游已经修复但是没有发布，可以从上游的Git仓库中获取Patch
 
 此外，其他Arch Linux移植项目的Patch也可以参考，例如：
 
