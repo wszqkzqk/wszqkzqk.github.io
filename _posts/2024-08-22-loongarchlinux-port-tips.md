@@ -604,6 +604,12 @@ GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的P
 2. 上游尚未存在相关Commit，或者本身使用tarball构建，并非git仓库，**优先在`source`中添加[指向上游Patch的链接](#如何从GitHub的PR/Commit中获取Patch)**
 3. 相关PR变动过于频繁，以上两种情况均不可行时，才考虑将Patch文件**拉到本地并放入`source`中**
 
+## 与上游交流的注意事项
+
+这部分内容可以参考[archriscv社区的建议](https://github.com/felixonmars/archriscv-packages/wiki/%E5%BC%80%E5%A7%8B%E9%A1%B9%E7%9B%AE%E8%B4%A1%E7%8C%AE%E5%92%8C%E7%A4%BE%E5%8C%BA%E4%BA%A4%E6%B5%81%E5%89%8D%E5%BF%85%E8%A6%81%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%A6%82%E5%BF%B5)：
+
+> 首先在给社区做贡献之前，一定要优先看上游的 Code of conduct/How to contribute 等指引，尽可能的按照上游的习惯去合作。 其次和社区沟通时，尽量**减少提 “某某错误是在给 loongarch-packages 做修复时出现的”**，也**不要用 loongarch-packages 这边的习惯做法去和上游对峙**。在和上游沟通时，只需要提软件错误相关的**必要信息**即可。更不要不知所谓的丢个 loongarch-package 的修复链接给上游，敷衍了事的报个 bug，**这样会损害整个项目的社区声誉**。
+
 # 更多阅读材料
 
 * [龙芯的Arch Linux移植工作流程 by wszqkzqk](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)
