@@ -95,10 +95,6 @@ menuentry 'Cachy OS with Ubuntu Kernel' --class arch --class gnu-linux --class g
 
 Arch Linux使用的`mkinitcpio`默认会创建两个`initramfs`镜像，一个是默认使用了`autodetect`钩子的`initramfs-linux*.img`，仅包含了当前所需的模块；另一个是默认禁用了`autodetect`钩子的`initramfs-linux-fallback*.img`，包含了所有模块。
 
-由于该设计位于移动固态硬盘上，可能会在多个不同的设备上使用，因此，使用`autodetect`的镜像并没有意义，应当直接创建一个包含所有模块的`initramfs`镜像。只需要在`/etc/mkinitcpio.conf`中编辑`HOOKS`变量，去掉`autodetect`钩子，再执行`mkinitcpio -P`即可。
-
-当然，如果不想修改`HOOKS`变量，也可以直接将GRUB引导项中的`initramfs-linux*.img`替换为`initramfs-linux*-fallback.img`，以便默认使用包含所有模块的`initramfs`镜像。
-
-不过，这样的`initramfs`镜像会比较大，会**增加启动时间**；但是在笔者的设备上，即使是完整的`initramfs`镜像加载也非常快速。
+由于该设计位于移动固态硬盘上，可能会在多个不同的设备上使用，因此，使用`autodetect`的镜像并没有意义，应当直接创建一个包含所有模块的`initramfs`镜像。只需要在`/etc/mkinitcpio.conf`中编辑`HOOKS`变量，去掉`autodetect`钩子，再执行`mkinitcpio -P`即可。此外，由于需要使用单独挂载的共享内核模块，还需要在`HOOKS`变量中添加`usr`钩子，以便访问`/usr/lib/modules`下的模块。
 
 Ubuntu等发行版使用的`initramfs-tools`默认`MODULES=most`，即包含了大部分模块，因此不需要额外配置。
