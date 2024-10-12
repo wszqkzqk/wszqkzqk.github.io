@@ -610,6 +610,16 @@ GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的P
 
 > 首先在给社区做贡献之前，一定要优先看上游的 Code of conduct/How to contribute 等指引，尽可能的按照上游的习惯去合作。 其次和社区沟通时，尽量**减少提 “某某错误是在给 loongarch-packages 做修复时出现的”**，也**不要用 loongarch-packages 这边的习惯做法去和上游对峙**。在和上游沟通时，只需要提软件错误相关的**必要信息**即可。更不要不知所谓的丢个 loongarch-package 的修复链接给上游，敷衍了事的报个 bug，**这样会损害整个项目的社区声誉**。
 
+此外，笔者还有若干补充：
+
+* 某些问题并不一定与架构相关，比如上游的`config.guess`、`config.sub`或者`Cargo.lock`等文件过旧，这时候如果可以用**安全性考虑、更好获得上游修复等理由**向上游提出就**没有必要提及架构问题和我们的移植项目**，因为一般而言维护者更可能更关注通用的安全、性能、修复等问题，而不是一个自己不太了解的架构上的构建情况
+  * 提出“可能影响`loong64`架构的构建时“，也最好一并附上**安全性考虑**等理由
+* 向本不支持`loong64`的软件的构建/配置文件中简单添加`loong64`支持时，考虑到上游可能根本不知道这个架构，可以附上相关介绍
+  * [内核文档中的LoongArch介绍](https://docs.kernel.org/arch/loongarch/introduction.html)
+  * [Phoronix上有关LoongArch的资讯与评测](https://www.phoronix.com/search/LoongArch)
+  * 在PR中简单介绍这个架构
+  * 总之，尽量简洁地让上游了解这个架构，并体现一定的必要性
+
 # 更多阅读材料
 
 * [龙芯的Arch Linux移植工作流程 by wszqkzqk](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)
