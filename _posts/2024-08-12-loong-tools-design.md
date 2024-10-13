@@ -13,7 +13,7 @@ tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 
 
 # 前言
 
-Loong Arch Linux是Arch Linux的龙芯移植版本，目前龙芯Linux社区较普遍地认为，为龙芯Linux生态圈维护一个滚动更新的Arch Linux发行版具有重要意义，目前[北京大学Linux俱乐部](https://github.com/lcpu-club)计划接手维护。
+Loong Arch Linux是Arch Linux的龙芯移植版本，目前龙芯Linux社区较普遍地认为，为龙芯Linux生态圈维护一个滚动更新的Arch Linux发行版具有重要意义，目前[北京大学Linux俱乐部](https://github.com/lcpu-club)已经接手维护。
 
 由于社区维护力量较为有限，Loong Arch Linux将会尽可能地实现**上游化**，来减少维护工作量。
 
