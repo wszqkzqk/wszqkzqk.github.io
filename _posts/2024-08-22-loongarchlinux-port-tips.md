@@ -568,6 +568,16 @@ SOLINKS_MIRROR=https://loongarchlinux.lcpu.dev/loongarch/archlinux sogrep-loong6
 
 构建环境会自动读取宿主的镜像站配置并写入到构建环境的`/etc/pacman.d/mirrorlist`中。然而，我们真正使用的`mirrorlist`是`/etc/pacman.d/mirrorlist-loong64`，这一文件不会从宿主环境中读取。如果我们想要修改，可以在模板环境中修改`/etc/pacman.d/mirrorlist-loong64`。（但是注意不应该对模板环境进行任何污染，确保模板环境是干净的）
 
+有时候，如果**嫌镜像站同步过慢影响开发**，可以将其设置为`CacheServer`：
+
+```bash
+CacheServer = https://mirrors.pku.edu.cn/loongarch-lcpu/archlinux/$repo/os/$arch
+Server = https://loongarchlinux.lcpu.dev/loongarch/archlinux/$repo/os/$arch
+Server = https://mirrors.pku.edu.cn/loongarch-lcpu/archlinux/$repo/os/$arch
+```
+
+这样会优先从第一个`Server`条目，也就是原始的Tier0镜像站获取仓库元数据，并优先从`CacheServer`获取软件包，保证了下载速度和软件包的新鲜度。
+
 ## LTO提示磁盘空间不足：`lto: fatal error: write: No space left on device`
 
 * **该方法已失效！**
