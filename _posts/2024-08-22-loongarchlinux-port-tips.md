@@ -92,16 +92,16 @@ genrebuild <package1> <package2> ...
 
 # 一般的Bootstrap方法
 
-在Bootsrap的过程中，往往需要在构建环境中添加一些源中没有的软件包，这可以通过`makechrootpkg`的`-I`参数来实现，而在运行`extra-testing-loong64-build`或者`extra-staging-loong64-build`的时候，可以通过`--`参数来添加传递到`makechrootpkg`的参数。
+在Bootsrap的过程中，往往需要在构建环境中添加一些源中没有的软件包，这可以通过`makechrootpkg`的`-I`参数来实现，而在运行`extra-loong64-build`或者`extra-loong64-build`的时候，可以通过`--`参数来添加传递到`makechrootpkg`的参数。
 
 ```bash
 cd <package>
-extra-testing-loong64-build -- -I <package1> -I <package2> ...
+extra-loong64-build -- -I <package1> -I <package2> ...
 ```
 
 # 软件包的手动上传
 
-在打包完成后，如果具有上传权限，开发者可以将软件包上传。没有处理好依赖或者没有重新构建完所有需要重新构建的软件包时**不应当上传软件包**，或**只能**上传到`extra-staging`或者`core-staging`。（一般来说没有构建完所有需要构建的包时最好**什么源都不要上传**，只有在问题十分复杂，需要多个开发者协作解决时才上传`staging`，否则请参见本文介绍的[**Bootstrap方法**](#一般的Bootstrap方法)或者[**本地仓库**](https://wszqkzqk.github.io/2024/09/19/build-order-local-repo/)的使用，先在本地解决好，再一次性上传）当软件包没有依赖和重构建问题时，可以上传到`extra-testing`或者`core-testing`。如果软件包很简单稳定，完全不需要测试，才可以上传到`extra`或者`core`。
+在打包完成后，如果具有上传权限，开发者可以将软件包上传。没有处理好依赖或者没有重新构建完所有需要重新构建的软件包时**不应当上传软件包**，或**只能**上传到`extra-staging`或者`core-staging`。（一般来说没有构建完所有需要构建的包时最好**什么源都不要上传**，只有在问题十分复杂，需要多个开发者协作解决时才上传`staging`，否则请参见本文介绍的[**Bootstrap方法**](#一般的Bootstrap方法)或者[**本地仓库**](https://wszqkzqk.github.io/2024/09/19/build-order-local-repo/)的使用，先在本地解决好，再一次性上传~~，当软件包没有依赖和重构建问题时，可以上传到`extra-testing`或者`core-testing`。如果软件包很简单稳定，完全不需要测试，才可以上传到`extra`或者`core`~~。由于我们目前只跟进Arch Linux官方的`extra`和`core`仓库，因此一般也不上传testing仓库。
 
 需要注意的是，如果软件包存在需要一并上传的依赖或者需要重新构建的软件包，应当**一并上传，不要遗漏**。
 
@@ -457,7 +457,7 @@ Username for 'https://gitlab.archlinux.org':
 默认情况下，每次运行针对相同仓库的构建命令时，`devtools`会自动清理上一次的构建环境。如果需要保存某一次的构建环境，可以对上一次构建环境的子卷进行快照，例如：
 
 ```bash
-sudo btrfs subvolume snapshot /var/lib/archbuild/extra-testing-loong64-build/<user-name> <path-to-your-snapshot>
+sudo btrfs subvolume snapshot /var/lib/archbuild/extra-loong64-build/<user-name> <path-to-your-snapshot>
 ```
 
 如果不再需要这个快照，可以通过以下命令删除：
@@ -471,7 +471,7 @@ sudo btrfs subvolume delete <path-to-your-snapshot>
 可以使用`systemd-nspawn`进入构建环境，例如：
 
 ```bash
-sudo systemd-nspawn -aD /var/lib/archbuild/extra-testing-loong64-build/<user-name>
+sudo systemd-nspawn -aD /var/lib/archbuild/extra-loong64-build/<user-name>
 ```
 
 * 注意：**切勿**进入`/var/lib/archbuild/<repo-name>-loong64-build/root`环境中，这是保留的**干净环境**，不要在这个环境中进行任何操作。如果对这个环境进行了修改，下次运行`<repo-name>-loong64-build`时请添加`-c`参数以清理环境。
@@ -534,21 +534,14 @@ Do you want to delete it? [Y/n]
 
 这表示的是软件包的校验和不匹配，一般来说**重新运行命令**，尝试**重新下载**软件包即可解决。
 
-由于目前项目正处于Bootstrap阶段，在`testing`和`staging`中可能会存在名称完全相同的的包，但是内容不同，这时候如果运行命令在`extra-testing-loong64-build`和`extra-staging-loong64-build`中反复切换，就可能一直遇到这个问题。此外，对于架构为`any`的包， 用户自行在x86下载的更新包与龙芯的包可能同名但是构建环境与签名者不同，也会出现这个错误。
+对于架构为`any`的包， 用户自行在x86下载的更新包与龙芯的包可能同名但是构建环境与签名者不同，很可能会出现这个错误。
 
-如果不愿意被重试困扰，可以在运行的构建命令中向`makechrootpkg`传递`-d`参数，为`staging`和`testing`环境分别指定不同的缓存目录，例如：
-
-```bash
-mkdir ~/testing-cache
-extra-testing-loong64-build -- -d ~/testing-cache:/var/cache/pacman/pkg/ -- -A
-```
+如果不愿意被重试困扰，可以在运行的构建命令中向`makechrootpkg`传递`-d`参数，为构建环境指定不同的缓存目录，例如：
 
 ```bash
-mkdir ~/staging-cache
-extra-staging-loong64-build -- -d ~/staging-cache:/var/cache/pacman/pkg/ -- -A
+mkdir ~/loong64-cache
+extra-loong64-build -- -d ~/loong64-cache:/var/cache/pacman/pkg/ -- -A
 ```
-
-这样就可以避免`testing`与`staging`环境的软件包在现阶段内的冲突。不过原则上，`testing`和`staging`中的软件包应该用不同的`pkgrel`来区分，当前是因为项目处于Bootstrap阶段，还没有完全规范化。
 
 * 这一方法可以避免在**构建子环境**中可能遇到的冲突问题，却不能避免**干净chroot模板环境**在构建前的升级过程中可能遇到的冲突问题
   * 因为`-d`参数只会传递给从模板环境（`root`子卷）新建的构建子环境，而不会传递给模板环境本身
@@ -589,7 +582,7 @@ Server = https://mirrors.pku.edu.cn/loongarch-lcpu/archlinux/$repo/os/$arch
 > 可以尝试调整 `SYSTEMD_NSPAWN_TMPFS_TMP` 这个变量的值来拒绝挂载 tmpfs
 >
 > ```bash
-> sudo SYSTEMD_NSPAWN_TMPFS_TMP=0 extra-testing-loong64-build -- -- -A
+> sudo SYSTEMD_NSPAWN_TMPFS_TMP=0 extra-loong64-build -- -- -A
 > ```
 >
 > 记得需要加上 sudo 用 root 跑，不然 devtools 自己 sudo 了之后，这个环境变量就没了。
