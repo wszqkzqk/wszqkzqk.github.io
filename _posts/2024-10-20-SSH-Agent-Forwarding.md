@@ -83,7 +83,7 @@ ssh-add ~/.ssh/id_rsa
 
 可以在**远程机器**的`~/.profile`中加入以下代码：
 
-```bash
+```
 if [[ -z "${SSH_CONNECTION}" ]]; then
     export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 fi
@@ -95,4 +95,6 @@ fi
 
 由于在vscode多次连接中，远程的`vscode-server`均不会重启，因此如果在此前`vscode-server`已经启动，加载了当时的ssh连接下的`SSH_AUTH_SOCK`变量，在断开连接后再次连接时，`SSH_AUTH_SOCK`变量不会更新，导致ssh-agent转发失败。
 
-解决方法是在vscode中手动重启`vscode-server`，在vscode中按`F1`，输入`Remote-SSH: Restart Server`，选择重启`vscode-server`。当然，也可以退出vscode后再手动通过ssh连接远程服务器，并通过命令`pkill -f vscode-server`杀死`vscode-server`进程，再次连接vscode即可。
+解决方法是在vscode中手动重启`vscode-server`，在vscode中按`F1`，输入`Remote-SSH: Restart Server`，选择重启`vscode-server`。
+
+当然，也可以退出vscode后再手动通过ssh连接远程服务器，并通过命令`pkill -f vscode-server`杀死`vscode-server`进程，再次连接vscode即可。
