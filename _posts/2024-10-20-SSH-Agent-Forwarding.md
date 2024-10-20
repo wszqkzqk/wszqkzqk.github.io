@@ -76,3 +76,17 @@ Start-Service ssh-agent
 ```pwsh
 ssh-add ~/.ssh/id_rsa
 ```
+
+## 远程机器的`SSH_AUTH_SOCK`
+
+当将本地`ssh-agent`转发到远程机器时（`ssh -A remote`或在配置文件中设置`ForwardAgent yes`），远程机器**不能**覆盖环境变量`SSH_AUTH_SOCK`。当用户通过 SSH 登录时，必须避免在登录过程中设置`SSH_AUTH_SOCK`。否则，SSH 转发可能会失败，并且在远程机器上使用`ssh-add -l`检查现有密钥时，可能会看到错误信息（如：The agent has no identities）。
+
+可以在**远程机器**的`~/.profile`中加入以下代码：
+
+```bash
+if [[ -z "${SSH_CONNECTION}" ]]; then
+    export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+fi
+```
+
+这样，只有在非 SSH 登录时，`SSH_AUTH_SOCK`才会被设置。
