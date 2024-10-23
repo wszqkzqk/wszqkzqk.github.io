@@ -604,6 +604,7 @@ GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的P
 优先级：
 
 1. 如果上游已经存在相关Commit，且软件本身使用git仓库进行构建，**优先使用`git cherry-pick -n <commit-hash>`**应用补丁
+   * 如果**一个PR**有**多个Commit**且上游合并的时候**没有squash**，可以直接**应用merge commit**，但是需要加上`-m 1`参数
 2. 上游尚未存在相关Commit，或者本身使用tarball构建，并非git仓库，**优先在`source`中添加[指向上游Patch的链接](#如何从GitHub的PR/Commit中获取Patch)**
 3. 相关PR变动过于频繁，以上两种情况均不可行时，才考虑将Patch文件**拉到本地并放入`source`中**
 
