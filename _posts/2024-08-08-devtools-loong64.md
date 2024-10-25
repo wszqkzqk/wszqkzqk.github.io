@@ -13,6 +13,8 @@ tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 
 
 Arch Linux主要使用devtools来构建软件包。为了方便拥有x86_64设备的开发者构建LoongArch的软件包，笔者制作了一个[`devtools-loong64`](https://github.com/lcpu-club/devtools-loong)的[AUR软件包](https://aur.archlinux.org/packages/devtools-loong64)，可以在龙芯或者x86_64设备上构建LoongArch的软件包。
 
+* 事实上不只是x86_64设备，任何能够运行Arch Linux及其移植的设备都可以使用`devtools-loong64`构建LoongArch的软件包
+
 # 特点
 
 相比于原来的`devtools`龙芯移植，`devtools-loong64`保留了Arch Linux官方原版的`devtools`作为依赖，通过patch的方式增加了部分LoongArch专属的文件，简化了维护的潜在工作量。

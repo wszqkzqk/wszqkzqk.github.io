@@ -23,8 +23,10 @@ Loong Arch Linux是Arch Linux的龙芯移植版本，目前龙芯Linux社区较�
 
 本文默认读者至少已经满足以下**条件中的一个**（建议读者预先大致阅读笔者的另一篇博客[在x86设备上跨架构构建LoongArch的Arch Linux软件包](https://wszqkzqk.github.io/2024/08/08/devtools-loong64/)）：
 
-1. 拥有x86_64设备且可以在设备上运行x86_64的Arch Linux操作系统或者容器
-2. 拥有原生的龙芯编译机器，或者可以运行LoongArch的QEMU System虚拟机
+1. 拥有**原生**的**龙芯编译机器**，或者**可以运行LoongArch的QEMU System虚拟机**
+2. 拥有**任意**架构的64位设备且可以在设备上运行对应架构支持的**Arch Linux操作系统或者容器**
+  * 例如x86_64的官方Arch Linux、x86_64的其他Linux发行版中的Arch Linux容器、WSL2中的Arch Linux等
+  * 例如aarch64的Arch Linux ARM、aarch64的其他Linux发行版中的Arch Linux ARM容器等
 
 如果对本文中涉及的某些基本概念不熟悉，可以参考[ArchWiki](https://wiki.archlinux.org/)。
 
