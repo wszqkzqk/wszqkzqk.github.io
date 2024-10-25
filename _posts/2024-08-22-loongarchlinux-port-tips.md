@@ -587,6 +587,17 @@ Server = https://mirrors.pku.edu.cn/loongarch-lcpu/archlinux/$repo/os/$arch
 >
 > 记得需要加上 sudo 用 root 跑，不然 devtools 自己 sudo 了之后，这个环境变量就没了。
 
+## 在协作时怎么同步`loongarch-packages`的`master`分支？如何管理用于PR的开发分支？
+
+为了避免冲突，我们需要遵循以下原则：
+
+* 所有人使用自己的fork来进行开发
+* 主分支（`master`）只用于同步上游的`loongarch-packages`的`master`分支
+  * 仅用于同步，不用于开发
+* 为要修复的包**单独建立**以包名命名的分支
+  * 派生自`master`分支，派生前先同步`master`分支
+  * 命令示例：`git checkout -b <package-name>`
+  * 开发分支仅用于对应包的补丁提交，不用于同步
 
 ## 如何从GitHub的PR/Commit中获取Patch
 
