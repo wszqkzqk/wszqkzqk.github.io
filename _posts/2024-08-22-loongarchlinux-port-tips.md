@@ -318,6 +318,42 @@ sha256sums+=(...)
     * 禁用了仅x86下存在的编译选项
   * 对于RISC-V架构的Patch，可以参考其Patch的内容，参照维护自己的Patch
 
+
+# 与上游交流的注意事项
+
+这部分内容可以参考[archriscv社区的建议](https://github.com/felixonmars/archriscv-packages/wiki/%E5%BC%80%E5%A7%8B%E9%A1%B9%E7%9B%AE%E8%B4%A1%E7%8C%AE%E5%92%8C%E7%A4%BE%E5%8C%BA%E4%BA%A4%E6%B5%81%E5%89%8D%E5%BF%85%E8%A6%81%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%A6%82%E5%BF%B5)：
+
+> 首先在给社区做贡献之前，一定要优先看上游的 Code of conduct/How to contribute 等指引，尽可能的按照上游的习惯去合作。 其次和社区沟通时，尽量**减少提 “某某错误是在给 loongarch-packages 做修复时出现的”**，也**不要用 loongarch-packages 这边的习惯做法去和上游对峙**。在和上游沟通时，只需要提软件错误相关的**必要信息**即可。更不要不知所谓的丢个 loongarch-package 的修复链接给上游，敷衍了事的报个 bug，**这样会损害整个项目的社区声誉**。
+
+此外，笔者还有若干补充：
+
+* 某些问题并不一定与架构相关，比如上游的`config.guess`、`config.sub`或者`Cargo.lock`等文件过旧，这时候如果可以用**安全性考虑、更好获得上游修复等理由**向上游提出就**没有必要提及架构问题和我们的移植项目**，因为一般而言维护者更可能更关注通用的安全、性能、修复等问题，而不是一个自己不太了解的架构上的构建情况
+  * 提出“可能影响`loong64`架构的构建时“，也最好一并附上**安全性考虑**等理由
+* 向本不支持`loong64`的软件的构建/配置文件中简单添加`loong64`支持时，考虑到上游可能根本不知道这个架构，可以附上相关介绍
+  * [内核文档中的LoongArch介绍](https://docs.kernel.org/arch/loongarch/introduction.html)
+  * [Phoronix上有关LoongArch的资讯与评测](https://www.phoronix.com/search/LoongArch)
+  * 在PR中简单介绍这个架构
+  * 总之，尽量简洁地让上游了解这个架构，并体现一定的必要性
+
+# 开发分支的管理要求
+
+为了避免给`loongarch-packages`引入冲突，我们一般需要遵循以下原则：
+
+* 使用**自己的fork**来进行开发
+* 主分支（`master`）只用于同步上游的`loongarch-packages`的`master`分支
+  * 仅用于同步，不用于开发
+* 为要修复的包**单独建立**以包名命名的分支
+  * 派生自`master`分支（派生前先同步`master`分支）
+  * 命令示例：`git checkout -b <package-name>`
+  * 开发分支仅用于对应包的补丁提交，不用于同步
+
+# 有关LoongArch64的编译器预定义宏
+
+以下指导原则来自[xen0n](https://github.com/xen0n/)：
+
+> 关注gpr宽度是否为64，用`__loongarch_grlen == 64`，
+> 关注调用约定是否为LP64系，用`__loongarch_lp64`
+
 # FAQ
 
 ## `relocation R_LARCH_B26 out of range`/`relocation R_LARCH_B26 overflow`错误
@@ -587,28 +623,9 @@ Server = https://mirrors.pku.edu.cn/loongarch-lcpu/archlinux/$repo/os/$arch
 >
 > 记得需要加上 sudo 用 root 跑，不然 devtools 自己 sudo 了之后，这个环境变量就没了。
 
-## 在协作时怎么同步`loongarch-packages`的`master`分支？如何管理用于PR的开发分支？
-
-为了避免冲突，我们需要遵循以下原则：
-
-* 所有人使用自己的fork来进行开发
-* 主分支（`master`）只用于同步上游的`loongarch-packages`的`master`分支
-  * 仅用于同步，不用于开发
-* 为要修复的包**单独建立**以包名命名的分支
-  * 派生自`master`分支，派生前先同步`master`分支
-  * 命令示例：`git checkout -b <package-name>`
-  * 开发分支仅用于对应包的补丁提交，不用于同步
-
 ## 如何从GitHub的PR/Commit中获取Patch
 
 GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的PR/Commit页面下，只需要在PR或者Commit号后面加上`.patch`或者`.diff`即可跳转到对应的Patch页面，该Patch可以直接放到`PKGBUILD`的`source`中，但是建议用`::`分隔来指定Patch的名字。
-
-## 有关LoongArch64的编译器预定义宏
-
-以下指导原则来自[xen0n](https://github.com/xen0n/)：
-
-> 关注gpr宽度是否为64，用`__loongarch_grlen == 64`
-> 关注调用约定是否为LP64系，用`__loongarch_lp64`
 
 ## 上游已合并但未发布的Commit/未合并的PR导出的Patch在`source`中优先写链接还是写本地Patch文件
 
@@ -618,22 +635,6 @@ GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的P
    * 如果**一个PR**有**多个Commit**且上游合并的时候**没有squash**，可以直接**应用merge commit**，但是需要加上`-m 1`参数
 2. 上游尚未存在相关Commit，或者本身使用tarball构建，并非git仓库，**优先在`source`中添加[指向上游Patch的链接](#如何从GitHub的PR/Commit中获取Patch)**
 3. 相关PR变动过于频繁，以上两种情况均不可行时，才考虑将Patch文件**拉到本地并放入`source`中**
-
-## 与上游交流的注意事项
-
-这部分内容可以参考[archriscv社区的建议](https://github.com/felixonmars/archriscv-packages/wiki/%E5%BC%80%E5%A7%8B%E9%A1%B9%E7%9B%AE%E8%B4%A1%E7%8C%AE%E5%92%8C%E7%A4%BE%E5%8C%BA%E4%BA%A4%E6%B5%81%E5%89%8D%E5%BF%85%E8%A6%81%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%A6%82%E5%BF%B5)：
-
-> 首先在给社区做贡献之前，一定要优先看上游的 Code of conduct/How to contribute 等指引，尽可能的按照上游的习惯去合作。 其次和社区沟通时，尽量**减少提 “某某错误是在给 loongarch-packages 做修复时出现的”**，也**不要用 loongarch-packages 这边的习惯做法去和上游对峙**。在和上游沟通时，只需要提软件错误相关的**必要信息**即可。更不要不知所谓的丢个 loongarch-package 的修复链接给上游，敷衍了事的报个 bug，**这样会损害整个项目的社区声誉**。
-
-此外，笔者还有若干补充：
-
-* 某些问题并不一定与架构相关，比如上游的`config.guess`、`config.sub`或者`Cargo.lock`等文件过旧，这时候如果可以用**安全性考虑、更好获得上游修复等理由**向上游提出就**没有必要提及架构问题和我们的移植项目**，因为一般而言维护者更可能更关注通用的安全、性能、修复等问题，而不是一个自己不太了解的架构上的构建情况
-  * 提出“可能影响`loong64`架构的构建时“，也最好一并附上**安全性考虑**等理由
-* 向本不支持`loong64`的软件的构建/配置文件中简单添加`loong64`支持时，考虑到上游可能根本不知道这个架构，可以附上相关介绍
-  * [内核文档中的LoongArch介绍](https://docs.kernel.org/arch/loongarch/introduction.html)
-  * [Phoronix上有关LoongArch的资讯与评测](https://www.phoronix.com/search/LoongArch)
-  * 在PR中简单介绍这个架构
-  * 总之，尽量简洁地让上游了解这个架构，并体现一定的必要性
 
 # 更多阅读材料
 
