@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      龙芯Arch Linux移植技巧
-subtitle:   Loong Arch Linux移植要点
+subtitle:   参与Loong Arch Linux移植工作的注意事项及FAQ
 date:       2024-08-22
 author:     wszqkzqk
 header-img: img/bg-mountain-darken.webp
@@ -385,9 +385,36 @@ prapre() {
 
 `-mcmodel=medium`会使得编译器使用`medium`模型，这样可以扩大地址空间，允许更大的跳转范围（2 GiB）。
 
+### LTO出错：换链接器还是禁用LTO？
+
+目前的`binutils`版本（`2.43+r4+g7999dae6961-1`）存在一些Bug，可能会在链接时出现段错误等情况，尤其是在LTO时，这时候我们一般有两种选择：
+
+* 改用`mold`链接器
+  * 在`PKGBUILD`的`prepare()`函数中加入以下内容：
+    ```bash
+    export LDFLAGS="${LDFLAGS} -fuse-ld=mold"
+    ```
+* 禁用LTO
+  * 在`PKGBUILD`中加入`OPTIONS=(!lto)`
+
+一般来说，这两种方法都可以解决这一问题，但是目前推荐优先尝试不禁用LTO，仅改用`mold`链接器的方法：
+
+* 目前据笔者的观察，`mold`在LoongArch下稳定性更好
+* `mold`的性能显著更好，且对`binutils`的`bfd`的兼容性出色
+* 保留LTO可以提高软件包的性能
+
+总结选择如下：
+
+1. 如果上游设置直接可行，不要作更改，直接使用上游设置
+2. 如果上游设置不可行，优先尝试`mold`链接器
+3. 如果`mold`链接器也无法解决问题，可以尝试禁用LTO
+
 ### `binutils`的Bug：设置`-mcmodel=medium`后仍然链接失败
 
-目前（2024.9.14）的`binutils`版本（`2.43+r4+g7999dae6961-1`）存在问题，`relax`时对指令进行了错误的优化，导致即使设置了`-mcmodel=medium`也会出现`relocation R_LARCH_B26 out of range`问题。这一问题即将修复，但是尚未发布。
+* 与上一小节类似，目前**建议直接改用`mold`链接器**（`export LDFLAGS="${LDFLAGS} -fuse-ld=mold"`）
+* 如果`mold`链接器会引入新的问题，必须使用`bfd`，可以尝试以下方法
+
+目前的`binutils`版本（`2.43+r4+g7999dae6961-1`）存在问题，`relax`时对指令进行了错误的优化，导致即使设置了`-mcmodel=medium`也会出现`relocation R_LARCH_B26 out of range`问题。这一问题即将修复，但是尚未发布。
 
 如果遇到这一问题，可以通过在`LDFLAGS`中加入`-Wl,--no-relax`来避免这一问题。
 
