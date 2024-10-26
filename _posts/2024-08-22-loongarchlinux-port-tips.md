@@ -392,6 +392,8 @@ prapre() {
 
 ### LTO出错：换链接器还是禁用LTO？
 
+#### 因链接器Bug导致的LTO失败
+
 目前的`binutils`版本（`2.43+r4+g7999dae6961-1`）存在一些Bug，可能会在链接时出现段错误等情况，尤其是在LTO时，这时候我们一般有两种选择：
 
 * 改用`mold`链接器
@@ -400,7 +402,7 @@ prapre() {
     export LDFLAGS="${LDFLAGS} -fuse-ld=mold"
     ```
 * 禁用LTO
-  * 在`PKGBUILD`中加入`OPTIONS=(!lto)`
+  * 在`PKGBUILD`中加入`options=(!lto)`
 
 一般来说，这两种方法都可以解决这一问题，但是目前推荐优先尝试不禁用LTO，仅改用`mold`链接器的方法：
 
@@ -413,6 +415,16 @@ prapre() {
 1. 如果上游设置直接可行，不要作更改，直接使用上游设置
 2. 如果上游设置不可行，优先尝试`mold`链接器
 3. 如果`mold`链接器也无法解决问题，可以尝试禁用LTO
+
+#### 其他原因导致的LTO失败
+
+注意，以上指引是针对**链接器Bug**的情况（比如链接过程中直接因为段错误退出了），如果不是这个原因，例如，存在无法访问的其他架构的内联汇编导致LTO失败，那么应当直接禁用LTO：
+
+```log
+error: impossible constraint in ‘asm’
+```
+
+这个时候换用其他链接器是无法解决问题的。
 
 ### `binutils`的Bug：设置`-mcmodel=medium`后仍然链接失败
 
