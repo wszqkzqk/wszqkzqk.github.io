@@ -429,11 +429,11 @@ error: impossible constraint in ‘asm’
 ### `binutils`的Bug：设置`-mcmodel=medium`后仍然链接失败
 
 * 与上一小节类似，目前**建议直接改用`mold`链接器**（`export LDFLAGS="${LDFLAGS} -fuse-ld=mold"`）
-* 如果`mold`链接器会引入新的问题，必须使用`bfd`，可以尝试以下方法
+* 如果`mold`链接器会引入新的问题，必须使用`bfd`时，可以尝试以下方法
 
 目前的`binutils`版本（`2.43+r4+g7999dae6961-1`）存在问题，`relax`时对指令进行了错误的优化，导致即使设置了`-mcmodel=medium`也会出现`relocation R_LARCH_B26 out of range`问题。这一问题即将修复，但是尚未发布。
 
-如果遇到这一问题，可以通过在`LDFLAGS`中加入`-Wl,--no-relax`来避免这一问题。
+如果不改用其他链接器，可以通过在`LDFLAGS`中加入`-Wl,--no-relax`来避免这一问题。
 
 ```bash
 prapre() {
