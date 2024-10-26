@@ -351,48 +351,6 @@ done
 注意：
 * 如果patch文件**仅包含**对`config.sub`和`config.guess`的更新，不需要额外维护`loong.patch`，而是将包名添加到`update_config`文件中
 
-### patch维护建议及示例
-
-原则上，本项目的软件包应当尽可能地减少patch的使用，而是应当尽可能地将patch提交到软件上游或者Arch Linux上游。因此，我们的patch应当尽可能地少，保持简单、易于理解、易于维护。笔者将给出针对部分情况下减少patch维护的建议示例。
-
-#### Bootstrap情况：构建失败但并不需要维护patch（新手如果觉得困难可以跳过这个部分）
-
-某些时候，尤其是一些需要自举完成编译的软件包，在某些版本上可能会因为上游原因导致构建失败，可能暂时需要patch才能构建，但是当修复的软件包上传到软件源后，我们并**不需要长期维护**这个patch。笔者将以`vala`软件包为例，展示这种情况。
-
-首先，我们需要获取软件包：
-
-```bash
-pkgctl repo clone --protocol=https vala
-```
-
-然后，我们可以尝试使用`extra-loong64-build`构建：
-
-```bash
-cd vala
-extra-loong64-build -- -- -A
-```
-
-Vala是一个需要自举编译的软件包，目前（2024.08.14）在Loong Arch Linux软件源中的版本为`0.56.14`。如果我们尝试直接构建新版的`vala`软件包，可能会出现构建失败的情况，查看终端日志或者包目录下的`vala-*-loong64-build.log`文件可以发现类似如下的错误：
-
-```log
-valacodecontext.c: In function 'vala_code_context_get_gir_path':
-valacodecontext.c:2538:27: error: assignment to 'gchar **' {aka 'char **'} from incompatible pointer type 'const gchar * const*' {aka 'const char * const*'} [-Wincompatible-pointer-types]
-```
-
-笔者同时也是Vala项目的贡献者，可以直接告诉大家，这个问题在`vala < 0.56.15`且`gcc >= 14`（如果用Clang编译则是`clang >= 16`）时会出现，这是因为Vala编译器生成的C代码中存在不兼容的指针赋值。在`gcc < 14`时，这一问题仅是一个警告，不会导致构建失败；但是在`gcc >= 14`时，GCC默认对这个问题使用了`-Werror`，因此会导致构建失败。
-
-目前，Vala上游已经修复了（其实是Workaround）这个问题，在`0.56.15`版本及以后的Vala在编译代码时并不会因这一问题而失败，我们并**不需要维护**这个patch。然而，现存于仓库的`vala`软件包是`0.56.14`版本，在`gcc`升级到`14`之前完全可以正常使用，但是现在升级到`gcc 14`后`vala 0.56.14`产生的C代码则无法通过编译，也就**无法完成自举**，即使上游早已修复并发版，我们也仍然需要处理这个问题。
-
-对于这种情况，我们可以在打包时在`PKGBUILD`的`build()`函数中添加一个`CFLAGS+=" -Wno-incompatible-pointer-types"`，这样可以在构建时忽略这个警告，再正常构建即可。
-
-```bash
-extra-loong64-build -- -- -A
-```
-
-更新到我们新构建的软件包后，以后的Vala软件构建就不会再出现这个问题，也就不需要维护这个patch。
-
-Bootstrap问题相对而言比较特殊，而且就一般的“构建失败优先修改代码而非编译参数”的原则来说，这种情况的解决方式可能也并不是那么直观。这可能要求包维护者需要对上游情况有一定的了解，如果遇到问题，可以从上游的issues等内容中找到解决方案。
-
 # 软件包的手动上传
 
 参见[龙芯Arch Linux移植技巧 #软件包的手动上传](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/#软件包的手动上传)一节
