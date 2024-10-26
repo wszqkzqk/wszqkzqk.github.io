@@ -401,6 +401,9 @@ prapre() {
     ```bash
     export LDFLAGS="${LDFLAGS} -fuse-ld=mold"
     ```
+  * 在`PKGBUILD`的`makedepends`数组中加入`mold`
+    * 为了避免补丁应用时的冲突风险，不建议直接在原来的`makedepends`数组中直接添加`mold`
+    * 建议在`PKGBUILD`末尾添加`makedepends+=('mold')`
 * 禁用LTO
   * 在`PKGBUILD`中加入`options=(!lto)`
 
