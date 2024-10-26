@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      龙芯Arch Linux移植技巧
-subtitle:   参与Loong Arch Linux移植工作的注意事项及FAQ
+subtitle:   参与移植工作的注意事项及FAQ
 date:       2024-08-22
 author:     wszqkzqk
 header-img: img/bg-mountain-darken.webp
@@ -84,11 +84,17 @@ end | sort | uniq
 
 ## 构建顺序
 
+### 一般情况
+
 获得了需要重新构建的软件包列表后，我们需要按照依赖关系的顺序来构建这些软件包。目前，肥猫的[`genrebuild`脚本](https://github.com/felixonmars/archlinux-futils/blob/master/genrebuild)可以帮助我们生成构建顺序。
 
 ```bash
 genrebuild <package1> <package2> ...
 ```
+
+### KDE及Qt软件包
+
+Arch Linux官方维护有专门用于构建KDE及Qt软件包的工具[kde-build](https://gitlab.archlinux.org/archlinux/kde-build)，其中[记录了构建这些软件包的顺序](https://gitlab.archlinux.org/archlinux/kde-build/-/tree/master/package-list)。我们需要按照这一手动维护的顺序来构建这些软件包。
 
 # 一般的Bootstrap方法
 
