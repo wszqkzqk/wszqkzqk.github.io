@@ -341,6 +341,8 @@ sha256sums+=(...)
   * 在PR中简单介绍这个架构
   * 总之，尽量简洁地让上游了解这个架构，并体现一定的必要性
 
+PR参考示例：[GitHub Google/libultrahdr PR#303](https://github.com/google/libultrahdr/pull/303)
+
 # 开发分支的管理要求
 
 为了避免给`loongarch-packages`引入冲突，我们一般需要遵循以下原则：
