@@ -428,6 +428,8 @@ prapre() {
 
 ```log
 error: impossible constraint in ‘asm’
+# Or
+Error: no match insn: xxx xxx xxx
 ```
 
 这个时候换用其他链接器是无法解决问题的。
