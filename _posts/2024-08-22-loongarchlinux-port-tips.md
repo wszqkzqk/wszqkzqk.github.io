@@ -697,3 +697,5 @@ GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的P
 * [在x86设备上跨架构构建LoongArch的Arch Linux软件包](https://wszqkzqk.github.io/2024/08/08/devtools-loong64/)
 * [Arch RISC-V Port Wiki - 我们的工作习惯](https://github.com/felixonmars/archriscv-packages/wiki/%E6%88%91%E4%BB%AC%E7%9A%84%E5%B7%A5%E4%BD%9C%E4%B9%A0%E6%83%AF)
 * [Arch RISC-V Port Wiki - 完全新人指南](https://github.com/felixonmars/archriscv-packages/wiki/%E5%AE%8C%E5%85%A8%E6%96%B0%E4%BA%BA%E6%8C%87%E5%8D%97)
+* [利用本地仓库实现有依赖关系的软件包的顺序构建 by wszqkzqk](https://wszqkzqk.github.io/2024/09/19/build-order-local-repo/)
+* [Loong Arch Linux维护中可能用到Bootstrap构建方法 by wszqkzqk](https://wszqkzqk.github.io/2024/11/20/Loong-Arch-Linux-Bootstrap-Packages/)

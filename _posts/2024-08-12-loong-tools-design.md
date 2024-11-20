@@ -369,3 +369,5 @@ done
 * 可能的补丁参考源：[AOSC Code Tracking Project](https://github.com/AOSC-Tracking)
 * 可能的补丁参考源：[Gentoo/Loongson Support Overlay](https://github.com/xen0n/loongson-overlay)
 * [龙芯Arch Linux移植技巧 by wszqkzqk](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)
+* [利用本地仓库实现有依赖关系的软件包的顺序构建 by wszqkzqk](https://wszqkzqk.github.io/2024/09/19/build-order-local-repo/)
+* [Loong Arch Linux维护中可能用到Bootstrap构建方法 by wszqkzqk](https://wszqkzqk.github.io/2024/11/20/Loong-Arch-Linux-Bootstrap-Packages/)
