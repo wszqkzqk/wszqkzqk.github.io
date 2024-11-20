@@ -681,7 +681,7 @@ GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的P
 
 ## 上游已合并但未发布的Commit/未合并的PR导出的Patch在`source`中优先写链接还是写本地Patch文件
 
-很多时候我们使用的Patch可能是已经合并但未发布的Commit，或者是未合并的PR导出的Patch。这些Patch已经可以从上游的链接中获取。为了**简化我们的补丁集内容**，并且**增加Patch的可查验性**，我们一般按照以下原则来指定Patch的来源：
+很多时候我们使用的Patch可能是已经合并但未发布的Commit，或者是未合并的PR导出的Patch。这些Patch已经可以从上游的链接中获取。为了**简化我们的补丁集内容**，并且**增加Patch的可查验性**，便于**追踪**上游及PR提出者的**更新**，我们一般按照以下原则来指定Patch的来源：
 
 1. 如果上游已经存在相关Commit，且软件本身使用git仓库进行构建，**优先使用`git cherry-pick -n <commit-hash>`**应用补丁
    * 如果**一个PR**有**多个Commit**且上游合并的时候**没有squash**，可以直接**应用merge commit**，但是需要加上`-m 1`参数
