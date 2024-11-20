@@ -677,7 +677,7 @@ Server = https://mirrors.pku.edu.cn/loongarch-lcpu/archlinux/$repo/os/$arch
 
 ## 如何从GitHub的PR/Commit中获取Patch
 
-GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的PR/Commit页面下，只需要在PR或者Commit号后面加上`.patch`或者`.diff`即可跳转到对应的Patch页面，该Patch可以直接放到`PKGBUILD`的`source`中，但是建议用`::`分隔来指定Patch的名字。
+GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的PR/Commit页面下，只需要在PR或者Commit号后面加上`.patch`或者`.diff`即可跳转到对应的Patch页面，该Patch可以直接放到`PKGBUILD`的`source`中，但是建议用`::`分隔来指定Patch的名字。（要求Patch文件名需要有实际意义）
 
 ## 上游已合并但未发布的Commit/未合并的PR导出的Patch在`source`中优先写链接还是写本地Patch文件
 
