@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Loong Arch Linux维护中可能用到Bootstrap构建方法
-subtitle:   面向新人的Bootstrap构建基础教程
+subtitle:   面向新人的Bootstrap构建基础指引
 date:       2024-11-20
 author:     wszqkzqk
 header-img: img/bg-sunrise.webp
@@ -11,9 +11,9 @@ tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 
 
 ## 前言
 
-有时候某些软件的构建往往会依赖自身进行编译，这时候就需要使用Bootstrap构建方法。这种方法在Arch Linux维护中可能会用到，因此我在这里写了一个面向新人的Bootstrap构建基础教程。
+有时候某些软件的构建往往会依赖自身进行编译，这时候就需要使用Bootstrap构建方法。
 
-本教程仅简单列举一些新人相对容易理解的、常见的Bootstrap构建方法，对于复杂的问题，可能需要具体研究。
+本教程仅简单列举一些新人相对容易理解的、常见的Bootstrap构建方法，对于复杂的问题，可能需要额外的具体研究。
 
 ## 注意事项
 
@@ -25,9 +25,9 @@ tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 
 
 ### 例子：`vala`
 
-Vala是一种编程语言，Vala编译器会将Vala代码编译成C代码，然后再编译成二进制文件。Vala编译器本身也是用Vala语言编写的，因此在编译Vala编译器时，我们需要使用Bootstrap构建方法。Vala官方给出了Bootstrap构建方法：Vala官方会直接发布由Vala代码生成的中间C代码的tarball，我们只需要解压这个tarball，然后再用C编译器编译即可。
+Vala是一种为GObject设计的高级编程语言，Vala编译器会将Vala代码编译成C代码，然后再编译成二进制文件。Vala编译器本身也是用Vala语言编写的，因此在编译Vala编译器时，我们需要使用Bootstrap构建方法。Vala官方给出了Bootstrap构建方法：Vala官方会直接发布包含Vala代码及其生成的中间C代码的tarball，我们只需要解压这个tarball，然后再禁用Vala编译，指定使用C编译器编译即可。
 
-因此，我们只需要对Arch Linux官方的`vala`软件包的PKGBUILD文件进行修改得到`vala-bootstrap`软件包的PKGBUILD文件即可。
+因此，我们只需要对Arch Linux官方的`vala`软件包的PKGBUILD文件进行修改，得到`vala-bootstrap`软件包的PKGBUILD文件即可。
 
 * 修改包名并增加`provides`字段
 * 修改`source`字段，使用Vala官方发布的tarball替代git源码
@@ -91,18 +91,21 @@ package() {
 }
 ```
 
-这样的`vala-bootstrap`软件包构建完成后，我们可以将其添加到本地仓库，然后使用`vala-bootstrap`软件包构建`vala`软件包。最后，我们再将最后得到的`vala`软件包上传。
+这样的`vala-bootstrap`软件包构建完成后，我们可以将其添加到本地仓库，然后使用`vala-bootstrap`软件包构建`vala`软件包。最后，我们再将得到的干净的`vala`软件包上传。
 
 ## 利用其他发行版的二进制包构建
 
-如果某个软件包在Loong Arch Linux上还没有，但是其他支持LoongArch的发行版上已经构建好了二进制包，我们可以尝试使用其他发行版的二进制包构建。我们同样可以构建一个`-bootstrap`软件包，然后在`build()`或者`package()`函数中，使用`bsdtar`解压其他发行版的二进制包，直接安装到`$pkgdir`中。
+如果某个软件包在Loong Arch Linux上还没有，但是**其他支持LoongArch的发行版**上已经构建好了**二进制包**，我们可以尝试使用其他发行版的二进制包构建。我们同样可以构建一个`-bootstrap`软件包，然后在`build()`或者`package()`函数中，使用`bsdtar`解压其他发行版的二进制包，直接安装到`$pkgdir`中。（同样需要注意添加`provides`字段）
 
 这一方法容易遇到一些问题：
 
 * 不同发行版的路径结构可能不同，有时候可能需要手动调整
   * 比如`/usr/lib`和`/usr/lib64`的区别
   * 比如`/usr/bin`和`/usr/local/bin`的区别
-* 不同发行版的二进制包可能有不同的依赖，需要手动调整或者导入依赖包
+* 不同发行版的二进制包可能有不同的依赖
+  * 可能会遇到链接到不存在的库的问题
+    * 包括依赖缺失或者soname不同
+  * 需要手动调整或者导入依赖包
 
 ## 利用有“功能替代”作用的其他软件包构建
 
@@ -126,11 +129,11 @@ CMake Error at cmake/Modules/FindDCompiler.cmake:80 (message):
 
 这是因为LDC的CMake脚本在检测D编译器时，只支持`ldmd2`、`dmd`和`gdmd`这些接受D语言参考实现`dmd`参数风格的编译器，而实际上`gcc-d`并没有提供`gdmd`（不同的是`ldc`是提供`ldmd2`的）。
 
-PS: 对于新手来说，**这个知识可能不是那么关键**，因为它已经被记录在我的教程里面了，很容易查阅到。但是笔者是怎么知道的呢？**在遇到相关问题是知道怎么查/怎么做可能才更关键**。笔者此前也对D语言编译器相关的一切完全不了解，遇到这个问题时，笔者首先去**AUR**查找了`gdmd`，找到了[`gdmd-git`这个包](https://aur.archlinux.org/packages/gdmd-git)，包的描述是`DMD-like wrapper for GDC`，即`gdmd`是`GDC`的`DMD`的包装器。再去专门查找一下相关知识，即可知道想要构建`ldc`，仅仅有`gcc-d`是不够的，还需要`gdmd`，因此笔者打包了AUR的`gdmd-git`并添加到本地仓库，然后在`ldc`的PKGBUILD文件中添加了`gdmd`到`makedepends`中。
+PS: 对于新手来说，上面这条知识本身可能不是那么关键，因为它已经被记录在我的教程里面了，很容易查阅到。但是笔者是怎么知道的呢？**在遇到相关问题时知道怎么查/怎么做可能才更关键**。笔者此前也对D语言编译器相关的一切完全不了解，遇到这个问题时，笔者首先去**AUR**查找了`gdmd`，找到了[`gdmd-git`这个包](https://aur.archlinux.org/packages/gdmd-git)，包的描述是`DMD-like wrapper for GDC`，即`gdmd`是`GDC`的`DMD`的包装器。再去专门查找一下相关知识，即可知道想要构建`ldc`，仅仅有`gcc-d`是不够的，还需要`gdmd`，因此笔者打包了AUR的`gdmd-git`并添加到本地仓库，然后在`ldc`的PKGBUILD文件中添加了`gdmd`到`makedepends`中。
 
 从AUR获取`gdmd-git`并构建、添加到本地仓库，且在修改的`ldc`的PKGBUILD文件中额外添加`gdmd`到`makedepends`后，即可尝试构建`ldc`。
 
-然而，这样直接构建时又会遇到问题，Arch Linux的`ldc`软件包的PKGBUILD文件中指定了一些编译参数：
+然而，这样直接构建时又会遇到问题。Arch Linux的`ldc`软件包的PKGBUILD文件中指定了一些编译参数：
 
 ```bash
     ...
@@ -139,11 +142,11 @@ PS: 对于新手来说，**这个知识可能不是那么关键**，因为它已
     ...
 ```
 
-而`gdmd`并不能接受这些参数，进而报错，我们可以在`build()`函数中，临时禁用这些参数再次构建。
+经过尝试，我们可以发现，`gdmd`并不能接受这些参数，进而报错。我们可以在`build()`函数中，临时禁用这些参数再次构建。
 
-构建完成后，我们可以将`ldc`软件包添加到本地仓库，然后使用这一用`gcc-d`构建的不干净的`ldc`软件包构建干净的`ldc`软件包。
+构建完成后，我们可以将`ldc`软件包添加到本地仓库，然后使用这一用`gcc-d`构建的`ldc`软件包，利用Arch Linux官方的`ldc`的PKGBUILD文件，构建干净的`ldc`软件包。
 
-不幸的是，我们又会遇到一个与架构有关的问题，即`ldc`这一**软件包本身需要Patch**。如果直接按照官方的PKGBUILD文件构建，在**check**阶段会报错：
+不幸的是，我们又会遇到一个与架构及发行版环境有关的问题，即`ldc`这一**软件包本身需要Patch**。如果直接按照官方的PKGBUILD文件构建，在**check**阶段会报错：
 
 ```log
 /usr/bin/ld: /build/ldc/src/ldc/build/lib/libdruntime-ldc-unittest-shared.so: undefined reference to `__atomic_compare_exchange_16'
