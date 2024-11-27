@@ -117,9 +117,7 @@ extra-loong64-build -- -I <package1> -I <package2> ...
 #!/bin/bash
 
 if [[ $# -lt 2 ]]; then
-    echo "Usage: ${0##*/} <repo-name> <pkg-file> [option]"
-    echo "Option:"
-    echo "  --sign Sign the database file."
+    echo "Usage: ${0##*/} <repo-name> <pkg-file>"
     exit 1
 fi
 
@@ -142,18 +140,6 @@ TEMP2=${TEMP%-*}
 VER=${TEMP2##*-}
 NAME=${TEMP2%-*}
 
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        --sign)
-            SIGN=-s
-            shift
-            ;;
-        *)
-            shift
-            ;;
-    esac
-done
-
 gpg --detach-sign --use-agent $PKG_PATH
 if [[ ! -e $PKG_PATH.sig ]]; then
     echo "$PKG_PATH.sig not found! Exiting..."
@@ -161,7 +147,7 @@ if [[ ! -e $PKG_PATH.sig ]]; then
 fi
 
 rsync -e "ssh -p ${PORT}" -p '--chmod=ug=rw,o=r' -c -h -L --progress --partial -y $PKG_PATH{,.sig} $TIER0SERVER:$_remote_path/$REPO/os/loong64/
-ssh -tt $TIER0SERVER -p $PORT "cd $_remote_path/$REPO/os/loong64/; flock /tmp/loong-repo-$REPO.lck repo-add $SIGN -R $REPO.db.tar.gz $PKG; curl -X POST http://127.0.0.1/op/uploong/$NAME --data-urlencode 'ver=$VER-$REL'"
+ssh -tt $TIER0SERVER -p $PORT "cd $_remote_path/$REPO/os/loong64/; flock /tmp/loong-repo-$REPO.lck repo-add -R $REPO.db.tar.gz $PKG"
 ```
 
 然后对脚本进行修改，填入服务器信息，就可以使用这个脚本来上传软件包了：
