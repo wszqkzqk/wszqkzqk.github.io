@@ -371,3 +371,5 @@ done
 * [龙芯Arch Linux移植技巧 by wszqkzqk](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)
 * [利用本地仓库实现有依赖关系的软件包的顺序构建 by wszqkzqk](https://wszqkzqk.github.io/2024/09/19/build-order-local-repo/)
 * [Loong Arch Linux维护中可能用到Bootstrap构建方法 by wszqkzqk](https://wszqkzqk.github.io/2024/11/20/Loong-Arch-Linux-Bootstrap-Packages/)
+* [LoongArch介绍 — The Linux Kernel documentation](https://www.kernel.org/doc/html/latest/translations/zh_CN/arch/loongarch/introduction.html)
+* [LoongArch 指令集架构的文档](https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-Vol1-v1.10-CN.pdf)
