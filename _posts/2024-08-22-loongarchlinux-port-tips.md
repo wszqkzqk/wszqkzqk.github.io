@@ -348,6 +348,8 @@ PR参考示例：[GitHub Google/libultrahdr PR#303](https://github.com/google/li
 > 关注gpr宽度是否为64，用`__loongarch_grlen == 64`，
 > 关注调用约定是否为LP64系，用`__loongarch_lp64`
 
+一般来说，我们关注的是调用约定，因此建议使用`__loongarch_lp64`。
+
 # FAQ
 
 ## `relocation R_LARCH_B26 out of range`/`relocation R_LARCH_B26 overflow`错误
