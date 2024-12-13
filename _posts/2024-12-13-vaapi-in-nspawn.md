@@ -19,9 +19,9 @@ systemd-nspawn容器是一个轻量级的容器，它可以在不使用虚拟机
 
 ## 方法
 
-一般来说，硬件加速设备的设备节点位于`/dev/dri`目录下，例如`/dev/dri/renderD128`。我们可以将`/dev/dri`目录映射到容器中，使容器可以访问硬件加速设备。
+一般来说，硬件加速设备的设备节点位于`/dev/dri`目录下，例如`/dev/dri/renderD128`。我们可以**将`/dev/dri`目录**使用**`--bind`选项**映射到容器中，使容器可以访问硬件加速设备。
 
-然而，如果单纯只是使用`--bind`选项将`/dev/dri`目录映射到容器中而没有其他操作，容器中的应用仍不能使用硬件加速设备，例如打开容器：
+然而，如果单纯只是映射而没有其他操作，容器中的应用仍不能使用硬件加速设备，例如打开容器：
 
 ```bash
 sudo systemd-nspawn --bind /dev/dri -bD /path/to/container/root
@@ -36,13 +36,13 @@ VA error: wayland: failed to open /dev/dri/renderD128: Operation not permitted (
 VA error: wayland: did not get DRM device
 ```
 
-这是systemd-nspawn的默认权限设置导致的。我们还需要额外传递`--property=DeviceAllow='char-drm rw'`选项，使容器中的应用可以访问硬件加速设备：
+这是systemd-nspawn的默认权限设置导致的。我们还需要**额外传递`--property=DeviceAllow='char-drm rw'`**选项，使容器中的应用可以访问硬件加速设备：
 
 ```bash
 sudo systemd-nspawn --bind /dev/dri --property=DeviceAllow='char-drm rw' -bD /path/to/container/root
 ```
 
-这时在容器中运行`vainfo`，就可以正常打开硬件加速设备了：
+这时在容器中运行`vainfo`，就可以正常使用硬件加速设备了：
 
 ```log
 Trying display: wayland
@@ -85,6 +85,8 @@ Device creation failed: -1.
 [vist#0:0/hevc @ 0x5a1a52eac580] [dec:hevc @ 0x5a1a52eadd40] Using auto hwaccel type vaapi with new default device.
 ```
 
-日志中的`Using auto hwaccel type vaapi with new default device.`表示FFmpeg选择使用VA-API硬件加速。当然，VA-API硬件加速器并不是`-hwaccel auto`的最优先选择，如果有cuda可用，FFmpeg会优先选择cuda硬件加速器。这在日志中也将会有体现。
+日志中的`Using auto hwaccel type vaapi with new default device.`表示FFmpeg选择使用VA-API硬件加速。当然，VA-API硬件加速器并不是`-hwaccel auto`的最优先选择，如果有cuda可用，FFmpeg会优先选择cuda硬件加速器。这在日志中也将会有体现。（也可以不使用`auto`，明确将`-hwaccel`选项设置为`vaapi`等）
+
+`-c:v hevc_vaapi`表示使用VA-API硬件加速器进行HEVC编码，`-vf hwupload`表示使用硬件上传（如果颜色空间不支持一般可以使用`-vf 'hwupload,scale_vaapi=format=nv12'`转化，有关FFmpeg硬件加速的使用方法，可以参见笔者的[另一篇博客](https://wszqkzqk.github.io/2023/01/01/FFmpeg%E7%9A%84%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/)）。如果硬件本身支持示例中的HEVC编码，且容器的硬件加速配置成功，这一命令应当能够正常运行。
 
 而`-c:v hevc_vaapi`表示使用VA-API硬件加速器进行HEVC编码，`-vf hwupload`表示使用硬件上传（如果颜色空间不支持一般可以使用`-vf 'hwupload,scale_vaapi=format=nv12'`转化，有关FFmpeg硬件加速的使用方法，可以参见笔者的[另一篇博客](https://wszqkzqk.github.io/2023/01/01/FFmpeg%E7%9A%84%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/)）。如果硬件本身支持示例中的HEVC编码，且容器的硬件加速配置成功，这一命令应当能够正常运行。
