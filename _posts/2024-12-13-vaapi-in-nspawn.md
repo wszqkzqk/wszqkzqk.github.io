@@ -6,7 +6,7 @@ date:       2024-12-13
 author:     wszqkzqk
 header-img: img/FFmpeg_Logo_new.webp
 catalog:    true
-tags:       FFmpeg 媒体文件 开源软件 媒体编解码
+tags:       FFmpeg 媒体文件 开源软件 媒体编解码 容器
 ---
 
 ## 前言

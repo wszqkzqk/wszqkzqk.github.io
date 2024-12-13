@@ -6,7 +6,7 @@ date:       2023-07-21
 author:     wszqkzqk
 header-img: img/Linux-distro-logo/archlinux.webp
 catalog:    true
-tags:       开源软件 系统配置 Linux archlinux
+tags:       开源软件 系统配置 Linux archlinux 容器
 ---
 
 ## 前言

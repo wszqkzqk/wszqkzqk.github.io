@@ -6,7 +6,7 @@ date:       2024-08-12
 author:     wszqkzqk
 header-img: img/bg-mountain-darken.webp
 catalog:    true
-tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 虚拟化 龙芯 LoongArchLinux
+tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 虚拟化 龙芯 LoongArchLinux 容器
 ---
 
 本文将介绍目前LoongArch的Arch Linux移植的**最小**维护架构（**不包括**CI工具）和参与[北京大学Linux俱乐部](https://github.com/lcpu-club)的Arch Linux龙芯移植工作的可能方式。

@@ -6,7 +6,7 @@ date:       2024-07-21
 author:     wszqkzqk
 header-img: img/bg-sunrise.webp
 catalog:    true
-tags:       系统配置 虚拟化 网络 Linux
+tags:       系统配置 虚拟化 网络 Linux 容器
 ---
 
 ## 前言
