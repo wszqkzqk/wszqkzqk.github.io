@@ -85,6 +85,6 @@ Device creation failed: -1.
 [vist#0:0/hevc @ 0x5a1a52eac580] [dec:hevc @ 0x5a1a52eadd40] Using auto hwaccel type vaapi with new default device.
 ```
 
-当然，VA-API硬件加速器并不是`-hwaccel auto`的最优先选择，如果有cuda可用，FFmpeg会优先选择cuda硬件加速器。这在日志中也有体现。
+日志中的`Using auto hwaccel type vaapi with new default device.`表示FFmpeg选择使用VA-API硬件加速。当然，VA-API硬件加速器并不是`-hwaccel auto`的最优先选择，如果有cuda可用，FFmpeg会优先选择cuda硬件加速器。这在日志中也将会有体现。
 
 而`-c:v hevc_vaapi`表示使用VA-API硬件加速器进行HEVC编码，`-vf hwupload`表示使用硬件上传（如果颜色空间不支持一般可以使用`-vf 'hwupload,scale_vaapi=format=nv12'`转化，有关FFmpeg硬件加速的使用方法，可以参见笔者的[另一篇博客](https://wszqkzqk.github.io/2023/01/01/FFmpeg%E7%9A%84%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/)）。如果硬件本身支持示例中的HEVC编码，且容器的硬件加速配置成功，这一命令应当能够正常运行。
