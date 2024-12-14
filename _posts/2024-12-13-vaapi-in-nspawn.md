@@ -42,7 +42,7 @@ VA error: wayland: did not get DRM device
 sudo systemd-nspawn --bind /dev/dri --property=DeviceAllow='char-drm rw' -bD /path/to/container/root
 ```
 
-这时在容器中运行`vainfo`，就可以正常使用硬件加速设备了：
+这时在容器中运行`vainfo`，就可以看到硬件加速设备的信息了：
 
 ```log
 Trying display: wayland
