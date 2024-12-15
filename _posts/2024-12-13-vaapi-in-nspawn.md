@@ -4,7 +4,7 @@ title:      在systemd-nspawn容器中使用硬件加速视频编解码
 subtitle:   nspawn容器中使用VA-API硬件加速
 date:       2024-12-13
 author:     wszqkzqk
-header-img: img/FFmpeg_Logo_new.webp
+header-img: img/media/bg-modern-img-comp.webp
 catalog:    true
 tags:       FFmpeg 媒体文件 开源软件 媒体编解码 容器
 ---
