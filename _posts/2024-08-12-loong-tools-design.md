@@ -9,7 +9,7 @@ catalog:    true
 tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 虚拟化 龙芯 LoongArchLinux 容器
 ---
 
-本文将介绍目前LoongArch的Arch Linux移植的**最小**维护架构（**不包括**CI工具）和参与[北京大学Linux俱乐部](https://github.com/lcpu-club)的Arch Linux龙芯移植工作的可能方式。
+本文将介绍目前LoongArch的Arch Linux移植的**最小**维护架构（**不包括**CI工具）和参与[北京大学Linux俱乐部](https://github.com/lcpu-club)的Arch Linux龙芯移植工作的方式。
 
 # 前言
 
@@ -122,7 +122,7 @@ extra-loong64-build -- -- -A
 * 如果需要`core-staging`和`extra-staging`中的包，请使用`extra-staging-loong64-build`。
   * ~~目前（2024.09.05）我们的工作进度**仍存放于`testing`与`staging`中**~~
   * ~~如果要针对最新的维护状况构建，请使用**`extra-testing-loong64-build`**或者`extra-staging-loong64-build`~~
-  * 目前我们只跟进Arch Linux官方的`core`和`extra`仓库，因此**一般使用`extra-loong64-build`**
+  * 目前我们只跟进Arch Linux官方的`core`和`extra`仓库，因此**一般只使用`extra-loong64-build`**
 
 #### 首次构建可能问题
 
@@ -375,7 +375,7 @@ def process_target_version(version: Optional[str]) -> Optional[str]:
         repos = core_repos + extra_repos # core repos first
         processed_version = None # not a specific version
 
-        pkgnames = subprocess.check_output(["bash", "-c", "source PKGBUILD; echo $pkgname"]).decode().strip().split()
+        pkgnames = subprocess.check_output(['bash', '-c', r'source PKGBUILD; echo "${pkgname[@]}"']).decode().strip().split()
         for pkgname in pkgnames:
             for repo in repos:
                 if repo:
