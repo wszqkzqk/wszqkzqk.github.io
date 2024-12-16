@@ -212,7 +212,13 @@ CACHE_DIR: str = os.path.join(GLib.get_user_cache_dir(), "devtools-loong64")
 PATCH_GIT: str = "https://github.com/lcpu-club/loongarch-packages.git"
 PATCH_FILE: str = "loong.patch"
 PATCH_REPO_PATH: str = os.path.join(CACHE_DIR, "loongarch-packages")
-X86_REPOS: tuple[str] = ("core", "extra")
+X86_REPOS: tuple[str] = (
+    "core-staging",
+    "core-testing",
+    "core",
+    "extra-staging",
+    "extra-testing",
+    "extra")
 X86_DB_PATH: str = os.path.join(CACHE_DIR, "repo-db", "x86")
 
 def download_file(source: str, dest: str) -> None:
@@ -281,7 +287,7 @@ def update_status(mirror_x86: str) -> None:
     if os.path.isdir(PATCH_REPO_PATH):
         print(f"Updating existing {PATCH_REPO_PATH}...")
         subprocess.run(["git", "-C", PATCH_REPO_PATH, "fetch", "--all"])
-        subprocess.run(["git", "-C", PATCH_REPO_PATH, "reset", "--hard", f"origin/master"])
+        subprocess.run(["git", "-C", PATCH_REPO_PATH, "reset", "--hard", "origin/master"])
     else:
         print(f"Cloning PATCH_REPO_PATH to {PATCH_REPO_PATH}...")
         os.makedirs(os.path.dirname(PATCH_REPO_PATH), exist_ok=True)
@@ -306,27 +312,76 @@ def modify_pkgbuild_cargo_fetch(pkgbuild_path: str) -> None:
             f.write(new_content)
         print("Automatically changed 'cargo fetch' to use 'uname -m'.")
 
+def process_target_version(version: Optional[str]) -> Optional[str]:
+    """
+    Process the target version of the package to be checked out.
+
+    Args:
+        version (str): The target version to be checked out
+
+    Returns:
+        str: The processed target version
+    """
+    # Keep the order of the repos
+    core_repos = []
+    extra_repos = []
+    processed_version: Optional[str] = version
+    if processed_version == "staging":
+        core_repos.append(load_repo(X86_DB_PATH, "core-staging"))
+        core_repos.append(load_repo(X86_DB_PATH, "core-testing"))
+        extra_repos.append(load_repo(X86_DB_PATH, "extra-staging"))
+        extra_repos.append(load_repo(X86_DB_PATH, "extra-testing"))
+        processed_version = None # not a specific version
+    elif processed_version == "testing":
+        core_repos.append(load_repo(X86_DB_PATH, "core-testing"))
+        extra_repos.append(load_repo(X86_DB_PATH, "extra-testing"))
+        processed_version = None # not a specific version
+
+    if (not processed_version) or (processed_version == "stable"):
+        core_repos.append(load_repo(X86_DB_PATH, "core"))
+        extra_repos.append(load_repo(X86_DB_PATH, "extra"))
+        repos = core_repos + extra_repos # core repos first
+        processed_version = None # not a specific version
+
+        pkgnames = subprocess.check_output(["bash", "-c", "source PKGBUILD; echo $pkgname"]).decode().strip().split()
+        for pkgname in pkgnames:
+            for repo in repos:
+                if repo:
+                    pkg = repo.get_pkg(pkgname)
+                    if pkg:
+                        processed_version = pkg.version
+                        break
+            if processed_version:
+                break
+
+    return processed_version
+
 def main() -> None:
     """
     Main function that orchestrates the package patching process.
     """
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
-        description='A tool for managing and patching Arch Linux packages for loong64 architecture. '
+        description='A tool for managing and patching Arch Linux build scripts for loong64 architecture. '
                    'This utility downloads package sources, applies loong64-specific patches, '
-                   'and handles necessary build configuration updates.',
+                   'and handles updates.',
         formatter_class=argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument('pkgbase',
         help='Name of the pkgbase to be processed')
     parser.add_argument('-m', '--mirror',
-        help='Mirror URL for x86_64 package database to set to current stable version (default: %(default)s)',
+        help='Mirror URL for Arch Linux official package database to get version info (default: %(default)s)',
         default="https://geo.mirror.pkgbuild.com",
         metavar='URL')
+    parser.add_argument('-c', '--checkout',
+        help='Checkout a specific version of the package may be "stable", "testing", "staging", '
+        '"main" , commit hash or a specific version pkgver-pkgrel, default is the current stable version',
+        metavar='VERSION')
 
     args: argparse.Namespace = parser.parse_args()
 
     mirror_x86: str = args.mirror
     pkgbase: str = args.pkgbase
+    version: Optional[str] = args.checkout
 
     update_status(mirror_x86)
 
@@ -352,21 +407,14 @@ def main() -> None:
         subprocess.run(["git", "checkout", "main"])
         subprocess.run(["git", "pull"])
 
-        repos: List[Optional[pyalpm.DB]] = [load_repo(X86_DB_PATH, "core"), load_repo(X86_DB_PATH, "extra")]
-        version: Optional[str] = None
-        pkgnames = subprocess.check_output(["bash", "-c", "source PKGBUILD; echo $pkgname"]).decode().strip().split()
-        for pkgname in pkgnames:
-            for repo in repos:
-                if repo:
-                    pkg = repo.get_pkg(pkgname)
-                    if pkg:
-                        version = pkg.version
-                        break
-            if version:
-                break
-        if version:
-            print(f"Checking out version of Arch Linux's stable repo: {version}")
-            subprocess.run(["git", "checkout", version])
+        processed_version = process_target_version(version)
+
+        if processed_version:
+            if (not version) or (processed_version == version):
+                print(f"Checking out: {processed_version}")
+            else:
+                print(f"Checking out: {processed_version} (requested: {version})")
+            subprocess.run(["git", "checkout", processed_version])
         else:
             print("Warning: Failed to find a version in Arch Linux's stable repo!")
         os.chdir("..")
