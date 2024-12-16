@@ -220,6 +220,7 @@ X86_REPOS: tuple[str] = (
     "extra-testing",
     "extra")
 X86_DB_PATH: str = os.path.join(CACHE_DIR, "repo-db", "x86")
+CARGO_FETCH_REGEX = re.compile(r'(cargo\s+fetch.*?)(x86_64|\$CARCH)')
 
 def download_file(source: str, dest: str) -> None:
     """
@@ -297,15 +298,11 @@ def update_status(mirror_x86: str) -> None:
 
 def modify_pkgbuild_cargo_fetch(pkgbuild_path: str) -> None:
     """Modify cargo fetch commands in PKGBUILD to use uname -m"""
-    content = ""
+    content: Optional[str] = None
     with open(pkgbuild_path, 'r') as f:
         content = f.read()
 
-    new_content = re.sub(
-        r'cargo\s*fetch\s*(x86_64|\$CARCH)',
-        lambda m: 'cargo fetch $(uname -m)',
-        content
-    )
+    new_content = CARGO_FETCH_REGEX.sub(r'\1$(uname -m)', content)
 
     if new_content != content:
         with open(pkgbuild_path, 'w') as f:
