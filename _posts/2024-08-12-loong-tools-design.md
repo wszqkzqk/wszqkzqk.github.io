@@ -221,6 +221,9 @@ X86_REPOS: tuple[str] = (
     "extra")
 X86_DB_PATH: str = os.path.join(CACHE_DIR, "repo-db", "x86")
 CARGO_FETCH_REGEX = re.compile(r'(cargo\s+fetch.*?)(x86_64|\$CARCH)')
+UPDATE_CONFIG_REGEX = re.compile(
+    r'(build\s*\(\s*\)\s*{.*?^\s*cd\s+[^\n]*$)',
+    re.MULTILINE | re.DOTALL)
 
 def download_file(source: str, dest: str) -> None:
     """
@@ -296,9 +299,41 @@ def update_status(mirror_x86: str) -> None:
 
     update_repo(mirror_x86)
 
+def modify_pkgbuild_config(pkgbuild_path: str) -> None:
+    """
+    Add config.sub and config.guess update commands after cd command in build().
+
+    This function injects necessary commands into the PKGBUILD's build() function
+    to ensure the build system correctly recognizes the loong64 architecture.
+    It adds commands to copy the latest config.sub and config.guess files from
+    the system's automake package.
+
+    Args:
+        pkgbuild_path (str): Path to the PKGBUILD file to be modified
+    """
+    with open(pkgbuild_path, 'r') as f:
+        content = f.read()
+    
+    update_commands = """
+  for c_s in $(find -type f -name config.sub -o -name configure.sub); do cp -f /usr/share/automake-1.1?/config.sub "$c_s"; done
+  for c_g in $(find -type f -name config.guess -o -name configure.guess); do cp -f /usr/share/automake-1.1?/config.guess "$c_g"; done"""
+    
+    new_content = UPDATE_CONFIG_REGEX.sub(r'\1' + update_commands, content)
+    
+    if new_content != content:
+        with open(pkgbuild_path, 'w') as f:
+            f.write(new_content)
+        print("Added config.sub and config.guess update to PKGBUILD.")
+
 def modify_pkgbuild_cargo_fetch(pkgbuild_path: str) -> None:
-    """Modify cargo fetch commands in PKGBUILD to use uname -m"""
-    content: Optional[str] = None
+    """
+    Modify cargo fetch commands in PKGBUILD
+    
+    This function replaces x86_64 or $CARCH in cargo fetch commands with $(uname -m).
+
+    Args:
+        pkgbuild_path (str): Path to the PKGBUILD file to be modified
+    """
     with open(pkgbuild_path, 'r') as f:
         content = f.read()
 
@@ -432,18 +467,19 @@ def main() -> None:
             sys.exit(1)
     else:
         print(f"No patch of {pkgbase} found.")
-        update_config_path = os.path.join(PATCH_REPO_PATH, "update_config")
-        if os.path.isfile(update_config_path):
-            with open(update_config_path, "r") as f:
-                if pkgbase in f.read().splitlines():
-                    pkgbuild_path = os.path.join(pkgbase, "PKGBUILD")
-                    sed_command = r'/^build()/,/configure/ {/^[[:space:]]*cd[[:space:]]\+/ { s/$/\n  for c_s in $(find -type f -name config.sub -o -name configure.sub); do cp -f \/usr\/share\/automake-1.1?\/config.sub "$c_s"; done\n  for c_g in $(find -type f -name config.guess -o -name configure.guess); do cp -f \/usr\/share\/automake-1.1?\/config.guess "$c_g"; done/; t;};}'
-                    subprocess.run(["sed", "-i", sed_command, pkgbuild_path])
-                    print("Added config.sub and config.guess update to PKGBUILD.")
-
         pkgbuild_path = os.path.join(pkgbase, "PKGBUILD")
+        update_config_path = os.path.join(PATCH_REPO_PATH, "update_config")
+
         if os.path.isfile(pkgbuild_path):
             modify_pkgbuild_cargo_fetch(pkgbuild_path)
+
+            if os.path.isfile(update_config_path):
+                with open(update_config_path, "r") as f:
+                    if pkgbase in f.read().splitlines():
+                        modify_pkgbuild_config(pkgbuild_path)
+        else:
+            print(f"No PKGBUILD found in {pkgbase}.")
+            sys.exit(1)
     print("Done.")
 
 if __name__ == "__main__":
