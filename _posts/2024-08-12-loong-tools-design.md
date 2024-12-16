@@ -186,13 +186,13 @@ done
 #!/usr/bin/env python3
 
 """
-A tool for managing and patching packages for the Loong64 architecture.
+A tool for managing and patching packages for the loong64 architecture.
 
 This script handles the following tasks:
 - Downloads and updates package repositories
-- Applies Loong64-specific patches to packages
+- Applies loong64-specific patches to packages
 - Manages package version control
-- Updates build configurations for Loong64 architecture
+- Updates build configurations for loong64 architecture
 """
 
 import os
@@ -203,8 +203,8 @@ import pyalpm
 import urllib.request
 import shutil
 import re
-import gi
 from typing import Optional, List
+import gi
 gi.require_version('GLib', '2.0')
 from gi.repository import GLib
 
@@ -286,7 +286,7 @@ def update_status(mirror_x86: str) -> None:
         print(f"Cloning PATCH_REPO_PATH to {PATCH_REPO_PATH}...")
         os.makedirs(os.path.dirname(PATCH_REPO_PATH), exist_ok=True)
         subprocess.run(["git", "clone", PATCH_GIT, PATCH_REPO_PATH])
-    
+
     update_repo(mirror_x86)
 
 def modify_pkgbuild_cargo_fetch(pkgbuild_path: str) -> None:
@@ -311,11 +311,11 @@ def main() -> None:
     Main function that orchestrates the package patching process.
     """
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
-        description='A tool for managing and patching Arch Linux packages for Loong64 architecture. '
-                   'This utility downloads package sources, applies Loong64-specific patches, '
+        description='A tool for managing and patching Arch Linux packages for loong64 architecture. '
+                   'This utility downloads package sources, applies loong64-specific patches, '
                    'and handles necessary build configuration updates.',
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    
+
     parser.add_argument('pkgbase',
         help='Name of the pkgbase to be processed')
     parser.add_argument('-m', '--mirror',
@@ -326,24 +326,24 @@ def main() -> None:
     args: argparse.Namespace = parser.parse_args()
 
     mirror_x86: str = args.mirror
-    PKGBASE: str = args.pkgbase
+    pkgbase: str = args.pkgbase
 
     update_status(mirror_x86)
 
-    PATCH_DIR: str = os.path.join(PATCH_REPO_PATH, PKGBASE)
+    patch_dir: str = os.path.join(PATCH_REPO_PATH, pkgbase)
 
     print("Cloning official package repository...")
 
-    if os.path.isdir(PATCH_DIR) and not os.path.exists(os.path.join(PATCH_DIR, PATCH_FILE)):
-        print(f"{PATCH_DIR} exists, but {os.path.exists(os.path.join(PATCH_DIR, PATCH_FILE))} does not exist.")
+    if os.path.isdir(patch_dir) and not os.path.exists(os.path.join(patch_dir, PATCH_FILE)):
+        print(f"{patch_dir} exists, but {os.path.exists(os.path.join(patch_dir, PATCH_FILE))} does not exist.")
         print("It's a full package repository, not a patch repository.")
         print("Copying the full package files...")
-        shutil.copytree(PATCH_DIR, PKGBASE, dirs_exist_ok=True)
+        shutil.copytree(patch_dir, pkgbase, dirs_exist_ok=True)
         print("Done.")
         sys.exit(0)
     else:
-        subprocess.run(["pkgctl", "repo", "clone", "--protocol=https", PKGBASE])
-        os.chdir(PKGBASE)
+        subprocess.run(["pkgctl", "repo", "clone", "--protocol=https", pkgbase])
+        os.chdir(pkgbase)
         git_status = subprocess.check_output(
             ["git", "status"], env={"LC_ALL": "C"}
         ).decode()
@@ -371,14 +371,14 @@ def main() -> None:
             print("Warning: Failed to find a version in Arch Linux's stable repo!")
         os.chdir("..")
 
-    if os.path.isdir(PATCH_DIR):
+    if os.path.isdir(patch_dir):
         print("Copying patches...")
-        for filename in os.listdir(PATCH_DIR):
-            if os.path.isfile(os.path.join(PATCH_DIR, filename)):
-                shutil.copy2(os.path.join(PATCH_DIR, filename), os.path.join(PKGBASE, filename))
+        for filename in os.listdir(patch_dir):
+            if os.path.isfile(os.path.join(patch_dir, filename)):
+                shutil.copy2(os.path.join(patch_dir, filename), os.path.join(pkgbase, filename))
             else:
-                shutil.copytree(os.path.join(PATCH_DIR, filename), os.path.join(PKGBASE, filename), dirs_exist_ok=True)
-        os.chdir(PKGBASE)
+                shutil.copytree(os.path.join(patch_dir, filename), os.path.join(pkgbase, filename), dirs_exist_ok=True)
+        os.chdir(pkgbase)
         if os.path.isfile(PATCH_FILE):
             print(f"Applying patch {PATCH_FILE}...")
             subprocess.run(["patch", "-p1", "-i", PATCH_FILE])
@@ -386,17 +386,17 @@ def main() -> None:
             print("No 'loong.patch' found.")
             sys.exit(1)
     else:
-        print(f"No patch of {PKGBASE} found.")
+        print(f"No patch of {pkgbase} found.")
         update_config_path = os.path.join(PATCH_REPO_PATH, "update_config")
         if os.path.isfile(update_config_path):
             with open(update_config_path, "r") as f:
-                if PKGBASE in f.read().splitlines():
-                    pkgbuild_path = os.path.join(PKGBASE, "PKGBUILD")
+                if pkgbase in f.read().splitlines():
+                    pkgbuild_path = os.path.join(pkgbase, "PKGBUILD")
                     sed_command = r'/^build()/,/configure/ {/^[[:space:]]*cd[[:space:]]\+/ { s/$/\n  for c_s in $(find -type f -name config.sub -o -name configure.sub); do cp -f \/usr\/share\/automake-1.1?\/config.sub "$c_s"; done\n  for c_g in $(find -type f -name config.guess -o -name configure.guess); do cp -f \/usr\/share\/automake-1.1?\/config.guess "$c_g"; done/; t;};}'
                     subprocess.run(["sed", "-i", sed_command, pkgbuild_path])
                     print("Added config.sub and config.guess update to PKGBUILD.")
 
-        pkgbuild_path = os.path.join(PKGBASE, "PKGBUILD")
+        pkgbuild_path = os.path.join(pkgbase, "PKGBUILD")
         if os.path.isfile(pkgbuild_path):
             modify_pkgbuild_cargo_fetch(pkgbuild_path)
     print("Done.")
