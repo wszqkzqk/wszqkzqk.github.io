@@ -182,77 +182,228 @@ done
 
 这些过程可以手动使用命令完成，也可以封装一些脚本来实现，以下是笔者给出的参考实现：
 
-```
-#!/bin/bash
+```python
+#!/usr/bin/env python3
 
-PATCH_GIT="https://github.com/lcpu-club/loongarch-packages.git"
+"""
+A tool for managing and patching packages for the Loong64 architecture.
 
-if [ -z "$1" ]; then
-  echo "Usage: get-loong64-pkg <package-name>"
-  exit 1
-fi
+This script handles the following tasks:
+- Downloads and updates package repositories
+- Applies Loong64-specific patches to packages
+- Manages package version control
+- Updates build configurations for Loong64 architecture
+"""
 
-PACKAGE_NAME=$1
-PATCH_REPO=${PATCH_REPO:-~/projects/loongarch-packages}
+import os
+import sys
+import subprocess
+import argparse
+import pyalpm
+import requests
+import shutil
+import re
+import gi
+from typing import Optional, List
+gi.require_version('GLib', '2.0')
+from gi.repository import GLib
 
-if [ -d "$PATCH_REPO" ]; then
-  echo "Updating existing $PATCH_REPO..."
-  git -C "$PATCH_REPO" fetch --all
-  git -C "$PATCH_REPO" reset --hard origin/$(git -C "$PATCH_REPO" rev-parse --abbrev-ref HEAD)
-else
-  echo "Cloning PATCH_REPO to $PATCH_REPO..."
-  mkdir -p "$(dirname "$PATCH_REPO")"
-  git clone "$PATCH_GIT" "$PATCH_REPO"
-fi
+CACHE_DIR: str = os.path.join(GLib.get_user_cache_dir(), "devtools-loong64")
+PATCH_GIT: str = "https://github.com/lcpu-club/loongarch-packages.git"
+PATCH_FILE: str = "loong.patch"
+PATCH_REPO_PATH: str = os.path.join(CACHE_DIR, "loongarch-packages")
+X86_REPOS: tuple[str] = ("core", "extra")
+X86_DB_PATH: str = os.path.join(CACHE_DIR, "repo-db", "x86")
 
-PATCH_DIR="$PATCH_REPO/$PACKAGE_NAME"
+def download_file(source: str, dest: str) -> None:
+    """
+    Download a file from a given URL to a local destination.
 
-echo "Cloning official package repository..."
-if [[ -d "$PATCH_DIR" && ! -e "$PATCH_DIR/$PATCH_FILE" ]]; then
-  echo "$PATCH_DIR exists, but $PATCH_DIR/$PATCH_FILE does not exist."
-  echo "It's a full package repository, not a patch repository."
-  cp -r "$PATCH_DIR" .
-  exit 0
-else
-  pkgctl repo clone --protocol=https "$PACKAGE_NAME"
+    Args:
+        source (str): The URL of the file to download
+        dest (str): The local path where the file should be saved
 
-  cd "$PACKAGE_NAME"
-  git_status=$(LC_ALL=C git status 2>&1)
-  if [[ $git_status =~ "modified:" ]]; then
-    git stash
-  fi
-  git pull
-  cd ..
-fi
+    Raises:
+        Exception: If the download fails for any reason
+    """
+    headers = {"User-Agent": "Mozilla/5.0", }
+    repo_path = os.path.dirname(dest)
+    if not os.path.exists(repo_path):
+        os.makedirs(repo_path)
+    try:
+        # Download the file and save it to dest_path
+        response = requests.get(source, headers=headers)
+        response.raise_for_status()
+        with open(dest, 'wb') as out_file:
+            out_file.write(response.content)
+    except Exception as e:
+        print(f"Error downloading file: {e}")
 
-if [ -d "$PATCH_DIR" ]; then
-  echo "Copying patches..."
-  cp -f "$PATCH_DIR"/* "$PACKAGE_NAME"
-  cd "$PACKAGE_NAME"
-  PATCH_FILE="loong.patch"
-  if [ -f "$PATCH_FILE" ]; then
-    echo "Applying patch $PATCH_FILE..."
-    patch -p1 < "$PATCH_FILE"
-  else
-    echo "No 'loong.patch' found."
-    exit 1
-  fi
+def update_repo(mirror_x86: str) -> None:
+    """
+    Update the local repository database from a specified mirror.
 
-  echo "Done."
-else
-  echo "No patch of $PACKAGE_NAME found."
-  if grep -Fxq "$PACKAGE_NAME" "$PATCH_REPO/update_config"; then
-    sed -i '/^build()/,/configure/ {/^[[:space:]]*cd[[:space:]]\+/ { s/$/\n  for c_s in $(find -type f -name config.sub -o -name configure.sub); do cp -f \/usr\/share\/automake-1.1?\/config.sub "$c_s"; done\n  for c_g in $(find -type f -name config.guess -o -name configure.guess); do cp -f \/usr\/share\/automake-1.1?\/config.guess "$c_g"; done/; t;};}' "$PACKAGE_NAME/PKGBUILD"
-    echo "Added config.sub and config.guess update to PKGBUILD."
-  fi
+    Args:
+        mirror_x86 (str): The base URL of the x86_64 package mirror
+    """
+    for repo in X86_REPOS:
+        download_file(f"{mirror_x86}/{repo}/os/x86_64/{repo}.db",
+                     os.path.join(X86_DB_PATH, "sync", f"{repo}.db"))
 
-  if grep -Eq 'cargo fetch.*(x86_64|\$CARCH)' "$PACKAGE_NAME/PKGBUILD"; then
-    sed -i '/cargo fetch/s/\$CARCH/`uname -m`/' "$PACKAGE_NAME/PKGBUILD"
-    sed -i '/cargo fetch/s/\x86_64/`uname -m`/' "$PACKAGE_NAME/PKGBUILD"
-    echo "Automatically changed 'cargo fetch' to use 'uname -m'."
-  fi
-  exit 1
-fi
+def load_repo(dir_path: str, repo: str) -> Optional[pyalpm.DB]:
+    """
+    Load a package repository database.
+
+    Args:
+        dir_path (str): The directory path where the repository database is located
+        repo (str): The name of the repository to load
+
+    Returns:
+        Optional[pyalpm.DB]: The loaded repository database, or None if loading fails
+    """
+    handle = pyalpm.Handle("/", dir_path)
+    try:
+        db = handle.register_syncdb(repo, 0)
+        return db
+    except pyalpm.error as e:
+        print(f"Failed to load repo {dir_path}: {e}")
+        return None
+
+def update_status(mirror_x86: str) -> None:
+    """
+    Update both the patch repository and package database.
+
+    This function ensures that both the local patch repository and package database
+    are up to date with their respective remote sources.
+
+    Args:
+        mirror_x86 (str): The base URL of the x86_64 package mirror
+    """
+    if os.path.isdir(PATCH_REPO_PATH):
+        print(f"Updating existing {PATCH_REPO_PATH}...")
+        subprocess.run(["git", "-C", PATCH_REPO_PATH, "fetch", "--all"])
+        subprocess.run(["git", "-C", PATCH_REPO_PATH, "reset", "--hard", f"origin/master"])
+    else:
+        print(f"Cloning PATCH_REPO_PATH to {PATCH_REPO_PATH}...")
+        os.makedirs(os.path.dirname(PATCH_REPO_PATH), exist_ok=True)
+        subprocess.run(["git", "clone", PATCH_GIT, PATCH_REPO_PATH])
+    
+    update_repo(mirror_x86)
+
+def modify_pkgbuild_cargo_fetch(pkgbuild_path: str) -> None:
+    """Modify cargo fetch commands in PKGBUILD to use uname -m"""
+    content = ""
+    with open(pkgbuild_path, 'r') as f:
+        content = f.read()
+
+    new_content = re.sub(
+        r'cargo\s*fetch\s*(x86_64|\$CARCH)',
+        lambda m: 'cargo fetch $(uname -m)',
+        content
+    )
+
+    if new_content != content:
+        with open(pkgbuild_path, 'w') as f:
+            f.write(new_content)
+        print("Automatically changed 'cargo fetch' to use 'uname -m'.")
+
+def main() -> None:
+    """
+    Main function that orchestrates the package patching process.
+    """
+    parser: argparse.ArgumentParser = argparse.ArgumentParser(
+        description='A tool for managing and patching Arch Linux packages for Loong64 architecture. '
+                   'This utility downloads package sources, applies Loong64-specific patches, '
+                   'and handles necessary build configuration updates.',
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    
+    parser.add_argument('pkgbase',
+        help='Name of the pkgbase to be processed')
+    parser.add_argument('-m', '--mirror',
+        help='Mirror URL for x86_64 package database to set to current stable version (default: %(default)s)',
+        default="https://geo.mirror.pkgbuild.com",
+        metavar='URL')
+
+    args: argparse.Namespace = parser.parse_args()
+
+    mirror_x86: str = args.mirror
+    PKGBASE: str = args.pkgbase
+
+    update_status(mirror_x86)
+
+    PATCH_DIR: str = os.path.join(PATCH_REPO_PATH, PKGBASE)
+
+    print("Cloning official package repository...")
+
+    if os.path.isdir(PATCH_DIR) and not os.path.exists(os.path.join(PATCH_DIR, PATCH_FILE)):
+        print(f"{PATCH_DIR} exists, but {os.path.exists(os.path.join(PATCH_DIR, PATCH_FILE))} does not exist.")
+        print("It's a full package repository, not a patch repository.")
+        print("Copying the full package files...")
+        shutil.copytree(PATCH_DIR, PKGBASE, dirs_exist_ok=True)
+        print("Done.")
+        sys.exit(0)
+    else:
+        subprocess.run(["pkgctl", "repo", "clone", "--protocol=https", PKGBASE])
+        os.chdir(PKGBASE)
+        git_status = subprocess.check_output(
+            ["git", "status"], env={"LC_ALL": "C"}
+        ).decode()
+        if "modified:" in git_status:
+            subprocess.run(["git", "stash"])
+        subprocess.run(["git", "checkout", "main"])
+        subprocess.run(["git", "pull"])
+
+        repos: List[Optional[pyalpm.DB]] = [load_repo(X86_DB_PATH, "core"), load_repo(X86_DB_PATH, "extra")]
+        version: Optional[str] = None
+        pkgnames = subprocess.check_output(["bash", "-c", "source PKGBUILD; echo $pkgname"]).decode().strip().split()
+        for pkgname in pkgnames:
+            for repo in repos:
+                if repo:
+                    pkg = repo.get_pkg(pkgname)
+                    if pkg:
+                        version = pkg.version
+                        break
+            if version:
+                break
+        if version:
+            print(f"Checking out version of Arch Linux's stable repo: {version}")
+            subprocess.run(["git", "checkout", version])
+        else:
+            print("Warning: Failed to find a version in Arch Linux's stable repo!")
+        os.chdir("..")
+
+    if os.path.isdir(PATCH_DIR):
+        print("Copying patches...")
+        for filename in os.listdir(PATCH_DIR):
+            if os.path.isfile(os.path.join(PATCH_DIR, filename)):
+                shutil.copy2(os.path.join(PATCH_DIR, filename), os.path.join(PKGBASE, filename))
+            else:
+                shutil.copytree(os.path.join(PATCH_DIR, filename), os.path.join(PKGBASE, filename), dirs_exist_ok=True)
+        os.chdir(PKGBASE)
+        if os.path.isfile(PATCH_FILE):
+            print(f"Applying patch {PATCH_FILE}...")
+            subprocess.run(["patch", "-p1", "-i", PATCH_FILE])
+        else:
+            print("No 'loong.patch' found.")
+            sys.exit(1)
+    else:
+        print(f"No patch of {PKGBASE} found.")
+        update_config_path = os.path.join(PATCH_REPO_PATH, "update_config")
+        if os.path.isfile(update_config_path):
+            with open(update_config_path, "r") as f:
+                if PKGBASE in f.read().splitlines():
+                    pkgbuild_path = os.path.join(PKGBASE, "PKGBUILD")
+                    sed_command = r'/^build()/,/configure/ {/^[[:space:]]*cd[[:space:]]\+/ { s/$/\n  for c_s in $(find -type f -name config.sub -o -name configure.sub); do cp -f \/usr\/share\/automake-1.1?\/config.sub "$c_s"; done\n  for c_g in $(find -type f -name config.guess -o -name configure.guess); do cp -f \/usr\/share\/automake-1.1?\/config.guess "$c_g"; done/; t;};}'
+                    subprocess.run(["sed", "-i", sed_command, pkgbuild_path])
+                    print("Added config.sub and config.guess update to PKGBUILD.")
+
+        pkgbuild_path = os.path.join(PKGBASE, "PKGBUILD")
+        if os.path.isfile(pkgbuild_path):
+            modify_pkgbuild_cargo_fetch(pkgbuild_path)
+    print("Done.")
+
+if __name__ == "__main__":
+    main()
 ```
 
 这个脚本可以将软件包的测试构建过程简化为：
