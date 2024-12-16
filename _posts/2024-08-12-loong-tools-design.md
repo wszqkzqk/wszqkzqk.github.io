@@ -200,7 +200,7 @@ import sys
 import subprocess
 import argparse
 import pyalpm
-import requests
+import urllib.request
 import shutil
 import re
 import gi
@@ -226,16 +226,15 @@ def download_file(source: str, dest: str) -> None:
     Raises:
         Exception: If the download fails for any reason
     """
-    headers = {"User-Agent": "Mozilla/5.0", }
+    headers = {"User-Agent": "Mozilla/5.0"}
     repo_path = os.path.dirname(dest)
     if not os.path.exists(repo_path):
         os.makedirs(repo_path)
+
     try:
-        # Download the file and save it to dest_path
-        response = requests.get(source, headers=headers)
-        response.raise_for_status()
-        with open(dest, 'wb') as out_file:
-            out_file.write(response.content)
+        req = urllib.request.Request(source, headers=headers)
+        with urllib.request.urlopen(req) as response, open(dest, 'wb') as out_file:
+            out_file.write(response.read())
     except Exception as e:
         print(f"Error downloading file: {e}")
 
