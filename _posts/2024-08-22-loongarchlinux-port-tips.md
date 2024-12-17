@@ -451,6 +451,7 @@ prapre() {
 ## QEMU User特异性问题
 
 * **省流：在QEMU USER模式如果遇到奇怪/难以解释的问题，请尝试在QEMU System模式或者实体机上进行测试**
+  * 当然，QEMU System模式模拟性能很差，请自行衡量
 
 由于QEMU User的实现问题，使用QEMU User模式构建软件包时可能会遇到一些特异性问题，目前已知的问题有：
 
@@ -508,7 +509,7 @@ prapre() {
 
 ## `pkgctl`从官方`clone`软件包时要求输入用户名和密码
 
-如果使用`pkgctl`从官方克隆软件包时要求输入用户名和密码：
+如果使用`pkgctl`从官方克隆软件包时（包括用`get-loong64-pkg`获取软件包时）要求输入用户名和密码：
 
 ```log
 ==> Cloning <package-name> ...
@@ -649,19 +650,19 @@ Server = https://mirrors.pku.edu.cn/loongarch-lcpu/archlinux/$repo/os/$arch
 
 ## LTO提示磁盘空间不足：`lto: fatal error: write: No space left on device`
 
-* **该方法已失效！**
+很有可能不是真的吃满了硬盘空间，是因为`archbuild`的`/tmp`目录是挂载在`tmpfs`上的，Arch Linux上游设定的默认大小是内存（**不包括swap**）的50%，如果`/tmp`被写满了，就会出现这个问题。
 
-参考自[archriscv wiki](https://github.com/felixonmars/archriscv-packages/wiki/%E6%88%91%E4%BB%AC%E7%9A%84%E5%B7%A5%E4%BD%9C%E4%B9%A0%E6%83%AF#%E7%A3%81%E7%9B%98%E5%8D%A0%E7%94%A8%E6%BB%A1%E4%BA%86)
+如果确实有用小内存机器构建这样大型的软件包的需求，可以在构建命令中向`makechrootpkg`传递`-t /tmp:size=<size-you-want>`参数，指定`tmpfs`的大小（仍然可以用内存的百分比表示，此外也可以指定更多参数，参见[Linux内核文档](https://www.kernel.org/doc/html/v6.12/filesystems/tmpfs.html)），例如：
 
-> 很有可能不是真的吃满了，是因为 devtools 使用了 systemd-nspawn，而后者默认用参数 `size=10%`挂载在 `/tmp` 目录上。
->
-> 可以尝试调整 `SYSTEMD_NSPAWN_TMPFS_TMP` 这个变量的值来拒绝挂载 tmpfs
->
-> ```bash
-> sudo SYSTEMD_NSPAWN_TMPFS_TMP=0 extra-loong64-build -- -- -A
-> ```
->
-> 记得需要加上 sudo 用 root 跑，不然 devtools 自己 sudo 了之后，这个环境变量就没了。
+```bash
+extra-loong64-build -- -t /tmp:size=20G,mode=777 -- -A
+```
+
+需要注意的是，如果要用以上方法，应当保证`tmpfs`的大小根据内存和swap的总大小合理设置。以下是来自Linux内核文档的警告：
+
+> If you **oversize** your tmpfs instances the machine will **deadlock** since the OOM handler will **not be able to free** that memory.
+
+对于小内存机器，如果要使用这样的方法来构建大型软件包，应当务必确保启用了**足够大的swap分区**。
 
 ## 如何从GitHub的PR/Commit中获取Patch
 
