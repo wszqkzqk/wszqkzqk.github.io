@@ -652,10 +652,10 @@ Server = https://mirrors.pku.edu.cn/loongarch-lcpu/archlinux/$repo/os/$arch
 
 这一错误很有可能不是真的吃满了硬盘空间。`archbuild`使用的systemd-nspawn环境中`/tmp`目录是挂载的`tmpfs`，Arch Linux上游设定的`tmpfs`大小是内存（**不包括swap**）的50%，如果`/tmp`被写满了，就会出现这个问题。
 
-如果确实有用小内存机器构建这样大型的软件包的需求，可以在构建命令中向`makechrootpkg`传递`-t /tmp:size=<size-you-want>`参数**覆盖**Arch Linux上游的设定，指定`tmpfs`的大小（仍然可以用内存的百分比表示，此外也可以指定更多参数，参见[Linux内核文档](https://www.kernel.org/doc/html/v6.12/filesystems/tmpfs.html)），例如：
+如果确实有用小内存机器构建这样大型的软件包的需求，可以在构建命令中向`makechrootpkg`传递`-t /tmp:size=<size-you-want>`参数**覆盖**Arch Linux上游的设定，指定`tmpfs`的大小（可以用绝对大小或者物理内存的百分比表示，此外也可以指定更多参数，参见[Linux内核文档](https://www.kernel.org/doc/html/v6.12/filesystems/tmpfs.html)），例如：
 
 ```bash
-extra-loong64-build -- -t /tmp:size=25G -- -A
+extra-loong64-build -- -t /tmp:size=32G -- -A
 ```
 
 需要注意的是，如果要用以上方法，应当保证`tmpfs`的大小根据内存和swap的总大小合理设置。以下是来自Linux内核文档的警告：
