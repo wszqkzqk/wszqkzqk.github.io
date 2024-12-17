@@ -60,39 +60,50 @@ paru -S devtools-loong64
 
 # 维护仓库
 
-* **TODO:** 补丁维护仓库结构仍可能会有微调
-
 我们的补丁维护仓库位于[GitHub lcpu-club/loongarch-packages](https://github.com/lcpu-club/loongarch-packages)下，每个需要额外patch的软件包都有一个对应于包名的目录。该目录仅用于存放patch或龙芯特有的配置文件,**不直接存放`PKGBUILD`或上游软件源代码文件**。
 
 * `loong.patch`是主要针对`PKGBUILD`的patch文件
   * 也可能包含其他Arch Linux**官方**软件包仓库**git跟踪**的文件
-    * 具体是否可以包含Arch Linux**官方**软件包仓库中**git跟踪**的文件由移植包维护者自行决定
-      * 有的维护者可能要求使用独立的patch并在makepkg中应用
-      * 有的维护者可能允许直接编辑并一并导出到`loong.patch`
-    * 但是**不能**包括新的补丁文件
-  * 使用`git diff`导出
-* 其他文件则可能是针对软件包的其他patch文件或者特别适用于龙芯的的配置文件
+* 其他文件则可能是针对软件包的其他patch文件或者特别适用于龙芯的的配置文件，须添加在`PKGBUILD`的`source`数组中
+* 目前（自2024.12.17）`devtools-loong64 >= 1.3.0.patch3-1`已集成补丁导出工具`export-loong64-patches`。以上内容，包括`loong.patch`和其他补丁，均应当由`export-loong64-patches`自动导出。
 
-此外，仓库下还有`update_config`文件，用于存放需要更新`config.guess`和`config.sub`且不需要其他patch的软件包名。详见[后文](#特殊情况)。
+## 特殊情况
+
+* 本部分是为了简化维护而特别设计的，如果初学者不理解这部分内容，可以跳过，几篇文档都看完以后会理解的（）
+
+部分软件包由于补丁内容非常一致、简单，而且有大量的软件包系统性地需要这些补丁，在这种时候，我们为了简洁与维护方便，并没有创建这些软件包的补丁维护目录。目前的这样特殊情况主要分为两种：
+
+* 特殊情况1：`config.sub`和`config.guess`
+  * 开发不活跃的软件`config.sub`和`config.guess`过旧，需要更新才能在龙芯平台上正常构建
+  * **仅**需要更新`config.sub`和`config.guess`而**不用其他任何修改**就能成功构建
+* 特殊情况2：使用`cargo fetch`的软件包的架构指定问题
+  * `cargo fetch`在`PKGBUILD`中使用了硬编码的`x86_64`，需要替换为`uname -m`（`loongarch64`）
+  * `cargo fetch`在`PKGBUILD`中使用了`$CARCH`（在本发行版是`loong64`），需要替换为`uname -m`（`loongarch64`）
+* 对于这些特殊情况，我们的包拉取工具`get-loong64-pkg`（`devtools-loong64 >= 1.3.0.patch3-1`）会自动处理，因此不需要单独维护补丁
+
+## 补丁维护原则
+
+本项目始终以上游化为目标，因此我们的软件包构建过程中，**尽量**不对软件包进行patch；对于共性问题，应当视具体情况提交到**软件上游**或者**Arch Linux上游**。但是，由于龙芯平台的特殊性，有些软件包可能不可避免地需要patch才能在龙芯平台上正常运行,而上游可能并不能够及时接收这些修复，此时我们不得不在我们的[补丁维护仓库](https://github.com/lcpu-club/loongarch-packages)中**暂时**维护patch。
+
+因此对这两种特殊情况：
+
+* 特殊情况1：如果没有对应的补丁，但软件包名在`update_config`文件中，需要对`PKGBUILD`进行修改
+  * 需要对`config.sub`和`config.guess`进行更新
+* 特殊情况2：如果没有对应的补丁，但软件包使用`cargo fetch`，需要将`$CARCH`替换为`uname -m`，并且将
+  * 硬编码的`x86_64`也要替换为`uname -m`
 
 # 工作流程
 
-## 不需要patch的软件包构建及测试流程示例
+## 构建及测试流程示例
 
-这是最简单的情况，我们以`erofs-utils`软件包为例，展示如何构建和测试软件包。
+我们以`erofs-utils`软件包为例，展示如何构建和测试软件包。
 
 ### 获取软件包
 
-由于Loong Arch Linux的构建需要遵循尽可能上游化的原则，我们的构建与移植需要先获取Arch Linux官方构建仓库。以`erofs-utils`软件包为例，我们可以通过以下命令获取：
+目前（自2024.12.17）`devtools-loong64 >= 1.3.0.patch3-1`已集成获取软件包的工具`get-loong64-pkg`，可以直接使用，详细使用方法可以运行`get-loong64-pkg -h`查看。该工具可以自动从Arch Linux官方仓库**拉取**构建文件，**自动同步更新**，**切换**到相应的版本，并**自动应用**我们的补丁集中维护的**补丁**。
 
 ```bash
-pkgctl repo clone erofs-utils
-```
-
-如果报错`Please make sure you have the correct access rights and the repository exists.`，则需要指明使用`https`协议：
-
-```bash
-pkgctl repo clone --protocol=https erofs-utils
+get-loong64-pkg erofs-utils
 ```
 
 ### 构建尝试
@@ -105,14 +116,14 @@ cd erofs-utils
 
 一般来说，软件包的构建命令是`extra-loong64-build`。由于原软件包`PKGBUILD`是针对x86_64的，其`arch`数组并不包含`loong64`，未经修改并不能够直接用无参数的`extra-loong64-build`构建。虽然说修改`arch`数组也可以算是需要针对`PKGBUILD`的patch，但是我们默认在我们的移植中，所有`arch`字段不为`any`的软件包的`arch`字段都应该包含`loong64`，因此对`arch`的修改**不应当**出现在维护的patch中。
 
-对此，我们可以有两种选择，一种是先修改`PKGBUILD`，将`loong64`添加到`arch`数组中，然后再使用`extra-loong64-build`构建（如果需要导出补丁则需要改回来）。
+对此，我们可以有两种选择，一种是先修改`PKGBUILD`，将`loong64`添加到`arch`数组中，然后再使用`extra-loong64-build`构建（如果需要导出补丁则需要改回来，不推荐）。
 
-为了避免麻烦，我们还可以向`extra-loong64-build`传递参数来解决问题：
+为了避免麻烦，我们推荐向`extra-loong64-build`传递参数来解决问题：
 
 * `extra-loong64-build`参数组中在`--`后的参数会传递给`makechrootpkg`，而`makechrootpkg`参数组中在`--`后的参数会传递给`makepkg`
 * `makepkg`的`-A`参数表示忽略`arch`字段不兼容的情况以便继续构建
 
-因此，我们可以使用以下命令构建：
+因此，我们推荐使用以下命令构建：
 
 ```bash
 extra-loong64-build -- -- -A
@@ -128,13 +139,11 @@ extra-loong64-build -- -- -A
 
 首次运行时，程序会在`/var/lib/archbuild/`下创建目录`extra-loong64`，如果是Btrfs文件系统，会在`extra-loong64`下创建一个名为`root`的子卷，用于存放LoongArch Linux的基本chroot环境，在后续每次运行构建时，将会对这一子卷中的环境进行升级同步，并创建一个新的快照子卷进行构建。（其他文件系统则是创建普通目录、复制目录）
 
-此时如果在同步数据库阶段就提示PGP签名错误，可能是因为没有导入PGP密钥，请自行检查软件包`archlinux-lcpu-keyring`是否[正常安装](#导入pgp-key)。如果仅有下载的部分软件包提示签名校验失败，可能是网络问题，重试即可。首次运行无论是否失败，均会在`/var/lib/archbuild/extra-loong64`下创建一个名为`root`的子卷，如果创建并没有成功，在重试时会提示该路径并非Arch Linux的chroot环境，此时请运行`extra-loong64-build -c`清理环境，或者手动删除`/var/lib/archbuild/extra-loong64`下的所有子卷以及`/var/lib/archbuild/extra-loong64`目录本身，然后再次运行。
+此时如果在同步数据库阶段就提示PGP签名错误，可能是因为没有导入PGP密钥，请自行检查软件包`archlinux-lcpu-keyring`是否[正常安装](#导入pgp-key)。如果仅有下载的部分软件包提示签名校验失败，可能是网络问题，重试即可。首次运行无论是否失败，均会在`/var/lib/archbuild/extra-loong64`下创建一个名为`root`的子卷，如果创建并没有成功，在重试时会提示该路径并非Arch Linux的chroot环境，此时请运行`extra-loong64-build -c`清理环境，然后再次运行。
 
-#### 构建成功
+#### 构建成功后
 
 构建成功后，在原构建仓库目录下会生成`*.pkg.tar.zst`软件包文件，即为构建成功的软件包；`*.log`为各项构建过程的日志。更详细的编译日志则是在`/var/lib/archbuild/extra-loong64/$USER/build/`下。
-
-由于这种最简单的情况并不需要patch，这里不需要patch导出流程。
 
 如果读者是北京大学Linux俱乐部Arch Linux用户组的成员且在`archlinux-lcpu-keyring`中有签名密钥，可以手动对软件包进行签名：
 
@@ -147,440 +156,42 @@ done
 
 软件包的测试可以使用龙芯物理机、`qemu-system-loongarch64`虚拟机、使用QEMU User Mode Emulation的龙芯容器等方式进行，具体方法不再赘述。
 
-## 需要patch的软件包
-
-本项目始终以上游化为目标，因此我们的软件包构建过程中，**尽量**不对软件包进行patch；对于共性问题，应当视具体情况提交到软件上游或者Arch Linux上游。但是，由于龙芯平台的特殊性，有些软件包可能不可避免地需要patch才能在龙芯平台上正常运行,而上游可能并不能够及时接收这些修复，此时我们不得不在我们的[补丁维护仓库](https://github.com/lcpu-club/loongarch-packages)中**暂时**维护patch。
-
-### 构建测试流程
-
-有额外patch的软件包仍然需要从上游拉取Arch Linux官方仓库，然后从我们的补丁维护仓库中获取patch。大致流程如下：
-
-1. 将补丁维护仓库对应目录下所有文件复制到软件包目录下
-2. 对`PKGBUILD`应用`loong.patch`
-
-#### 特殊情况
-
-* 本部分是为了简化维护而特别设计的，如果初学者不理解这部分内容，可以跳过，几篇文档都看完以后会理解的（）
-
-部分软件包由于补丁内容非常一致、简单，而且有大量的软件包系统性地需要这些补丁，在这种时候，我们为了简洁与维护方便，并没有创建这些软件包的补丁维护目录。目前的这样特殊情况主要分为两种：
-
-* 特殊情况1：`config.sub`和`config.guess`
-  * 开发不活跃的软件`config.sub`和`config.guess`过旧，需要更新才能在龙芯平台上正常构建
-  * **仅**需要更新`config.sub`和`config.guess`而**不用其他任何修改**就能成功构建
-* 特殊情况2：使用`cargo fetch`的软件包的架构指定问题
-  * `cargo fetch`在`PKGBUILD`中使用了硬编码的`x86_64`，需要替换为`uname -m`（`loongarch64`）
-  * `cargo fetch`在`PKGBUILD`中使用了`$CARCH`（在本发行版是`loong64`），需要替换为`uname -m`（`loongarch64`）
-
-因此对这两种特殊情况：
-
-* 特殊情况1：如果没有对应的补丁，但软件包名在`update_config`文件中，需要对`PKGBUILD`进行修改
-  * 需要对`config.sub`和`config.guess`进行更新
-* 特殊情况2：如果没有对应的补丁，但软件包使用`cargo fetch`，需要将`$CARCH`替换为`uname -m`，并且将
-  * 硬编码的`x86_64`也要替换为`uname -m`
-
-#### 脚本化
-
-这些过程可以手动使用命令完成，也可以封装一些脚本来实现，以下是笔者给出的参考实现：
-
-```python
-#!/usr/bin/env python3
-
-"""
-A tool for managing and patching packages for the loong64 architecture.
-
-This script handles the following tasks:
-- Downloads and updates package repositories
-- Applies loong64-specific patches to packages
-- Manages package version control
-- Updates build configurations for loong64 architecture
-"""
-
-import os
-import sys
-import subprocess
-import argparse
-import pyalpm
-import urllib.request
-import shutil
-import re
-from typing import Optional, List
-import gi
-gi.require_version('GLib', '2.0')
-from gi.repository import GLib
-
-CACHE_DIR: str = os.path.join(GLib.get_user_cache_dir(), "devtools-loong64")
-PATCH_GIT: str = "https://github.com/lcpu-club/loongarch-packages.git"
-PATCH_FILE: str = "loong.patch"
-PATCH_REPO_PATH: str = os.path.join(CACHE_DIR, "loongarch-packages")
-X86_REPOS: tuple[str] = (
-    "core-staging",
-    "core-testing",
-    "core",
-    "extra-staging",
-    "extra-testing",
-    "extra")
-X86_DB_PATH: str = os.path.join(CACHE_DIR, "repo-db", "x86")
-CARGO_FETCH_REGEX = re.compile(r'(cargo\s+fetch.*?)(x86_64|\$CARCH)')
-UPDATE_CONFIG_REGEX = re.compile(
-    r'(build\s*\(\s*\)\s*{.*?^\s*cd\s+[^\n]*$)',
-    re.MULTILINE | re.DOTALL)
-
-def download_file(source: str, dest: str) -> None:
-    """
-    Download a file from a given URL to a local destination.
-
-    Args:
-        source (str): The URL of the file to download
-        dest (str): The local path where the file should be saved
-
-    Raises:
-        Exception: If the download fails for any reason
-    """
-    headers = {"User-Agent": "Mozilla/5.0"}
-    repo_path = os.path.dirname(dest)
-    if not os.path.exists(repo_path):
-        os.makedirs(repo_path)
-
-    try:
-        req = urllib.request.Request(source, headers=headers)
-        with urllib.request.urlopen(req) as response, open(dest, 'wb') as out_file:
-            out_file.write(response.read())
-    except Exception as e:
-        print(f"Error downloading file: {e}")
-
-def update_repo(mirror_x86: str) -> None:
-    """
-    Update the local repository database from a specified mirror.
-
-    Args:
-        mirror_x86 (str): The base URL of the x86_64 package mirror
-    """
-    for repo in X86_REPOS:
-        download_file(f"{mirror_x86}/{repo}/os/x86_64/{repo}.db",
-                     os.path.join(X86_DB_PATH, "sync", f"{repo}.db"))
-
-def load_repo(dir_path: str, repo: str) -> Optional[pyalpm.DB]:
-    """
-    Load a package repository database.
-
-    Args:
-        dir_path (str): The directory path where the repository database is located
-        repo (str): The name of the repository to load
-
-    Returns:
-        Optional[pyalpm.DB]: The loaded repository database, or None if loading fails
-    """
-    handle = pyalpm.Handle("/", dir_path)
-    try:
-        db = handle.register_syncdb(repo, 0)
-        return db
-    except pyalpm.error as e:
-        print(f"Failed to load repo {dir_path}: {e}")
-        return None
-
-def update_status(mirror_x86: str) -> None:
-    """
-    Update both the patch repository and package database.
-
-    This function ensures that both the local patch repository and package database
-    are up to date with their respective remote sources.
-
-    Args:
-        mirror_x86 (str): The base URL of the x86_64 package mirror
-    """
-    if os.path.isdir(PATCH_REPO_PATH):
-        print(f"Updating existing {PATCH_REPO_PATH}...")
-        subprocess.run(["git", "-C", PATCH_REPO_PATH, "fetch", "--all"])
-        subprocess.run(["git", "-C", PATCH_REPO_PATH, "reset", "--hard", "origin/master"])
-    else:
-        print(f"Cloning PATCH_REPO_PATH to {PATCH_REPO_PATH}...")
-        os.makedirs(os.path.dirname(PATCH_REPO_PATH), exist_ok=True)
-        subprocess.run(["git", "clone", PATCH_GIT, PATCH_REPO_PATH])
-
-    update_repo(mirror_x86)
-
-def modify_pkgbuild_config(pkgbuild_path: str) -> None:
-    """
-    Add config.sub and config.guess update commands after cd command in build().
-
-    This function injects necessary commands into the PKGBUILD's build() function
-    to ensure the build system correctly recognizes the loong64 architecture.
-    It adds commands to copy the latest config.sub and config.guess files from
-    the system's automake package.
-
-    Args:
-        pkgbuild_path (str): Path to the PKGBUILD file to be modified
-    """
-    with open(pkgbuild_path, 'r') as f:
-        content = f.read()
-    
-    update_commands = """
-  for c_s in $(find -type f -name config.sub -o -name configure.sub); do cp -f /usr/share/automake-1.1?/config.sub "$c_s"; done
-  for c_g in $(find -type f -name config.guess -o -name configure.guess); do cp -f /usr/share/automake-1.1?/config.guess "$c_g"; done"""
-    
-    new_content = UPDATE_CONFIG_REGEX.sub(r'\1' + update_commands, content)
-    
-    if new_content != content:
-        with open(pkgbuild_path, 'w') as f:
-            f.write(new_content)
-        print("Added config.sub and config.guess update to PKGBUILD.")
-
-def modify_pkgbuild_cargo_fetch(pkgbuild_path: str) -> None:
-    """
-    Modify cargo fetch commands in PKGBUILD
-    
-    This function replaces x86_64 or $CARCH in cargo fetch commands with $(uname -m).
-
-    Args:
-        pkgbuild_path (str): Path to the PKGBUILD file to be modified
-    """
-    with open(pkgbuild_path, 'r') as f:
-        content = f.read()
-
-    new_content = CARGO_FETCH_REGEX.sub(r'\1$(uname -m)', content)
-
-    if new_content != content:
-        with open(pkgbuild_path, 'w') as f:
-            f.write(new_content)
-        print("Automatically changed 'cargo fetch' to use 'uname -m'.")
-
-def process_target_version(version: Optional[str]) -> Optional[str]:
-    """
-    Process the target version of the package to be checked out.
-
-    Args:
-        version (str): The target version to be checked out
-
-    Returns:
-        str: The processed target version
-    """
-    # Keep the order of the repos
-    core_repos = []
-    extra_repos = []
-    processed_version: Optional[str] = version
-    if processed_version == "staging":
-        core_repos.append(load_repo(X86_DB_PATH, "core-staging"))
-        core_repos.append(load_repo(X86_DB_PATH, "core-testing"))
-        extra_repos.append(load_repo(X86_DB_PATH, "extra-staging"))
-        extra_repos.append(load_repo(X86_DB_PATH, "extra-testing"))
-        processed_version = None # not a specific version
-    elif processed_version == "testing":
-        core_repos.append(load_repo(X86_DB_PATH, "core-testing"))
-        extra_repos.append(load_repo(X86_DB_PATH, "extra-testing"))
-        processed_version = None # not a specific version
-
-    if (not processed_version) or (processed_version == "stable"):
-        core_repos.append(load_repo(X86_DB_PATH, "core"))
-        extra_repos.append(load_repo(X86_DB_PATH, "extra"))
-        repos = core_repos + extra_repos # core repos first
-        processed_version = None # not a specific version
-
-        pkgnames = subprocess.check_output(['bash', '-c', r'source PKGBUILD; echo "${pkgname[@]}"']).decode().strip().split()
-        for pkgname in pkgnames:
-            for repo in repos:
-                if repo:
-                    pkg = repo.get_pkg(pkgname)
-                    if pkg:
-                        processed_version = pkg.version
-                        break
-            if processed_version:
-                break
-
-    return processed_version
-
-def main() -> None:
-    """
-    Main function that orchestrates the package patching process.
-    """
-    parser: argparse.ArgumentParser = argparse.ArgumentParser(
-        description='A tool for managing and patching Arch Linux build scripts for loong64 architecture. '
-                   'This utility downloads package sources, applies loong64-specific patches, '
-                   'and handles updates.',
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-
-    parser.add_argument('pkgbase',
-        help='Name of the pkgbase to be processed')
-    parser.add_argument('-m', '--mirror',
-        help='Mirror URL for Arch Linux official package database to get version info (default: %(default)s)',
-        default="https://geo.mirror.pkgbuild.com",
-        metavar='URL')
-    parser.add_argument('-c', '--checkout',
-        help='Checkout a specific version of the package may be "stable", "testing", "staging", '
-        '"main" , commit hash or a specific version pkgver-pkgrel, default is the current stable version',
-        metavar='VERSION')
-
-    args: argparse.Namespace = parser.parse_args()
-
-    mirror_x86: str = args.mirror
-    pkgbase: str = args.pkgbase
-    version: Optional[str] = args.checkout
-
-    update_status(mirror_x86)
-
-    patch_dir: str = os.path.join(PATCH_REPO_PATH, pkgbase)
-
-    print("Cloning official package repository...")
-
-    if os.path.isdir(patch_dir) and not os.path.exists(os.path.join(patch_dir, PATCH_FILE)):
-        print(f"{patch_dir} exists, but {os.path.exists(os.path.join(patch_dir, PATCH_FILE))} does not exist.")
-        print("It's a full package repository, not a patch repository.")
-        print("Copying the full package files...")
-        shutil.copytree(patch_dir, pkgbase, dirs_exist_ok=True)
-        print("Done.")
-        sys.exit(0)
-    else:
-        subprocess.run(["pkgctl", "repo", "clone", "--protocol=https", pkgbase])
-        os.chdir(pkgbase)
-        git_status = subprocess.check_output(
-            ["git", "status"], env={"LC_ALL": "C"}
-        ).decode()
-        if "modified:" in git_status:
-            subprocess.run(["git", "stash"])
-        subprocess.run(["git", "checkout", "main"])
-        subprocess.run(["git", "pull"])
-
-        processed_version = process_target_version(version)
-
-        if processed_version:
-            if (not version) or (processed_version == version):
-                print(f"Checking out: {processed_version}")
-            else:
-                print(f"Checking out: {processed_version} (requested: {version})")
-            subprocess.run(["git", "checkout", processed_version])
-        else:
-            print("Warning: Failed to find a version in Arch Linux's stable repo!")
-        os.chdir("..")
-
-    if os.path.isdir(patch_dir):
-        print("Copying patches...")
-        for filename in os.listdir(patch_dir):
-            if os.path.isfile(os.path.join(patch_dir, filename)):
-                shutil.copy2(os.path.join(patch_dir, filename), os.path.join(pkgbase, filename))
-            else:
-                shutil.copytree(os.path.join(patch_dir, filename), os.path.join(pkgbase, filename), dirs_exist_ok=True)
-        os.chdir(pkgbase)
-        if os.path.isfile(PATCH_FILE):
-            print(f"Applying patch {PATCH_FILE}...")
-            subprocess.run(["patch", "-p1", "-i", PATCH_FILE])
-        else:
-            print("No 'loong.patch' found.")
-            sys.exit(1)
-    else:
-        print(f"No patch of {pkgbase} found.")
-        pkgbuild_path = os.path.join(pkgbase, "PKGBUILD")
-        update_config_path = os.path.join(PATCH_REPO_PATH, "update_config")
-
-        if os.path.isfile(pkgbuild_path):
-            modify_pkgbuild_cargo_fetch(pkgbuild_path)
-
-            if os.path.isfile(update_config_path):
-                with open(update_config_path, "r") as f:
-                    if pkgbase in f.read().splitlines():
-                        modify_pkgbuild_config(pkgbuild_path)
-        else:
-            print(f"No PKGBUILD found in {pkgbase}.")
-            sys.exit(1)
-    print("Done.")
-
-if __name__ == "__main__":
-    main()
-```
-
-这个脚本可以将软件包的测试构建过程简化为：
-
-```bash
-./get-loong64-pkg <package-name>
-cd <package-name>
-extra-loong64-build -- -- -A
-```
-
-构建成功后的测试流程与不需要patch的软件包相同，这里不再赘述。
-
 ### patch导出流程
 
-patch导出是应用patch流程的逆过程。对于需要patch适配的软件包，开发者在适配完成后，需要将适配的patch导出，并添加到我们的[补丁维护仓库](https://github.com/lcpu-club/loongarch-packages)中。
+之前列出的软件包`erofs-utils`较为简单，不需要额外修复就能直接构建，然而仍然存在大量的软件包需要开发者进行一些修复适配（修复遇到困难可以查看笔者提供的[软件包修复构建的相关指引](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)）。
+
+对于需要patch适配的软件包，开发者在适配完成并进行构建和验证后，需要将适配的patch导出，添加到我们的[补丁维护仓库](https://github.com/lcpu-club/loongarch-packages)中。
 
 导出的内容包括针对`PKGBUILD`的patch和软件包的其他patch或特别适用于龙芯的配置文件。除了`loong.patch`外，其他需要用到的patch文件或者其他配置应当注意添加到`PKGBUILD`中的`source`数组中，并且更新好`PKGBUILD`中的哈希值，具体操作可以参考ArchWiki的[PKGBUILD条目](https://wiki.archlinux.org/title/PKGBUILD)。
 
-此外其他文件应当尽可能地命名得更具体，以便于其他开发者理解。
+此外其他文件应当尽可能地**命名得更具体**，以便于其他开发者理解。
 
-鉴于手动导出patch流程过于繁琐而且可能出错，可以使用笔者给出的补丁导出脚本参考实现。也可以尝试自己开发脚本来简化这个过程，并且欢迎分享给笔者或者[北京大学Linux俱乐部](https://github.com/lcpu-club)。参考实现如下：
-
-```
-#!/bin/bash
-
-if [[ "$1" == "--help" || "$1" == "-h" ]]; then
-  echo "Usage: export-loong64-patches [package-path] [destination-directory]"
-  exit 0
-fi
-
-if [[ $# -gt 2 ]]; then
-  echo "Error: Too many arguments."
-  exit 1
-fi
-
-PATCH_DIR="loong64-patches"
-if [[ $# -eq 2 ]]; then
-  cd "$1" || exit
-  PATCH_DIR="$2"
-elif [[ $# -eq 1 ]]; then
-  PATCH_DIR="$1"
-fi
-
-mkdir -p "$PATCH_DIR"
-
-original_pkgrel=$(grep '^pkgrel=' "PKGBUILD")
-if [[ $original_pkgrel =~ pkgrel=([0-9]+)\.([0-9]+) ]]; then
-    echo "Ignore to export change of pkgrel to patch."
-    num1=${BASH_REMATCH[1]}
-    sed -i "s/pkgrel=[0-9]\+\.[0-9]\+/pkgrel=$num1/" "PKGBUILD"
-fi
-
-echo "Exporting: loong.patch..."
-git diff > "$PATCH_DIR/loong.patch"
-
-sed -i "s/pkgrel=[0-9]\+/$original_pkgrel/" "PKGBUILD"
-
-sources=$(. PKGBUILD && echo "${source[@]}")
-
-untracked_files=$(git ls-files --others --exclude-standard)
-
-for file in $sources; do
-  if [ -f "$file" ]; then
-    for untracked_file in $untracked_files; do
-      if [ "$file" == "$untracked_file" ]; then
-        echo "Copying: $file..."
-        cp "$file" "$PATCH_DIR"
-        break
-      fi
-    done
-  fi
-done
-```
-
-这个脚本的逻辑是：
-
-1. 将软件包目录下`git diff`的结果写入`loong.patch`
-  * 即对上游git仓库已跟踪文件的修改，一般为`PKGBUILD`的修改
-2. 查找需要复制的其他文件
-  * 需要复制的文件一定在`PKGUILD`的`source`数组中
-  * 需要复制的文件一定在本地存在
-  * 需要复制的文件一定不在Arch Linux官方软件包git仓库的跟踪文件中
-  * 同时满足以上三个条件的文件一定需要复制，为充要条件
-3. 对`PKGBUILD`的`pkgrel`字段的小版本号进行忽略
-  * `pkgrel`字段的小版本号是我们在维护时用于版本控制的，不应当导出到patch中
-  * patch中不能包含对`pkgver`和`pkgrel`的修改
-
-这个脚本可以将软件包的patch导出过程简化为：
+目前（自2024.12.17）`devtools-loong64 >= 1.3.0.patch3-1`已集成补丁导出工具`export-loong64-patches`，可以直接使用，详细使用方法可以运行`export-loong64-patches -h`查看。该工具可以自动导出软件包的patch，**不需要**手动导出。运行以下命令，可以将补丁导出到`loong64-patches`目录下：
 
 ```bash
-./export-loong64-patches <package-path> <destination-directory>
+export-loong64-patches
 ```
 
-软件包的patch提交流程与要求详见[补丁维护仓库自述文件](https://github.com/lcpu-club/loongarch-packages)。
+> 这个脚本的逻辑是：
+>
+> 1. 将软件包目录下`git diff`的结果写入`loong.patch`
+>   * 即对上游git仓库已跟踪文件的修改，一般为`PKGBUILD`的修改
+> 2. 查找需要复制的其他文件
+>   * 需要复制的文件一定在`PKGUILD`的`source`数组中
+>   * 需要复制的文件一定在本地存在
+>   * 需要复制的文件一定不在Arch Linux官方软件包git仓库的跟踪文件中
+>   * 同时满足以上三个条件的文件一定需要复制，为充要条件
+> 3. 对`PKGBUILD`的`pkgrel`字段的小版本号进行忽略
+>   * `pkgrel`字段的小版本号是我们在维护时用于版本控制的，不应当导出到patch中
+>   * patch中不能包含对`pkgver`和`pkgrel`的修改
 
-注意：
+对于导出的补丁，需要注意[补丁维护原则](#补丁维护原则)中列出的特殊情况：
 * 如果patch文件**仅包含**对`config.sub`和`config.guess`的更新，不需要额外维护`loong.patch`，而是将包名添加到`update_config`文件中
+  * 有关添加到`update_config`文件后的自动处理流程是否能够解决问题，可以预先使用以下命令验证：
+    ```bash
+    sed -i '/^build()/,/configure/ {/^[[:space:]]*cd[[:space:]]\+/ { s/$/\n  for c_s in $(find -type f -name config.sub -o -name configure.sub); do cp -f \/usr\/share\/automake-1.1?\/config.sub "$c_s"; done\n  for c_g in $(find -type f -name config.guess -o -name configure.guess); do cp -f \/usr\/share\/automake-1.1?\/config.guess "$c_g"; done/; t;};}' "PKGBUILD"
+    ```
+    * 如果能够解决问题，就不要单独维护`loong.patch`
 
 # 软件包的手动上传
 
