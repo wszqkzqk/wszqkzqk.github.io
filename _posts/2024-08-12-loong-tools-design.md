@@ -100,7 +100,7 @@ paru -S devtools-loong64
 
 ### 获取软件包
 
-目前（自2024.12.17）`devtools-loong64 >= 1.3.0.patch3-1`已集成获取软件包的工具`get-loong64-pkg`，可以直接使用，详细使用方法可以运行`get-loong64-pkg -h`查看。该工具可以自动从Arch Linux官方仓库**拉取**构建文件，**自动同步更新**，**切换**到相应的版本，并**自动应用**我们的补丁集中维护的**补丁**。
+目前（自2024.12.17）`devtools-loong64 >= 1.3.0.patch3-1`已集成获取软件包的工具`get-loong64-pkg`，可以直接使用，详细使用方法可以运行`get-loong64-pkg -h`查看。该工具可以自动从Arch Linux官方仓库**拉取**构建文件，**自动同步更新**，**切换**到相应的版本，并**自动应用**我们的补丁集中维护的**补丁**。需要注意的是，传递的参数是`pkgbase`，而不是`pkgname`。
 
 ```bash
 get-loong64-pkg erofs-utils

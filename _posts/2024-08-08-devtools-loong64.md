@@ -123,7 +123,11 @@ sudo: effective uid is not 0, is /usr/bin/sudo on a file system with the 'nosuid
 
 ## PKGBUILD的获取
 
-准备工作完成后，可以准备一个包含PKGBUILD的软件包进行测试，PKGBUILD可以自己通过`pkgctl repo clone xxx`下载并自行移植，也可以先从Arch Linux官方克隆仓库，再从目前北京大学Linux俱乐部维护的[补丁仓库](https://github.com/lcpu-club/loongarch-packages)中获取补丁。
+目前（自2024.12.17）`devtools-loong64 >= 1.3.0.patch3-1`已集成获取软件包的工具`get-loong64-pkg`，可以直接使用，详细使用方法可以运行`get-loong64-pkg -h`查看。该工具可以自动从Arch Linux官方仓库**拉取**构建文件，**自动同步更新**，**切换**到相应的版本，并**自动应用**我们的补丁集中维护的**补丁**。需要注意的是，传递的参数是软件包的`pkgbase`，而不是`pkgname`。
+
+```bash
+get-loong64-pkg <package>
+```
 
 ## 首次运行
 
