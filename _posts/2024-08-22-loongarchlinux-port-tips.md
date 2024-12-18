@@ -98,12 +98,18 @@ Arch Linux官方维护有专门用于构建KDE及Qt软件包的工具[kde-build]
 
 # 一般的Bootstrap方法
 
+## 向`makechrootpkg`传递`-I`参数
+
 在Bootsrap的过程中，往往需要在构建环境中添加一些源中没有的软件包，这可以通过`makechrootpkg`的`-I`参数来实现，而在运行`extra-loong64-build`或者`extra-loong64-build`的时候，可以通过`--`参数来添加传递到`makechrootpkg`的参数。
 
 ```bash
 cd <package>
 extra-loong64-build -- -I <package1> -I <package2> ...
 ```
+
+## 本地仓库
+
+如果觉得手动传递`-I`参数比较麻烦，可以参考笔者介绍的[**本地仓库**](https://wszqkzqk.github.io/2024/09/19/build-order-local-repo/)的方法。
 
 # 软件包的手动上传
 
