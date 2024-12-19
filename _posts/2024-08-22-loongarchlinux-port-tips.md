@@ -527,10 +527,12 @@ Username for 'https://gitlab.archlinux.org':
 
 * 这个软件是仅相关于Loong Arch Linux的软件包，没有由Arch Linux维护
   * 例如`archlinux-lcpu-keyring`，`devtools-loong64`
+  * 这些软件包不能用上游的`pkgctl repo clone`，但是可以**正常用`get-loong64-pkg`获取**
 * 未以`pkgbase`来克隆软件包仓库
   * 注意上游的软件包仓库名是`pkgbase`，而**不一定**是`pkgname`
   * 同一`pkgbase`可能会包括多个`pkgname`的软件包
     * 例如`rust`提供了`rust`、`rust-musl`、`rust-src`、`rust-wasm`等软件包，这些软件包都在`rust`这一仓库中
+  * 无论是`pkgctl`还是`get-loong64-pkg`，都需要使用`pkgbase`来克隆软件包仓库
 * 单纯把软件包名敲错了
 
 ## 我想保存/查看某一次的构建环境怎么办？
@@ -617,7 +619,7 @@ Do you want to delete it? [Y/n]
 
 这表示的是软件包的校验和不匹配，一般来说**重新运行命令**，尝试**重新下载**软件包即可解决。
 
-对于架构为`any`的包， 用户自行在x86下载的更新包与龙芯的包可能同名但是构建环境与签名者不同，很可能会出现这个错误。
+对于架构为`any`的包， 用户自行在**x86下载的更新包**与**龙芯的包**可能**同名**但是构建环境与签名者不同，很可能会出现这个错误。
 
 如果不愿意被重试困扰，可以在运行的构建命令中向`makechrootpkg`传递`-d`参数，为构建环境指定不同的缓存目录，例如：
 
