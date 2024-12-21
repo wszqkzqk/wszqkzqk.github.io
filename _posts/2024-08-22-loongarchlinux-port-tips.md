@@ -180,7 +180,7 @@ end
 
 # 使用QEMU System测试
 
-QEMU User模式下的容器没有自己的内核，显然无法用于内核测试。因此，我们需要在龙芯实体机或者QEMU System模式下进行内核测试。在实体机下的测试相对比较好理解，这里主要介绍QEMU System模式下的内核测试。
+QEMU User模式下的容器没有自己的内核，显然无法用于内核测试。因此，我们需要在龙芯实体机或者QEMU System模式下进行内核测试。在实体机下的测试相对比较好理解，这里主要介绍在没有龙芯实体机时使用QEMU System模式测试内核。
 
 在获取或者自己构建了Loong Arch Linux的qcow2镜像后，我们可以使用`qemu-system-loongarch64`来启动虚拟机，例如：
 
@@ -190,7 +190,7 @@ qemu-system-loongarch64 \
     -cpu la464-loongarch-cpu \
     -machine virt \
     -smp 16 \
-    -bios ./QEMU_EFI_9.0.fd \
+    -bios ./QEMU_EFI.fd \
     -serial stdio \
     -device virtio-gpu-pci \
     -net nic -net user \
@@ -205,7 +205,10 @@ qemu-system-loongarch64 \
 
 * `-m 6G`：分配6 GB内存
 * `-smp 16`：使用16个CPU核心
-* `-bios ./QEMU_EFI_9.0.fd`：指定QEMU使用的EFI固件
+* `-bios ./QEMU_EFI.fd`：指定QEMU使用的EFI固件
+  * 该固件可以在本项目的`edk2-loongarch64`软件包中获取
+  * 在镜像站中下载该软件包，解压后可以在解压后目录下的`usr/share/edk2/loongarch64/QEMU_EFI.fd`找到
+  * 此外，由于`edk2-loongarch64`是`any`包，也可以直接在非`loong64`架构的机器上安装该软件包
 * `-hda <path-to-your-image>`：指定虚拟机使用的qcow2镜像
 * `-virtfs local,path=<path-to-your-sharing-directory>,mount_tag=host0,security_model=passthrough,id=host0`：将宿主机的目录目录共享给虚拟机
 
