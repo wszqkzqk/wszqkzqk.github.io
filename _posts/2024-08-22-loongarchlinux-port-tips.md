@@ -334,7 +334,7 @@ sha256sums+=(...)
 
 此外，笔者还有若干补充：
 
-* 某些问题并不一定与架构相关，比如上游的`config.guess`、`config.sub`或者`Cargo.lock`等文件过旧，这时候提出“可能影响`loong64`架构的构建时“，也最好一并附上**安全性考虑**等理由，因为一般而言维护者更可能更关注通用的安全、性能、修复等问题，而不是一个自己不太了解的架构上的构建情况
+* 某些问题并不一定与架构相关，比如上游的`config.guess`、`config.sub`或者`Cargo.lock`等文件过旧，这时候提出“可能影响`loong64`架构的构建时”，也最好一并附上**安全性考虑**等理由，因为一般而言维护者更可能更关注通用的安全、性能、修复等问题，而不是一个自己不太了解的架构上的构建情况
 * 向本不支持`loong64`的软件的构建/配置文件中添加`loong64`支持时，考虑到上游可能根本不知道这个架构，可以附上相关介绍
   * [内核文档中的LoongArch介绍](https://docs.kernel.org/arch/loongarch/introduction.html)
   * [Phoronix上有关LoongArch的资讯与评测](https://www.phoronix.com/search/LoongArch)
