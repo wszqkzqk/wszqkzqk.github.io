@@ -380,7 +380,7 @@ PR参考示例：[GitHub Google/libultrahdr PR#303](https://github.com/google/li
 例如，可以在`PKGBUILD`中的`prepare()`或者`build()`函数中加入以下内容：
 
 ```bash
-prapre() {
+prepare() {
     ......
 
     # Add ` -mcmodel=medium` to CFLAGS etc.
