@@ -64,6 +64,10 @@ paru -S devtools-loong64
 
 * `loong.patch`是主要针对`PKGBUILD`的patch文件
   * 也可能包含其他Arch Linux**官方**软件包仓库**git跟踪**的文件
+    * **不推荐**
+    * 如果直接修改非`PKGBUILD`的git跟踪文件将必然需要修改`PKGBUILD`的checksum数组
+      * 上游更新后容易在`loong.patch`应用时带来冲突
+    * 建议额外维护一个对应的`.diff`文件，在`PKGBUILD`中应用
 * 其他文件则可能是针对软件包的其他patch文件或者特别适用于龙芯的的配置文件，须添加在`PKGBUILD`的`source`数组中
 * 目前（自2024.12.17）`devtools-loong64 >= 1.3.0.patch3-1`已集成补丁导出工具`export-loong64-patches`。以上内容，包括`loong.patch`和其他补丁，均应当由`export-loong64-patches`自动导出。
 
