@@ -68,7 +68,7 @@ paru -S devtools-loong64
     * 如果直接修改非`PKGBUILD`的git跟踪文件将必然需要修改`PKGBUILD`的checksum数组
       * 上游更新后容易在`loong.patch`应用时带来冲突
     * 建议额外维护一个对应的`.diff`文件，在`PKGBUILD`中应用
-      * 参考：[pacman/loong.patch](https://github.com/lcpu-club/loongarch-packages/blob/7acdf42d0c47175a90b3d8a666e259f9ed7121a6/pacman/loong.patch#L19)
+      * 参考：[pacman/loong.patch](https://github.com/lcpu-club/loongarch-packages/blob/7acdf42d0c47175a90b3d8a666e259f9ed7121a6/pacman/loong.patch#L19)或[electron32/loong.patch](https://github.com/lcpu-club/loongarch-packages/blob/e302e49d9b032ede5517ac6532f10c76524852cc/electron32/loong.patch#L9)
 * 其他文件则可能是针对软件包的其他patch文件或者特别适用于龙芯的的配置文件，须添加在`PKGBUILD`的`source`数组中
 * 目前（自2024.12.17）`devtools-loong64 >= 1.3.0.patch3-1`已集成补丁导出工具`export-loong64-patches`。以上内容，包括`loong.patch`和其他补丁，均应当由`export-loong64-patches`自动导出。
 
