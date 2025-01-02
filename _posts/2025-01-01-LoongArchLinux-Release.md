@@ -35,12 +35,12 @@ LCPU 维护团队完成了以下关键工作：
 新的社区团队致力于：
 
 1. **及时跟随 Arch Linux 官方的更新进度，持续维护 Loong Arch Linux 发行版**
-   - 最终借助 [Arch Linux Ports](https://rfc.archlinux.page/0032-arch-linux-ports/) 平台，推动 Arch Linux 官方增加对龙架构的支持，并同步发行龙架构版本。
+   - 最终借助 [Arch Linux Ports](https://rfc.archlinux.page/0032-arch-linux-ports/) 平台，推动 Arch Linux 官方增加对龙架构的支持，并同步发行龙架构版本
 2. **修复上游软件在龙架构上的构建问题，并尽可能将修复上游化**
-   - 最终推动各软件包上游提高龙架构的维护等级。
+   - 最终推动各软件包上游提高龙架构的维护等级
 3. **培养更多能够为龙架构、Arch Linux 及上游社区生态作出贡献的人才，建设更加开放健康的开源社区**
 
-我们欢迎有意愿的同学[加入社区](https://github.com/lcpu-club/loongarch-packages)团队（可联系社区负责人 wszqkzqk@qq.com），共同建设龙架构的软件生态，共同维护 Loong Arch Linux 发行版！
+我们欢迎有意愿的同学[加入社区](https://github.com/lcpu-club/loongarch-packages)团队（可联系社区负责人 [wszqkzqk](mailto:wszqkzqk@qq.com)），共同建设龙架构的软件生态，共同维护 Loong Arch Linux 发行版！
 
 ## 原 Loong Arch Linux 用户换源升级指南
 
