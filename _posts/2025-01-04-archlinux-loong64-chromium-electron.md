@@ -211,7 +211,7 @@ index 7f9cca27..3acbe4ad 100755
 
 由于Google的fork中并没有发布`esbuild`的二进制文件，我们无法用Arch Linux上游使用的`makepkg-source-roller.py`脚本来获取`esbuild`的二进制文件。而系统的`esbuild`版本过新，也不适合用于构建Electron。我们可以通过`npm`下载版本最接近的`esbuild`二进制文件，然后将其复制到对应的位置。
 
-首先，修改Arch Linux上游的`makepkg-source-roller.py`脚本，根据[项目的约定原则](https://wszqkzqk.github.io/2024/08/12/loong-tools-design/#%E7%BB%B4%E6%8A%A4%E4%BB%93%E5%BA%93)，对于Arch Linux构建文件仓库中跟踪的PKGBUILD以外的文件，我们一般不建议直接修改以免引发checksum变动，使补丁出现冲突。我们可以使用`+=`向`source`数组及checksum数组中添加我们对`makepkg-source-roller.py`的补丁，禁止使用Arch Linux的方式直接获取`esbuild`二进制文件：
+首先，修改Arch Linux上游的`makepkg-source-roller.py`脚本，根据[项目的约定原则](https://wszqkzqk.github.io/2024/08/12/loong-tools-design/#%E7%BB%B4%E6%8A%A4%E4%BB%93%E5%BA%93)，对于Arch Linux构建文件仓库中跟踪的PKGBUILD以外的文件，我们一般不建议直接修改以免引发checksum变动，使补丁出现冲突。我们可以使用`+=`向`source`数组及checksum数组中添加我们对`makepkg-source-roller.py`的补丁`makepkg-source-roller.py.diff`，禁止使用Arch Linux的方式直接获取`esbuild`二进制文件：
 
 ```
 @@ -400,7 +400,9 @@ if __name__ == "__main__":
