@@ -15,7 +15,7 @@ Chromium是一款开源的网页浏览器，是Google Chrome的开源版本。El
 
 目前，清华的[Chen Jiajie](https://github.com/jiegec)维护了适用于龙架构的[Chromium补丁集](https://github.com/AOSC-Dev/chromium-loongarch64)。字节跳动的[darkyzhou](https://github.com/darkyzhou)则基于Chen Jiajie的工作，维护了适用于龙架构的[Electron修复](https://github.com/darkyzhou/electron-loong64)。
 
-然而，这些内容主要考虑的是针对AOSC发行版或者单独发行的Electron软件包，不能够直接应用于Arch Linux。本文将介绍如何利用好这些社区力量，为龙架构的Arch Linux修复并构建Chromium与Electron。
+然而，这些内容主要考虑的是针对AOSC发行版或者单独发行的Electron软件包，可能有特定的路径配置，或者复杂的构建环境要求，不能够直接适用于Arch Linux的构建流程。本文将介绍如何利用好这些社区力量，为龙架构的Arch Linux修复并构建Chromium与Electron。
 
 ## Chromium
 
