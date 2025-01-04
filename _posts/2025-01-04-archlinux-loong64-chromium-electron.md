@@ -262,12 +262,14 @@ npm install @esbuild/linux-loong64@0.14.54
 
 如果darkyzhou的仓库中没有适用于我们所需版本的修复补丁，我们可以尝试自行找到该electron版本对应的Chromium版本，然后移植[Chen Jiajie的Chromium补丁](https://github.com/AOSC-Dev/chromium-loongarch64)进行修复。
 
-由于Chen Jiajie所维护的补丁是针对Chromium的tarball的，将对Chromium主仓库以及子模块的修改都包含在一个`diff`文件中。我们除了需要对这个`diff`文件进行适当的清理、修改外，还需要将这个`diff`文件拆分成多个`diff`文件，应用于相应的子模块并逐一解决冲突。然后，我们再将最终的补丁文件放到Electron的`patches/<submodule-name>`目录下，并在`patches/<submodule-name>/.patches`文件中添加这一额外指定的`diff`文件的文件名。
+由于Chen Jiajie所维护的补丁是针对Chromium的tarball的，将对Chromium主仓库以及子模块的修改都包含在一个`diff`文件中。我们除了需要对这个`diff`文件进行适当的清理、修改外，还需要将这个`diff`文件根据子模块拆分成多个文件。我们在获取子模块的源码后，首先应当使用`git checkout`命令切换到对应的版本，再将我们拆分好的补丁文件应用于相应的子模块，并逐一解决冲突。完成后，再使用`git diff`导出我们的补丁。
 
-以上适配工作完成后，我们可以参考[前一章](#对于社区已有维护补丁的版本)的步骤，应用这些补丁，构建Electron。
+接下来，我们再将最终的补丁文件放到Electron的`patches/<submodule-name>`目录下，并在`patches/<submodule-name>/.patches`文件中添加这一额外指定的补丁文件的文件名。
+
+以上适配工作完成后，参考[前一节](#对于社区已有维护补丁的版本)的步骤，应用这些补丁，构建Electron。
 
 ## 结语
 
 通过这样的方式，我们可以利用社区力量，维护龙架构的Arch Linux软件生态。这样的方式不仅可以让我们更好地适配Arch Linux的构建方式，也可以让我们更好地利用社区资源，减少重复劳动，提高效率。
 
-最后，感谢Chen Jiajie和darkyzhou的工作，感谢社区的支持，让我们一起维护龙架构的软件生态，让我们的龙架构更好地发展！
+最后，感谢Chen Jiajie和darkyzhou的工作，感谢其他开源社区的支持，让我们一起维护龙架构的软件生态，让我们的龙架构更好地发展！
