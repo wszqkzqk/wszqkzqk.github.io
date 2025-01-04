@@ -111,6 +111,21 @@ paru -S devtools-loong64
 get-loong64-pkg erofs-utils
 ```
 
+
+### 软件包PGP签名的导入与验证
+
+许多软件包在PKGBUILD中会指明需要验证PGP签名，如果在构建时没有导入相应的PGP密钥，会导致构建失败。目前有以下几种解决方案：
+
+1. 在**宿主机**的`~/.gnupg/gpg.conf`中添加`auto-key-retrieve`选项，这样在构建时会自动从密钥服务器下载PGP密钥。
+   * 缺点是PGP服务器上可能没有相应的密钥
+2. 一般来说，软件包的PGP密钥会在软件包`keys`子目录下提供，可以在构建前从`keys`中导入密钥
+   * 缺点是`keys`下的密钥一般是`devtools`的`export-pkgbuild-keys`自动导出的，可能会有一些问题
+3. 考虑到Arch Linux官方上游会对软件包的PGP密钥进行验证，而在我们的构建环境中使用hash验证已经可以基本保证源的完整性与可靠性，因此我们可以考虑在构建流程中**跳过**PGP验证
+   * `extra-loong64-build`参数组中在`--`后的参数会传递给`makechrootpkg`，而`makechrootpkg`参数组中在`--`后的参数会传递给`makepkg`
+   * 因此使用`extra-loong64-build -- -- --skippgpcheck`可以跳过PGP验证
+
+其中，1、2两种方法可结合使用。
+
 ### 构建尝试
 
 切换到克隆下来的示例软件包目录：
