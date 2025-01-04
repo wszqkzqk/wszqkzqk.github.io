@@ -6,7 +6,7 @@ date:       2025-01-04
 author:     wszqkzqk
 header-img: img/bg-mountain-darken.webp
 catalog:    true
-tags:       开源软件 Linux archlinux 国产硬件 虚拟化 龙芯 LoongArchLinux
+tags:       开源软件 Linux archlinux 国产硬件 龙芯 LoongArchLinux Chromium Electron
 ---
 
 ## 前言
@@ -199,7 +199,7 @@ index 7f9cca27..3acbe4ad 100755
        exit 1
 ```
 
-这一补丁需要在合并子模块源码前就**预先应用**，否则在合并时就会报错。需要注意的是，对Electron的修改也应当在合并子模块源码前就**预先应用**。
+这一补丁需要在合并子模块源码前就**预先应用**，否则在合并时就会报错。需要注意的是，对**Electron本体**的修改也应当在合并子模块源码前就**预先应用**。
 
 ```bash
   # Apply in advance to so that makepkg-source-roller.py will not throw error
@@ -265,3 +265,9 @@ npm install @esbuild/linux-loong64@0.14.54
 由于Chen Jiajie所维护的补丁是针对Chromium的tarball的，将对Chromium主仓库以及子模块的修改都包含在一个`diff`文件中。我们除了需要对这个`diff`文件进行适当的清理、修改外，还需要将这个`diff`文件拆分成多个`diff`文件，应用于相应的子模块并逐一解决冲突。然后，我们再将最终的补丁文件放到Electron的`patches/<submodule-name>`目录下，并在`patches/<submodule-name>/.patches`文件中添加这一额外指定的`diff`文件的文件名。
 
 以上适配工作完成后，我们可以参考[前一章](#对于社区已有维护补丁的版本)的步骤，应用这些补丁，构建Electron。
+
+## 结语
+
+通过这样的方式，我们可以利用社区力量，维护龙架构的Arch Linux软件生态。这样的方式不仅可以让我们更好地适配Arch Linux的构建方式，也可以让我们更好地利用社区资源，减少重复劳动，提高效率。
+
+最后，感谢Chen Jiajie和darkyzhou的工作，感谢社区的支持，让我们一起维护龙架构的软件生态，让我们的龙架构更好地发展！
