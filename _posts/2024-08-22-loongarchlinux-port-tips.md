@@ -387,13 +387,14 @@ prepare() {
     # to avoid `relocation R_LARCH_B26 overflow`
     export CFLAGS="${CFLAGS} -mcmodel=medium"
     export CXXFLAGS="${CXXFLAGS} -mcmodel=medium"
-    export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"
 
     ......
 }
 ```
 
 `-mcmodel=medium`会使得编译器使用`medium`模型，这样可以扩大地址空间，允许更大的跳转范围（2 GiB）。
+
+* 自Rust 1.83起，Rust的Code Model默认为`medium`，因此不需要再额外设置`export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"`
 
 ### LTO出错：换链接器还是禁用LTO？
 
@@ -453,7 +454,6 @@ prapre() {
     # to avoid `relocation R_LARCH_B26 overflow`
     export CFLAGS="${CFLAGS} -mcmodel=medium"
     export CXXFLAGS="${CXXFLAGS} -mcmodel=medium"
-    export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"
     export LDFLAGS="${LDFLAGS} -Wl,--no-relax"
 
     ......
@@ -461,6 +461,8 @@ prapre() {
 ```
 
 待`binutils`修复后，应当将这一修改去除。
+
+* 自Rust 1.83起，Rust的Code Model默认为`medium`，因此不需要再额外设置`export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"`
 
 ## QEMU User特异性问题
 

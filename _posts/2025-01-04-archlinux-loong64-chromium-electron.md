@@ -96,8 +96,9 @@ sha256sums+=('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
   # to avoid `relocation R_LARCH_B26 overflow`
   export CFLAGS="${CFLAGS} -mcmodel=medium"
   export CXXFLAGS="${CXXFLAGS} -mcmodel=medium"
-  export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"
 ```
+
+* 自Rust 1.83起，Rust的Code Model默认为`medium`，因此不需要再额外设置`export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"`
 
 一切就绪后，我们可以使用`devtools-loong64`构建Chromium了。
 
