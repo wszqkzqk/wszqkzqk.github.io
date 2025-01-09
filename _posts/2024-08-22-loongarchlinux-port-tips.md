@@ -400,7 +400,7 @@ prepare() {
 
 #### 因链接器Bug导致的LTO失败
 
-目前的`binutils`版本（`2.43+r4+g7999dae6961-1`）存在一些Bug，可能会在链接时出现段错误等情况，尤其是在LTO时，这时候我们一般有两种选择：
+目前的`binutils`版本存在一些Bug，可能会在链接时出现段错误等情况，尤其是在LTO时，这时候我们一般有两种选择：
 
 * 改用`mold`链接器
   * 在`PKGBUILD`的`prepare()`函数中加入以下内容：
@@ -439,30 +439,33 @@ Error: no match insn: xxx xxx xxx
 
 ### `binutils`的Bug：设置`-mcmodel=medium`后仍然链接失败
 
-* 与上一小节类似，目前**建议直接改用`mold`链接器**（`export LDFLAGS="${LDFLAGS} -fuse-ld=mold"`）
-* 如果`mold`链接器会引入新的问题，必须使用`bfd`时，可以尝试以下方法
+* `bintuils`自`2.43_1+r171+g01da089627be-1`已经修复了`relax`的问题，参见[Commit bb9a0a3](https://github.com/bminor/binutils-gdb/commit/bb9a0a36e78aa564021b377a4a7fab4851b2c22b)，不应该再出现这个问题
+* 以下内容理论上应该没有必要使用
 
-目前的`binutils`版本（`2.43+r4+g7999dae6961-1`）存在问题，`relax`时对指令进行了错误的优化，导致即使设置了`-mcmodel=medium`也会出现`relocation R_LARCH_B26 out of range`问题。这一问题即将修复，但是尚未发布。
-
-如果不改用其他链接器，可以通过在`LDFLAGS`中加入`-Wl,--no-relax`来避免这一问题。
-
-```bash
-prapre() {
-    ......
-
-    # Add ` -mcmodel=medium` to CFLAGS etc.
-    # to avoid `relocation R_LARCH_B26 overflow`
-    export CFLAGS="${CFLAGS} -mcmodel=medium"
-    export CXXFLAGS="${CXXFLAGS} -mcmodel=medium"
-    export LDFLAGS="${LDFLAGS} -Wl,--no-relax"
-
-    ......
-}
-```
-
-待`binutils`修复后，应当将这一修改去除。
-
-* 自Rust 1.83起，Rust的Code Model默认为`medium`，因此不需要再额外设置`export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"`
+> * 与上一小节类似，目前**建议直接改用`mold`链接器**（`export LDFLAGS="${LDFLAGS} -fuse-ld=mold"`）
+> * 如果`mold`链接器会引入新的问题，必须使用`bfd`时，可以尝试以下方法
+> 
+> 目前的`binutils`版本（`2.43+r4+g7999dae6961-1`）存在问题，`relax`时对指令进行了错误的优化，导致即使设置了`-mcmodel=medium`也会出现`relocation R_LARCH_B26 out of range`问题。这一问题即将修复，但是尚未发布。
+> 
+> 如果不改用其他链接器，可以通过在`LDFLAGS`中加入`-Wl,--no-relax`来避免这一问题。
+> 
+> ```bash
+> prapre() {
+>     ......
+> 
+>     # Add ` -mcmodel=medium` to CFLAGS etc.
+>     # to avoid `relocation R_LARCH_B26 overflow`
+>     export CFLAGS="${CFLAGS} -mcmodel=medium"
+>     export CXXFLAGS="${CXXFLAGS} -mcmodel=medium"
+>     export LDFLAGS="${LDFLAGS} -Wl,--no-relax"
+> 
+>     ......
+> }
+> ```
+> 
+> 待`binutils`修复后，应当将这一修改去除。
+> 
+> * 自Rust 1.83起，Rust的Code Model默认为`medium`，因此不需要再额外设置`export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"`
 
 ## QEMU User特异性问题
 
