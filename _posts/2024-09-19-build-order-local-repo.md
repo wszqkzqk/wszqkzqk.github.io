@@ -117,13 +117,19 @@ sudo ln -s /usr/bin/archbuild /usr/bin/local-staging-loong64-build
 ./genrebuild package1 package2 package3 ...
 ```
 
-然后，按顺序进行打包并添加到本地仓库的流程，假设我们的构建目录下存在[`add-to-local`](#添加软件包)脚本，本地仓库数据库的路径为`/srv/local-repo/local-repo.db.tar.gz`：
+然后，按顺序进行打包并添加到本地仓库。不过需要注意的是，如果列表中的包的在上游仓库的版本号在打包期间发生变化，可能会导致本地在此前后打的包版本不对应，因此需要先在构建前更新一下仓库信息，使用`get-loong64-pkg`脚本下载任意一个包即可：
+
+```bash
+get-loong64-pkg package1
+```
+
+在随后按列表顺序构建的过程中，则需要向`get-loong64-pkg`传递`--skip-update`参数，禁止脚本在按照列表构建期间更新上游仓库信息。假设我们的构建目录下存在[`add-to-local`](#添加软件包)脚本，本地仓库数据库的路径为`/srv/local-repo/local-repo.db.tar.gz`：
 
 * Bash
 
 ```
 for pkg in package1 package2 package3 ...; do
-    get-loong64-pkg $pkg
+    get-loong64-pkg $pkg --skip-update
     cd $pkg
     gpg --import keys/pgp/*
     while ! updpkgsums; do
@@ -131,7 +137,7 @@ for pkg in package1 package2 package3 ...; do
     done
     rm *.pkg.tar.zst*
     cd ..
-    get-loong64-pkg $pkg
+    get-loong64-pkg $pkg --skip-update
     script -c "time local-loong64-build -- -- -A" build-log-all.log && ../add-to-local /srv/local-repo/local-repo.db.tar.gz *.pkg.tar.zst
     if [ $? -ne 0 ]; then
         break
@@ -144,14 +150,14 @@ done
 
 ```fish
 for pkg in package1 package2 package3 ...                                                                      
-    get-loong64-pkg $pkg
+    get-loong64-pkg $pkg --skip-update
     cd $pkg
     gpg --import keys/pgp/*
     while ! updpkgsums
     end
     rm *.pkg.tar.zst*
     cd ..
-    get-loong64-pkg $pkg
+    get-loong64-pkg $pkg --skip-update
     script -c "time local-loong64-build -- -- -A" build-log-all.log && ../add-to-local /srv/local-repo/local-repo.db.tar.gz *.pkg.tar.zst
     if test $status -ne 0
         break
