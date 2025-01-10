@@ -132,7 +132,7 @@ for pkg in package1 package2 package3 ...; do
     rm *.pkg.tar.zst*
     cd ..
     get-loong64-pkg $pkg
-    script -c "local-loong64-build -- -- -A" build-log-all.log && ../add-to-local /srv/local-repo/local-repo.db.tar.gz *.pkg.tar.zst
+    script -c "time local-loong64-build -- -- -A" build-log-all.log && ../add-to-local /srv/local-repo/local-repo.db.tar.gz *.pkg.tar.zst
     if [ $? -ne 0 ]; then
         break
     fi
@@ -152,7 +152,7 @@ for pkg in package1 package2 package3 ...
     rm *.pkg.tar.zst*
     cd ..
     get-loong64-pkg $pkg
-    script -c "local-loong64-build -- -- -A" build-log-all.log && ../add-to-local /srv/local-repo/local-repo.db.tar.gz *.pkg.tar.zst
+    script -c "time local-loong64-build -- -- -A" build-log-all.log && ../add-to-local /srv/local-repo/local-repo.db.tar.gz *.pkg.tar.zst
     if test $status -ne 0
         break
     end
