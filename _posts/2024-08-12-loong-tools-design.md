@@ -155,6 +155,12 @@ extra-loong64-build -- -- -A
   * ~~如果要针对最新的维护状况构建，请使用**`extra-testing-loong64-build`**或者`extra-staging-loong64-build`~~
   * 目前我们只跟进Arch Linux官方的`core`和`extra`仓库，因此**一般只使用`extra-loong64-build`**
 
+如果想要保留对构建时间的记录，以及更加完整的构建日志，可以使用`script`命令：
+
+```bash
+script -c "time extra-loong64-build -- -- -A" build-log-all.log
+```
+
 #### 首次构建可能问题
 
 首次运行时，程序会在`/var/lib/archbuild/`下创建目录`extra-loong64`，如果是Btrfs文件系统，会在`extra-loong64`下创建一个名为`root`的子卷，用于存放LoongArch Linux的基本chroot环境，在后续每次运行构建时，将会对这一子卷中的环境进行升级同步，并创建一个新的快照子卷进行构建。（其他文件系统则是创建普通目录、复制目录）
