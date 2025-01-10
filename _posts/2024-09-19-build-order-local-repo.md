@@ -83,7 +83,7 @@ chmod +x add-to-local
 
 # 在构建中启用本地仓库
 
-如果想要在devtools的构建过程中使用本地仓库，需要在`/usr/share/devtools/pacman.conf.d/`下添加一个配置文件，比如`local-testing-loong64.conf`。建议按照一定的规则来命名，比如这里的示例`local`表示本地仓库，`testing`表示基于`testing`仓库，`loong64`表示龙芯64位架构。这一`conf`文件可以从`/usr/share/devtools/pacman.conf.d/extra-testing-loong64.conf`复制并编辑。（针对`staging`或者稳定仓库的本地仓库构建同理）
+如果想要在devtools的构建过程中使用本地仓库，需要在`/usr/share/devtools/pacman.conf.d/`下添加一个配置文件，比如`local-loong64.conf`、`local-testing-loong64.conf`、`local-staging-loong64.conf`。建议按照一定的规则来命名，比如`local-testing-loong64.conf`的示例`local`表示本地仓库，`testing`表示基于`testing`仓库，`loong64`表示龙芯64位架构。`conf`文件可以从`/usr/share/devtools/pacman.conf.d/extra-loong64.conf`（或`extra-testing-loong64.conf`、`extra-staging-loong64.conf`）复制并编辑。
 
 复制并编辑`local-repo`所基于的`conf`文件，在**所有**软件源的指定**之前**插入本地仓库的指定：
 * **务必**保证本地仓库的指定在所有软件源的指定**之前**
@@ -100,7 +100,9 @@ Server = file:///srv/local-repo
 完成后，我们还需要增加`archbuild`的软链接，以便在构建时使用本地仓库：
 
 ```bash
+sudo ln -s /usr/bin/archbuild /usr/bin/local-loong64-build
 sudo ln -s /usr/bin/archbuild /usr/bin/local-testing-loong64-build
+sudo ln -s /usr/bin/archbuild /usr/bin/local-staging-loong64-build
 ```
 
 确保软链接的名称与`conf`文件的名称保持对应。以后，我们就可以使用`local-testing-loong64-build`命令基于`local-repo`构建软件包了。
@@ -115,23 +117,25 @@ sudo ln -s /usr/bin/archbuild /usr/bin/local-testing-loong64-build
 ./genrebuild package1 package2 package3 ...
 ```
 
-然后，按顺序进行打包并添加到本地仓库的流程，假设我们的构建目录在`~/loongpack`下且存在[`get-loong64-pkg`](https://wszqkzqk.github.io/2024/08/12/loong-tools-design/#脚本化)和[`add-to-local`](#添加软件包)脚本，本地仓库数据库的路径为`/srv/local-repo/local-repo.db.tar.gz`：
+然后，按顺序进行打包并添加到本地仓库的流程，假设我们的构建目录下存在[`add-to-local`](#添加软件包)脚本，本地仓库数据库的路径为`/srv/local-repo/local-repo.db.tar.gz`：
 
 * Bash
 
 ```
 for pkg in package1 package2 package3 ...; do
-    cd ~/loongpack
-    ~/loongpack/get-loong64-pkg "$pkg"
-    cd ~/loongpack/"$pkg"
-
-    local-testing-loong64-build -- -- -A 2>&1 | tee build-log-all.log
+    get-loong64-pkg $pkg
+    cd $pkg
+    gpg --import keys/pgp/*
+    while ! updpkgsums; do
+        :
+    done
+    rm *.pkg.tar.zst*
+    cd ..
+    get-loong64-pkg $pkg
+    script -c "local-loong64-build -- -- -A" build-log-all.log && ../add-to-local /srv/local-repo/local-repo.db.tar.gz *.pkg.tar.zst
     if [ $? -ne 0 ]; then
         break
     fi
-
-    ~/loongpack/add-to-local /srv/local-repo/local-repo.db.tar.gz *.pkg.tar.zst
-
     cd ~/loongpack
 done
 ```
@@ -140,10 +144,15 @@ done
 
 ```fish
 for pkg in package1 package2 package3 ...                                                                      
-    cd ~/loongpack
-    ~/loongpack/get-loong64-pkg $pkg
-    cd ~/loongpack/$pkg
-    local-testing-loong64-build -- -- -A 2>&1 | tee build-log-all.log && ~/loongpack/add-to-local /srv/local-repo/local-repo.db.tar.gz *.pkg.tar.zst
+    get-loong64-pkg $pkg
+    cd $pkg
+    gpg --import keys/pgp/*
+    while ! updpkgsums
+    end
+    rm *.pkg.tar.zst*
+    cd ..
+    get-loong64-pkg $pkg
+    script -c "local-loong64-build -- -- -A" build-log-all.log && ../add-to-local /srv/local-repo/local-repo.db.tar.gz *.pkg.tar.zst
     if test $status -ne 0
         break
     end
