@@ -706,7 +706,7 @@ GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的P
 
 由于国内网络环境的原因，有时候我们直接从`PKGBUILD`指定的git地址克隆一个完整且巨大的仓库可能会非常困难，如果这一仓库在国内有可以高速访问的镜像，我们确实也可以先从镜像源克隆一份，然后再经过一些处理后给`makepkg`使用。
 
-首先我们先从国内的某个镜像源克隆一份，这里需要注意的是，我们推荐将这一用于存储的仓库克隆为bare仓库，遵从上游``makepkg`的习惯：
+首先我们先从国内的某个镜像源（比如Gitee、GitCode或者某些国内的GitHub镜像站等）克隆一份，这里需要注意的是，我们推荐将这一用于存储的仓库克隆为bare仓库，遵从上游`makepkg`的习惯：
 
 ```bash
 git clone --bare <mirror-repo-url> <path-to-bare-repo>
