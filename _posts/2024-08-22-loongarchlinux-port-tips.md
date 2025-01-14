@@ -702,6 +702,46 @@ GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的P
 2. 上游尚未存在相关Commit，或者本身使用tarball构建，并非git仓库，**优先在`source`中添加[指向上游Patch的链接](#如何从GitHub的PR/Commit中获取Patch)**
 3. 相关PR变动过于频繁，以上两种情况均不可行时，才考虑将Patch文件**拉到本地并放入`source`中**
 
+## 某git仓库太大，我是否可以从国内的镜像源克隆再给`makepkg`使用
+
+由于国内网络环境的原因，有时候我们直接从`PKGBUILD`指定的git地址克隆一个完整且巨大的仓库可能会非常困难，如果这一仓库在国内有可以高速访问的镜像，我们确实也可以先从镜像源克隆一份，然后再经过一些处理后给`makepkg`使用。
+
+首先我们先从国内的某个镜像源克隆一份，这里需要注意的是，我们推荐将这一用于存储的仓库克隆为bare仓库，遵从上游``makepkg`的习惯：
+
+```bash
+git clone --bare <mirror-repo-url> <path-to-bare-repo>
+```
+
+然后，根据`PKGBUILD`的`source`数组中的地址，重新指定我们从镜像源克隆的仓库的远程地址：
+
+```bash
+cd <path-to-bare-repo>
+git remote set-url origin <upstream-repo-url>
+```
+
+此外，由于`makepkg`通常会使用`git tag`来切换到指定的版本，我们必须要保证在每次`makepkg`自动`git fetch`时一并获取`tag`（`makepkg`克隆的仓库自动设定了这项设置，手动克隆的则默认没有开启，需要自行设定），避免没有拉取到上游的`tag`导致找不到对应的版本。我们可以通过以下命令开启这一设置：
+
+```bash
+git config fetch.pruneTags true
+```
+
+## `makepkg`克隆下来的git仓库是bare仓库，如何测试、应用Patch
+
+Arch Linux的`makepkg`会把仓库克隆成bare仓库，其中没有工作目录的，因此无法直接在这个仓库中进行修改。如果需要在本地测试、应用Patch，可以将这个bare仓库克隆一份非bare仓库，例如：
+
+```bash
+git clone <path-to-bare-repo> <path-to-non-bare-repo>
+```
+
+这一克隆过程仅涉及在本地的复制和处理，不会涉及网络传输，因此速度很快。后续，我们可能还需要将这个非bare仓库的`origin`指向上游仓库，例如：
+
+```bash
+cd <path-to-non-bare-repo>
+git remote set-url origin <upstream-repo-url>
+```
+
+然后就可以在这个非bare仓库中进行修改、测试、应用Patch了。
+
 # 更多阅读材料
 
 * [龙芯的Arch Linux移植工作流程 by wszqkzqk](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)
