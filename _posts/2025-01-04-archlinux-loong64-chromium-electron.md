@@ -170,6 +170,8 @@ build/rust/rust_bindgen.gni
 build/rust/rust_target.gni
 ```
 
+此外，有时候我们所使用的Chromium版本可能与darkyzhou的补丁中指定的版本不同，导致补丁在应用的时候可能会出现冲突。这时，我们应当先在Chromium中解决这些冲突，再导出我们的Chromium补丁以替换darkyzhou的Chromium补丁`patches/chromium/loong64_support.patch`。其他子模块如果出现冲突，也应当类似处理。
+
 #### 导出补丁
 
 由于我们向Electron的git仓库新增了未跟踪的文件，我们还需要`git add`这些文件，并使用`git diff`导出我们的补丁：
