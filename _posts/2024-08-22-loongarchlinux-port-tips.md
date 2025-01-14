@@ -725,6 +725,8 @@ git remote set-url origin <upstream-repo-url>
 git config fetch.pruneTags true
 ```
 
+最后，将该仓库移动到`PKGBUILD`所在目录的指定名称，即可给`makepkg`使用。
+
 ## `makepkg`克隆下来的git仓库是bare仓库，如何测试、应用Patch
 
 Arch Linux的`makepkg`会把仓库克隆成bare仓库，其中没有工作目录的，因此无法直接在这个仓库中进行修改。如果需要在本地测试、应用Patch，可以将这个bare仓库克隆一份非bare仓库，例如：
