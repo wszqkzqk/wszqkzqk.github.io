@@ -265,9 +265,36 @@ npm install @esbuild/linux-loong64@0.14.54
 
 #### 使用Chromium的补丁
 
-如果darkyzhou的仓库中没有适用于我们所需版本的修复补丁，我们可以尝试自行找到该electron版本对应的Chromium版本，然后移植[Chen Jiajie的Chromium补丁](https://github.com/AOSC-Dev/chromium-loongarch64)进行修复。
+如果darkyzhou的仓库中没有适用于我们所需版本的修复补丁，我们可以尝试自行找到该electron版本对应的Chromium版本，然后移植[Chen Jiajie的Chromium补丁](https://github.com/AOSC-Dev/chromium-loongarch64)进行修复。其实这样的工作量跟修改darkyzhou的补丁差不多。
 
-需要注意的是，Chen Jiajie的补丁是基于完整的Chromium源码的，如果要直接应用，需要等Arch Linux的`makepkg-source-roller.py`脚本整合Chromium的源码后再进行操作。应用之后可能还需要自行解决冲突。
+需要注意的是，Chen Jiajie的补丁是基于完整的Chromium源码的，如果要直接应用，需要等Arch Linux的`makepkg-source-roller.py`脚本整合Chromium的源码后再进行操作（应当放在Arch Linux上游跑完`src/electron/script/apply_all_patches.py`后的`echo "Applying local patches..."`段中，和上游的其他local patch一起应用）。
+
+我们需要事先按照之前介绍的方法对补丁进行**清理**。这里应用的补丁还需要预先**解决好冲突**，尤其是当Chen Jiajie的补丁针对的Chromium版本与我们的不完全对应的时候。
+
+此外，除了Chromium的补丁，我们还需要对`electron_runtime_api_delegate.cc`文件进行适配，增加对`loong64`的支持，例如：
+
+```
+--- a/shell/browser/extensions/api/runtime/electron_runtime_api_delegate.cc
++++ b/shell/browser/extensions/api/runtime/electron_runtime_api_delegate.cc
+@@ -67,6 +67,8 @@ bool ElectronRuntimeAPIDelegate::GetPlatformInfo(PlatformInfo* info) {
+     info->arch = extensions::api::runtime::PlatformArch::kX86_32;
+   } else if (strcmp(arch, "x64") == 0) {
+     info->arch = extensions::api::runtime::PlatformArch::kX86_64;
++  } else if (strcmp(arch, "loong64") == 0) {
++    info->arch = extensions::api::runtime::PlatformArch::kLoong64;
+   } else {
+     NOTREACHED();
+   }
+@@ -78,6 +80,8 @@ bool ElectronRuntimeAPIDelegate::GetPlatformInfo(PlatformInfo* info) {
+     info->nacl_arch = extensions::api::runtime::PlatformNaclArch::kX86_32;
+   } else if (strcmp(nacl_arch, "x86-64") == 0) {
+     info->nacl_arch = extensions::api::runtime::PlatformNaclArch::kX86_64;
++  } else if (strcmp(nacl_arch, "loong64") == 0) {
++    info->nacl_arch = extensions::api::runtime::PlatformNaclArch::kLoong64;
+   } else {
+     NOTREACHED();
+   }
+```
 
 #### 手动拆分补丁
 
