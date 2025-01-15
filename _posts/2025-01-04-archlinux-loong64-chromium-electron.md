@@ -269,7 +269,7 @@ npm install @esbuild/linux-loong64@0.14.54
 
 需要注意的是，Chen Jiajie的补丁是基于完整的Chromium源码的，如果要直接应用，需要等Arch Linux的`makepkg-source-roller.py`脚本整合Chromium的源码后再进行操作（应当放在Arch Linux上游跑完`src/electron/script/apply_all_patches.py`后的`echo "Applying local patches..."`段中，和上游的其他local patch一起应用）。
 
-我们需要事先按照之前介绍的方法对补丁进行**清理**。这里应用的补丁还需要预先**解决好冲突**，尤其是当Chen Jiajie的补丁针对的Chromium版本与我们的不完全对应的时候。
+我们需要事先按照之前介绍的方法对补丁进行[**清理**](#清理)与[compiler-rt路径适配](#额外的修改)。这里应用的Chromium补丁还需要预先**解决好冲突**，尤其是当Chen Jiajie的补丁针对的Chromium版本与我们的不完全对应的时候。
 
 此外，除了Chromium的补丁，我们还需要对`electron_runtime_api_delegate.cc`文件进行适配，增加对`loong64`的支持，例如：
 
@@ -311,3 +311,10 @@ npm install @esbuild/linux-loong64@0.14.54
 通过这样的方式，我们可以利用社区力量，维护龙架构的Arch Linux软件生态。这样的方式不仅可以让我们更好地适配Arch Linux的构建方式，也可以让我们更好地利用社区资源，减少重复劳动，提高效率。
 
 最后，感谢Chen Jiajie和darkyzhou的工作，感谢其他开源社区的支持，让我们一起维护龙架构的软件生态，让我们的龙架构更好地发展！
+
+## 参考链接
+
+* [Chromium 131的适配补丁集](https://github.com/lcpu-club/loongarch-packages/tree/13e278dc0dbb10f593af6b40871e8a3cd8166f47/chromium)
+* [Electron 32的适配补丁集](https://github.com/lcpu-club/loongarch-packages/tree/d7e71d63b8cfd5d4cf00e07693a59ccf583d9bc1/electron32)
+* [Electron 30的适配：PR #401](https://github.com/lcpu-club/loongarch-packages/pull/401)，注意PR的Comment内容也有参考意义
+* [Electron 33的适配：PR #400](https://github.com/lcpu-club/loongarch-packages/pull/400)，注意PR的Comment内容也有参考意义
