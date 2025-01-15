@@ -606,6 +606,22 @@ makepkg -R
 
 然而，**笔者并不推荐这种做法**，笔者仍然建议按照官方的流程来运行构建命令。此外，校内具有上传权限的开发者请注意，由这样的方式得到的软件包**一律禁止上传**，只能用于本地的Bootstrap用途。
 
+### 在保存的环境中操作git源代码仓库
+
+`archbuild`会将存储构建源码的整个`PKGBUILD`所在目录`pkgbase`挂载到构建环境的`/startdir`目录下，当我们离开构建环境后，这个目录会被卸载。此时，如果我们再尝试对git源代码仓库进行操作，会因为找不到`/startdir`下的object而报错。
+
+如果需要用`systemd-nspawn`进入保存的环境中操作git源代码仓库，可以将宿主的`PKGBUILD`和构建源码的所在的`pkgbase`目录挂载到构建环境的`/startdir`目录下，例如：
+
+```bash
+sudo systemd-nspawn -aD /var/lib/archbuild/extra-loong64-build/<user-name> --bind /path/to/your/pkgbase:/startdir
+```
+
+如果我们是希望直接在宿主的环境中操作git源代码仓库，则需要修改git仓库设定的`.git/objects/info/alternates`，将其指向宿主的实际`objects`目录，例如：
+
+```bash
+find /path/to/the/git/repo -type f -path '*/.git/objects/info/alternates' -exec sed -i -e 's|^/startdir|/path/to/your/pkgbase|g' {} +^C
+```
+
 ## 网络环境不稳定导致下载失败
 
 有时候我们的网络环境不稳定，导致构建所需的源代码下载失败，而如果反复运行构建命令，又存在重新创建环境等资源开销，较为缓慢。

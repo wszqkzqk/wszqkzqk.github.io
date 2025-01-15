@@ -263,13 +263,21 @@ npm install @esbuild/linux-loong64@0.14.54
 
 ### 对于没有维护补丁的版本
 
+#### 使用Chromium的补丁
+
 如果darkyzhou的仓库中没有适用于我们所需版本的修复补丁，我们可以尝试自行找到该electron版本对应的Chromium版本，然后移植[Chen Jiajie的Chromium补丁](https://github.com/AOSC-Dev/chromium-loongarch64)进行修复。
 
-由于Chen Jiajie所维护的补丁是针对Chromium的tarball的，将对Chromium主仓库以及子模块的修改都包含在一个`diff`文件中。我们除了需要对这个`diff`文件进行适当的清理、修改外，还需要将这个`diff`文件根据子模块拆分成多个文件。我们在获取子模块的源码后，首先应当使用`git checkout`命令切换到对应的版本，再将我们拆分好的补丁文件应用于相应的子模块，并逐一解决冲突。完成后，再使用`git diff`导出我们的补丁。
+需要注意的是，Chen Jiajie的补丁是基于完整的Chromium源码的，如果要直接应用，需要等Arch Linux的`makepkg-source-roller.py`脚本整合Chromium的源码后再进行操作。应用之后可能还需要自行解决冲突。
 
-接下来，我们再将最终的补丁文件放到Electron的`patches/<submodule-name>`目录下，并在`patches/<submodule-name>/.patches`文件中添加这一额外指定的补丁文件的文件名。
+#### 手动拆分补丁
 
-以上适配工作完成后，参考[前一节](#对于社区已有维护补丁的版本)的步骤，应用这些补丁，构建Electron。
+以下内容不再推荐，仅留作存档：
+
+> 由于Chen Jiajie所维护的补丁是针对Chromium的tarball的，将对Chromium主仓库以及子模块的修改都包含在一个`diff`文件中。我们除了需要对这个`diff`文件进行适当的清理、修改外，还需要将这个`diff`文件根据子模块拆分成多个文件。我们在获取子模块的源码后，首先应当使用`git checkout`命令切换到对应的版本，再将我们拆分好的补丁文件应用于相应的子模块，并逐一解决冲突。完成后，再使用`git diff`导出我们的补丁。
+>
+> 接下来，我们再将最终的补丁文件放到Electron的`patches/<submodule-name>`目录下，并在`patches/<submodule-name>/.patches`文件中添加这一额外指定的补丁文件的文件名。
+>
+> 以上适配工作完成后，参考[前一节](#对于社区已有维护补丁的版本)的步骤，应用这些补丁，构建Electron。
 
 ## 结语
 
