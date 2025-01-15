@@ -269,9 +269,9 @@ npm install @esbuild/linux-loong64@0.14.54
 
 需要注意的是，Chen Jiajie的补丁是基于完整的Chromium源码的，如果要直接应用，需要等Arch Linux的`makepkg-source-roller.py`脚本整合Chromium的源码后再进行操作（应当放在Arch Linux上游跑完`src/electron/script/apply_all_patches.py`后的`echo "Applying local patches..."`段中，和上游的其他local patch一起应用）。
 
-我们需要事先按照之前介绍的方法对补丁进行[**清理**](#清理)与[compiler-rt路径适配](#额外的修改)。这里应用的Chromium补丁还需要预先**解决好冲突**，尤其是当Chen Jiajie的补丁针对的Chromium版本与我们的不完全对应的时候。
+我们需要事先按照之前介绍的方法对补丁进行[**清理**](#清理)。这里应用的Chromium补丁还需要预先**解决好冲突**，尤其是当Chen Jiajie的补丁针对的Chromium版本与我们的不完全对应的时候。
 
-此外，除了Chromium的补丁，我们还需要对`electron_runtime_api_delegate.cc`文件进行适配，增加对`loong64`的支持，例如：
+除了Chromium的补丁，我们还需要对`electron_runtime_api_delegate.cc`文件进行适配，增加对`loong64`的支持，例如：
 
 ```
 --- a/shell/browser/extensions/api/runtime/electron_runtime_api_delegate.cc
@@ -295,6 +295,8 @@ npm install @esbuild/linux-loong64@0.14.54
      NOTREACHED();
    }
 ```
+
+此外，我们**至少**还需要完成上一节提到的[适配`depot_tools`](#适配depot_tools)、[获取`esbuild`的二进制文件](#获取esbuild的二进制文件)、[路径适配的修改](#路径适配的修改)这些工作并应用才能完成适配。
 
 #### 手动拆分补丁
 
