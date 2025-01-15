@@ -253,8 +253,6 @@ npm install @esbuild/linux-loong64@0.14.54
   cp node_modules/@esbuild/linux-loong64/bin/esbuild src/third_party/devtools-frontend/src/third_party/esbuild/esbuild
 ```
 
-由于之前darkyzhou的补丁中已经包含了对`esbuild`以来版本的修改（指定为了0.14.54），我们无需再对`devtools_frontend`中指定的版本进行修改。
-
 #### 路径适配的修改
 
 与Chromium类似，我们也需要用`compiler-rt-adjust-paths-loong64.patch`替换Arch Linux的`compiler-rt-adjust-paths.patch`（参见Chromium的[相关部分](#额外的修改)）。
