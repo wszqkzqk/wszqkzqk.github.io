@@ -154,10 +154,10 @@ VER=${TEMP2##*-}
 NAME=${TEMP2%-*}
 
 gpg --detach-sign --use-agent $PKG_PATH
-if [[ ! -e $PKG_PATH.sig ]]; then
-    echo "$PKG_PATH.sig not found! Exiting..."
-    exit 1
-fi
+while [[ ! -s $PKG_PATH.sig ]]; do
+    echo "Signature file not found or empty. Trying to sign again..."
+    gpg --detach-sign --use-agent $PKG_PATH
+done
 
 rsync -e "ssh -p ${PORT}" -p '--chmod=ug=rw,o=r' -c -h -L --progress --partial -y $PKG_PATH{,.sig} $TIER0SERVER:$_remote_path/$REPO/os/loong64/
 ssh -tt $TIER0SERVER -p $PORT "cd $_remote_path/$REPO/os/loong64/; flock /tmp/loong-repo-$REPO.lck repo-add -R $REPO.db.tar.gz $PKG"
