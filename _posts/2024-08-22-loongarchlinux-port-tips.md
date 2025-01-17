@@ -113,7 +113,7 @@ extra-loong64-build -- -I <package1> -I <package2> ...
 
 ## 本地仓库
 
-如果觉得手动传递`-I`参数比较麻烦，可以参考笔者介绍的[**本地仓库**](https://wszqkzqk.github.io/2024/09/19/build-order-local-repo/)的方法。
+手动传递`-I`参数往往比较麻烦，推荐参考笔者介绍的[**本地仓库**](https://wszqkzqk.github.io/2024/09/19/build-order-local-repo/)的方法。
 
 # 软件包的手动上传
 
