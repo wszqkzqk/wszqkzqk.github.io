@@ -40,12 +40,10 @@ Loong Arch Linux是Arch Linux的龙芯移植版本，目前龙芯Linux社区较�
 
 Loong Arch Linux移植签名所用的PGP密钥并不在Arch Linux的`archlinux-keyring`密钥环中，因此需要导入签名密钥。
 
-目前笔者打包了[北京大学Linux俱乐部](https://github.com/lcpu-club)Arch Linux用户组的密钥环[`archlinux-lcpu-keyring`](https://github.com/lcpu-club/archlinux-lcpu-keyring)。但这一软件包尚未上传到AUR，可以通过以下方式安装：
+目前笔者打包了[北京大学Linux俱乐部](https://github.com/lcpu-club)Arch Linux用户组的密钥环[`archlinux-lcpu-keyring`](https://github.com/lcpu-club/archlinux-lcpu-keyring)。可以从AUR中安装：
 
 ```bash
-git clone https://github.com/lcpu-club/archlinux-lcpu-keyring.git
-cd archlinux-lcpu-keyring
-makepkg -si
+paru -S archlinux-lcpu-keyring
 ```
 
 ### 安装[`devtools-loong64`](https://github.com/lcpu-club/devtools-loong)
