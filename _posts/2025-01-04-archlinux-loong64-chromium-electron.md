@@ -308,7 +308,7 @@ npm install @esbuild/linux-loong64@0.14.54
 
 ## 结语
 
-当然，**很可能单纯按照本文的内容来修复是不够的**，我们仍然可能**不可避免地遇到各种各样的其他问题**，这时候我们需要根据错误信息，充分检索，具体问题具体分析，逐一解决。
+当然，**很可能单纯按照本文的内容来修复是不够的**，我们仍然可能**不可避免地遇到各种各样的其他问题**，这时候我们需要根据错误信息，充分检索，具体问题具体分析，逐一解决。（注意在**上游有相关修复**的时候应该优先**移植**上游的修复到我们的版本，如果没有，我们才使用自己的修复，尤其是潜在的可能因为**工具链变化等原因出现的架构无关问题**）
 
 通过共用/参考补丁内容的方式，我们可以利用社区力量，维护龙架构的Arch Linux软件生态。这样的方式不仅可以让我们更好地适配Arch Linux的构建方式，也可以让我们更好地利用社区资源，减少重复劳动，提高效率。
 
@@ -318,5 +318,5 @@ npm install @esbuild/linux-loong64@0.14.54
 
 * [Chromium 131的适配补丁集](https://github.com/lcpu-club/loongarch-packages/tree/13e278dc0dbb10f593af6b40871e8a3cd8166f47/chromium)
 * [Electron 32的适配补丁集](https://github.com/lcpu-club/loongarch-packages/tree/d7e71d63b8cfd5d4cf00e07693a59ccf583d9bc1/electron32)
-* [Electron 30的适配：PR #401](https://github.com/lcpu-club/loongarch-packages/pull/401)，注意PR的Comment内容也有参考意义
-* [Electron 33的适配：PR #400](https://github.com/lcpu-club/loongarch-packages/pull/400)，注意PR的Comment内容也有参考意义
+* [Electron 30的适配：PR #401](https://github.com/lcpu-club/loongarch-packages/pull/401)，可以参考这个PR的内容和曲折的修复过程（包括PR的diff和comment）
+* [Electron 33的适配：PR #400](https://github.com/lcpu-club/loongarch-packages/pull/400)，可以参考这个PR的内容和曲折的修复过程（包括PR的diff和comment）
