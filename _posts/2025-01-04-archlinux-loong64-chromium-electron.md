@@ -34,7 +34,7 @@ build/rust/rust_target.gni
 
 ### 额外的修改
 
-此外，Arch Linux对于Chromium构建中的compiler-rt的路径也有修改，以适配比`clang >= 18`。而我们也需要在同样的构建文件中的相同位置进行修改，增加对龙架构的支持。我们可以再增加一个补丁`compiler-rt-adjust-paths-loong64.patch`，并在应用时选择我们的补丁替换Arch Linux的`compiler-rt-adjust-paths.patch`：
+此外，Arch Linux对于Chromium构建中的compiler-rt的路径也有修改，以适配`clang > 16`。而我们也需要在同样的构建文件中的相同位置进行修改，增加对龙架构的支持。我们可以再增加一个补丁`compiler-rt-adjust-paths-loong64.patch`，并在应用时选择我们的补丁替换Arch Linux的`compiler-rt-adjust-paths.patch`：
 
 ```
 diff --git a/build/config/clang/BUILD.gn b/build/config/clang/BUILD.gn
