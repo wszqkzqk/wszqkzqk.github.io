@@ -263,13 +263,13 @@ npm install @esbuild/linux-loong64@0.14.54
 
 #### 使用Chromium的补丁（推荐）
 
-如果darkyzhou的仓库中没有适用于我们所需版本的修复补丁，我们可以尝试自行找到该electron版本对应的Chromium版本，然后移植[Chen Jiajie的Chromium补丁](https://github.com/AOSC-Dev/chromium-loongarch64)进行修复。其实这样的工作量跟修改darkyzhou的补丁差不多。
+如果darkyzhou的仓库中没有适用于我们所需版本的修复补丁，我们可以尝试自行找到该electron版本对应的Chromium版本，然后移植[Chen Jiajie的Chromium补丁](https://github.com/AOSC-Dev/chromium-loongarch64)进行修复。（注意：即使darkyzhou维护了补丁集，也可能是未验证的，不一定能保证成功构建或者构建后可以使用）其实这种方式的工作量并不比修改darkyzhou的补丁大，某种程度上讲，这种方式更加简洁，而且更符合**Arch Linux上游的补丁应用方式**。
 
-需要注意的是，Chen Jiajie的补丁是基于完整的Chromium源码的，如果要直接应用，需要等Arch Linux的`makepkg-source-roller.py`脚本整合Chromium的源码后再进行操作（应当放在Arch Linux上游跑完`src/electron/script/apply_all_patches.py`后的`echo "Applying local patches..."`段中，和上游的其他local patch一起应用，实践上建议放在所有Arch Linux上游的local patch之后应用）。
+需要注意的是，Chen Jiajie的补丁是基于完整的Chromium源码的，如果要直接应用，需要等Arch Linux的`makepkg-source-roller.py`脚本整合Chromium的源码后再进行操作（应当放在Arch Linux上游跑完`src/electron/script/apply_all_patches.py`后的`echo "Applying local patches..."`段中，和上游的其他local patch一起应用，实践上**建议放在所有Arch Linux上游的local patch之后应用**）。
 
 我们需要事先按照之前介绍的方法对补丁进行[**清理**](#清理)。这里应用的Chromium补丁还需要预先**解决好冲突**，尤其是当Chen Jiajie的补丁针对的Chromium版本与我们的不完全对应的时候。
 
-除了Chromium的补丁，我们还需要对`electron_runtime_api_delegate.cc`文件进行适配，增加对`loong64`的支持，例如：
+除了Chromium的补丁，我们还需要对`electron_runtime_api_delegate.cc`文件进行适配，增加对`loong64`的支持，例如（对`electron`目录应用）：
 
 ```
 --- a/shell/browser/extensions/api/runtime/electron_runtime_api_delegate.cc
@@ -295,16 +295,6 @@ npm install @esbuild/linux-loong64@0.14.54
 ```
 
 此外，我们**至少**还需要完成上一节提到的[适配`depot_tools`](#适配depot_tools)、[获取`esbuild`的二进制文件](#获取esbuild的二进制文件)、[路径适配的修改](#路径适配的修改)这些工作并应用才能完成适配。
-
-#### 手动拆分补丁
-
-以下内容不再推荐，仅留作存档：
-
-> 由于Chen Jiajie所维护的补丁是针对Chromium的tarball的，将对Chromium主仓库以及子模块的修改都包含在一个`diff`文件中。我们除了需要对这个`diff`文件进行适当的清理、修改外，还需要将这个`diff`文件根据子模块拆分成多个文件。我们在获取子模块的源码后，首先应当使用`git checkout`命令切换到对应的版本，再将我们拆分好的补丁文件应用于相应的子模块，并逐一解决冲突。完成后，再使用`git diff`导出我们的补丁。
->
-> 接下来，我们再将最终的补丁文件放到Electron的`patches/<submodule-name>`目录下，并在`patches/<submodule-name>/.patches`文件中添加这一额外指定的补丁文件的文件名。
->
-> 以上适配工作完成后，参考[前一节](#对于社区已有维护补丁的版本)的步骤，应用这些补丁，构建Electron。
 
 ## 结语
 
