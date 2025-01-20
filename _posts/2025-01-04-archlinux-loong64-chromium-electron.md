@@ -89,16 +89,18 @@ sha256sums+=('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
   patch -Np1 -i "${srcdir}/chromium-loong64-support.patch"
 ```
 
-对于Chromium这样巨大的二进制软件包，还需要在`prepare()`函数中设定`code model`为`medium`。（参见[移植修复指引中的相关内容](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/#relocation-r_larch_b26-out-of-rangerelocation-r_larch_b26-overflow%E9%94%99%E8%AF%AF)）
+* 自`devtools-loong64` `1.3.1.patch2-1`起（2025.1.21），我们已经在默认的`makepkg.conf`中向`CFLAGS`和`CXXFLAGS`添加了`-mcmodel=medium`，因此**理论上一般不需要再额外设置**Code Model。以下内容已存档：
 
-```bash
-  # Add ` -mcmodel=medium` to CFLAGS etc.
-  # to avoid `relocation R_LARCH_B26 overflow`
-  export CFLAGS="${CFLAGS} -mcmodel=medium"
-  export CXXFLAGS="${CXXFLAGS} -mcmodel=medium"
-```
-
-* 自Rust 1.83起，Rust的Code Model默认为`medium`，因此不需要再额外设置`export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"`
+> 对于Chromium这样巨大的二进制软件包，还需要在`prepare()`函数中设定`code model`为`medium`。（参见[移植修复指引中的相关内容](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/#relocation-r_larch_b26-out-of-rangerelocation-r_larch_b26-overflow%E9%94%99%E8%AF%AF)）
+>
+> ```bash
+>   # Add ` -mcmodel=medium` to CFLAGS etc.
+>   # to avoid `relocation R_LARCH_B26 overflow`
+>   export CFLAGS="${CFLAGS} -mcmodel=medium"
+>   export CXXFLAGS="${CXXFLAGS} -mcmodel=medium"
+> ```
+>
+> * 自Rust 1.83起，Rust的Code Model默认为`medium`，因此不需要再额外设置`export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"`
 
 一切就绪后，我们可以使用`devtools-loong64`构建Chromium了。
 
