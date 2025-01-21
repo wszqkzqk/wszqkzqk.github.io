@@ -56,6 +56,8 @@ paru -S devtools-loong64
 
 对于在容器中运行x86_64 Arch Linux的用户，还需要参考笔者在另一篇博客中的[`binfmt_misc` FLAGS说明](https://wszqkzqk.github.io/2024/08/08/devtools-loong64/#binfmt_misc-flags说明仅针对在容器中运行x86-arch-linux的用户)一节进行设置。其他用户可以忽略。
 
+在构建软件包前，需要注意`devtools-loong64`的版本是否为最新版本。`devtools-loong64`的更新可能会带来重要的功能更新，或者新的默认编译参数，因此请记得**在构建软件包前确认`devtools-loong64`为最新版本**。
+
 # 维护仓库
 
 我们的补丁维护仓库位于[GitHub lcpu-club/loongarch-packages](https://github.com/lcpu-club/loongarch-packages)下，每个需要额外patch的软件包都有一个对应于包名的目录。该目录仅用于存放patch或龙芯特有的配置文件,**不直接存放`PKGBUILD`或上游软件源代码文件**。
