@@ -89,7 +89,9 @@ sha256sums+=('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
   patch -Np1 -i "${srcdir}/chromium-loong64-support.patch"
 ```
 
-* 自`devtools-loong64` `1.3.1.patch2-1`起（2025.1.21），我们已经在默认的`makepkg.conf`中向`CFLAGS`和`CXXFLAGS`添加了`-mcmodel=medium`，因此**理论上一般不需要再额外设置**Code Model。以下内容已存档：
+* 自`devtools-loong64` `1.3.1.patch2-1`起（2025.1.21），我们已经在默认的`makepkg.conf`中向`CFLAGS`和`CXXFLAGS`添加了`-mcmodel=medium`，因此**理论上一般不需要再额外设置**Code Model。
+
+以下内容**已失效，**仅存档供查看：
 
 > 对于Chromium这样巨大的二进制软件包，还需要在`prepare()`函数中设定`code model`为`medium`。（参见[移植修复指引中的相关内容](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/#relocation-r_larch_b26-out-of-rangerelocation-r_larch_b26-overflow%E9%94%99%E8%AF%AF)）
 >

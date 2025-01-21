@@ -376,29 +376,40 @@ PR参考示例：[GitHub Google/libultrahdr PR#303](https://github.com/google/li
 
 这个错误通常发生在编译Chromium、Firefox等大型软件包时，链接器无法找到合适的位置来放置跳转指令。
 
-解决这个问题的方法一般为在编译参数中加入`-mcmodel=medium`来扩大地址空间，使得链接器可以找到合适的位置来放置跳转指令。[^1] [^2]
+自`devtools-loong64`的`1.3.1.patch2-1`起（2025.1.21），我们已经在默认的`makepkg.conf`中向`CFLAGS`和`CXXFLAGS`添加了`-mcmodel=medium`，因此**理论上一般不需要再额外设置**Code Model，理论上也不应该出现这个问题。
 
-[^1]: [GitHub/Rust PR#120661](https://github.com/rust-lang/rust/pull/120661)
-[^2]: [GCC Doc: LoongArch Options](https://gcc.gnu.org/onlinedocs/gcc/gcc-command-options/machine-dependent-options/loongarch-options.html#cmdoption-LoongArch-mcmodel)
+如果仍然出现这个问题，可能是以下原因：
 
-例如，可以在`PKGBUILD`中的`prepare()`或者`build()`函数中加入以下内容：
+* 程序**静态链接**到了2025.1.21**之前**`devtools-loong64 < 1.3.1.patch2-1`构建的且没有手动指定`-mcmodel=medium`的**系统库或者对象文件**
+  * 此时应该**重新构建**这些包含没有覆盖的系统库或者对象文件的依赖包
+* 软件包的构建文件中因为各种原因，没有使用系统的`CFLAGS`和`CXXFLAGS`
+  * 此时可能可以在构建文件等地方手动添加指定Code Model的参数
 
-```bash
-prepare() {
-    ......
+以下方法仅在`devtools-loong64 < 1.3.1.patch2-1`时使用，目前**已失效**，仅供存档：
 
-    # Add ` -mcmodel=medium` to CFLAGS etc.
-    # to avoid `relocation R_LARCH_B26 overflow`
-    export CFLAGS="${CFLAGS} -mcmodel=medium"
-    export CXXFLAGS="${CXXFLAGS} -mcmodel=medium"
-
-    ......
-}
-```
-
-`-mcmodel=medium`会使得编译器使用`medium`模型，这样可以扩大地址空间，允许更大的跳转范围（2 GiB）。
-
-* 自Rust 1.83起，Rust的Code Model默认为`medium`，因此不需要再额外设置`export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"`
+> 解决这个问题的方法一般为在编译参数中加入`-mcmodel=medium`来扩大地址空间，使得链接器可以找到合适的位置来放置跳转指令。[^1] [^2]
+>
+> [^1]: [GitHub/Rust PR#120661](https://github.com/rust-lang/rust/pull/120661)
+> [^2]: [GCC Doc: LoongArch Options](https://gcc.gnu.org/onlinedocs/gcc/gcc-command-options/machine-dependent-options/loongarch-options.html#cmdoption-LoongArch-mcmodel)
+>
+> 例如，可以在`PKGBUILD`中的`prepare()`或者`build()`函数中加入以下内容：
+>
+> ```bash
+> prepare() {
+>     ......
+>
+>     # Add ` -mcmodel=medium` to CFLAGS etc.
+>     # to avoid `relocation R_LARCH_B26 overflow`
+>     export CFLAGS="${CFLAGS} -mcmodel=medium"
+>     export CXXFLAGS="${CXXFLAGS} -mcmodel=medium"
+>
+>     ......
+> }
+> ```
+>
+> `-mcmodel=medium`会使得编译器使用`medium`模型，这样可以扩大地址空间，允许更大的跳转范围（2 GiB）。
+>
+> * 自Rust 1.83起，Rust的Code Model默认为`medium`，因此不需要再额外设置`export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"`
 
 ### LTO出错：换链接器还是禁用LTO？
 
@@ -444,7 +455,7 @@ Error: no match insn: xxx xxx xxx
 ### `binutils`的Bug：设置`-mcmodel=medium`后仍然链接失败
 
 * `bintuils`自`2.43_1+r171+g01da089627be-1`已经修复了`relax`的问题，参见[Commit bb9a0a3](https://github.com/bminor/binutils-gdb/commit/bb9a0a36e78aa564021b377a4a7fab4851b2c22b)，不应该再出现这个问题
-* 以下内容理论上应该没有必要使用
+* 以下内容**已失效**，理论上应该没有必要使用，仅供存档
 
 > * 与上一小节类似，目前**建议直接改用`mold`链接器**（`export LDFLAGS="${LDFLAGS} -fuse-ld=mold"`）
 > * 如果`mold`链接器会引入新的问题，必须使用`bfd`时，可以尝试以下方法
@@ -468,8 +479,6 @@ Error: no match insn: xxx xxx xxx
 > ```
 > 
 > 待`binutils`修复后，应当将这一修改去除。
-> 
-> * 自Rust 1.83起，Rust的Code Model默认为`medium`，因此不需要再额外设置`export RUSTFLAGS="${RUSTFLAGS} -C code-model=medium"`
 
 ## QEMU User特异性问题
 
