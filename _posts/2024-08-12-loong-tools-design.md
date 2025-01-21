@@ -36,7 +36,10 @@ Loong Arch Linux是Arch Linux的龙芯移植版本，目前龙芯Linux社区较�
 
 使用`devtools`构建软件包在每次构建时都会创建一个干净的chroot环境，该工具对Btrfs的快照进行了适配，创建新的chroot环境时会使用Btrfs的快照功能快速根据存放基本chroot环境的子卷创建新的chroot环境。因此，**建议使用Btrfs文件系统**。
 
-### 导入PGP Key
+### 导入PGP Key（仅非龙架构时需要）
+
+* Loong Arch Linux本身自带了`archlinux-lcpu-keyring`，因此不需要额外导入PGP Key
+* 其他架构的Arch Linux用户需要导入PGP Key
 
 Loong Arch Linux移植签名所用的PGP密钥并不在Arch Linux的`archlinux-keyring`密钥环中，因此需要导入签名密钥。
 
@@ -47,6 +50,16 @@ paru -S archlinux-lcpu-keyring
 ```
 
 ### 安装[`devtools-loong64`](https://github.com/lcpu-club/devtools-loong)
+
+#### 龙架构
+
+我们的官方仓库中即有`devtools-loong64`软件包，可以直接安装：
+
+```bash
+sudo pacman -S devtools-loong64
+```
+
+#### 非龙架构
 
 笔者已经打包了`devtools-loong64`工具，并上传到了AUR，可以直接从AUR中安装：
 
