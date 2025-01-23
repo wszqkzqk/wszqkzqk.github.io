@@ -42,6 +42,50 @@ Linux的kernel config非常复杂，Loong Arch Linux作为Arch Linux的龙芯移
 * 仅提取以`y`或`m`结尾的行
 * 去掉开头的`+`
 
+该过程可以用Python脚本实现：
+
+```python
+#!/usr/bin/env python3
+
+import sys
+import os
+
+def process_patch(patch_path):
+    if not os.path.exists(patch_path):
+        print(f"Error: File {patch_path} does not exist")
+        return
+
+    output_path = os.path.join(os.path.dirname(patch_path), 'loong-addition.config')
+    
+    with open(patch_path, 'r') as patch_file:
+        lines = patch_file.readlines()
+
+    # Process lines
+    filtered_lines = []
+    for line in lines:
+        line = line.strip()
+        if line.startswith('+CONFIG_') and (line.endswith('=y') or line.endswith('=m')):
+            # Remove leading + character
+            filtered_lines.append(line[1:] + '\n')
+
+    # Write to output file
+    with open(output_path, 'w') as output_file:
+        output_file.writelines(filtered_lines)
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python3 cleanpatch.py <patch_file>")
+        sys.exit(1)
+    
+    process_patch(sys.argv[1])
+```
+
+将该脚本保存为`cleanpatch.py`，并运行：
+
+```bash
+python3 cleanpatch.py defconfig.diff
+```
+
 以此便系统性地清理了**部分**AOSC的发行版配置（比如休眠、zswap压缩算法配置，部分数值设定等），得到了需要开启的新的**配置项列表**，命名为`loong-addition.config`。
 
 笔者在`PKGBUILD`的`prepare()`函数中，插入了一段逻辑，用于将`loong-addition.config`合并到`config`的末尾：
