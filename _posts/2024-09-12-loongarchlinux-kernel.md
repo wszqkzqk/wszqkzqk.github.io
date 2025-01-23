@@ -68,6 +68,9 @@ def process_patch(patch_path):
             # Remove leading + character
             filtered_lines.append(line[1:] + '\n')
 
+    # Sort lines
+    filtered_lines.sort()
+
     # Write to output file
     with open(output_path, 'w') as output_file:
         output_file.writelines(filtered_lines)
