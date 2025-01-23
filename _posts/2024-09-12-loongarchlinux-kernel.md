@@ -103,4 +103,18 @@ python3 cleanpatch.py defconfig.diff
 
 这样，我们得以完全避免与上游的冲突，同时，也将维护的内容由**整个config文件**或者`diff`文件，变为了**配置项列表**，大大降低了维护的难度。
 
-后续，我们只需要手动对`loong-addition.config`进行进一步清理，移除不需要的配置项，并实时添加新增的需要额外支持的硬件，即可得到合理的Loong Arch Linux的kernel config。这一工作仅为可选，至少不会影响使用。目前，笔者仅对非常少量的配置项进行了清理，在以后，随着维护力量的增强，可以进一步完善。
+## 后续维护
+
+后续，我们只需要手动对`loong-addition.config`进行进一步清理，移除不需要的配置项，并实时添加新增的需要额外支持的硬件，即可得到合理的Loong Arch Linux的kernel config。
+
+为了保证追加的配置项的可维护性，笔者建议每次对`loong-addition.config`进行整理：
+
+* 搭建内核构建的环境（可以直接将构建环境[通过`btrfs subvolume snapshot`导出](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/#%E4%BF%9D%E5%AD%98)然后[进入环境操作](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/#%E8%BF%9B%E5%85%A5%E7%8E%AF%E5%A2%83%E6%9F%A5%E7%9C%8B)）
+* 直接使用**Arch Linux上游**的`config`文件，复制到`.config`
+* 运行`make savedefconfig`，生成原始的`defconfig`，并复制到`defconfig.orig`
+* 将`loong-addition.config`追加到`defconfig`后，并移动到`.config`
+* 运行`make savedefconfig`，生成新的`defconfig`
+* 使用`diff -u defconfig.orig defconfig > defconfig.diff`生成新的`diff`文件
+* 使用`cleanpatch.py`清理`defconfig.diff`，得到新的`loong-addition.config`
+
+目前，笔者还没有完全完成不需要的配置项的清理，以后还需要进一步的维护。这一方法已经大大简化了维护的难度，我们现在可以很容易地同步上游的新配置，同时保持对龙芯硬件的支持。
