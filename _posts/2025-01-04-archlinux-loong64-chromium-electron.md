@@ -315,6 +315,7 @@ darkyzhou的Electron修复补丁是“patch了Electron的patch过程”，更类
 ## 参考链接
 
 * [Chromium 131的适配补丁集](https://github.com/lcpu-club/loongarch-packages/tree/13e278dc0dbb10f593af6b40871e8a3cd8166f47/chromium)
-* [Electron 32的适配补丁集](https://github.com/lcpu-club/loongarch-packages/tree/d7e71d63b8cfd5d4cf00e07693a59ccf583d9bc1/electron32)
+* [Electron 32的适配补丁集（早期，基于darkyzhou的Electron补丁）](https://github.com/lcpu-club/loongarch-packages/tree/d7e71d63b8cfd5d4cf00e07693a59ccf583d9bc1/electron32)
+* [Electron 32的适配补丁集（后期，基于Chromium的补丁）](https://github.com/lcpu-club/loongarch-packages/tree/07923d160122f37c42dd776b50cdbd30dbf03ae7/electron32)
 * [Electron 30的适配：PR #401 (Merged)](https://github.com/lcpu-club/loongarch-packages/pull/401)，可以参考这个PR的内容和曲折的修复过程（包括PR的diff和comment）
 * [Electron 33的适配：PR #400 (Merged)](https://github.com/lcpu-club/loongarch-packages/pull/400)，可以参考这个PR的内容和曲折的修复过程（包括PR的diff和comment）
