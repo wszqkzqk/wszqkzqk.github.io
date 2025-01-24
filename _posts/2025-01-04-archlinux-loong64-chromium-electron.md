@@ -263,6 +263,10 @@ npm install @esbuild/linux-loong64@0.14.54
 
 然后，参考Chromium的[应用补丁环节](#应用补丁)，将所有补丁文件放置在`PKGBUILD`文件所在目录，修改`PKGBUILD`文件，补充添加、应用补丁的步骤即可。
 
+#### 评价
+
+darkyzhou的Electron修复补丁是“patch了Electron的patch过程”，更类似“自己维护一个上游”，但是却和Arch Linux中的Electron本地补丁的应用方式有较大不同。虽然看起来基于darkyzhou的补丁清理会比较方便，但是实际上，这种维护模式下维护的补丁很容易出现冲突，甚至**小版本升级都可能需要重新适配**。因此，笔者更推荐下文基于Chromium的补丁进行适配的方式。
+
 ### 对于没有维护补丁的版本
 
 #### 使用Chromium的补丁（推荐）
