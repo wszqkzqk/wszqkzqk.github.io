@@ -115,7 +115,8 @@ python3 cleanpatch.py defconfig.diff
 * 搭建内核构建的环境（可以直接将构建环境[通过`btrfs subvolume snapshot`导出](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/#%E4%BF%9D%E5%AD%98)然后[进入环境操作](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/#%E8%BF%9B%E5%85%A5%E7%8E%AF%E5%A2%83%E6%9F%A5%E7%9C%8B)）
 * 直接使用**Arch Linux上游**的`config`文件，复制到`.config`
 * 运行`make savedefconfig`，生成原始的`defconfig`，并复制到`defconfig.orig`
-* 将`loong-addition.config`追加到`defconfig`后，并移动到`.config`
+* 运行`make olddefconfig`，生成新的`.config`
+* 将`loong-addition.config`的内容加到`.config`中
 * 运行`make savedefconfig`，生成新的`defconfig`
 * 使用`diff -u defconfig.orig defconfig > defconfig.diff`生成新的`diff`文件
 * 使用`cleanpatch.py`清理`defconfig.diff`，得到新的`loong-addition.config`
