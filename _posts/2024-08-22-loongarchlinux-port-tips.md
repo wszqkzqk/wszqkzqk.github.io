@@ -216,6 +216,8 @@ qemu-system-loongarch64 \
 * `-hda <path-to-your-image>`：指定虚拟机使用的qcow2镜像
 * `-virtfs local,path=<path-to-your-sharing-directory>,mount_tag=host0,security_model=passthrough,id=host0`：将宿主机的目录目录共享给虚拟机
 
+如果不需要启动GUI，**只在终端中操作**,可以去掉`-serial stdio`,并**加入`-nographic`参数**。
+
 对于需要传递给虚拟机的软件包，可以复制或者`bind mount`到共享目录下，供虚拟机使用。
 
 在虚拟机中，可以使用以下命令挂载共享目录：
