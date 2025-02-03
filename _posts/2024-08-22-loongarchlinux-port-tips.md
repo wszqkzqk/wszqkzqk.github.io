@@ -276,7 +276,7 @@ sudo rmmod nbd
 
 为了避免这样的情况，我们可以将直接删除改为写成多行注释，例如，如果我们想要删除掉opencv的PKGBUILD中有关cuda的构建，我们可以在其前面插入`: <<COMMENT_SEPARATOR`，在其后面插入`COMMENT_SEPARATOR`，这样就可以在一定程度上避免上游对这个函数部分的修改导致的冲突。
 
-```PKGBUILD
+```bash
   # Use a "multi-line comment" to keep patch from rotting
   : <<COMMENT_SEPARATOR
   CFLAGS="${CFLAGS} -fno-lto" CXXFLAGS="${CXXFLAGS} -fno-lto" LDFLAGS="${LDFLAGS} -fno-lto" \
@@ -296,7 +296,7 @@ COMMENT_SEPARATOR
 
 由于`PKGBUILD`本质上是一个bash文件，对于新加入的`source`和哈希值等数组的内容，如果要最大程度地避免上游修改带来的冲突，我们可以**使用`+=`来添加新的元素**，而不是直接修改数组的内容。
 
-```PKGBUILD
+```bash
 source+=(...)
 sha256sums+=(...)
 ```
