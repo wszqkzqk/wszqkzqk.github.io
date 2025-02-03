@@ -316,7 +316,11 @@ makedepends=(${makedepends[@]/cuda})
 
 `pkgver()`函数一般通过`git`等工具来获取软件包的版本号，然而由于环境不同，可能会导致`pkgver()`函数获取到的版本号（尤其是hash的位数）不同。（此时可能会存在导出的`loong.patch`中包含对`pkgver`变量的修改，这是**不允许**的）
 
-为了避免这种情况，我们应当删除或者注释掉`pkgver()`函数，保证软件包使用的是上游的版本号。
+为了避免这种情况，我们应当删除或者注释掉`pkgver()`函数，保证软件包使用的是上游的版本号。当然，更好的办法是向上游反馈，要求在`pkgver()`函数的`git`命令中添加`--abbrev=12`等参数，以保证版本号的一致性。向上游反馈这个问题时，一般附加以“增加构建的可复现性”等理由，或者援引先例来说明这个问题的重要性。（一般不宜直接、单独以本项目的需要为理由）有关此问题的Arch Linux上游修改先例：
+
+* [gcc #14](https://gitlab.archlinux.org/archlinux/packaging/packages/gcc/-/issues/14)
+* [gcc commit 9dc7297f](https://gitlab.archlinux.org/archlinux/packaging/packages/gcc/-/commit/9dc7297f6752c8592b603c9949613f56fe018453)
+* [gcc commit 158c088f](https://gitlab.archlinux.org/archlinux/packaging/packages/gcc/-/commit/158c088f6220da200e1a5986857b1fb8ce15e303)
 
 # Patch的获取
 
