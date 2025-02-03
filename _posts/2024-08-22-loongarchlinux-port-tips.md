@@ -290,6 +290,15 @@ COMMENT_SEPARATOR
 
 值得注意的是，如果我们不需要某个包的`package()`函数，我们应当直接将这个包**从`pkgname`数组中移除**，此时对应的`package()`函数会被忽略，因此不用删除或者注释掉。
 
+如果仍然担心直接删除会导致冲突，也可以不在原处改动，而是在`PKGBUILD`末尾追加从Bash数组中删除对应的元素的操作，例如：
+
+```bash
+pkgname=(${pkgname[@]/ollama-cuda})
+pkgname=(${pkgname[@]/ollama-rocm})
+makedepends=(${makedepends[@]/hipblas})
+makedepends=(${makedepends[@]/cuda})
+```
+
 ## 内容插入的原则（`source`、哈希数组等）
 
 此外，由于“主要矛盾”不同，语句插入的原则也发生了变化。比如，一般按照字母顺序来插入新的依赖或者新的选项，但是在这种情况下，我们可以将新的依赖或者新的选项插入到**上下文最不容易被上游修改的地方**，这样可以减少冲突的发生。
