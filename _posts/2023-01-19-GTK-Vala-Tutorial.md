@@ -443,10 +443,10 @@ valac --pkg gtk4 example-4.vala
 |北京|重庆|
 |[![#~/img/GTK-examples/berlin-day-length.webp](/img/GTK-examples/berlin-day-length.webp)](/img/GTK-examples/berlin-day-length.webp)|[![#~/img/GTK-examples/sydney-day-length.webp](/img/GTK-examples/sydney-day-length.webp)](/img/GTK-examples/sydney-day-length.webp)|
 |柏林|悉尼|
-|[![#~/img/GTK-examples/murmansk-day-length.webp](/img/GTK-examples/murmansk-day-length.webp)](/img/GTK-examples/murmansk-day-length.webp)|[![#~/img/GTK-examples/n-polar-day-length.webp](/img/GTK-examples/n-polar-day-length.webp)](/img/GTK-examples/n-polar-day-length.webp)|
-|摩尔曼斯克|北极点|
-|[![#~/img/GTK-examples/singapore-day-length.webp](/img/GTK-examples/singapore-day-length.webp)](/img/GTK-examples/singapore-day-length.webp)|[![#~/img/GTK-examples/s-polar-day-length.webp](/img/GTK-examples/s-polar-day-length.webp)](/img/GTK-examples/s-polar-day-length.webp)|
-|新加坡|南极点|
+|[![#~/img/GTK-examples/singapore-day-length.webp](/img/GTK-examples/singapore-day-length.webp)](/img/GTK-examples/singapore-day-length.webp)|[![#~/img/GTK-examples/murmansk-day-length.webp](/img/GTK-examples/murmansk-day-length.webp)](/img/GTK-examples/murmansk-day-length.webp)|
+|新加坡|摩尔曼斯克|
+|[![#~/img/GTK-examples/n-polar-day-length.webp](/img/GTK-examples/n-polar-day-length.webp)](/img/GTK-examples/n-polar-day-length.webp)|[![#~/img/GTK-examples/s-polar-day-length.webp](/img/GTK-examples/s-polar-day-length.webp)](/img/GTK-examples/s-polar-day-length.webp)|
+|北极点|南极点|
 
 ### 程序架构
 
@@ -457,15 +457,17 @@ valac --pkg gtk4 example-4.vala
 
 - `solar_declination (int n)`  
   利用近似公式计算第 n 天的太阳赤纬角（单位：角度），公式为：  
-  δ = 23.44° * sin(2π/365 * (n - 81))。
+  $$
+  \delta = 23.44 \times \sin\left(\frac{2\pi}{365} \times (n - 81)\right)
+  $$
 
 - `compute_day_length (double latitude, int n)`  
   根据输入的纬度（单位：度）和天数，计算当天的日照时长（单位：小时）。  
-  先将纬度转换为弧度，然后使用公式 X = -tan(φ) * tan(δ) 计算 X 值，其中 φ 为纬度（弧度）、δ 为太阳赤纬角（弧度）。  
-  此处 X 表示太阳在地平面上升降时刻对应的余弦值，即 cos(ω₀)，通过 X 的取值判断：  
-  - 若 X 在 [-1, 1] 内，则通过 ω₀ = arccos(X) 计算出太阳的小时角，再利用该角度计算日照时长；  
-  - 若 X < -1，则表示处于极昼状态（日照 24 小时）；  
-  - 若 X > 1，则表示处于极夜状态（日照 0 小时）。
+  先将纬度转换为弧度，然后使用公式 $X = -\tan(\phi)\tan(\delta)$ 计算 X 值，其中 $\phi$ 为纬度（弧度）、$\delta$ 为太阳赤纬角（弧度）。  
+  此处 X 表示太阳在地平面上升降时刻对应的余弦值，即 $\cos(\omega_0)$，通过 X 的取值判断：  
+  - 若 $X$ 在 $[-1, 1]$ 内，则通过 $\omega_0 = \arccos(X)$ 计算出太阳的小时角，再利用该角度计算日照时长；  
+  - 若 $X < -1$，则表示处于极昼状态（日照 24 小时）；  
+  - 若 $X > 1$，则表示处于极夜状态（日照 0 小时）。
 
 - `generate_day_lengths (double latitude, int year)`  
   遍历一年中的每一天，调用 compute_day_length 计算各天日照时长，返回包含所有天长时数据的数组。
