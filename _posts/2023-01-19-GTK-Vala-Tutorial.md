@@ -457,9 +457,7 @@ valac --pkg gtk4 example-4.vala
 
 - `solar_declination (int n)`  
   利用近似公式计算第 n 天的太阳赤纬角（单位：角度），公式为：  
-  $$
-  \delta = 23.44 \times \sin\left(\frac{2\pi}{365} \times (n - 81)\right)
-  $$
+  $\delta = 23.44 \times \sin\left(\frac{2\pi}{365} \times (n - 81)\right)$
 
 - `compute_day_length (double latitude, int n)`  
   根据输入的纬度（单位：度）和天数，计算当天的日照时长（单位：小时）。  
