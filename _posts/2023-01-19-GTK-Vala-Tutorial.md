@@ -468,7 +468,7 @@ valac --pkg gtk4 example-4.vala
   - 若 $X > 1$，则表示处于极夜状态（日照 0 小时）。
 
 - `generate_day_lengths (double latitude, int year)`  
-  遍历一年中的每一天，调用 compute_day_length 计算各天日照时长，返回包含所有天长时数据的数组。
+  遍历一年中的每一天，调用 `compute_day_length` 计算各天日照时长，返回包含所有天长时数据的数组。
 
 #### 主窗口类 `DayLengthWindow`
 此类继承自 `Gtk.ApplicationWindow`，用于构建图形界面和显示绘图内容：
