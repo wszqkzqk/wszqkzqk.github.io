@@ -271,7 +271,7 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         cr.paint ();
 
         // Set margins
-        int margin_left = 70;
+        int margin_left = 75;
         int margin_right = 20;
         int margin_top = 40;
         int margin_bottom = 70;
@@ -283,7 +283,7 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         // X axis range: 1 to total_days
         int total_days = (day_lengths != null) ? day_lengths.length : 365;
 
-        // Draw grid lines (light gray)
+        // Draw grid lines (gray)
         cr.set_source_rgba (0.5, 0.5, 0.5, 0.5);
         cr.set_line_width (1.0);
         // Horizontal grid lines (every 3 hours)
@@ -297,7 +297,7 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         for (int month = 1; month <= 12; month += 1) {
             DateTime month_start = new DateTime (new TimeZone.local (), current_year, month, 1, 0, 0, 0);
             int day_num = month_start.get_day_of_year ();
-            double x_pos = margin_left + (plot_width * ((day_num - 1) / (double)(total_days - 1)));
+            double x_pos = margin_left + (plot_width * ((double) (day_num - 1) / (total_days - 1)));
             cr.move_to (x_pos, margin_top);
             cr.line_to (x_pos, height - margin_bottom);
             cr.stroke ();
@@ -335,7 +335,7 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
             // Use GLib.DateTime to construct the 1st of each month
             DateTime month_start = new DateTime (new TimeZone.local (), current_year, month, 1, 0, 0, 0);
             int day_num = month_start.get_day_of_year ();
-            double x_pos = margin_left + (plot_width * ((day_num - 1) / (double)(total_days - 1)));
+            double x_pos = margin_left + (plot_width * ((double) (day_num - 1) / (total_days - 1)));
             cr.move_to (x_pos, height - margin_bottom);
             cr.line_to (x_pos, height - margin_bottom + 5);
             cr.stroke ();
@@ -356,7 +356,7 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         string x_title = "Date (Month)";
         Cairo.TextExtents x_ext;
         cr.text_extents (x_title, out x_ext);
-        cr.move_to (width / 2 - x_ext.width / 2, height - margin_bottom + 50);
+        cr.move_to ((double) width / 2 - x_ext.width / 2, height - margin_bottom + 50);
         cr.show_text (x_title);
         
         // Y axis title
@@ -364,10 +364,10 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         Cairo.TextExtents y_ext;
         cr.text_extents (y_title, out y_ext);
         cr.save ();
-        // Position 25 pixels to the left of Y axis, vertically centered
-        cr.translate (margin_left - 55, height / 2);
-        // Rotate 90 degrees (π/2) for vertical text
-        cr.rotate (Math.PI / 2);
+        // Position 45 pixels to the left of Y axis, vertically centered
+        cr.translate (margin_left - 45, (double) height / 2);
+        // Rotate -90 degrees (π/2) for vertical text
+        cr.rotate (-Math.PI / 2);
         // Adjust text position for vertical centering
         cr.move_to (-y_ext.width / 2, 0);
         cr.show_text (y_title);
@@ -382,7 +382,7 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         cr.set_source_rgb (1, 0, 0);
         cr.set_line_width (2.5);
         for (int i = 0; i < total_days; i += 1) {
-            double x = margin_left + (plot_width * (i / (double)(total_days - 1)));
+            double x = margin_left + (plot_width * ((double) i / (total_days - 1)));
             double y = margin_top + (plot_height * (1 - (day_lengths[i] - y_min) / (y_max - y_min)));
             if (i == 0) {
                 cr.move_to (x, y);
