@@ -9,7 +9,7 @@ catalog:    true
 tags:       开源软件 GTK Vala
 ---
 
-本文采用[**CC-BY-SA-3.0**](https://creativecommons.org/licenses/by-sa/3.0/)协议发布，但本文代码采用[**LGPL v2.1+**](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)协议公开
+本文采用[**CC-BY-SA-4.0**](https://creativecommons.org/licenses/by-sa/4.0/)协议发布，但本文代码采用[**LGPL v2.1+**](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)协议公开
 
 # 前言
 
@@ -61,7 +61,7 @@ tags:       开源软件 GTK Vala
   - 若 $X > 1$，则表示处于极夜状态（日照 0 小时）。
 
 - `generate_day_lengths (double latitude, int year)`  
-  遍历一年中的每一天，调用 `compute_day_length` 计算各天日照时长，返回包含所有天长时数据的数组。
+  遍历一年中的每一天，调用 `compute_day_length` 计算各天日照时长，返回包含所有白昼时长数据的数组。
 
 ### 主窗口类 `DayLengthWindow`
 此类继承自 `Gtk.ApplicationWindow`，用于构建图形界面和显示绘图内容：
@@ -93,7 +93,7 @@ tags:       开源软件 GTK Vala
 实现这个应用程序的代码如下：
 
 ```vala
-#!/usr/bin/env -S vala --pkg=gtk4 -X -lm -X -O2 -X -march=native --cc="ccache cc" -X -pipe -X -fuse-ld=mold
+#!/usr/bin/env -S vala --pkg=gtk4 -X -lm -X -O2 -X -pipe -X -march=native
 
 // Helper functions to compute day-of-year, solar declination and day length
 
