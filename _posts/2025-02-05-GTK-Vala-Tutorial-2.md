@@ -93,7 +93,7 @@ tags:       开源软件 GTK Vala
 实现这个应用程序的代码如下：
 
 ```vala
-#!/usr/bin/env -S vala --pkg=gtk4 -X -lm -X -O2 -X -pipe -X -march=native
+#!/usr/bin/env -S vala --pkg=gtk4 -X -lm -X -pipe -X -O2 -X -march=native
 
 // Helper functions to compute day-of-year, solar declination and day length
 
@@ -105,7 +105,7 @@ tags:       开源软件 GTK Vala
  */
 private inline int days_in_year (int year) {
     // Leap year: divisible by 400 or divisible by 4 but not by 100.
-    if ((year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0))) {
+    if ((year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0))) {
         return 366;
     }
     return 365;
@@ -244,9 +244,7 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         drawing_area.hexpand = true;
         drawing_area.vexpand = true;
         // Register drawing callback
-        drawing_area.set_draw_func ((area, cr, width, height) => {
-            draw_plot (area, cr, width, height);
-        });
+        drawing_area.set_draw_func (this.draw_plot);
         vbox.append (drawing_area);
     }
 
