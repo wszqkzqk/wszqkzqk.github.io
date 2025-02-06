@@ -112,59 +112,60 @@ private inline int days_in_year (int year) {
 }
 
 /**
- * Computes solar declination in degrees using an approximate formula.
+ * Computes solar declination in radians using an approximate formula.
  *
- * Formula: δ (deg) = 23.44 * sin(2π/365 * (n - 81))
+ * Formula: δ (rad) = (23.44 * π/180) * sin(2π/365 * (n - 81))
  *
  * @param n The day number in the year.
- * @return Solar declination in degrees.
+ * @return Solar declination in radians.
  */
 private inline double solar_declination (int n) {
-    return 23.44 * Math.sin (2 * Math.PI / 365.0 * (n - 81));
+    return (23.44 * Math.PI / 180.0) * Math.sin (2 * Math.PI / 365.0 * (n - 81));
 }
 
 /**
- * Calculates the day length (in hours) for a given latitude and day number.
+ * Calculates the day length (in hours) for a given latitude (in radians) and day number.
  *
- * Using formula: T = (2/15) * arccos( -tan(φ) * tan(δ) )
+ * Using formula: T = (24/π) * arccos( -tan(φ) * tan(δ) )
  *
  * φ: observer's latitude, δ: solar declination
  *
  * When |tan φ * tan δ| > 1, returns polar day (24 hours) or polar night (0 hours)
  *
- * @param latitude Latitude in degrees.
+ * @param latitude_rad Latitude in radians.
  * @param n The day number in the year.
  * @return Day length in hours.
  */
-private inline double compute_day_length (double latitude, int n) {
-    double phi = latitude * Math.PI / 180.0; // Convert to radians
-    double delta_deg = solar_declination (n);
-    double delta = delta_deg * Math.PI / 180.0; // Convert to radians
+private inline double compute_day_length (double latitude_rad, int n) {
+    double phi = latitude_rad;
+    double delta = solar_declination (n);
     double X = -Math.tan (phi) * Math.tan (delta);
     if (X < -1) {
         return 24.0; // Polar day
     } else if (X > 1) {
         return 0.0;  // Polar night
     } else {
-        double omega0 = Math.acos (X); // in radians
-        double omega0_deg = omega0 * 180.0 / Math.PI;
-        double T = 2 * (omega0_deg / 15.0); // 15° per hour
+        // 'omega0' is the half-angle (in radians) corresponding to the time from sunrise to solar noon.
+        // Since 2π radians represent 24 hours, 1 radian equals 24/(2π) hours.
+        // Multiplying omega0 by (24/Math.PI) converts this angle to the total day length in hours.
+        double omega0 = Math.acos (X); // computed in radians
+        double T = (24.0 / Math.PI) * omega0; // convert to hours
         return T;
     }
 }
 
 /**
- * Generates an array of day lengths for all days at the given latitude and year.
+ * Generates an array of day lengths for all days at the given latitude (in radians) and year.
  *
- * @param latitude Latitude in degrees.
+ * @param latitude_rad Latitude in radians.
  * @param year The year for which to generate day lengths.
  * @return Array of day lengths in hours.
  */
-private inline double[] generate_day_lengths (double latitude, int year) {
+private inline double[] generate_day_lengths (double latitude_rad, int year) {
     int total_days = days_in_year (year);
     double[] lengths = new double[total_days];
     for (int i = 0; i < total_days; i += 1) {
-        lengths[i] = compute_day_length (latitude, i + 1);
+        lengths[i] = compute_day_length (latitude_rad, i + 1);
     }
     return lengths;
 }
@@ -178,7 +179,7 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
     private Gtk.DrawingArea drawing_area;
     private double[] day_lengths;
     private int current_year;
-    private double current_latitude;
+    private double latitude_deg;
 
     /**
      * Constructs a new DayLengthWindow.
@@ -257,9 +258,11 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
      * Updates plot data based on input values.
      */
     private void update_plot_data () {
-        current_latitude = double.parse (latitude_entry.text);
+        latitude_deg = double.parse (latitude_entry.text);
         current_year = int.parse (year_entry.text);
-        day_lengths = generate_day_lengths (current_latitude, current_year);
+        // Convert input latitude (in degrees) to radians
+        double latitude_rad = latitude_deg * Math.PI / 180.0;
+        day_lengths = generate_day_lengths (latitude_rad, current_year);
     }
 
     /**
