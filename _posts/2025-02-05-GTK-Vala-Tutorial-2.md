@@ -49,18 +49,18 @@ tags:       开源软件 GTK Vala
   判断规则：能被 400 整除，或者能被 4 整除但不能被 100 整除的为闰年。
 
 - `solar_declination (int n)`  
-  利用近似公式计算第 n 天的太阳赤纬角（单位：角度），公式为：  
-  $\delta = 23.44 \times \sin\left(\frac{2\pi}{365} \times (n - 81)\right)$
+  利用近似公式计算第 n 天的太阳赤纬角（弧度），公式为：  
+  $\delta = 23.44 \times \frac{\pi}{180} \times \sin\left(\frac{2\pi}{365} \times (n - 81)\right)$。
 
-- `compute_day_length (double latitude, int n)`  
-  根据输入的纬度（单位：度）和天数，计算当天的日照时长（单位：小时）。  
-  先将纬度转换为弧度，然后使用公式 $X = -\tan(\phi)\tan(\delta)$ 计算 X 值，其中 $\phi$ 为纬度（弧度）、$\delta$ 为太阳赤纬角（弧度）。  
+- `compute_day_length (double latitude_rad, int n)`   
+  根据输入的纬度（弧度）和天数，计算当天的日照时长（单位：小时）。  
+  使用公式 $X = -\tan(\phi)\tan(\delta)$ 计算 X 值，其中 $\phi$ 为纬度（弧度）、$\delta$ 为太阳赤纬角（弧度）。  
   此处 X 表示太阳在地平面上升降时刻对应的余弦值，即 $\cos(\omega_0)$，通过 X 的取值判断：  
   - 若 $X$ 在 $[-1, 1]$ 内，则通过 $\omega_0 = \arccos(X)$ 计算出太阳的小时角，再利用该角度计算日照时长；  
   - 若 $X < -1$，则表示处于极昼状态（日照 24 小时）；  
   - 若 $X > 1$，则表示处于极夜状态（日照 0 小时）。
 
-- `generate_day_lengths (double latitude, int year)`  
+- `generate_day_lengths (double latitude_rad, int year)`  
   遍历一年中的每一天，调用 `compute_day_length` 计算各天日照时长，返回包含所有白昼时长数据的数组。
 
 ### 主窗口类 `DayLengthWindow`
