@@ -199,37 +199,42 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
 
         // Use vertical box as the main container
         var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, 10);
-        set_child (vbox);
+        this.child = vbox;
 
         // Input area (using Grid layout)
-        var grid = new Gtk.Grid ();
-        grid.column_spacing = 10;
-        grid.row_spacing = 10;
+        var grid = new Gtk.Grid () {
+            column_spacing = 10,
+            row_spacing = 10
+        };
         vbox.append (grid);
 
-        var lat_label = new Gtk.Label ("Latitude (degrees, positive for N, negative for S):");
-        lat_label.set_margin_start (5);
-        lat_label.set_margin_top (5);
-        lat_label.set_halign (Gtk.Align.START);
-        lat_label.set_markup ("<b>Latitude (degrees):</b>");
+        var lat_label = new Gtk.Label ("<b>Latitude (degrees):</b>") {
+            margin_start = 5,
+            margin_top = 5,
+            halign = Gtk.Align.START,
+            use_markup = true
+        };
         grid.attach (lat_label, 0, 0, 1, 1);
 
-        latitude_entry = new Gtk.Entry ();
-        latitude_entry.set_width_chars (10);
+        latitude_entry = new Gtk.Entry () {
+            width_chars = 10
+        };
         grid.attach (latitude_entry, 1, 0, 1, 1);
 
-        var year_label = new Gtk.Label ("Year:");
-        year_label.set_margin_start (5);
-        year_label.set_margin_top (5);
-        year_label.set_halign (Gtk.Align.START);
-        year_label.set_markup ("<b>Year:</b>");
+        var year_label = new Gtk.Label ("<b>Year:</b>") {
+            margin_start = 5,
+            margin_top = 5,
+            halign = Gtk.Align.START,
+            use_markup = true
+        };
         grid.attach (year_label, 2, 0, 1, 1);
 
-        year_entry = new Gtk.Entry ();
-        year_entry.set_width_chars (10);
+        year_entry = new Gtk.Entry () {
+            width_chars = 10,
+            // Set year entry text using current_year
+            text = current_year.to_string ()
+        };
         grid.attach (year_entry, 3, 0, 1, 1);
-        // Set year entry text using current_year
-        year_entry.text = current_year.to_string ();
 
         var plot_button = new Gtk.Button.with_label ("Plot Day Length");
         grid.attach (plot_button, 4, 0, 1, 1);
@@ -239,10 +244,10 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         });
 
         // Drawing area: using Gtk.DrawingArea and Cairo for plotting
-        drawing_area = new Gtk.DrawingArea ();
-        // Make the drawing area expandable
-        drawing_area.hexpand = true;
-        drawing_area.vexpand = true;
+        drawing_area = new Gtk.DrawingArea () {
+            hexpand = true,
+            vexpand = true
+        };
         // Register drawing callback
         drawing_area.set_draw_func (this.draw_plot);
         vbox.append (drawing_area);
