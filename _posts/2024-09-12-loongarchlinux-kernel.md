@@ -85,7 +85,7 @@ if __name__ == "__main__":
 python3 cleanpatch.py defconfig.diff
 ```
 
-以此便系统性地清理了**部分**AOSC的发行版配置（比如休眠、zswap压缩算法配置，部分数值设定等），得到了需要开启的新的**配置项列表**，命名为`loong-addition.config`。
+以此便系统性地清理了**部分**AOSC的发行版配置（这样可以用Arch Linux的配置覆盖休眠、zswap压缩算法配置，部分数值设定等发行版相关配置），得到了需要开启的新的**配置项列表**，命名为`loong-addition.config`。
 
 笔者在`PKGBUILD`的`prepare()`函数中，插入了一段逻辑，用于将`loong-addition.config`合并到`config`的末尾：
 
