@@ -60,18 +60,14 @@ def process_patch(patch_path):
     with open(patch_path, 'r') as patch_file:
         lines = patch_file.readlines()
 
-    # Process lines
     filtered_lines = []
     for line in lines:
         line = line.strip()
         if line.startswith('+CONFIG_') and (line.endswith('=y') or line.endswith('=m')):
-            # Remove leading + character
             filtered_lines.append(line[1:] + '\n')
 
-    # Sort lines
     filtered_lines.sort()
 
-    # Write to output file
     with open(output_path, 'w') as output_file:
         output_file.writelines(filtered_lines)
 
