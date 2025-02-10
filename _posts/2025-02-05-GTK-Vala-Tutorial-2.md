@@ -420,7 +420,7 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         cr.set_font_size (22);
         Cairo.TextExtents cap_ext;
         cr.text_extents (caption, out cap_ext);
-        cr.move_to ((width - cap_ext.width) / 2.0, margin_top / 2.0);
+        cr.move_to ((width - cap_ext.width) / 2, (double) margin_top / 2);
         cr.show_text (caption);
 
         // Return if no data
