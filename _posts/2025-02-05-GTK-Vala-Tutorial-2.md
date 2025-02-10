@@ -19,7 +19,7 @@ tags:       开源软件 GTK Vala
 
 # 构建应用：白昼时长计算与绘制工具
 
-笔者在这里用一个有趣的例子来展示如何构建一个简单的应用程序。该程序用到了GTK4的许多组件，以及Cairo的绘图功能。
+笔者在这里用一个有趣的例子来展示如何构建一个简单的应用程序。该程序用到了GTK4的许多组件（有意识地在用GTK4下新增的，推荐的，或者行为发生改变的组件），以及Cairo的绘图功能。
 
 这个应用程序可用于计算在不同纬度下，全年的每一天的白昼时长。为了方便，程序做了这些简化：
 
@@ -69,7 +69,10 @@ tags:       开源软件 GTK Vala
   - 使用 `Gtk.Box` 和 `Gtk.Grid` 布局管理窗口组件。  
   - `Gtk.Entry` 控件允许用户输入纬度和年份，并通过 `Gtk.Button` 触发绘图更新。
 - **事件处理**  
-  - “Plot Day Length” 按钮点击时调用 `update_plot_data ()` 读取输入并更新数据，再通过 `drawing_area.queue_draw ()` 重绘图表。
+  - “Plot” 按钮点击时调用 `update_plot_data ()` 读取输入并更新数据，再通过 `drawing_area.queue_draw ()` 重绘图表。
+  - “Export” 按钮点击时弹出文件保存对话框，用户选择保存路径后调用 `export_to_png ()` 导出图表为 PNG 图像。
+    - 通过 `Gtk.FileDialog` 选择保存路径，设置默认文件名和过滤器（仅显示 PNG 图像）。
+    - 通过 `Cairo.ImageSurface` 创建图像表面，绘制图表内容，最后保存为 PNG 文件。
 - **绘图操作**  
   - `drawing_area` 使用 `Gtk.DrawingArea`，并注册了绘图回调 `draw_plot ()`。  
   - `draw_plot ()` 中利用 `Cairo` 库完成以下工作：  
