@@ -180,6 +180,7 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
     private double[] day_lengths;
     private int current_year;
     private double latitude_deg;
+    private Gtk.Button export_button;
 
     /**
      * Constructs a new DayLengthWindow.
@@ -237,11 +238,36 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         };
         grid.attach (year_entry, 3, 0, 1, 1);
 
-        var plot_button = new Gtk.Button.with_label ("Plot Day Length");
+        var plot_button = new Gtk.Button.with_label ("Plot");
         grid.attach (plot_button, 4, 0, 1, 1);
         plot_button.clicked.connect (() => {
             update_plot_data ();
             drawing_area.queue_draw ();
+        });
+
+        // Export image button
+        export_button = new Gtk.Button.with_label ("Export");
+        grid.attach (export_button, 5, 0, 1, 1);
+        export_button.clicked.connect (() => {
+            var file_dialog = new Gtk.FileDialog () {
+                modal = true,
+                initial_name = "daylength_plot.png",
+                default_filter = new Gtk.FileFilter () {
+                    name = "PNG Images"
+                }
+            };
+            file_dialog.default_filter.add_mime_type ("image/png");
+            file_dialog.save.begin (this, null, (obj, res) => {
+                try {
+                    var file = file_dialog.save.end (res);
+                    if (file != null) {
+                        string filepath = file.get_path ();
+                        export_to_png (filepath);
+                    }
+                } catch (Error e) {
+                    stderr.printf ("Error: %s\n", e.message);
+                }
+            });
         });
 
         // Drawing area: using Gtk.DrawingArea and Cairo for plotting
@@ -281,7 +307,7 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         // Set margins
         int margin_left = 75;
         int margin_right = 20;
-        int margin_top = 40;
+        int margin_top = 50;
         int margin_bottom = 70;
         int plot_width = width - margin_left - margin_right;
         int plot_height = height - margin_top - margin_bottom;
@@ -381,6 +407,19 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         cr.show_text (y_title);
         cr.restore ();
 
+        // Add caption below the X axis title for clarity and aesthetics
+        string caption;
+        if (latitude_entry.text == "" || year_entry.text == "") {
+            caption = "Day Length";
+        } else {
+            caption = "Day Length - Latitude: " + latitude_entry.text + "°, Year: " + year_entry.text;
+        }
+        cr.set_font_size (22);
+        Cairo.TextExtents cap_ext;
+        cr.text_extents (caption, out cap_ext);
+        cr.move_to ((width - cap_ext.width) / 2.0, margin_top / 2.0);
+        cr.show_text (caption);
+
         // Return if no data
         if (day_lengths == null) {
             return;
@@ -399,6 +438,33 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
             }
         }
         cr.stroke ();
+    }
+
+    /**
+     * Exports the current day length plot to a PNG image file.
+     *
+     * This function gets the current width and height of the drawing area.
+     * If the dimensions are invalid, it defaults to 800x600.
+     * It then creates a Cairo image surface, draws the plot onto it,
+     * and writes the surface to a PNG file at the specified file path.
+     *
+     * @param filepath The destination file path for the exported PNG image.
+     */
+    private void export_to_png (string filepath) {
+        int width = drawing_area.get_width ();
+        int height = drawing_area.get_height ();
+
+        if (width <= 0 || height <= 0) {
+            width = 800;
+            height = 600;
+        }
+
+        Cairo.ImageSurface surface = new Cairo.ImageSurface (Cairo.Format.RGB24, width, height);
+        Cairo.Context cr = new Cairo.Context (surface);
+
+        draw_plot (drawing_area, cr, width, height);
+
+        surface.write_to_png (filepath);
     }
 }
 
