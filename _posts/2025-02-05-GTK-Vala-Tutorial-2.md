@@ -284,7 +284,8 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
                         export_plot (filepath);
                     }
                 } catch (Error e) {
-                    stderr.printf ("Error: %s\n", e.message);
+                    // Usually due to the user canceling the dialog
+                    message ("File has not been saved: %s", e.message);
                 }
             });
         });
