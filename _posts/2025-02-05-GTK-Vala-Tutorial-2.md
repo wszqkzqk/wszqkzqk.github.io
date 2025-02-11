@@ -96,7 +96,7 @@ tags:       开源软件 GTK Vala
 实现这个应用程序的代码如下：
 
 ```vala
-#!/usr/bin/env -S vala --pkg=gtk4 -X -lm -X -pipe -X -O2 -X -march=native
+#!/usr/bin/env -S vala --pkg=gtk4 -X -lm -X -O2 -X -march=native --cc="ccache cc" -X -pipe -X -fuse-ld=mold
 
 // Helper functions to compute day-of-year, solar declination and day length
 
@@ -260,14 +260,15 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
             svg_filter.name = "SVG Images";
             svg_filter.add_mime_type ("image/svg+xml");
 
-            var list_model = new ListStore (typeof (Gtk.FileFilter));
-            list_model.append (png_filter);
-            list_model.append (svg_filter);
+            // FileDialog.filters are required to contain default filter and others
+            var filter_list = new ListStore (typeof (Gtk.FileFilter));
+            filter_list.append (png_filter);
+            filter_list.append (svg_filter);
 
             var file_dialog = new Gtk.FileDialog () {
                 modal = true,
                 initial_name = "daylength_plot.png",
-                filters = list_model
+                filters = filter_list
             };
 
             file_dialog.save.begin (this, null, (obj, res) => {
