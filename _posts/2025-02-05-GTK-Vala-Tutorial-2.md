@@ -70,9 +70,9 @@ tags:       开源软件 GTK Vala
   - `Gtk.Entry` 控件允许用户输入纬度和年份，并通过 `Gtk.Button` 触发绘图更新。
 - **事件处理**  
   - “Plot” 按钮点击时调用 `update_plot_data ()` 读取输入并更新数据，再通过 `drawing_area.queue_draw ()` 重绘图表。
-  - “Export” 按钮点击时弹出文件保存对话框，用户选择保存路径后调用 `export_plot ()` 导出图表为 PNG 或 SVG 图像。
-    - 通过 `Gtk.FileDialog` 选择保存路径，设置默认文件名和过滤器（仅显示 PNG 和 SVG 文件）。
-    - 通过 `Cairo.ImageSurface` 创建图像表面，绘制图表内容，最后保存为 PNG 或 SVG 文件。
+  - “Export” 按钮点击时弹出文件保存对话框，用户选择保存路径后调用 `export_plot ()` 导出图表为 PNG, SVG 或 PDF 文件。
+    - 通过 `Gtk.FileDialog` 选择保存路径，设置默认文件名和过滤器（仅显示 PNG, SVG 和 PDF 文件）。
+    - 通过 `Cairo.ImageSurface` 创建图像表面，绘制图表内容，最后保存为 PNG, SVG 或 PDF 文件。
 - **绘图操作**  
   - `drawing_area` 使用 `Gtk.DrawingArea`，并注册了绘图回调 `draw_plot ()`。  
   - `draw_plot ()` 中利用 `Cairo` 库完成以下工作：  
@@ -96,7 +96,7 @@ tags:       开源软件 GTK Vala
 实现这个应用程序的代码如下：
 
 ```vala
-#!/usr/bin/env -S vala --pkg=gtk4 -X -lm -X -O2 -X -march=native --cc="ccache cc" -X -pipe -X -fuse-ld=mold
+#!/usr/bin/env -S vala --pkg=gtk4 -X -lm -X -pipe -X -O2 -X -march=native
 
 // Helper functions to compute day-of-year, solar declination and day length
 
@@ -260,10 +260,15 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
             svg_filter.name = "SVG Images";
             svg_filter.add_mime_type ("image/svg+xml");
 
+            var pdf_filter = new Gtk.FileFilter ();
+            pdf_filter.name = "PDF Documents";
+            pdf_filter.add_mime_type ("application/pdf");
+
             // FileDialog.filters are required to contain default filter and others
             var filter_list = new ListStore (typeof (Gtk.FileFilter));
             filter_list.append (png_filter);
             filter_list.append (svg_filter);
+            filter_list.append (pdf_filter);
 
             var file_dialog = new Gtk.FileDialog () {
                 modal = true,
@@ -472,8 +477,18 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
             height = 600;
         }
 
-        if (filepath.down ().has_suffix (".svg")) {
+        string? extension = null;
+        var last_dot = filepath.last_index_of_char ('.');
+        if (last_dot != -1) {
+            extension = filepath[last_dot:].down ();
+        }
+
+        if (extension == ".svg") {
             Cairo.SvgSurface surface = new Cairo.SvgSurface (filepath, width, height);
+            Cairo.Context cr = new Cairo.Context (surface);
+            draw_plot (drawing_area, cr, width, height);
+        } else if (extension == ".pdf") {
+            Cairo.PdfSurface surface = new Cairo.PdfSurface (filepath, width, height);
             Cairo.Context cr = new Cairo.Context (surface);
             draw_plot (drawing_area, cr, width, height);
         } else {
