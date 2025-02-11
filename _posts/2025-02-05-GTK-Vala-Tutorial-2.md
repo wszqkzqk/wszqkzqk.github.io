@@ -72,7 +72,7 @@ tags:       开源软件 GTK Vala
   - “Plot” 按钮点击时调用 `update_plot_data ()` 读取输入并更新数据，再通过 `drawing_area.queue_draw ()` 重绘图表。
   - “Export” 按钮点击时弹出文件保存对话框，用户选择保存路径后调用 `export_plot ()` 导出图表为 PNG, SVG 或 PDF 文件。
     - 通过 `Gtk.FileDialog` 选择保存路径，设置默认文件名和过滤器（仅显示 PNG, SVG 和 PDF 文件）。
-    - 通过 `Cairo.ImageSurface` 创建图像表面，绘制图表内容，最后保存为 PNG, SVG 或 PDF 文件。
+    - 通过 `Cairo.ImageSurface`、`Cairo.SvgSurface` 或 `Cairo.PdfSurface` 创建绘图表面，再调用 `draw_plot ()` 绘制图表。
 - **绘图操作**  
   - `drawing_area` 使用 `Gtk.DrawingArea`，并注册了绘图回调 `draw_plot ()`。  
   - `draw_plot ()` 中利用 `Cairo` 库完成以下工作：  
