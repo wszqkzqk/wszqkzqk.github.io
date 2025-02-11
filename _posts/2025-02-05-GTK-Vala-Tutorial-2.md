@@ -70,9 +70,9 @@ tags:       开源软件 GTK Vala
   - `Gtk.Entry` 控件允许用户输入纬度和年份，并通过 `Gtk.Button` 触发绘图更新。
 - **事件处理**  
   - “Plot” 按钮点击时调用 `update_plot_data ()` 读取输入并更新数据，再通过 `drawing_area.queue_draw ()` 重绘图表。
-  - “Export” 按钮点击时弹出文件保存对话框，用户选择保存路径后调用 `export_to_png ()` 导出图表为 PNG 图像。
-    - 通过 `Gtk.FileDialog` 选择保存路径，设置默认文件名和过滤器（仅显示 PNG 图像）。
-    - 通过 `Cairo.ImageSurface` 创建图像表面，绘制图表内容，最后保存为 PNG 文件。
+  - “Export” 按钮点击时弹出文件保存对话框，用户选择保存路径后调用 `export_plot ()` 导出图表为 PNG 或 SVG 图像。
+    - 通过 `Gtk.FileDialog` 选择保存路径，设置默认文件名和过滤器（仅显示 PNG 和 SVG 文件）。
+    - 通过 `Cairo.ImageSurface` 创建图像表面，绘制图表内容，最后保存为 PNG 或 SVG 文件。
 - **绘图操作**  
   - `drawing_area` 使用 `Gtk.DrawingArea`，并注册了绘图回调 `draw_plot ()`。  
   - `draw_plot ()` 中利用 `Cairo` 库完成以下工作：  
@@ -252,20 +252,30 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         export_button = new Gtk.Button.with_label ("Export");
         grid.attach (export_button, 5, 0, 1, 1);
         export_button.clicked.connect (() => {
+            var png_filter = new Gtk.FileFilter ();
+            png_filter.name = "PNG Images";
+            png_filter.add_mime_type ("image/png");
+            
+            var svg_filter = new Gtk.FileFilter ();
+            svg_filter.name = "SVG Images";
+            svg_filter.add_mime_type ("image/svg+xml");
+
+            var list_model = new ListStore (typeof (Gtk.FileFilter));
+            list_model.append (png_filter);
+            list_model.append (svg_filter);
+
             var file_dialog = new Gtk.FileDialog () {
                 modal = true,
                 initial_name = "daylength_plot.png",
-                default_filter = new Gtk.FileFilter () {
-                    name = "PNG Images"
-                }
+                filters = list_model
             };
-            file_dialog.default_filter.add_mime_type ("image/png");
+
             file_dialog.save.begin (this, null, (obj, res) => {
                 try {
                     var file = file_dialog.save.end (res);
                     if (file != null) {
                         string filepath = file.get_path ();
-                        export_to_png (filepath);
+                        export_plot (filepath);
                     }
                 } catch (Error e) {
                     stderr.printf ("Error: %s\n", e.message);
@@ -444,16 +454,15 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
     }
 
     /**
-     * Exports the current day length plot to a PNG image file.
+     * Exports the current day length plot to an image file (PNG or SVG).
      *
      * This function gets the current width and height of the drawing area.
-     * If the dimensions are invalid, it defaults to 800x600.
-     * It then creates a Cairo image surface, draws the plot onto it,
-     * and writes the surface to a PNG file at the specified file path.
+     * If invalid, it defaults to 800x600.
+     * It then creates a Cairo surface (SVG or PNG) and draws the plot onto it.
      *
-     * @param filepath The destination file path for the exported PNG image.
+     * @param filepath The destination file path.
      */
-    private void export_to_png (string filepath) {
+    private void export_plot (string filepath) {
         int width = drawing_area.get_width ();
         int height = drawing_area.get_height ();
 
@@ -462,12 +471,16 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
             height = 600;
         }
 
-        Cairo.ImageSurface surface = new Cairo.ImageSurface (Cairo.Format.RGB24, width, height);
-        Cairo.Context cr = new Cairo.Context (surface);
-
-        draw_plot (drawing_area, cr, width, height);
-
-        surface.write_to_png (filepath);
+        if (filepath.down ().has_suffix (".svg")) {
+            Cairo.SvgSurface surface = new Cairo.SvgSurface (filepath, width, height);
+            Cairo.Context cr = new Cairo.Context (surface);
+            draw_plot (drawing_area, cr, width, height);
+        } else {
+            Cairo.ImageSurface surface = new Cairo.ImageSurface (Cairo.Format.RGB24, width, height);
+            Cairo.Context cr = new Cairo.Context (surface);
+            draw_plot (drawing_area, cr, width, height);
+            surface.write_to_png (filepath);
+        }
     }
 }
 
