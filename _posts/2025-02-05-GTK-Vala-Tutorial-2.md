@@ -223,7 +223,8 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         hbox_controls.append (lat_label);
 
         latitude_entry = new Gtk.Entry () {
-            width_chars = 10
+            width_chars = 10,
+            input_purpose = Gtk.InputPurpose.NUMBER
         };
         hbox_controls.append (latitude_entry);
 
@@ -235,6 +236,7 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
 
         year_entry = new Gtk.Entry () {
             width_chars = 10,
+            input_purpose = Gtk.InputPurpose.DIGITS,
             // Set year entry text using current_year
             text = current_year.to_string ()
         };
@@ -404,14 +406,14 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
         // Draw X and Y axis titles
         cr.set_source_rgb (0, 0, 0);
         cr.set_font_size (22);
-        
+
         // X axis title
         string x_title = "Date (Month)";
         Cairo.TextExtents x_ext;
         cr.text_extents (x_title, out x_ext);
         cr.move_to ((double) width / 2 - x_ext.width / 2, height - margin_bottom + 50);
         cr.show_text (x_title);
-        
+
         // Y axis title
         string y_title = "Day Length (hours)";
         Cairo.TextExtents y_ext;
@@ -428,10 +430,10 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
 
         // Add caption below the X axis title for clarity and aesthetics
         string caption;
-        if (latitude_entry.text == "" || year_entry.text == "") {
+        if (day_lengths == null) {
             caption = "Day Length";
         } else {
-            caption = "Day Length - Latitude: " + latitude_entry.text + "°, Year: " + year_entry.text;
+            caption = "Day Length - Latitude: %.2f°, Year: %d".printf (latitude_deg, current_year);
         }
         cr.set_font_size (22);
         Cairo.TextExtents cap_ext;
