@@ -294,7 +294,7 @@ public class DayLengthWindow : Gtk.ApplicationWindow {
             hexpand = true,
             vexpand = true
         };
-        // Register drawing callback
+        drawing_area.set_size_request (400, 400);
         drawing_area.set_draw_func (this.draw_plot);
         vbox_main.append (drawing_area);
     }
