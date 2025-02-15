@@ -63,6 +63,8 @@ tags:       开源软件 Vala Meson 媒体文件 PDF
   * 当处于单线程模式或转化内容只有一页时，会直接调用转换代码完成渲染，并更新进度条，减小不必要的开销。
   * 接受 PDF 密码，支持加密的 PDF 文件。
   * 接受 PDF 页码或页码范围指定。
+  * 转化多页 PDF 时，支持使用 `printf` 的整数格式化标识符，生成带有序号的输出文件名。
+    * 例如 `output-%03d.svg` 将会生成 `output-001.svg`、`output-002.svg` 等文件。
   * 由 `Reporter.ProgressBar` 负责显示转换进度。
 
 * `task2svg.vala`  
