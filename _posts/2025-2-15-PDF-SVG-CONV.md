@@ -15,6 +15,11 @@ tags:       开源软件 Vala Meson 媒体文件 PDF
 # 前言
 
 笔者最近发现 Cairo 在 Vala 语言中的集成非常方便，于是用 Vala 写了一个 PDF/SVG 格式转化工具，基于 Cairo/Poppler/Rsvg 开发，并实现了高效率转化。
+* 另一大原因是现有的 ImageMagick 等工具虽然可以用于转化，但是由于**光栅化**的原因，会将矢量描述的 PDF 或者 SVG 文件转化为位图，导致信息丢失。
+  * 而且 ImageMagick 似乎不支持生成 SVG。
+* 还有一大原因是现有的 `pdf2svg` 工具过于简单，功能实现较少。
+* 这些工具也都不支持多线程转化包含多页的 PDF 文件。
+* 当然最主要的原因还是笔者想尝试一下 Cairo。😉😉😉
 
 # 内容
 
@@ -24,6 +29,17 @@ tags:       开源软件 Vala Meson 媒体文件 PDF
 * Neo SVG to PDF (`neosvg2pdf`)： 将一组 SVG 文件合并生成单个 PDF 文件。
 
 项目采用 Vala 编程语言和 Meson 构建系统进行开发，依赖于 GLib、Cairo、Poppler、Pango、RSVG 等第三方库。其设计思路注重高并发（多线程处理）、模块化与跨平台兼容。由于 GLib 自带的日志系统不太适合命令行工具，因此项目中还实现了一个日志输出模块与彩色进度条显示。
+
+# 基本原理
+
+* PDF 转 SVG：  
+  * 利用 Poppler 库解析 PDF 文件，获取每一页的内容。
+  * 将内容渲染到 Cairo 的 `SvgSurface` 上，生成 SVG 文件。
+  * 通过 Cairo 的 `Context` 对象绘制 PDF 页面内容到 SVG 中。
+* SVG 转 PDF：  
+  * 利用 RSVG 库解析 SVG 文件，获取每个文件的内容。
+  * 将内容绘制到 Cairo 的 `PdfSurface` 上，生成 PDF 文件。
+  * 通过 Cairo 的 `Context` 对象绘制 SVG 文件内容到 PDF 中。
 
 # 组成结构
 
@@ -50,7 +66,7 @@ tags:       开源软件 Vala Meson 媒体文件 PDF
 * `task2svg.vala`  
   此类封装了单个页面转换任务，用于在线程池中执行。主要包括：
   * 读取指定页面，获取页面大小。
-  * 创建 Cairo 的 SVG `Surface` 及 `Context`。
+  * 创建 Cairo 的 `SvgSurface` 及 `Context`。
   * 通过 `page.render_for_printing` 将 PDF 页面渲染到 SVG 文件中。
 
 这种设计既保证了多线程转换的性能，又避免了 `Poppler.Page` 的线程安全问题。
