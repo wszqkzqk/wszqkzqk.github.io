@@ -20,7 +20,7 @@ tags:       开源软件 Vala Meson 媒体文件 PDF
   * 而且 ImageMagick 似乎不支持生成 SVG。
 * 还有一大原因是现有的 `pdf2svg` 工具实在过于简单，功能实现较少。
 * 这些工具也都不支持多线程转化包含多页的 PDF 文件，转化速度较慢。
-* 当然最主要的原因还是笔者想尝试一下 Cairo。😉😉😉
+* 当然最主要的原因还是笔者想尝试一下 Cairo。😉😉😉 而且这个项目本身工作量很小。
 * **本项目无论是结构设计还是代码实现都非常非常简单，也适合想要学习 Vala/Cairo 的开发者参考**。
 
 # 内容
@@ -30,7 +30,7 @@ tags:       开源软件 Vala Meson 媒体文件 PDF
 * Neo PDF to SVG (`neopdf2svg`)： 将 PDF 文件转化为 SVG 文件。支持多线程处理、加密 PDF 解密、指定页码转化以及格式化输出文件名。
 * Neo SVG to PDF (`neosvg2pdf`)： 将一组 SVG 文件合并生成单个 PDF 文件。
 
-项目采用 Vala 编程语言和 Meson 构建系统进行开发，依赖于 GLib、Cairo、Poppler、Pango、Rsvg 等第三方库。其设计思路注重高并发（多线程处理）、模块化与跨平台兼容。由于 GLib 自带的日志系统不太适合命令行工具，因此项目中还实现了一个日志输出模块与彩色进度条显示。
+项目采用 Vala 编程语言和 Meson 构建系统进行开发，依赖于 GLib、Cairo、Poppler、Pango、Rsvg 等第三方库。其设计思路注重并行化、模块化与跨平台兼容。由于 GLib 自带的日志系统不太适合命令行工具，因此项目中还实现了一个日志输出模块与彩色进度条显示。
 
 # 基本原理
 
@@ -128,4 +128,4 @@ PDF/SVG Converter 实现了高效的 PDF 与 SVG 格式互转功能。利用多�
 # 构建与运行
 
 * 参见项目 [**README.md**](https://github.com/wszqkzqk/pdf-svg-conv) 或 [**README-zh.md**](https://github.com/wszqkzqk/pdf-svg-conv/blob/main/README-zh.md)
-  * 已上传到 [Arch Linux AUR](https://aur.archlinux.org/packages/pdf-svg-conv)，同时也适配了 Windows (MSYS2) 环境的 `PKGBUILD` 构建脚本。
+* 已上传到 [Arch Linux AUR](https://aur.archlinux.org/packages/pdf-svg-conv)，同时也适配了 Windows (MSYS2) 环境的 [`PKGBUILD` 构建脚本](https://gist.github.com/wszqkzqk/5ece53f3cda6213c62c5f77a9da26af4)。
