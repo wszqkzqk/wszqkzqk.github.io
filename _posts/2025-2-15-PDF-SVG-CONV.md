@@ -14,13 +14,13 @@ tags:       开源软件 Vala Meson 媒体文件 PDF
 
 # 前言
 
-笔者最近发现 Cairo 在 Vala 语言中的集成非常方便，于是用 Vala 写了一个 PDF/SVG 转换工具，基于 Cairo/Poppler/Rsvg 开发，并实现了高效率转化。
+笔者最近发现 Cairo 在 Vala 语言中的集成非常方便，于是用 Vala 写了一个 PDF/SVG 格式转化工具，基于 Cairo/Poppler/Rsvg 开发，并实现了高效率转化。
 
 # 内容
 
 该项目主要提供两大功能命令行工具：
 
-* Neo PDF to SVG (`neopdf2svg`)： 将 PDF 文件转换为 SVG 文件。支持多线程处理、加密 PDF 解密、指定页码转化以及格式化输出文件名。
+* Neo PDF to SVG (`neopdf2svg`)： 将 PDF 文件转化为 SVG 文件。支持多线程处理、加密 PDF 解密、指定页码转化以及格式化输出文件名。
 * Neo SVG to PDF (`neosvg2pdf`)： 将一组 SVG 文件合并生成单个 PDF 文件。
 
 项目采用 Vala 编程语言和 Meson 构建系统进行开发，依赖于 GLib、Cairo、Poppler、Pango、RSVG 等第三方库。其设计思路注重高并发（多线程处理）、模块化与跨平台兼容。由于 GLib 自带的日志系统不太适合命令行工具，因此项目中还实现了一个日志输出模块与彩色进度条显示。
