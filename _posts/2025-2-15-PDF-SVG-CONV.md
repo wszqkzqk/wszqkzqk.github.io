@@ -9,7 +9,7 @@ catalog:    true
 tags:       开源软件 Vala Meson 媒体文件 PDF
 ---
 
-* 项目地址：[**PDF/SVG Converter**](https://github.com/wszqkzqk/pdf-svg-conv)
+* 项目 GitHub 地址：[**PDF/SVG Converter**](https://github.com/wszqkzqk/pdf-svg-conv)
 * 本文涉及的代码采用 [**LGPL v2.1+**](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html) 协议公开发布。
 
 # 前言
