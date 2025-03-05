@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      在Wayland下解决Electron应用的Fcitx5输入法问题
+title:      在Wayland下解决Electron应用的Fcitx5输入法漏字等问题
 subtitle:   解决运行在Xwayland下依赖旧式GTK的应用的Fcitx5输入法问题
 date:       2024-08-28
 author:     wszqkzqk
