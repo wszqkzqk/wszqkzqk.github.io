@@ -307,8 +307,6 @@ COMMENT_SEPARATOR
 
 ```bash
 pkgname=(${pkgname[@]/ollama-cuda})
-pkgname=(${pkgname[@]/ollama-rocm})
-makedepends=(${makedepends[@]/hipblas})
 makedepends=(${makedepends[@]/cuda})
 ```
 
