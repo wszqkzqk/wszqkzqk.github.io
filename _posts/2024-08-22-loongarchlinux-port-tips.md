@@ -96,6 +96,12 @@ end | sort | uniq
 genrebuild <package1> <package2> ...
 ```
 
+肥猫的脚本要求传入的参数是软件包名`pkgname`，而不是`pkgbase`，这与我们目前的流程不符。因此，北京大学学生Linux俱乐部的指导老师[Pluto](https://github.com/setarcos/)在[LCPU loongshot](https://github.com/lcpu-club/loongshot)仓库中提供了一个[修改版的`genrebuild`脚本](https://github.com/lcpu-club/loongshot/blob/main/scripts/genrebuild)，接受`pkgbase`作为参数。目前，我们更推荐使用这个修改版的`genrebuild`脚本。
+
+```bash
+genrebuild <pkgbase1> <pkgbase2> ...
+```
+
 ### KDE及Qt软件包
 
 Arch Linux官方维护有专门用于构建KDE及Qt软件包的工具[kde-build](https://gitlab.archlinux.org/archlinux/kde-build)，其中[记录了构建这些软件包的顺序](https://gitlab.archlinux.org/archlinux/kde-build/-/tree/master/package-list)。我们需要按照这一手动维护的顺序来构建这些软件包。
