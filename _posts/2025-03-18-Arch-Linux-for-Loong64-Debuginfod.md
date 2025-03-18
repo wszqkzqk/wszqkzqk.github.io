@@ -31,7 +31,7 @@ Debuginfod 是由 `elfutils` 项目提供的**调试符号分发服务**，它�
 
 ## 如何验证服务是否生效
 1. **检查环境变量**：  
-   升级 `libelf` 后，重新登录终端，系统会自动设置 `$DEBUGINFOD_URLS` 环境变量：  
+   升级 `libelf` 后，**重新登录终端**，系统会自动设置 `$DEBUGINFOD_URLS` 环境变量：  
    ```bash
    echo $DEBUGINFOD_URLS
    # 应输出我们的 Debuginfod 服务地址 (https://loongarchlinux.lcpu.dev/debuginfod)
