@@ -132,7 +132,7 @@ extra-loong64-build -- -I <package1> -I <package2> ...
 
 我们在[loongshot](https://github.com/lcpu-club/loongshot)中维护了一个上传软件包的工具[loong-repo-add](https://github.com/lcpu-club/loongshot/blob/main/scripts/loong-repo-add)，可以方便地上传软件包。
 
-由于技术限制和安全规定，目前仅在北京大学的校园网环境下才能上传软件包。如果在校外，可以通过北京大学VPN连接校园网后上传软件包。如果无法连接校园网，可以通过其他方式将软件包传给有上传权限的同学，由他们上传（不推荐）；或告知校内维护者重新打包（推荐）。
+由于技术限制和安全规定，目前仅在北京大学的校园网环境下才能上传软件包。如果在校外，可以通过北京大学VPN连接校园网后上传软件包。如果无法连接校园网，可以通过其他方式将软件包传给有上传权限的同学，由他们上传（不推荐）；或在仓库中通过PR提交好补丁（尽量附上完整信息），告知校内维护者重新打包（推荐）。
 
 对于有上传权限的开发者，可以向项目维护者索要服务器的地址和端口，并添加到`~/.ssh/config`中，默认需要将服务器命名为`loongarchlinux-tier0`。注意**设置好PGP密钥**，签名所用的密钥应当与在[archlinux-lcpu-keyring](https://github.com/lcpu-club/archlinux-lcpu-keyring)中提交的**一致**。
 
