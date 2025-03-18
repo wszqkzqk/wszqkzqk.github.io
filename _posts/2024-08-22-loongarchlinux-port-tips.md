@@ -121,7 +121,7 @@ extra-loong64-build -- -I <package1> -I <package2> ...
 
 手动传递`-I`参数往往比较麻烦，推荐参考笔者介绍的[**本地仓库**](https://wszqkzqk.github.io/2024/09/19/build-order-local-repo/)的方法。
 
-# 软件包的手动上传
+# 软件包的上传
 
 在打包完成后，如果具有上传权限，开发者可以将软件包上传。没有处理好依赖或者没有重新构建完所有需要重新构建的软件包时**不应当上传软件包**，或**只能**上传到`extra-staging`或者`core-staging`。（一般来说没有构建完所有需要构建的包时最好**什么源都不要上传**，只有在问题十分复杂，需要多个开发者协作解决时才上传`staging`，否则请参见本文介绍的[**Bootstrap方法**](#一般的Bootstrap方法)或者[**本地仓库**](https://wszqkzqk.github.io/2024/09/19/build-order-local-repo/)的使用，先在本地解决好，再一次性上传~~，当软件包没有依赖和重构建问题时，可以上传到`extra-testing`或者`core-testing`。如果软件包很简单稳定，完全不需要测试，才可以上传到`extra`或者`core`~~。由于我们目前只跟进Arch Linux官方的`extra`和`core`仓库，因此一般也不上传testing仓库。
 
@@ -130,63 +130,28 @@ extra-loong64-build -- -I <package1> -I <package2> ...
 * 如果软件包存在需要一并上传的依赖或者需要重新构建的软件包，应当**一并上传，不要遗漏**
 * 不管什么情况，同一个`pkgbase`下（即同一个构建仓库下）的软件包（各个`pkgname`）应当**一并上传，不要遗漏**；哪怕是重新修改PKGBUILD的时候看起来只影响了其中的部分软件包，也应当将**所有**软件包一并上传
 
-上传可以使用一些脚本来简化，例如：
+我们在[loongshot](https://github.com/lcpu-club/loongshot)中维护了一个上传软件包的工具[loong-repo-add](https://github.com/lcpu-club/loongshot/blob/main/scripts/loong-repo-add)，可以方便地上传软件包。
 
-```
-#!/bin/bash
+由于技术限制和安全规定，目前仅在北京大学的校园网环境下才能上传软件包。如果在校外，可以通过北京大学VPN连接校园网后上传软件包。如果无法连接校园网，可以通过其他方式将软件包传给有上传权限的同学，由他们上传（不推荐）；或告知校内维护者重新打包（推荐）。
 
-if [[ $# -lt 2 ]]; then
-    echo "Usage: ${0##*/} <repo-name> <pkg-file>"
-    exit 1
-fi
+对于有上传权限的开发者，可以向项目维护者索要服务器的地址和端口，并添加到`~/.ssh/config`中，默认需要将服务器命名为`loongarchlinux-tier0`。注意设置好PGP密钥，签名所用的密钥应当与在[archlinux-lcpu-keyring](https://github.com/lcpu-club/archlinux-lcpu-keyring)中提交的一致
 
-# Set the server information "username@hostname"
-TIER0SERVER=""
-# Set the port of the server
-PORT=""
-_remote_path=/srv/http/loongarch/archlinux/
-
-REPO=$1
-PKG_PATH=$2
-PKG=$(basename $2)
-shift
-shift
-
-# get pkgname and version infor from $PKG
-TEMP=${PKG%-*}
-REL=${TEMP##*-}
-TEMP2=${TEMP%-*}
-VER=${TEMP2##*-}
-NAME=${TEMP2%-*}
-
-gpg --detach-sign --use-agent $PKG_PATH
-while [[ ! -s $PKG_PATH.sig ]]; do
-    echo "Signature file not found or empty. Trying to sign again..."
-    gpg --detach-sign --use-agent $PKG_PATH
-done
-
-rsync -e "ssh -p ${PORT}" -p '--chmod=ug=rw,o=r' -c -h -L --progress --partial -y $PKG_PATH{,.sig} $TIER0SERVER:$_remote_path/$REPO/os/loong64/
-ssh -tt $TIER0SERVER -p $PORT "cd $_remote_path/$REPO/os/loong64/; flock /tmp/loong-repo-$REPO.lck repo-add -R $REPO.db.tar.gz $PKG"
-```
-
-然后对脚本进行修改，填入服务器信息，就可以使用这个脚本来上传软件包了：
-
-* Bash/Zsh
+如果还没有下载软件包上传工具，可以使用以下命令下载：
 
 ```bash
-for pkg in <pkg1> <pkg2> ...
-do
-    loong-repo-add <repo> $pkg
-done
+curl -O https://raw.githubusercontent.com/lcpu-club/loongshot/main/scripts/loong-repo-add
+chmod +x ./loong-repo-add
 ```
 
-* Fish
+之后即可使用`loong-repo-add`来上传软件包。目前的上传脚本在绝大部分情况下会自动处理好`debug`包的上传，因此务必保证上传的软件包列表**完整无遗漏**（需要包括`debug`包），建议使用通配符`*`来匹配上传软件包，例如：
 
-```fish
-for pkg in <pkg1> <pkg2> ...
-    loong-repo-add <repo> $pkg
-end
+```bash
+./loong-repo-add <repo> /path/to/package/*.pkg.tar.zst
 ```
+
+其中`<repo>`一般为`extra`或者`core`，如果确实需要上传到`testing`或者`staging`，可以使用`extra-testing`、`core-testing`、`extra-staging`或者`core-staging`。
+
+开发者需要注意检查`core`和`extra`仓库的软件包上传不要混淆。
 
 # 使用QEMU System测试
 
