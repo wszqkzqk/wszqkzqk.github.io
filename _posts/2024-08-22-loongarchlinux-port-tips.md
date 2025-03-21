@@ -310,6 +310,7 @@ makedepends=(${makedepends[@]/cuda})
   * 如果上游已经修复但是没有发布，可以从**上游的Git仓库**中获取Patch
     * 未合并的PR也可以作为我们临时修复的Patch
   * 善用GitHub的检索功能，关键字一般可以选择`loongarch`、`loong`、`loongson`、`loongarch64`、`loong64`等
+  * 注意：如果上游有相关修复，一定要**优先使用上游的修复**
 * 其他支持loongarch发行版
   * [Gentoo/Loongson Support Overlay](https://github.com/xen0n/loongson-overlay)
   * [ABBS/ACBS tree for AOSC OS package metadata, build configuration, scripts, and patches](https://github.com/AOSC-Dev/aosc-os-abbs)
