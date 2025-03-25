@@ -164,3 +164,5 @@ collect2: error: ld returned 1 exit status
 ```
 
 然后再次构建，即得到了干净且测试全部通过的`ldc`软件包。上传补丁和`ldc`软件包即可。
+
+附注：这一链接问题是ldc的一个bug，ldc的测试用到的druntime中使用了16字节的原子操作，这一操作在某些架构下（比如x86_64）可以内联为一条指令，但是在某些架构下（比如loon64和riscv64）则需要调用`libatomic`库中的函数。因此，这一问题在loon64上会暴露出来。经过讨论，ldc的维护者已经在开发分支中修复了这一问题，对于loong64与riscv64架构会默认链接`libatomic`库。因此，这一问题在未来的版本中将不再出现。参见[这一PR](https://github.com/ldc-developers/ldc/pull/4864)。
