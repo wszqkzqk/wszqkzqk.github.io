@@ -716,6 +716,8 @@ extra-loong64-build -- -t /tmp:size=32G -- -A
 
 GitHub的PR/Commit页面提供了`diff`和`patch`的下载功能，在对应的PR/Commit页面下，只需要在PR或者Commit号后面加上`.patch`或者`.diff`即可跳转到对应的Patch页面，该Patch可以直接放到`PKGBUILD`的`source`中，但是建议用`::`分隔来指定Patch的名字。（要求Patch文件名需要有实际意义）
 
+由于从GitHub获取的`.patch`文件中包含了时间、commit hash等容易变化的信息，尤其是commit hash的位数可能出现不一致，导致文件的**checksum出现变化**，因此笔者**更建议使用`.diff`文件**，`.diff`文件中只包含了文件的相对路径和变动内容，不包含commit hash等信息，更加稳定。
+
 ## 上游已合并但未发布的Commit/未合并的PR导出的Patch在`source`中优先写链接还是写本地Patch文件
 
 很多时候我们使用的Patch可能是已经合并但未发布的Commit，或者是未合并的PR导出的Patch。这些Patch已经可以从上游的链接中获取。为了**简化我们的补丁集内容**，并且**增加Patch的可查验性**，便于**追踪**上游及PR提出者的**更新**，我们一般按照以下原则来指定Patch的来源：
