@@ -380,7 +380,7 @@ PR参考示例：[GitHub Google/libultrahdr PR#303](https://github.com/google/li
 
 * 程序**静态链接**到了2025.1.21**之前**`devtools-loong64 < 1.3.1.patch2-1`构建的且没有手动指定`-mcmodel=medium`的**系统库或者对象文件**
   * 此时应该**重新构建**这些包含没有覆盖的系统库或者对象文件的依赖包
-* 软件包的构建文件中因为各种原因，没有使用系统的`CFLAGS`和`CXXFLAGS`
+* 软件包的构建系统因为各种原因，**没有使用全局的`CFLAGS`和`CXXFLAGS`**
   * 此时可能可以在构建文件等地方手动添加指定Code Model的参数
 
 以下方法仅在`devtools-loong64 < 1.3.1.patch2-1`时使用，目前**已失效**，仅供存档：
