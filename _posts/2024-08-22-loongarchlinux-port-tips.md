@@ -292,6 +292,8 @@ pkgname=(${pkgname[@]/ollama-cuda})
 makedepends=(${makedepends[@]/cuda})
 ```
 
+不过需要注意的是，这种使用参数扩展的方法会删除所有匹配项，可能误删含子字符串的元素，如果存在这种情况，请勿使用。
+
 ## 应用了额外Patch的包含`pkgver()`函数的软件包
 
 `pkgver()`函数一般通过`git`等工具来获取软件包的版本号，然而由于环境不同，可能会导致`pkgver()`函数获取到的版本号（尤其是hash的位数）不同。（此时可能会存在导出的`loong.patch`中包含对`pkgver`变量的修改，这是**不允许**的）
