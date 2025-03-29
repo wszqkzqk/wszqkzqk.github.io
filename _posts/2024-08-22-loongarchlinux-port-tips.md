@@ -299,7 +299,7 @@ pkgname=($(printf "%s\n" "${pkgname[@]}" | grep -Ev '^(torchvision-cuda|python-t
 makedepends=($(printf "%s\n" "${makedepends[@]}" | grep -Ev '^(cuda|cudnn|python-pytorch-opt-cuda)$'))
 ```
 
-这里使用`printf "%s\n"`来将数组元素逐行输出，然后使用`grep -Ev`来过滤掉不需要的元素，最后再将结果赋值回数组。其中，`grep`使用的正则表达式中用`^`和`$`来匹配行首和行尾，确保只删除完全匹配的元素。
+这里使用`printf "%s\n"`来将数组元素逐行输出，然后使用`grep -Ev`来过滤掉不需要的元素，最后再将结果赋值回数组。这里`grep`使用了正则表达式的`^`和`$`来匹配行首和行尾，确保只删除完全匹配的元素。这一方式也更加灵活，可以使用任何合法的正则表达式来匹配需要删除的元素。
 
 ## 应用了额外Patch的包含`pkgver()`函数的软件包
 
