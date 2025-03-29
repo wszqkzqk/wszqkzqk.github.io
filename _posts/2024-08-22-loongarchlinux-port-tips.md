@@ -292,7 +292,14 @@ pkgname=(${pkgname[@]/ollama-cuda})
 makedepends=(${makedepends[@]/cuda})
 ```
 
-不过需要注意的是，这种使用参数扩展的方法会删除所有匹配项，可能误删含子字符串的元素，如果存在这种情况，请勿使用。
+不过需要注意的是，这种使用参数扩展的方法会删除所有匹配项，可能误删含子字符串的元素，如果存在这种情况，请勿使用此方法。对于可能导致误删的情况，需要用更加复杂的正则表达式来匹配，例如：
+
+```bash
+pkgname=($(printf "%s\n" "${pkgname[@]}" | grep -Ev '^(torchvision-cuda|python-torchvision-cuda)$'))
+makedepends=($(printf "%s\n" "${makedepends[@]}" | grep -Ev '^(cuda|cudnn|python-pytorch-opt-cuda)$'))
+```
+
+这里使用`printf "%s\n"`来将数组元素逐行输出，然后使用`grep -Ev`来过滤掉不需要的元素，最后再将结果赋值回数组。其中，`grep`使用的正则表达式中用`^`和`$`来匹配行首和行尾，确保只删除完全匹配的元素。
 
 ## 应用了额外Patch的包含`pkgver()`函数的软件包
 
