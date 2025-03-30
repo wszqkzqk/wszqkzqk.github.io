@@ -35,7 +35,7 @@ pacman -S mingw-w64-ucrt-x86_64-aichat
 
 首次运行AIChat时，系统会提示我们配置，包括选择模型服务商、输入API密钥等。我们可以选择Google Gemini作为模型服务商，并输入申请到的API密钥。对于复杂任务，笔者推荐使用强大且免费开放的Gemini 2.5 Pro模型。配置完成后，AIChat会自动保存设置。
 
-如果我们想要添加多个模型服务商，可以在配置文件中手动添加。配置文件位于`~/.config/aichat/config.yaml`，我们可以使用文本编辑器打开并编辑。
+如果我们想要添加多个模型服务商，可以在配置文件中手动添加。配置文件位于用户数据目录下的`aichat/config.yaml`（在Linux上默认为`~/.config/aichat/config.yaml`，在Windows上默认为`%APPDATA%\aichat\config.yaml`）。
 
 此外，AIChat默认的上下文压缩阈值较小，为`4000`，现在比较强大的大模型普遍支持128 K的上下文，我们将阈值设定为`100000`一般是合理的。以下是一个示例配置文件：
 
