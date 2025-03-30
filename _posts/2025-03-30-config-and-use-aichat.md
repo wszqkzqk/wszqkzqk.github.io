@@ -105,10 +105,18 @@ Press Ctrl+O to open an editor for editing the input buffer.
 Press Ctrl+C to cancel the response, Ctrl+D to exit the REPL.
 ```
 
+## 基础会话使用
+
 例如，如果我们需要保留上下文信息，可以使用`.session`命令创建一个会话：
 
 ```bash
 .session
+```
+
+如果需要指定会话名称，可以使用`.session <name>`命令：
+
+```bash
+.session my_session
 ```
 
 这时我们可以输入问题，AIChat会自动将问题发送给模型并返回结果。我们也可以使用`.exit session`命令退出会话。
@@ -120,3 +128,41 @@ Press Ctrl+C to cancel the response, Ctrl+D to exit the REPL.
 ```
 
 这时AIChat会将文件内容作为上下文信息发送给模型，并返回结果。如果已经在会话中，我们还可以后续对文件的内容进行询问。
+
+## RAG增强问答
+
+RAG（Retrieval-Augmented Generation）是一种增强问答的技术，它结合了检索和生成模型的优势。AIChat支持RAG功能，我们可以使用`.rag`命令来初始化或访问RAG。例如，如果我们想要基于AIChat的Wiki文档进行增强问答，可以使用以下命令：
+
+```bash
+.rag aichat-wiki
+```
+
+在运行`.rag`命令后，AIChat会要求我们指定Embedding模型并设置相关参数（可以保留默认值）。假设我们之前添加了Google Gemini的API密钥，我们就可以使用Google的Embedding模型来进行RAG增强问答。
+
+设置完模型以后，AIChat还是要求我们设置RAG的内容源，对于AIChat的Wiki文档，我们可以使用`https://github.com/sigoden/aichat/wiki/**`作为内容源，其中`**`表示递归匹配该目录下的所有文件和子目录，将AIChat Wiki的所有页面添加到RAG中。另外，如果需要同时指定多个独立的URL，可以用分号 `;` 分隔它们。
+
+如果使用上述设定，我们即可配置得到一个RAG增强问答的环境：
+
+```log
+> .rag aichat-wiki
+⚙ Initializing RAG...
+> Select embedding model: gemini:text-embedding-004 (max-tokens:2048;max-batch:100;price:0)
+> Set chunk size: 1500
+> Set chunk overlay: 75
+> Add documents: https://github.com/sigoden/aichat/wiki/**
+Load https://github.com/sigoden/aichat/wiki/** [1/1]
+Start crawling url=https://github.com/sigoden/aichat/wiki/ exclude=_history extract=#wiki-body
+Crawled https://github.com/sigoden/aichat/wiki/
+Crawled https://github.com/sigoden/aichat/wiki/Environment-Variables
+Crawled https://github.com/sigoden/aichat/wiki/Macro-Guide
+Crawled https://github.com/sigoden/aichat/wiki/Role-Guide
+Crawled https://github.com/sigoden/aichat/wiki/Command-Line-Guide
+Crawled https://github.com/sigoden/aichat/wiki/Custom-Theme
+Crawled https://github.com/sigoden/aichat/wiki/Custom-REPL-Prompt
+Crawled https://github.com/sigoden/aichat/wiki/FAQ
+Crawled https://github.com/sigoden/aichat/wiki/Chat-REPL-Guide
+Crawled https://github.com/sigoden/aichat/wiki/Configuration-Guide
+Crawled https://github.com/sigoden/aichat/wiki/RAG-Guide
+```
+
+完成以后，我们即可在此RAG环境中进行增强问答。
