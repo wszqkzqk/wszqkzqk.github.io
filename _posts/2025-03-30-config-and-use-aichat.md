@@ -6,7 +6,7 @@ date:       2025-03-30
 author:     wszqkzqk
 header-img: img/llm/ai-bg-lossless.webp
 catalog:    true
-tags:       LLM
+tags:       AI LLM
 ---
 
 ## 前言
@@ -127,7 +127,7 @@ Press Ctrl+C to cancel the response, Ctrl+D to exit the REPL.
 .file /path/to/file
 ```
 
-这时AIChat会将文件内容作为上下文信息发送给模型，并返回结果。如果已经在会话中，我们还可以后续对文件的内容进行询问。
+这时AIChat会将文件内容作为上下文信息发送给模型，并返回结果。如果已经在会话中，我们还可以后续对文件的内容进行询问。很多时候网页版或者客户端的LLM可能对文件上传大小有限制，而AIChat直接指定本地文件时，文件会在本地处理而无需上传到远程服务器，因此**不受网页版大模型通常存在的文件上传大小限制**。
 
 ## RAG增强问答
 
