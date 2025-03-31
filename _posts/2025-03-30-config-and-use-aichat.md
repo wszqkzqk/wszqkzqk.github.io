@@ -52,6 +52,24 @@ clients:
   name: openrouter
   api_base: https://openrouter.ai/api/v1
   api_key: xxxxxx
+  models:
+    # Deepseek
+    - name: deepseek/deepseek-r1:free
+      max_input_tokens: 163840
+    - name: deepseek/deepseek-r1-zero:free
+      max_input_tokens: 163840
+    - name: deepseek/deepseek-chat-v3-0324:free
+      max_input_tokens: 131072
+    # Google Gemini
+    - name: google/gemini-2.5-pro-exp-03-25:free
+      max_input_tokens: 1000000
+      supports_vision: true
+    # Qwen
+    - name: qwen/qwq-32b:free
+      max_input_tokens: 40000
+    - name: qwen/qwen2.5-vl-72b-instruct:free
+      max_input_tokens: 131072
+      supports_vision: true
 ```
 
 ## 使用
