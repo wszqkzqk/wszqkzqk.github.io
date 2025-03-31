@@ -25,6 +25,8 @@ sudo pacman -S aichat
 
 ### Windows
 
+安装MSYS2后，打开MSYS2终端，执行以下命令：
+
 ```bash
 pacman -S mingw-w64-ucrt-x86_64-aichat
 ```
