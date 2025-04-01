@@ -25,7 +25,7 @@ sudo pacman -S aichat
 
 ### Windows
 
-安装MSYS2后，打开MSYS2终端，执行以下命令：
+笔者在2025.03.30为Windows的MSYS2环境增加了`mingw-w64-aichat`包，并在同日[被MSYS2项目接受](https://github.com/msys2/MINGW-packages/commit/2272a99a9c1175695017d8591c05d4e217613cc3)，现已支持直接从MSYS2的官方软件源安装。在确保Windows系统安装MSYS2后，打开MSYS2终端（以UCRT64环境为例），执行以下命令：
 
 ```bash
 pacman -S mingw-w64-ucrt-x86_64-aichat
