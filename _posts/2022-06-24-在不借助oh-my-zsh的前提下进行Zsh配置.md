@@ -33,11 +33,12 @@ MSYS2已经包含在了winget的软件库中，可以直接通过命令安装：
 winget install msys2.msys2
 ```
 
-安装完成后，需要在系统环境变量（现在的Windows系统应该只需要在开始菜单的搜索框中输入`path`就能弹出）中添加如下变量：
+安装完成后，需要在系统环境变量（现在的Windows系统应该只需要在开始菜单的搜索框中输入`path`就能弹出）中添加如下变量，其中设定`MSYS2_PATH_TYPE`为`inherit`是让MSYS2的环境变量继承Windows系统的环境变量所必须的，其余的是笔者的习惯，可选：
 
 |       变量名               |   变量值   |
 |       ----                |    ---    |
 |   MSYS2_PATH_TYPE[^1]     | inherit   |
+|   MSYS[^4]                | winsymlinks:native |   
 
 其实也可以把MSYS2的相关路径（使用的MinGW-w64工具链路径`MSYS2安装路径/使用的MinGW类型/bin`以及MSYS2路径`MSYS2安装路径/usr/bin`）添加到`Path`变量中，方便直接在Windows的cmd或者PowerShell中调用MSYS2命令，但是据说可能会出现一些冲突，然而笔者添加了以后并没有发现什么问题，因此这也可以作为一个可选项。
 
@@ -48,7 +49,9 @@ winget install msys2.msys2
 |D:\msys64\ucrt64\bin[^2] |
 |D:\msys64\usr\bin[^2]    |
 
-添加完成后，在MinTTY中运行MSYS2终端（如果添加了MSYS2可执行文件路径到`Path`环境变量，也可以在Windows终端的PowerShell或cmd环境中执行），安装Zsh：
+如果想要让MSYS2将Windows的用户主目录作为`$HOME`而不是MSYS2下的`/home/用户名`，可以编辑`MSYS2安装路径/etc/nsswitch.conf`文件，将`db_home`一行改为`db_home: windows`。
+
+完成后，在MinTTY中运行MSYS2终端（如果添加了MSYS2可执行文件路径到`Path`环境变量，也可以在Windows终端的PowerShell或cmd环境中执行），安装Zsh：
 
 ```bash
 pacman -S zsh
@@ -96,10 +99,10 @@ oh-my-posh不仅是跨Shell的，它还是跨平台的，Windows与Acrhlinux系�
 winget install JanDeDobbeleer.OhMyPosh
 ```
 
-Arch Linux系发行版则是（使用yay）：
+Arch Linux系发行版则是（使用paru）：
 
 ```bash
-sudo yay -S oh-my-posh-bin
+sudo paru -S oh-my-posh-bin
 ```
 
 #### 预览
@@ -260,3 +263,4 @@ sudo chmod -R +r /usr/share/oh-my-posh/themes/
 [^1]: 指定MSYS2程序读取的环境变量类型，`inherit`表示将系统变量合并到MSYS2环境变量
 [^2]: 注意应当写成本地MSYS2可执行文件目录所在路径或本地使用的MSYS2的MINGW环境的所在路径，且应当保证MINGW环境的所在路径排在前面
 [^3]: 注意不要删除`Path`变量中的原有内容
+[^4]: 指定MSYS2的软链接方式为`winsymlinks:native`，即使用Windows的软链接方式
