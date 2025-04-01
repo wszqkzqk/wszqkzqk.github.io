@@ -160,7 +160,7 @@ Zsh具有许多能够提高生产力的插件，如自动补全插件、语法�
 对于Arch Linux，这些插件都已经集成到了软件源中，可以直接安装：
 
 ```zsh
-yay -S zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search
+paru -S zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search
 ```
 
 对Windows则较为麻烦，需要手动clone到本地：
