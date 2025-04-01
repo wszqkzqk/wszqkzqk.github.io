@@ -56,17 +56,22 @@ clients:
     # Deepseek
     - name: deepseek/deepseek-r1:free
       max_input_tokens: 163840
+      max_output_tokens: 163840
     - name: deepseek/deepseek-chat-v3-0324:free
+      max_input_tokens: 131072
       max_input_tokens: 131072
     # Google Gemini
     - name: google/gemini-2.5-pro-exp-03-25:free
       max_input_tokens: 1000000
+      max_output_tokens: 65536
       supports_vision: true
     # Qwen
     - name: qwen/qwq-32b:free
       max_input_tokens: 40000
-    - name: qwen/qwen2.5-vl-72b-instruct:free
-      max_input_tokens: 131072
+      max_output_tokens: 40000
+    - name: qwen/qwen2.5-vl-32b-instruct:free
+      max_input_tokens: 8192
+      max_output_tokens: 8192
       supports_vision: true
 ```
 
