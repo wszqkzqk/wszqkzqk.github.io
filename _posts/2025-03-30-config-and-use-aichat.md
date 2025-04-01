@@ -56,8 +56,6 @@ clients:
     # Deepseek
     - name: deepseek/deepseek-r1:free
       max_input_tokens: 163840
-    - name: deepseek/deepseek-r1-zero:free
-      max_input_tokens: 163840
     - name: deepseek/deepseek-chat-v3-0324:free
       max_input_tokens: 131072
     # Google Gemini
