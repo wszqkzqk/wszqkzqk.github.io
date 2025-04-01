@@ -38,7 +38,12 @@ winget install msys2.msys2
 |       变量名               |   变量值   |
 |       ----                |    ---    |
 |   MSYS2_PATH_TYPE[^1]     | inherit   |
-|   MSYS[^4]                | winsymlinks:native |   
+|   MSYS[^4]                | winsymlinks:native |
+|   MINGW_ARCH[^5]          | ucrt64    |
+
+[^1]: 指定MSYS2程序读取的环境变量类型，`inherit`表示将系统变量合并到MSYS2环境变量
+[^4]: 指定MSYS2的软链接方式为`winsymlinks:native`，即使用Windows的软链接方式
+[^5]: 指定MSYS2使用的MINGW环境类型，`ucrt64`表示使用UCRT64环境
 
 其实也可以把MSYS2的相关路径（使用的MinGW-w64工具链路径`MSYS2安装路径/使用的MinGW类型/bin`以及MSYS2路径`MSYS2安装路径/usr/bin`）添加到`Path`变量中，方便直接在Windows的cmd或者PowerShell中调用MSYS2命令，但是据说可能会出现一些冲突，然而笔者添加了以后并没有发现什么问题，因此这也可以作为一个可选项。
 
@@ -48,6 +53,9 @@ winget install msys2.msys2
 |           ----          |
 |D:\msys64\ucrt64\bin[^2] |
 |D:\msys64\usr\bin[^2]    |
+
+[^2]: 注意应当写成本地MSYS2可执行文件目录所在路径或本地使用的MSYS2的MINGW环境的所在路径，且应当保证MINGW环境的所在路径排在前面
+[^3]: 注意不要删除`Path`变量中的原有内容
 
 如果想要让MSYS2将Windows的用户主目录作为`$HOME`而不是MSYS2下的`/home/用户名`，可以编辑`MSYS2安装路径/etc/nsswitch.conf`文件，将`db_home`一行改为`db_home: windows`。
 
@@ -258,9 +266,3 @@ cp /etc/zsh/zshrc ~/.zshrc
 ```zsh
 sudo chmod -R +r /usr/share/oh-my-posh/themes/
 ```
-
-
-[^1]: 指定MSYS2程序读取的环境变量类型，`inherit`表示将系统变量合并到MSYS2环境变量
-[^2]: 注意应当写成本地MSYS2可执行文件目录所在路径或本地使用的MSYS2的MINGW环境的所在路径，且应当保证MINGW环境的所在路径排在前面
-[^3]: 注意不要删除`Path`变量中的原有内容
-[^4]: 指定MSYS2的软链接方式为`winsymlinks:native`，即使用Windows的软链接方式
