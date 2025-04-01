@@ -59,7 +59,7 @@ clients:
       max_output_tokens: 163840
     - name: deepseek/deepseek-chat-v3-0324:free
       max_input_tokens: 131072
-      max_input_tokens: 131072
+      max_output_tokens: 131072
     # Google Gemini
     - name: google/gemini-2.5-pro-exp-03-25:free
       max_input_tokens: 1000000
