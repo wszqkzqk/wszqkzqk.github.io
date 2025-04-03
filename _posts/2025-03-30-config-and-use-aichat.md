@@ -35,11 +35,11 @@ pacman -S mingw-w64-ucrt-x86_64-aichat
 
 我们可以在Google的[AI Studio](https://aistudio.google.com/app/apikey)中免费申请API密钥。请注意，API密钥是非常重要的凭证，请不要泄露。
 
-首次运行AIChat时，系统会提示我们配置，包括选择模型服务商、输入API密钥等。我们可以选择Google Gemini作为模型服务商，并输入申请到的API密钥。对于复杂任务，笔者推荐使用强大且免费开放的Gemini 2.5 Pro模型。配置完成后，AIChat会自动保存设置。默认的配置过程十分简单，**一路完成之后就可以直接运行AIChat**，无需再次配置。
+首次运行AIChat时，系统会提示我们配置，包括选择模型服务商、输入API密钥等。我们可以选择Google Gemini作为模型服务商，并输入申请到的API密钥，然后则需要选择我们想要使用的模型。配置完成后，AIChat会自动保存设置。默认的配置过程十分简单，**一路完成之后就可以直接运行AIChat**，无需再次配置。
 
 如果我们还想要添加多个模型服务商，可以在配置文件中手动添加。配置文件位于用户数据目录下的`aichat/config.yaml`（在Linux上默认为`~/.config/aichat/config.yaml`，在Windows上默认为`%APPDATA%\aichat\config.yaml`）。
 
-此外，AIChat默认的上下文压缩阈值较小，为`4000`，现在比较强大的大模型普遍支持128 K的上下文，我们将阈值设定为`100000`一般是合理的。笔者在一般聊天中更喜欢使用DeepSeek v3模型（近期Google Gemini 2.5 Pro有时候容易无响应），以下是笔者的示例配置文件：
+此外，AIChat默认的上下文压缩阈值较小，为`4000`，现在比较强大的大模型普遍支持128 K及以上的上下文，我们将阈值设定为`100000`一般是合理的。笔者在一般聊天中更喜欢使用DeepSeek v3模型（近期Google Gemini 2.5 Pro有时候容易无响应），以下是笔者的示例配置文件：
 
 ```yaml
 compress_threshold: 100000
