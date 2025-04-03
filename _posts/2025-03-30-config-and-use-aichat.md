@@ -39,12 +39,12 @@ pacman -S mingw-w64-ucrt-x86_64-aichat
 
 如果我们想要添加多个模型服务商，可以在配置文件中手动添加。配置文件位于用户数据目录下的`aichat/config.yaml`（在Linux上默认为`~/.config/aichat/config.yaml`，在Windows上默认为`%APPDATA%\aichat\config.yaml`）。
 
-此外，AIChat默认的上下文压缩阈值较小，为`4000`，现在比较强大的大模型普遍支持128 K的上下文，我们将阈值设定为`100000`一般是合理的。以下是一个示例配置文件：
+此外，AIChat默认的上下文压缩阈值较小，为`4000`，现在比较强大的大模型普遍支持128 K的上下文，我们将阈值设定为`100000`一般是合理的。笔者在一般聊天中更喜欢使用DeepSeek v3模型，以下是笔者的一个示例配置文件：
 
 ```yaml
 compress_threshold: 100000
 
-model: gemini:gemini-2.5-pro-exp-03-25
+model: openrouter:deepseek/deepseek-chat-v3-0324:free
 clients:
 - type: gemini
   api_key: xxxxxx
