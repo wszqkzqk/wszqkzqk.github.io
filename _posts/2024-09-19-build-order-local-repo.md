@@ -55,20 +55,19 @@ fi
 
 CURRENT_DIR=$(pwd)
 DB_FILE="$1"
-DB_DIR=$(dirname "$DB_FILE")
+DB_DIR=$(dirname "$1")
 
 shift
-
 for pkg in "$@"; do
   pkg_basename=$(basename "$pkg")
-  if [[ "$pkg_basename" == *-debug-* ]]; then
-    echo "Ignoring debug package: $pkg_basename"
-    continue
-  fi
 
   cp -f "$pkg" "$DB_DIR"
+  if [[ "$pkg_basename" == *-debug-* ]]; then
+    echo "Found debug package: $pkg_basename"
+    continue
+  fi
   cd "$DB_DIR"
-  repo-add "$DB_FILE" "$pkg_basename"
+  repo-add $DB_FILE "$pkg_basename"
   cd "$CURRENT_DIR"
 done
 ```
