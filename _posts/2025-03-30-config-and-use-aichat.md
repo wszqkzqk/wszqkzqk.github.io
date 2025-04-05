@@ -308,7 +308,7 @@ find /tmp -maxdepth 1 -name "*.png" -exec bash -c 'for f; do cwebp -lossless "$f
 
 ### 模型幻觉率榜单
 
-以下内容摘自[Hugging Face](https://huggingface.co/spaces/vectara/leaderboard)的榜单，列出了当前主流模型的幻觉率、事实一致性率、回答率等指标。我们可以根据这些指标来选择合适的模型。
+以下内容摘自[Hugging Face](https://huggingface.co/spaces/vectara/leaderboard)的榜单，使用[Hallucination](https://github.com/vectara/hallucination-leaderboard)评估，列出了当前主流模型的幻觉率、事实一致性率、回答率等指标。我们可以根据这些指标来选择合适的模型。
 
 | 排名 | 模型名称                                                                                       | 幻觉率 (%) | 事实一致性率 (%) | 回答率 (%) | 平均摘要长度 | 类型     |
 |------|-----------------------------------------------------------------------------------------------|------------|------------------|------------|--------------|----------|
