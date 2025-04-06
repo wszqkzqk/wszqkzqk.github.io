@@ -267,7 +267,7 @@ Crawled https://github.com/sigoden/aichat/wiki/RAG-Guide
 
 此外，我们在RAG中对于模型的需求往往与普通会话不同，RAG中我们往往需要要求模型的幻觉率尽可能地低，可以参考附录的[榜单](#模型幻觉率榜单)来选择合适的模型。
 
-## 内置 HTTP 服务器
+## 内置HTTP服务器
 
 启动本地服务：
 
@@ -285,6 +285,14 @@ aichat --serve
 ```
 aichat --serve 127.0.0.1:1234
 ```
+
+如果想要在AIChat提供的HTTP服务中直接与LLM交互，可以打开运行`aichat --serve`所输出的`LLM Playground`的链接（例如`http://127.0.0.1:8000/playground`），在这里我们可以直接与LLM进行交互。
+
+|[![#~/img/llm/aichat-http-serve.webp](/img/llm/aichat-http-serve.webp)](/img/llm/aichat-http-serve.webp)|
+|:----:|
+|在浏览器中打开AIChat简洁的HTTP服务界面|
+
+AIChat的网页版默认会运行在一个不保存的会话中，点击左上角的`+`图标可以创建一个新的会话。不过笔者没有找到在网页中保存会话的功能，网页版中的所有会话似乎会在停止服务后丢失。
 
 ## Shell集成
 
