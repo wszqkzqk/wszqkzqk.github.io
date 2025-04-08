@@ -316,7 +316,7 @@ find /tmp -maxdepth 1 -name "*.png" -exec bash -c 'for f; do cwebp -lossless "$f
 
 ### 模型幻觉率榜单
 
-以下内容摘自[Hugging Face](https://huggingface.co/spaces/vectara/leaderboard)的[榜单](https://vectara-leaderboard.hf.space/?__theme=system)，使用[Hallucination](https://github.com/vectara/hallucination-leaderboard)评估，列出了当前主流模型的幻觉率、事实一致性率、回答率等指标。我们可以根据这些指标来选择合适的模型。
+以下内容摘自[Hugging Face](https://huggingface.co/spaces/vectara/leaderboard)的[榜单](https://vectara-leaderboard.hf.space/?__theme=system)，使用[Hallucination](https://github.com/vectara/hallucination-leaderboard)评估，列出了当前主流模型的幻觉率、事实一致性率、回答率等指标。我们可以根据这些指标来选择合适的模型。[^1]
 
 | T | Model                                             | Hallucination Rate (%) | Factual Consistency Rate (%) | Answer Rate (%) | Average Summary Length | Type            |
 |----|---------------------------------------------------|-------------------------|------------------------------|-----------------|-----------------------|-----------------|
@@ -448,3 +448,5 @@ find /tmp -maxdepth 1 -name "*.png" -exec bash -c 'for f; do cwebp -lossless "$f
 | ?  | Qwen/Qwen2.5-0.5B-Instruct                         | 25.2                    | 74.8                         | 100.0            | 72.6                  |                 |
 | ?  | google/gemma-1.1-2b-it                             | 27.8                    | 72.2                         | 100.0            | 66.8                  |                 |
 | ⭕ | tiiuae/falcon-7b-instruct                          | 29.9                    | 70.1                         | 90.0             | 75.5                  | instruction-tuned |
+
+[^1]: **S. Hughes, M. Bae**, "Vectara Hallucination Leaderboard", Vectara, Inc., 2023. [Online]. Available: [https://github.com/vectara/hallucination-leaderboard](https://github.com/vectara/hallucination-leaderboard).
