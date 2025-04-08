@@ -316,133 +316,135 @@ find /tmp -maxdepth 1 -name "*.png" -exec bash -c 'for f; do cwebp -lossless "$f
 
 ### 模型幻觉率榜单
 
-以下内容摘自[Hugging Face](https://huggingface.co/spaces/vectara/leaderboard)的榜单，使用[Hallucination](https://github.com/vectara/hallucination-leaderboard)评估，列出了当前主流模型的幻觉率、事实一致性率、回答率等指标。我们可以根据这些指标来选择合适的模型。
+以下内容摘自[Hugging Face](https://huggingface.co/spaces/vectara/leaderboard)的[榜单](https://vectara-leaderboard.hf.space/?__theme=system)，使用[Hallucination](https://github.com/vectara/hallucination-leaderboard)评估，列出了当前主流模型的幻觉率、事实一致性率、回答率等指标。我们可以根据这些指标来选择合适的模型。
 
-| 排名 | 模型名称                                                                                       | 幻觉率 (%) | 事实一致性率 (%) | 回答率 (%) | 平均摘要长度 | 类型     |
-|------|-----------------------------------------------------------------------------------------------|------------|------------------|------------|--------------|----------|
-| ?    | google/gemini-2.0-flash-001                                                                  | 0.7        | 99.3             | 100.0      | 65.2         |          |
-| ?    | openai/o3-mini-high-reasoning                                                                | 0.8        | 99.2             | 100.0      | 79.5         |          |
-| ?    | google/gemini-2.0-pro-exp-02-05                                                             | 0.8        | 99.2             | 99.7       | 61.5         |          |
-| ?    | google/gemini-2.5-pro-exp-03-25                                                             | 1.1        | 98.9             | 95.1       | 72.9         |          |
-| ?    | google/gemini-2.0-flash-lite-preview-02-05                                                 | 1.2        | 98.8             | 99.5       | 60.9         |          |
-| ?    | openai/gpt-4.5-preview                                                                       | 1.2        | 98.8             | 100.0      | 77.0         |          |
-| ?    | THUDM/glm-4-9b-chat                                                                          | 1.3        | 98.7             | 100.0      | 58.1         |          |
-| ?    | gemini-2.0-flash-exp                                                                         | 1.3        | 98.7             | 99.9       | 60.0         |          |
-| ?    | openai/o1-mini                                                                               | 1.4        | 98.6             | 100.0      | 78.3         |          |
-| ?    | openai/GPT-4o                                                                                | 1.5        | 98.5             | 100.0      | 77.8         |          |
-| ?    | amazon/nova-micro-v1                                                                         | 1.6        | 98.4             | 100.0      | 90.0         |          |
-| ?    | openai/GPT-4o-mini                                                                           | 1.7        | 98.3             | 100.0      | 76.3         |          |
-| 🟢   | openai/GPT-4-Turbo                                                                           | 1.7        | 98.3             | 100.0      | 86.2         | 预训练   |
-| ?    | amazon/nova-pro-v1                                                                           | 1.8        | 98.2             | 100.0      | 85.5         |          |
-| ?    | google/gemini-2.0-flash-thinking-exp                                                         | 1.8        | 98.2             | 99.3       | 73.2         |          |
-| ?    | amazon/nova-lite-v1                                                                          | 1.8        | 98.2             | 99.9       | 80.7         |          |
-| 🟢   | openai/GPT-4                                                                                 | 1.8        | 98.2             | 100.0      | 81.1         | 预训练   |
-| 🟢   | openai/GPT-3.5-Turbo                                                                         | 1.9        | 98.1             | 99.6       | 84.1         | 预训练   |
-| ?    | x-ai/grok-2-1212                                                                             | 1.9        | 98.1             | 100.0      | 86.5         |          |
-| ?    | ai21/jamba-1.6-large                                                                         | 2.3        | 97.7             | 99.9       | 85.6         |          |
-| ?    | deepseek/deepseek-chat                                                                        | 2.4        | 97.6             | 100.0      | 83.2         |          |
-| ?    | openai/o1                                                                                    | 2.4        | 97.6             | 99.9       | 73.0         |          |
-| ?    | openai/o1-pro                                                                                | 2.4        | 97.6             | 100.0      | 81.0         |          |
-| ?    | microsoft/Orca-2-13b                                                                          | 2.5        | 97.5             | 100.0      | 66.2         |          |
-| ?    | microsoft/Phi-3.5-MoE-instruct                                                               | 2.5        | 97.5             | 96.3       | 69.7         |          |
-| 🟦   | Intel/neural-chat-7b-v3-3                                                                    | 2.6        | 97.4             | 100.0      | 60.7         | 强化学习调优 |
-| ?    | Qwen/Qwen2.5-7B-Instruct                                                                     | 2.8        | 97.2             | 100.0      | 71.0         |          |
-| ?    | google/gemma-3-12b-it                                                                         | 2.8        | 97.2             | 100.0      | 69.6         |          |
-| ?    | ai21labs/AI21-Jamba-1.5-Mini                                                                 | 2.9        | 97.1             | 95.6       | 74.5         |          |
-| ?    | x-ai/grok-2-vision-1212                                                                      | 2.9        | 97.1             | 100.0      | 79.8         |          |
-| ?    | qwen/qwen-max                                                                                 | 2.9        | 97.1             | 88.4       | 90.4         |          |
-| ?    | google/gemma-3-27b-it                                                                         | 3.0        | 97.0             | 100.0      | 62.5         |          |
-| ?    | Qwen/Qwen2.5-32B-Instruct                                                                    | 3.0        | 97.0             | 100.0      | 67.9         |          |
-| ?    | snowflake/snowflake-arctic-instruct                                                           | 3.0        | 97.0             | 100.0      | 68.7         |          |
-| ?    | microsoft/Phi-3-mini-128k-instruct                                                           | 3.1        | 96.9             | 100.0      | 60.1         |          |
-| ?    | mistralai/Mistral-Small-24B-Instruct-2501                                                    | 3.1        | 96.9             | 100.0      | 74.9         |          |
-| ?    | openai/o1-preview                                                                             | 3.3        | 96.7             | 100.0      | 119.3        |          |
-| ?    | google/gemini-1.5-flash-002                                                                  | 3.4        | 96.6             | 99.9       | 59.4         |          |
-| ?    | microsoft/Phi-4-mini-instruct                                                                 | 3.4        | 96.6             | 100.0      | 69.7         |          |
-| ?    | openai/chatgpt-4o-latest                                                                      | 3.5        | 96.5             | 100.0      | 63.5         |          |
-| ?    | google/gemma-3-4b-it                                                                          | 3.7        | 96.3             | 100.0      | 63.7         |          |
-| ?    | 01-ai/Yi-1.5-34B-Chat                                                                        | 3.7        | 96.3             | 100.0      | 83.7         |          |
-| ?    | deepseek/deepseek-v3                                                                          | 3.9        | 96.1             | 100.0      | 88.2         |          |
-| ?    | meta-llama/Meta-Llama-3.1-405B-Instruct                                                       | 3.9        | 96.1             | 99.6       | 85.7         |          |
-| ?    | meta-llama/Llama-3.3-70B-Instruct                                                            | 4.0        | 96.0             | 100.0      | 85.3         |          |
-| ?    | internlm/internlm3-8b-instruct                                                                | 4.0        | 96.0             | 100.0      | 97.5         |          |
-| ?    | microsoft/Phi-3-mini-4k-instruct                                                              | 4.0        | 96.0             | 100.0      | 86.8         |          |
-| ?    | mistralai/Mistral-Large2                                                                      | 4.1        | 95.9             | 100.0      | 77.4         |          |
-| ?    | microsoft/Phi-3.5-mini-instruct                                                               | 4.1        | 95.9             | 100.0      | 75.0         |          |
-| ?    | meta-llama/Llama-3-70B-chat-hf                                                               | 4.1        | 95.9             | 99.2       | 68.5         |          |
-| ?    | Qwen/Qwen2.5-14B-Instruct                                                                    | 4.2        | 95.8             | 100.0      | 74.8         |          |
-| ?    | Qwen/Qwen2-VL-7B-Instruct                                                                    | 4.2        | 95.8             | 100.0      | 73.9         |          |
-| ?    | meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo                                              | 4.3        | 95.7             | 100.0      | 79.8         |          |
-| ?    | Qwen/Qwen2.5-72B-Instruct                                                                    | 4.3        | 95.7             | 100.0      | 80.8         |          |
-| ?    | anthropic/claude-3-7-sonnet-latest                                                           | 4.4        | 95.6             | 100.0      | 97.8         |          |
-| ?    | cohere/command-a-03-2025                                                                     | 4.5        | 95.5             | 100.0      | 77.3         |          |
-| ?    | anthropic/claude-3-7-sonnet-latest-think                                                     | 4.5        | 95.5             | 99.8       | 99.9         |          |
-| ?    | ai21/jamba-1.6-mini                                                                          | 4.6        | 95.4             | 100.0      | 82.3         |          |
-| ?    | anthropic/Claude-3-5-sonnet                                                                   | 4.6        | 95.4             | 100.0      | 95.9         |          |
-| ?    | xai/grok-beta                                                                                 | 4.6        | 95.4             | 100.0      | 91.0         |          |
-| ?    | mistralai/Mixtral-8x22B-Instruct-v0.1                                                        | 4.7        | 95.3             | 99.9       | 92.0         |          |
-| ?    | microsoft/phi-4                                                                               | 4.7        | 95.3             | 100.0      | 100.3        |          |
-| ?    | Qwen/Qwen2-72B-Instruct                                                                      | 4.7        | 95.3             | 100.0      | 100.1        |          |
-| ?    | allenai/olmo-2-0325-32b-instruct                                                             | 4.9        | 95.1             | 99.9       | 100.0        |          |
-| ?    | cohere/command-r-08-2024                                                                     | 4.9        | 95.1             | 100.0      | 68.7         |          |
-| ?    | anthropic/claude-3-5-haiku-20241022                                                          | 4.9        | 95.1             | 100.0      | 92.2         |          |
-| ?    | 01-ai/Yi-1.5-9B-Chat                                                                         | 4.9        | 95.1             | 100.0      | 85.7         |          |
-| ?    | meta-llama/Meta-Llama-3.1-70B-Instruct                                                       | 5.0        | 95.0             | 100.0      | 79.6         |          |
-| ?    | google/gemma-3-1b-it                                                                          | 5.3        | 94.7             | 99.9       | 57.9         |          |
-| ?    | meta-llama/Meta-Llama-3.1-8B-Instruct                                                        | 5.4        | 94.6             | 100.0      | 71.0         |          |
-| ?    | cohere/command-r-plus-08-2024                                                                 | 5.4        | 94.6             | 100.0      | 68.4         |          |
-| ?    | meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo                                              | 5.5        | 94.5             | 100.0      | 67.3         |          |
-| ?    | mistralai/mistral-small-3.1-24b-instruct                                                      | 5.6        | 94.4             | 100.0      | 73.1         |          |
-| ?    | mistralai/mistral-large-latest                                                                | 5.864811133200803 | 94.1351888667992 | 100.0 | 79.55367793240556 |          |
-| 🟢   | meta-llama/Llama-2-70b-chat-hf                                                               | 5.9        | 94.1             | 99.9       | 84.9         | 预训练   |
-| ?    | ibm-granite/granite-3.0-8b-instruct                                                           | 6.5        | 93.5             | 100.0      | 74.2         |          |
-| ?    | google/gemini-1.5-flash-001                                                                  | 6.6        | 93.4             | 99.9       | 63.3         |          |
-| ?    | mistralai/pixtral-large-latest                                                                | 6.6        | 93.4             | 100.0      | 76.4         |          |
-| ?    | google/gemini-1.5-pro-002                                                                    | 6.6        | 93.4             | 99.9       | 62.0         |          |
-| 🟢   | microsoft/phi-2                                                                              | 6.7        | 93.3             | 91.5       | 80.8         | 预训练   |
-| ?    | Qwen/Qwen2.5-3B-Instruct                                                                     | 7.0        | 93.0             | 100.0      | 70.4         |          |
-| ?    | google/gemma-2-2b-it                                                                          | 7.0        | 93.0             | 100.0      | 62.2         |          |
-| ?    | meta-llama/Llama-3-8B-chat-hf                                                                | 7.4        | 92.6             | 99.8       | 79.7         |          |
-| ?    | mistralai/ministral-8b-latest                                                                 | 7.5        | 92.5             | 100.0      | 62.7         |          |
-| 🟢   | google/Gemini-Pro                                                                            | 7.7        | 92.3             | 98.4       | 89.5         | 预训练   |
-| ?    | 01-ai/Yi-1.5-6B-Chat                                                                         | 7.9        | 92.1             | 100.0      | 98.9         |          |
-| ?    | meta-llama/Llama-3.2-3B-Instruct-Turbo                                                       | 7.9        | 92.1             | 100.0      | 72.2         |          |
-| ?    | deepseek/deepseek-v3-0324                                                                    | 8.0        | 92.0             | 100.0      | 78.9         |          |
-| ?    | mistralai/ministral-3b-latest                                                                 | 8.3        | 91.7             | 100.0      | 73.2         |          |
-| ?    | databricks/dbrx-instruct                                                                     | 8.3        | 91.7             | 100.0      | 85.9         |          |
-| ?    | Qwen/Qwen2-VL-2B-Instruct                                                                    | 8.3        | 91.7             | 100.0      | 81.8         |          |
-| ?    | cohere/c4ai-aya-expanse-32b                                                                  | 8.5        | 91.5             | 99.9       | 81.9         |          |
-| ?    | anthropic/Claude-3-5-Sonnet                                                                   | 8.6        | 91.4             | 100.0      | 103.0        |          |
-| ?    | ibm-granite/granite-3.1-8b-instruct                                                           | 8.6        | 91.4             | 100.0      | 107.4        |          |
-| ?    | mistralai/mistral-small-latest                                                                | 8.6        | 91.4             | 100.0      | 74.2         |          |
-| ?    | ibm-granite/granite-3.2-8b-instruct                                                           | 8.7        | 91.3             | 100.0      | 120.1        |          |
-| ?    | ibm-granite/granite-3.0-2b-instruct                                                           | 8.8        | 91.2             | 100.0      | 81.6         |          |
-| ?    | google/gemini-1.5-pro-001                                                                    | 9.1        | 90.9             | 99.8       | 61.6         |          |
-| ?    | mistralai/Mistral-7B-Instruct-v0.3                                                            | 9.5        | 90.5             | 100.0      | 98.4         |          |
-| ?    | google/gemma-2-9b-it                                                                          | 10.1       | 89.9             | 100.0      | 70.2         |          |
-| 🟢   | anthropic/Claude-3-opus                                                                      | 10.1       | 89.9             | 95.5       | 92.1         | 预训练   |
-| 🟢   | meta-llama/Llama-2-13b-chat-hf                                                               | 10.5       | 89.5             | 99.8       | 82.1         | 预训练   |
-| ?    | allenai/OLMo-2-1124-13B-Instruct                                                             | 10.8       | 89.2             | 100.0      | 82.0         |          |
-| ?    | allenai/OLMo-2-1124-7B-Instruct                                                              | 11.1       | 88.9             | 100.0      | 112.6        |          |
-| ?    | mistralai/Mistral-Nemo-Instruct-2407                                                          | 11.2       | 88.8             | 100.0      | 69.9         |          |
-| 🟢   | meta-llama/Llama-2-7b-chat-hf                                                                | 11.3       | 88.7             | 99.6       | 119.9        | 预训练   |
-| ?    | microsoft/WizardLM-2-8x22B                                                                   | 11.7       | 88.3             | 99.9       | 140.8        |          |
-| ?    | cohere/c4ai-aya-expanse-8b                                                                   | 12.2       | 87.8             | 99.9       | 83.9         |          |
-| ?    | Qwen/QwQ-32B-Preview                                                                         | 12.9       | 87.1             | 100.0      | 140.2        |          |
-| 🟢   | amazon/Titan-Express                                                                          | 13.5       | 86.5             | 99.5       | 98.4         | 预训练   |
-| 🟢   | google/PaLM-2                                                                                 | 14.1       | 85.9             | 99.8       | 86.6         | 预训练   |
-| ?    | deepseek/deepseek-r1                                                                          | 14.3       | 85.7             | 100.0      | 77.1         |          |
-| ⭕   | google/gemma-7b-it                                                                            | 14.8       | 85.2             | 100.0      | 113.0        | 指令调优  |
-| ?    | ibm-granite/granite-3.1-2b-instruct                                                          | 15.7       | 84.3             | 100.0      | 107.7        |          |
-| ?    | Qwen/Qwen2.5-1.5B-Instruct                                                                   | 15.8       | 84.2             | 100.0      | 70.7         |          |
-| 🟢   | anthropic/Claude-3-sonnet                                                                     | 16.3       | 83.7             | 100.0      | 108.5        | 预训练   |
-| ?    | ibm-granite/granite-3.2-2b-instruct                                                          | 16.5       | 83.5             | 100.0      | 117.3        |          |
-| ?    | google/gemma-1.1-7b-it                                                                        | 17.0       | 83.0             | 100.0      | 64.3         |          |
-| 🟢   | anthropic/Claude-2                                                                            | 17.4       | 82.6             | 99.3       | 87.5         | 预训练   |
-| ?    | google/flan-t5-large                                                                          | 18.3       | 81.7             | 99.3       | 20.9         |          |
-| ⭕   | mistralai/Mixtral-8x7B-Instruct-v0.1                                                         | 20.1       | 79.9             | 99.9       | 90.7         | 指令调优  |
-| ?    | meta-llama/Llama-3.2-1B-Instruct                                                             | 20.7       | 79.3             | 100.0      | 71.5         |          |
-| ?    | apple/OpenELM-3B-Instruct                                                                    | 24.8       | 75.2             | 99.3       | 47.2         |          |
-| ?    | Qwen/Qwen2.5-0.5B-Instruct                                                                   | 25.2       | 74.8             | 100.0      | 72.6         |          |
-| ?    | google/gemma-1.1-2b-it                                                                        | 27.8       | 72.2             | 100.0      | 66.8         |          |
-| ⭕   | tiiuae/falcon-7b-instruct                                                                    | 29.9       | 70.1             | 90.0       | 75.5         | 指令调优  |
+| T | Model                                             | Hallucination Rate (%) | Factual Consistency Rate (%) | Answer Rate (%) | Average Summary Length | Type            |
+|----|---------------------------------------------------|-------------------------|------------------------------|-----------------|-----------------------|-----------------|
+| ?  | google/gemini-2.0-flash-001                       | 0.7                     | 99.3                         | 100.0           | 65.2                  |                 |
+| ?  | google/gemini-2.0-pro-exp-02-05                   | 0.8                     | 99.2                         | 99.7             | 61.5                  |                 |
+| ?  | openai/o3-mini-high-reasoning                     | 0.8                     | 99.2                         | 100.0            | 79.5                  |                 |
+| ?  | google/gemini-2.5-pro-exp-03-25                   | 1.1                     | 98.9                         | 95.1             | 72.9                  |                 |
+| ?  | google/gemini-2.0-flash-lite-preview-02-05       | 1.2                     | 98.8                         | 99.5             | 60.9                  |                 |
+| ?  | openai/gpt-4.5-preview                             | 1.2                     | 98.8                         | 100.0            | 77.0                  |                 |
+| ?  | gemini-2.0-flash-exp                               | 1.3                     | 98.7                         | 99.9             | 60.0                  |                 |
+| ?  | THUDM/glm-4-9b-chat                                | 1.3                     | 98.7                         | 100.0            | 58.1                  |                 |
+| ?  | openai/o1-mini                                     | 1.4                     | 98.6                         | 100.0            | 78.3                  |                 |
+| ?  | openai/GPT-4o                                      | 1.5                     | 98.5                         | 100.0            | 77.8                  |                 |
+| ?  | amazon/nova-micro-v1                              | 1.6                     | 98.4                         | 100.0            | 90.0                  |                 |
+| 🟢 | openai/GPT-4-Turbo                                 | 1.7                     | 98.3                         | 100.0            | 86.2                  | pretrained       |
+| ?  | openai/GPT-4o-mini                                 | 1.7                     | 98.3                         | 100.0            | 76.3                  |                 |
+| ?  | google/gemini-2.0-flash-thinking-exp              | 1.8                     | 98.2                         | 99.3             | 73.2                  |                 |
+| ?  | amazon/nova-pro-v1                                 | 1.8                     | 98.2                         | 100.0            | 85.5                  |                 |
+| ?  | amazon/nova-lite-v1                                | 1.8                     | 98.2                         | 99.9             | 80.7                  |                 |
+| 🟢 | openai/GPT-4                                       | 1.8                     | 98.2                         | 100.0            | 81.1                  | pretrained       |
+| ?  | x-ai/grok-2-1212                                   | 1.9                     | 98.1                         | 100.0            | 86.5                  |                 |
+| 🟢 | openai/GPT-3.5-Turbo                               | 1.9                     | 98.1                         | 99.6             | 84.1                  | pretrained       |
+| ?  | ai21/jamba-1.6-large                               | 2.3                     | 97.7                         | 99.9             | 85.6                  |                 |
+| ?  | deepseek/deepseek-chat                             | 2.4                     | 97.6                         | 100.0            | 83.2                  |                 |
+| ?  | openai/o1                                          | 2.4                     | 97.6                         | 99.9             | 73.0                  |                 |
+| ?  | openai/o1-pro                                      | 2.4                     | 97.6                         | 100.0            | 81.0                  |                 |
+| ?  | microsoft/Orca-2-13b                               | 2.5                     | 97.5                         | 100.0            | 66.2                  |                 |
+| ?  | microsoft/Phi-3.5-MoE-instruct                     | 2.5                     | 97.5                         | 96.3             | 69.7                  |                 |
+| 🟦 | Intel/neural-chat-7b-v3-3                          | 2.6                     | 97.4                         | 100.0            | 60.7                  | RL-tuned         |
+| ?  | Qwen/Qwen2.5-7B-Instruct                           | 2.8                     | 97.2                         | 100.0            | 71.0                  |                 |
+| ?  | google/gemma-3-12b-it                              | 2.8                     | 97.2                         | 100.0            | 69.6                  |                 |
+| ?  | x-ai/grok-2-vision-1212                            | 2.9                     | 97.1                         | 100.0            | 79.8                  |                 |
+| ?  | ai21labs/AI21-Jamba-1.5-Mini                      | 2.9                     | 97.1                         | 95.6             | 74.5                  |                 |
+| ?  | qwen/qwen-max                                      | 2.9                     | 97.1                         | 88.4             | 90.4                  |                 |
+| ?  | Qwen/Qwen2.5-32B-Instruct                          | 3.0                     | 97.0                         | 100.0            | 67.9                  |                 |
+| ?  | snowflake/snowflake-arctic-instruct                | 3.0                     | 97.0                         | 100.0            | 68.7                  |                 |
+| ?  | google/gemma-3-27b-it                              | 3.0                     | 97.0                         | 100.0            | 62.5                  |                 |
+| ?  | microsoft/Phi-3-mini-128k-instruct                 | 3.1                     | 96.9                         | 100.0            | 60.1                  |                 |
+| ?  | mistralai/Mistral-Small-24B-Instruct-2501         | 3.1                     | 96.9                         | 100.0            | 74.9                  |                 |
+| ?  | openai/o1-preview                                  | 3.3                     | 96.7                         | 100.0            | 119.3                 |                 |
+| ?  | google/gemini-1.5-flash-002                       | 3.4                     | 96.6                         | 99.9             | 59.4                  |                 |
+| ?  | microsoft/Phi-4-mini-instruct                      | 3.4                     | 96.6                         | 100.0            | 69.7                  |                 |
+| ?  | openai/chatgpt-4o-latest                           | 3.5                     | 96.5                         | 100.0            | 63.5                  |                 |
+| ?  | 01-ai/Yi-1.5-34B-Chat                             | 3.7                     | 96.3                         | 100.0            | 83.7                  |                 |
+| ?  | google/gemma-3-4b-it                               | 3.7                     | 96.3                         | 100.0            | 63.7                  |                 |
+| ?  | meta-llama/Meta-Llama-3.1-405B-Instruct            | 3.9                     | 96.1                         | 99.6             | 85.7                  |                 |
+| ?  | deepseek/deepseek-v3                               | 3.9                     | 96.1                         | 100.0            | 88.2                  |                 |
+| ?  | meta-llama/Llama-3.3-70B-Instruct                  | 4.0                     | 96.0                         | 100.0            | 85.3                  |                 |
+| ?  | microsoft/Phi-3-mini-4k-instruct                   | 4.0                     | 96.0                         | 100.0            | 86.8                  |                 |
+| ?  | internlm/internlm3-8b-instruct                     | 4.0                     | 96.0                         | 100.0            | 97.5                  |                 |
+| ?  | mistralai/Mistral-Large2                           | 4.1                     | 95.9                         | 100.0            | 77.4                  |                 |
+| ?  | meta-llama/Llama-3-70B-chat-hf                     | 4.1                     | 95.9                         | 99.2             | 68.5                  |                 |
+| ?  | microsoft/Phi-3.5-mini-instruct                    | 4.1                     | 95.9                         | 100.0            | 75.0                  |                 |
+| ?  | Qwen/Qwen2.5-14B-Instruct                          | 4.2                     | 95.8                         | 100.0            | 74.8                  |                 |
+| ?  | Qwen/Qwen2-VL-7B-Instruct                          | 4.2                     | 95.8                         | 100.0            | 73.9                  |                 |
+| ?  | Qwen/Qwen2.5-72B-Instruct                          | 4.3                     | 95.7                         | 100.0            | 80.8                  |                 |
+| ?  | meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo    | 4.3                     | 95.7                         | 100.0            | 79.8                  |                 |
+| ?  | anthropic/claude-3-7-sonnet-latest                 | 4.4                     | 95.6                         | 100.0            | 97.8                  |                 |
+| ?  | anthropic/claude-3-7-sonnet-latest-think           | 4.5                     | 95.5                         | 99.8             | 99.9                  |                 |
+| ?  | cohere/command-a-03-2025                           | 4.5                     | 95.5                         | 100.0            | 77.3                  |                 |
+| ?  | meta-llama/llama-4-maverick                        | 4.6                     | 95.4                         | 100.0            | 84.8                  |                 |
+| ?  | xai/grok-beta                                      | 4.6                     | 95.4                         | 100.0            | 91.0                  |                 |
+| ?  | ai21/jamba-1.6-mini                                | 4.6                     | 95.4                         | 100.0            | 82.3                  |                 |
+| ?  | anthropic/Claude-3-5-sonnet                        | 4.6                     | 95.4                         | 100.0            | 95.9                  |                 |
+| ?  | Qwen/Qwen2-72B-Instruct                            | 4.7                     | 95.3                         | 100.0            | 100.1                 |                 |
+| ?  | mistralai/Mixtral-8x22B-Instruct-v0.1              | 4.7                     | 95.3                         | 99.9             | 92.0                  |                 |
+| ?  | microsoft/phi-4                                    | 4.7                     | 95.3                         | 100.0            | 100.3                 |                 |
+| ?  | meta-llama/llama-4-scout                           | 4.7                     | 95.3                         | 100.0            | 80.7                  |                 |
+| ?  | anthropic/claude-3-5-haiku-20241022                | 4.9                     | 95.1                         | 100.0            | 92.2                  |                 |
+| ?  | 01-ai/Yi-1.5-9B-Chat                              | 4.9                     | 95.1                         | 100.0            | 85.7                  |                 |
+| ?  | allenai/olmo-2-0325-32b-instruct                  | 4.9                     | 95.1                         | 99.9             | 100.0                 |                 |
+| ?  | cohere/command-r-08-2024                           | 4.9                     | 95.1                         | 100.0            | 68.7                  |                 |
+| ?  | meta-llama/Meta-Llama-3.1-70B-Instruct             | 5.0                     | 95.0                         | 100.0            | 79.6                  |                 |
+| ?  | google/gemma-3-1b-it                               | 5.3                     | 94.7                         | 99.9             | 57.9                  |                 |
+| ?  | cohere/command-r-plus-08-2024                      | 5.4                     | 94.6                         | 100.0            | 68.4                  |                 |
+| ?  | meta-llama/Meta-Llama-3.1-8B-Instruct              | 5.4                     | 94.6                         | 100.0            | 71.0                  |                 |
+| ?  | meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo    | 5.5                     | 94.5                         | 100.0            | 67.3                  |                 |
+| ?  | mistralai/mistral-small-3.1-24b-instruct           | 5.6                     | 94.4                         | 100.0            | 73.1                  |                 |
+| ?  | mistralai/mistral-large-latest                     | 5.864811133200803      | 94.1351888667992             | 100.0            | 79.55367793240556     |                 |
+| 🟢 | meta-llama/Llama-2-70b-chat-hf                     | 5.9                     | 94.1                         | 99.9             | 84.9                  | pretrained       |
+| ?  | ibm-granite/granite-3.0-8b-instruct                | 6.5                     | 93.5                         | 100.0            | 74.2                  |                 |
+| ?  | google/gemini-1.5-pro-002                          | 6.6                     | 93.4                         | 99.9             | 62.0                  |                 |
+| ?  | google/gemini-1.5-flash-001                       | 6.6                     | 93.4                         | 99.9             | 63.3                  |                 |
+| ?  | mistralai/pixtral-large-latest                     | 6.6                     | 93.4                         | 100.0            | 76.4                  |                 |
+| 🟢 | microsoft/phi-2                                    | 6.7                     | 93.3                         | 91.5             | 80.8                  | pretrained       |
+| ?  | Qwen/Qwen2.5-3B-Instruct                           | 7.0                     | 93.0                         | 100.0            | 70.4                  |                 |
+| ?  | google/gemma-2-2b-it                               | 7.0                     | 93.0                         | 100.0            | 62.2                  |                 |
+| ?  | meta-llama/Llama-3-8B-chat-hf                     | 7.4                     | 92.6                         | 99.8             | 79.7                  |                 |
+| ?  | mistralai/ministral-8b-latest                      | 7.5                     | 92.5                         | 100.0            | 62.7                  |                 |
+| 🟢 | google/Gemini-Pro                                  | 7.7                     | 92.3                         | 98.4             | 89.5                  | pretrained       |
+| ?  | 01-ai/Yi-1.5-6B-Chat                               | 7.9                     | 92.1                         | 100.0            | 98.9                  |                 |
+| ?  | meta-llama/Llama-3.2-3B-Instruct-Turbo            | 7.9                     | 92.1                         | 100.0            | 72.2                  |                 |
+| ?  | deepseek/deepseek-v3-0324                          | 8.0                     | 92.0                         | 100.0            | 78.9                  |                 |
+| ?  | databricks/dbrx-instruct                           | 8.3                     | 91.7                         | 100.0            | 85.9                  |                 |
+| ?  | mistralai/ministral-3b-latest                      | 8.3                     | 91.7                         | 100.0            | 73.2                  |                 |
+| ?  | Qwen/Qwen2-VL-2B-Instruct                          | 8.3                     | 91.7                         | 100.0            | 81.8                  |                 |
+| ?  | cohere/c4ai-aya-expanse-32b                       | 8.5                     | 91.5                         | 99.9             | 81.9                  |                 |
+| ?  | anthropic/Claude-3-5-Sonnet                        | 8.6                     | 91.4                         | 100.0            | 103.0                 |                 |
+| ?  | mistralai/mistral-small-latest                     | 8.6                     | 91.4                         | 100.0            | 74.2                  |                 |
+| ?  | ibm-granite/granite-3.1-8b-instruct                | 8.6                     | 91.4                         | 100.0            | 107.4                 |                 |
+| ?  | ibm-granite/granite-3.2-8b-instruct                | 8.7                     | 91.3                         | 100.0            | 120.1                 |                 |
+| ?  | ibm-granite/granite-3.0-2b-instruct                | 8.8                     | 91.2                         | 100.0            | 81.6                  |                 |
+| ?  | google/gemini-1.5-pro-001                          | 9.1                     | 90.9                         | 99.8             | 61.6                  |                 |
+| ?  | mistralai/Mistral-7B-Instruct-v0.3                 | 9.5                     | 90.5                         | 100.0            | 98.4                  |                 |
+| 🟢 | anthropic/Claude-3-opus                            | 10.1                    | 89.9                         | 95.5             | 92.1                  | pretrained       |
+| ?  | google/gemma-2-9b-it                               | 10.1                    | 89.9                         | 100.0            | 70.2                  |                 |
+| 🟢 | meta-llama/Llama-2-13b-chat-hf                     | 10.5                    | 89.5                         | 99.8             | 82.1                  | pretrained       |
+| ?  | allenai/OLMo-2-1124-13B-Instruct                   | 10.8                    | 89.2                         | 100.0            | 82.0                  |                 |
+| ?  | allenai/OLMo-2-1124-7B-Instruct                   | 11.1                    | 88.9                         | 100.0            | 112.6                 |                 |
+| ?  | mistralai/Mistral-Nemo-Instruct-2407               | 11.2                    | 88.8                         | 100.0            | 69.9                  |                 |
+| 🟢 | meta-llama/Llama-2-7b-chat-hf                     | 11.3                    | 88.7                         | 99.6             | 119.9                 | pretrained       |
+| ?  | microsoft/WizardLM-2-8x22B                        | 11.7                    | 88.3                         | 99.9             | 140.8                 |                 |
+| ?  | cohere/c4ai-aya-expanse-8b                        | 12.2                    | 87.8                         | 99.9             | 83.9                  |                 |
+| ?  | Qwen/QwQ-32B-Preview                               | 12.9                    | 87.1                         | 100.0            | 140.2                 |                 |
+| 🟢 | amazon/Titan-Express                               | 13.5                    | 86.5                         | 99.5             | 98.4                  | pretrained       |
+| 🟢 | google/PaLM-2                                      | 14.1                    | 85.9                         | 99.8             | 86.6                  | pretrained       |
+| ?  | deepseek/deepseek-r1                               | 14.3                    | 85.7                         | 100.0            | 77.1                  |                 |
+| ⭕ | google/gemma-7b-it                                 | 14.8                    | 85.2                         | 100.0            | 113.0                 | instruction-tuned |
+| ?  | ibm-granite/granite-3.1-2b-instruct                | 15.7                    | 84.3                         | 100.0            | 107.7                 |                 |
+| ?  | Qwen/Qwen2.5-1.5B-Instruct                         | 15.8                    | 84.2                         | 100.0            | 70.7                  |                 |
+| 🟢 | anthropic/Claude-3-sonnet                          | 16.3                    | 83.7                         | 100.0            | 108.5                 | pretrained       |
+| ?  | ibm-granite/granite-3.2-2b-instruct                | 16.5                    | 83.5                         | 100.0            | 117.3                 |                 |
+| ?  | google/gemma-1.1-7b-it                             | 17.0                    | 83.0                         | 100.0            | 64.3                  |                 |
+| 🟢 | anthropic/Claude-2                                 | 17.4                    | 82.6                         | 99.3             | 87.5                  | pretrained       |
+| ?  | google/flan-t5-large                               | 18.3                    | 81.7                         | 99.3             | 20.9                  |                 |
+| ⭕ | mistralai/Mixtral-8x7B-Instruct-v0.1               | 20.1                    | 79.9                         | 99.9             | 90.7                  | instruction-tuned |
+| ?  | meta-llama/Llama-3.2-1B-Instruct                   | 20.7                    | 79.3                         | 100.0            | 71.5                  |                 |
+| ?  | apple/OpenELM-3B-Instruct                          | 24.8                    | 75.2                         | 99.3             | 47.2                  |                 |
+| ?  | Qwen/Qwen2.5-0.5B-Instruct                         | 25.2                    | 74.8                         | 100.0            | 72.6                  |                 |
+| ?  | google/gemma-1.1-2b-it                             | 27.8                    | 72.2                         | 100.0            | 66.8                  |                 |
+| ⭕ | tiiuae/falcon-7b-instruct                          | 29.9                    | 70.1                         | 90.0             | 75.5                  | instruction-tuned |
