@@ -300,7 +300,7 @@ aichat --serve 127.0.0.1:1234
 |:----:|
 |在浏览器中打开AIChat简洁的HTTP服务界面|
 
-AIChat的网页版默认会运行在一个不保存的会话中，点击左上角的`+`图标可以创建一个新的会话。不过笔者没有找到在网页中保存会话的功能，网页版中的所有会话似乎会在停止服务后丢失。
+AIChat的网页版默认会运行在一个不保存的会话中，点击左上角的`+`图标可以创建一个新的会话。不过笔者没有找到在网页中保存会话的功能，网页版中的所有会话似乎会在**停止服务**后丢失。
 
 ## Shell集成
 
@@ -324,7 +324,7 @@ find /tmp -maxdepth 1 -name "*.png" -exec bash -c 'for f; do cwebp -lossless "$f
 
 ### 模型幻觉率榜单
 
-以下内容摘自[Hugging Face](https://huggingface.co/spaces/vectara/leaderboard)的[榜单](https://vectara-leaderboard.hf.space/?__theme=system)，使用[Hallucination](https://github.com/vectara/hallucination-leaderboard)评估，列出了当前主流模型的幻觉率、事实一致性率、回答率等指标。我们可以根据这些指标来选择合适的模型。[^1]
+以下内容摘自[Hugging Face](https://huggingface.co/spaces/vectara/leaderboard)的[榜单](https://vectara-leaderboard.hf.space/?__theme=system)，使用[Hallucination](https://github.com/vectara/hallucination-leaderboard)评估，列出了当前主流模型的幻觉率、事实一致性率、回答率等指标。我们可以根据这些指标来选择合适的模型。[^1]摘录时间为2025.04.08。
 
 | T | Model                                             | Hallucination Rate (%) | Factual Consistency Rate (%) | Answer Rate (%) | Average Summary Length | Type            |
 |----|---------------------------------------------------|-------------------------|------------------------------|-----------------|-----------------------|-----------------|
