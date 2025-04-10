@@ -325,7 +325,7 @@ find /tmp -maxdepth 1 -name "*.png" -exec bash -c 'for f; do cwebp -lossless "$f
 笔者是Arch Linux for Loong64（Loong Arch Linux）发行版的维护者，常常需要在开发者社区的日常会议上向其他开发者介绍Loong Arch Linux的最新进展。为了提高会议效率，可以很方便地使用AIChat来生成进度信息汇总。我们可以利用之前介绍的``` `command` ```的方式，通过`git`命令，将近2周内的仓库提交信息传递给LLM,并让LLM从**这一个角度**来帮助撰写我们所需要的汇报内容。在AIChat的Chat-REPL CLI界面中输入：
 
 ```bash
-.file `git -C ~/projects/loongarch-packages/ log --since="2 weeks ago" --stat` -- 假如你是Arch Linux for Loong64社区（由北京大学学生Linux俱乐部维护，仓库地址为https://github.com/lcpu-club/loongarch-packages）的维护者，你需要向其他龙架构的开发者汇报最近两周的Loong Arch Linux发行版的开发信息。请你先从git仓库的提交记录中分析，筛选并详细总结出对其他开发者有参考意义，尤其是对其他发行版和上游开发者（指参与龙架构相关开发的上游开发者）的维护有潜在帮助的内容。请有选择地介绍，但是切勿遗漏重要、有价值的信息；请用括号标注出修复的贡献者，例如(by wszqkzqk)这种形式；请尽量附上相关提交的链接供参考
+.file `git -C ~/projects/loongarch-packages/ log --since="2 weeks ago" --stat` -- 假如你是Arch Linux for Loong64社区（由北京大学学生Linux俱乐部维护，仓库地址为https://github.com/lcpu-club/loongarch-packages）的维护者，你需要向其他龙架构的开发者汇报最近两周的Loong Arch Linux发行版的开发信息。请你先从git仓库的提交记录中分析，筛选并详细总结出对其他开发者和我们的用户有参考意义，尤其是对其他发行版和上游开发者（指参与龙架构相关开发的上游开发者）的维护有潜在帮助的内容。请有选择地介绍，但是切勿遗漏重要、有价值的信息；请用括号标注出修复的贡献者，例如(by wszqkzqk)这种形式；请尽量附上相关提交的链接和向上游贡献内容的链接供参考
 ```
 
 这里的`git -C ~/projects/loongarch-packages/ log --since="2 weeks ago" --stat`会将最近两周的提交记录直接传递给LLM进行处理。LLM会自动分析提交记录，并生成一份详细的进度信息汇总，例如笔者在2025.04.10时的运行结果：
@@ -335,76 +335,85 @@ find /tmp -maxdepth 1 -name "*.png" -exec bash -c 'for f; do cwebp -lossless "$f
 
 ---
 
-### 1. **重要软件包修复与适配**
-#### a) **Electron系列更新**
-- **electron35** 新增支持 (by wszqkzqk)  
-  关键改动：  
-  - 基于Chromium 134版本适配LoongArch64  
-  - 修复Swiftshader中LLVM16的兼容性问题  
-  - 提交链接：[ce1141a](https://github.com/lcpu-club/loongarch-packages/commit/ce1141a710fd571cf05c75913474ceb6b3bdc79f)  
-  **上游意义**：Chromium/Electron的LoongArch支持补丁可作为其他发行版的参考模板。
-
-- **electron33/34** 构建修复 (by wszqkzqk)  
-  - 弃用系统`esbuild`，改为明确指定版本（解决上游争议）  
-  - 提交链接：[8a7439c](https://github.com/lcpu-club/loongarch-packages/commit/8a7439c3d8a179e9eabb8360b72558d61b73b173)  
-  **建议**：其他发行版若遇到Electron构建问题可参考此方案。
-
-#### b) **Qt6-WebEngine** 版本更新 (by wszqkzqk)  
-- 升级至v6.9.0并移除已上游化的`libyuv`补丁  
-- 提交链接：[f75364e](https://github.com/lcpu-club/loongarch-packages/commit/f75364e1cef6295b0b75df70134b661835eda9de)  
-**上游进展**：确认LoongArch SIMD支持已合并到libyuv主分支。
-
-#### c) **LuaJIT** 关键修复 (by Wu Xiaotian & Pluto Yang)  
-- 修复LazyVim和Neovim的兼容性问题  
-- 提交链接：[00fd5f7](https://github.com/lcpu-club/loongarch-packages/commit/00fd5f75bbebdc807594ccdc364756da36073dbf)  
-**跨发行版影响**：此补丁对依赖LuaJIT的生态软件（如Neovim）至关重要。
+### 1. **AMDVLK驱动支持**
+- **提交**: [a0d186c](https://github.com/lcpu-club/loongarch-packages/commit/a0d186ca279b47434b2a1c902a3247dbe379e73b)  
+  - 移植了上游stb库的LoongArch支持补丁（[stb#1610](https://github.com/nothings/stb/pull/1610)）(by wszqkzqk)  
+  - 临时添加`-DCMAKE_POLICY_VERSION_MINIMUM=3.5`以解决构建问题（[AMDVLK#402](https://github.com/GPUOpen-Drivers/AMDVLK/issues/402)）。  
+  - **意义**: 为LoongArch提供了AMD GPU的开源Vulkan驱动支持，对其他发行版集成AMDVLK有参考价值。
 
 ---
 
-### 2. **构建系统与工具链改进**
-#### a) **Rust生态适配**
-- **arti** (Tor客户端) 修复 (by wszqkzqk)  
-  - 解决`aws-lc-sys`构建问题（需添加`cmake`和`clang`依赖）  
-  - 提交链接：[3d9a05e](https://github.com/lcpu-club/loongarch-packages/commit/3d9a05e1cf89598b581106c6b0329ee32b836aae)  
-  **经验总结**：Rust项目若无预编译库，需显式声明构建工具链依赖。
-
-#### b) **QEMU依赖调整** (by wszqkzqk)  
-- 为`qemu-system-loongarch64`添加`edk2-loongarch64`依赖（与其他架构对齐）  
-- 提交链接：[4e2b778](https://github.com/lcpu-club/loongarch-packages/commit/4e2b77892556eaa06dead178b570ab17fb09bc73)  
-**标准化建议**：虚拟化工具链的依赖管理可推广到其他架构。
+### 2. **Rust生态适配**
+- **提交**: [4a56a27](https://github.com/lcpu-club/loongarch-packages/commit/4a56a27961b0aa4b85e3f75c4ac8813f8f55cd09)  
+  - 修复`aichat`的依赖`hnsw_rs`，替换`mmap-rs`为`memmap2`以解决构建问题 (by wszqkzqk)。  
+  - 上游PR: [hnswlib-rs#23](https://github.com/jean-pierreBoth/hnswlib-rs/pull/23)。  
+- **提交**: [3d9a05e](https://github.com/lcpu-club/loongarch-packages/commit/3d9a05e1cf89598b581106c6b0329ee32b836aae)  
+  - 修复`arti`（Tor客户端）的`aws-lc-sys`构建问题，需添加`cmake`和`clang`依赖 (by wszqkzqk)。  
+  - 使用`mold`链接器绕过`bfd`的分段错误问题。  
+  - **意义**: 展示了Rust工具链在LoongArch上的常见问题及解决方案，对上游Rust库维护者有参考价值。
 
 ---
 
-### 3. **上游贡献与补丁反馈**
-#### a) **hnswlib-rs** 上游PR (by wszqkzqk)  
-- 替换`mmap-rs`为`memmap2`以解决构建问题，已提交至上游：[PR #23](https://github.com/jean-pierreBoth/hnswlib-rs/pull/23)  
-- 影响软件：`aichat`  
-- 提交链接：[4a56a27](https://github.com/lcpu-club/loongarch-packages/commit/4a56a27961b0aa4b85e3f75c4ac8813f8f55cd09)  
-
-#### b) **CPU-X** 补丁回传 (by wszqkzqk)  
-- 回传LoongArch支持补丁至上游，基于提交[2cde825](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/commit/2cde825ec67c5f7818846e83ffafa882117eed5b)  
-- 提交链接：[83581a9](https://github.com/lcpu-club/loongarch-packages/commit/83581a970f1a407cd264fc3bf110c4af3b27b677)  
+### 3. **QEMU虚拟化改进**
+- **提交**: [4e2b778](https://github.com/lcpu-club/loongarch-packages/commit/4e2b77892556eaa06dead178b570ab17fb09bc73)  
+  - 为`qemu-system-loongarch64`添加`edk2-loongarch64`依赖（类似x86/aarch64）(by wszqkzqk)。  
+  - **意义**: 完善了LoongArch虚拟化支持，为其他发行版提供标准化依赖配置参考。
 
 ---
 
-### 4. **其他发行版参考建议**
-- **pkgfile** 架构识别修复 (by wszqkzqk)  
-  - 显式处理`loongarch64`架构标识，可能需上游进一步讨论  
-  - 提交链接：[659066f](https://github.com/lcpu-club/loongarch-packages/commit/659066f434f0d81b9c95ba23a7e13bef6b95733c)  
+### 4. **Chromium/Electron重大更新**
+- **提交**: [ce1141a](https://github.com/lcpu-club/loongarch-packages/commit/ce1141a710fd571cf05c75913474ceb6b3bdc79f)  
+  - 升级至Electron 35/Chromium 134，修复Swiftshader的LLVM16兼容性问题 (by wszqkzqk)。  
+  - 包含大量LoongArch支持补丁（如seccomp修复、depot_tools适配等）。  
+- **提交**: [2b0c6c4](https://github.com/lcpu-club/loongarch-packages/commit/2b0c6c499d26e220c15ab050389106ea4ac59251)  
+  - Chromium 135升级，不再需要Swiftshader的额外补丁 (by wszqkzqk)。  
+  - **意义**: 为浏览器生态的LoongArch支持提供持续维护范例，补丁可反馈至上游Chromium。
 
-- **GStreamer** 临时禁用`dots-viewer` (by wszqkzqk)  
-  - 因`nix 0.23.2`版本过旧导致构建失败，需后续跟踪  
-  - 提交链接：[7e6e575](https://github.com/lcpu-club/loongarch-packages/commit/7e6e575399c8f57da2e3017611477875711fc2dc)  
+---
+
+### 5. **Qt6 WebEngine适配**
+- **提交**: [f75364e](https://github.com/lcpu-club/loongarch-packages/commit/f75364e1cef6295b0b75df70134b661835eda9de)  
+  - 升级至Qt 6.9，移除已合并的`libyuv`补丁（上游已修复）(by wszqkzqk)。  
+  - **意义**: 展示了如何与上游协作逐步减少下游补丁，推动代码合并。
+
+---
+
+### 6. **LuaJIT关键修复**
+- **提交**: [00fd5f7](https://github.com/lcpu-club/loongarch-packages/commit/00fd5f75bbebdc807594ccdc364756da36073dbf)  
+  - 修复LuaJIT的JIT编译问题，确保LazyVim等工具链兼容性 (by Wu Xiaotian)。  
+- **提交**: [b7dca15](https://github.com/lcpu-club/loongarch-packages/commit/b7dca1539e9c3f6ab39ab04bf9b6e105863ef804)  
+  - 合并龙芯社区的LuaJIT更新，支持NeoVim构建 (by Pluto Yang)。  
+  - **意义**: 解决了动态语言运行时的重要兼容性问题，补丁可反馈至LuaJIT上游。
+
+---
+
+### 7. **工具链优化**
+- **提交**: [659066f](https://github.com/lcpu-club/loongarch-packages/commit/659066f434f0d81b9c95ba23a7e13bef6b95733c)  
+  - 修复`pkgfile`的LoongArch64架构识别问题 (by wszqkzqk)。  
+  - **意义**: 改进包管理工具对LoongArch的支持，建议提交至Arch Linux上游。
+
+---
+
+### 8. **上游贡献建议**
+- **已合并上游的补丁**:  
+  - `libyuv`（Qt6依赖）的LoongArch SIMD支持已合并，可移除本地补丁。  
+  - `stb`库的LoongArch补丁（[stb#1610](https://github.com/nothings/stb/pull/1610)）已合并。  
+- **待推动的补丁**:  
+  - `hnsw_rs`的`memmap2`替换（[hnswlib-rs#23](https://github.com/jean-pierreBoth/hnswlib-rs/pull/23)）需上游审核。  
+  - `pkgfile`的架构识别补丁可提交至Arch Linux。
 
 ---
 
 ### 完整提交列表
 - [所有相关提交记录](https://github.com/lcpu-club/loongarch-packages/commits/main)  
+- **重点包**: AMDVLK、QEMU、Chromium/Electron、Qt6、LuaJIT、Rust生态工具。
 
-请其他开发者重点关注**Electron/Chromium**、**LuaJIT**和**Rust工具链**相关改动，这些内容对跨发行版协作有较高参考价值。
+---
+
+以上内容可供其他LoongArch发行版维护者和上游开发者参考，欢迎进一步协作优化生态支持！
 ```
 
-LLM生成的信息未必直接可用，可能会有**错误、遗漏或者不正确的解读**，但是确实可以帮助我们快速生成一份大致的进度信息。我们可以在此基础上进行修改和补充，最终形成一份完整的进度信息。
+LLM生成的信息未必直接可用，可能会有**错误、遗漏或者不正确的解读**（这在上面的示例中即存在），但是确实可以帮助我们快速生成一份大致的进度信息。我们可以在此基础上进行修改和补充，最终形成一份完整的进度信息。
 
 ## 附录
 
