@@ -325,82 +325,103 @@ find /tmp -maxdepth 1 -name "*.png" -exec bash -c 'for f; do cwebp -lossless "$f
 笔者是Arch Linux for Loong64（Loong Arch Linux）发行版的维护者，常常需要在开发者社区的日常会议上向其他开发者介绍Loong Arch Linux的最新进展。为了提高会议效率，可以很方便地使用AIChat来生成进度信息汇总。在AIChat的Chat-REPL CLI界面中输入：
 
 ```bash
-.file `git -C ~/projects/loongarch-packages/ log --since="2 weeks ago" --stat` -- 假如你是Loong Arch Linux社区的开发者，你需要向其他龙架构的开发者汇报最近两周的Loong Arch Linux发行版的开发信息。请你先从git仓库的提交记录中分析，筛选并详细总结出对其他开发者有参考意义，尤其是对其他发行版和上游开发者（指上游的龙架构的开发者）的维护有潜在帮助的内容，请有选择地介绍，但是切勿遗漏重要、有价值的信息，请用括号标注出修复的贡献者例如(by wszqkzqk)这种形式。
+.file `git -C ~/projects/loongarch-packages/ log --since="2 weeks ago" --stat` -- 假如你是Arch Linux for Loong64社区（由北京大学学生Linux俱乐部维护，仓库地址为https://github.com/lcpu-club/loongarch-packages）的维护者，你需要向其他龙架构的开发者汇报最近两周的Loong Arch Linux发行版的开发信息。请你先从git仓库的提交记录中分析，筛选并详细总结出对其他开发者有参考意义，尤其是对其他发行版和上游开发者（指参与龙架构相关开发的上游开发者）的维护有潜在帮助的内容，请有选择地介绍，但是切勿遗漏重要、有价值的信息，请用括号标注出修复的贡献者，例如(by wszqkzqk)这种形式。
 ```
 
 这里的`git -C ~/projects/loongarch-packages/ log --since="2 weeks ago" --stat`会将最近两周的提交记录直接传递给LLM进行处理。LLM会自动分析提交记录，并生成一份详细的进度信息汇总，例如笔者在2025.04.10时的运行结果：
 
 ```markdown
+以下是从最近两周的提交记录中筛选出的对龙架构开发者、其他发行版维护者和上游开发者有参考价值的重要信息总结：
+
 ---
 
 ### **1. 关键软件包适配与修复**
-#### **Qt6系列更新**
+#### **Qt6 系列更新**
 - **qt6-webengine (6.9.0-1)**  
-  - 移除已合并到上游的`libyuv`补丁，确认上游已修复LoongArch支持 (by wszqkzqk)  
-  - 重要提示：上游开发者可参考补丁中的LoongArch SIMD构建优化（`add-loong64-support.patch`）  
-  - 相关提交：[f75364e](https://github.com/loongarchlinux/loongarchlinux/commit/f75364e1cef6295b0b75df70134b661835eda9de)
+  - 移除已合并到上游的 `libyuv` 补丁（龙架构 SIMD 支持已原生包含）(by wszqkzqk)  
+  - 重命名并优化龙架构支持补丁结构，便于后续维护。  
+  **上游参考**：建议其他发行版检查 `libyuv` 版本是否已包含龙架构支持。
 
-#### **Electron/Chromium相关**
+- **qt6-doc (6.9.0-1)**  
+  - 同步更新至 Qt 6.9 版本，补丁适配文档生成逻辑 (by wszqkzqk)。
+
+#### **Electron/Chromium 相关**
 - **electron35 (35.1.4-1)**  
-  - 新增对Chromium 134的LoongArch支持补丁，修复SwiftShader的LLVM 16兼容性问题 (by wszqkzqk)  
-  - 补丁包含大量架构支持代码（如`chromium-loong64-support.patch`），对上游Chromium移植有参考价值  
-  - 提交：[ce1141a](https://github.com/loongarchlinux/loongarchlinux/commit/ce1141a710fd571cf05c75913474ceb6b3bdc79f)  
-- **electron33/34**  
-  - 改进`esbuild`的获取方式，避免依赖系统版本（上游讨论参考：[Arch Linux Issue #2](https://gitlab.archlinux.org/archlinux/packaging/packages/electron34/-/issues/2)）(by wszqkzqk)  
+  - 新增对 Chromium 134 的龙架构支持补丁，修复 SwiftShader 中 LLVM16 的兼容性问题 (by wszqkzqk)。  
+  **上游参考**：SwiftShader 的 LLVM 后端可能需要针对龙架构进一步优化。
 
-#### **LuaJIT修复**
-- **luajit (2.1.1741730670-1)**  
-  - 修复影响LazyVim等工具的关键问题，补丁可能对上游LoongArch JIT优化有帮助 (by Wu Xiaotian)  
-  - 提交：[00fd5f7](https://github.com/loongarchlinux/loongarchlinux/commit/00fd5f75bbebdc807594ccdc364756da36073dbf)
+- **electron33/34 (33.4.8-2, 34.5.0-2)**  
+  - 弃用系统 `esbuild`，改为明确指定版本以避免构建问题 (by wszqkzqk)。  
+  **上游参考**：Electron 构建系统对非 x86 架构的依赖管理需更灵活。
 
----
-
-### **2. 构建系统与依赖调整**
-#### **Rust/Cargo项目适配**
-- **arti (Tor匿名网络工具)**  
-  - 修复`aws-lc-sys`构建问题：需添加`cmake`和`clang`到构建依赖 (by wszqkzqk)  
-  - 后续优化：移除不必要的`mold`链接器依赖 (提交：[3d9a05e](https://github.com/loongarchlinux/loongarchlinux/commit/3d9a05e1cf89598b581106c6b0329ee32b836aae))  
-- **apt-swarm (0.5.1-1)**  
-  - 类似Rust项目构建问题，需显式声明`clang/cmake`依赖 (by wszqkzqk)  
-
-#### **Python项目调整**
-- **archinstall (3.0.3-1)**  
-  - 修复非x86_64平台（如LoongArch）的`grub-install`目标设置问题 (by wszqkzqk)  
-
----
-
-### **3. 上游贡献与潜在协作点**
-- **aichat (0.29.0-1)**  
-  - 临时使用分叉的`hnsw_rs`库，并将依赖从`mmap-rs`迁移到`memmap2`以解决构建问题  
-  - 已向上游提交PR：[hnswlib-rs#23](https://github.com/jean-pierreBoth/hnswlib-rs/pull/23) (by wszqkzqk)  
-- **cpu-x (5.2.0-2)**  
-  - 反向移植上游提交[2cde825](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/commit/2cde825ec67c5f7818846e83ffafa882117eed5b)，修复非x86处理器的构建支持  
-
----
-
-### **4. 其他重要修复**
+#### **GPU/多媒体工具链**
 - **gstreamer (1.26.0-3)**  
-  - 临时禁用`dots-viewer`（因依赖过旧的`nix 0.23.2`无法在LoongArch构建）(by wszqkzqk)  
-- **postgresql (17.4-1)**  
-  - 修复补丁腐化问题 (by Pluto Yang)  
+  - 临时禁用 `dots-viewer`（因依赖的 `nix 0.23.2` 过旧无法在龙架构构建）(by wszqkzqk)。  
+  **上游建议**：`nix` 需更新以支持龙架构。
+
+- **luajit (2.1.1741730670-1)**  
+  - 修复 LazyVim 兼容性问题，合并龙芯官方补丁 (by Wu Xiaotian & Pluto Yang)。  
+  **关键点**：此补丁可能对依赖 LuaJIT 的其他项目（如 Neovim）有广泛影响。
+
+---
+
+### **2. 构建系统与工具链改进**
+#### **Rust 生态适配**
+- **arti (1.4.2-1.1)**  
+  - 移除 `mold` 链接器依赖（原用于规避 `bfd` 的段错误问题）(by wszqkzqk)。  
+  - 早期版本需添加 `cmake` 和 `clang` 以编译 `aws-lc-sys`（无预构建二进制）。  
+  **上游建议**：Rust 的加密库需提供龙架构预编译支持。
+
+- **apt-swarm (0.5.1-1)**  
+  - 类似问题：需手动添加 `clang/cmake` 编译 `aws-lc-sys` (by wszqkzqk)。
+
+#### **包管理工具**
+- **pkgfile (24-1.1)**  
+  - 修复龙架构（`loongarch64`）在更新器中的识别逻辑 (by wszqkzqk)。  
+  **跨发行版影响**：其他包管理工具需检查架构名称处理逻辑。
+
+---
+
+### **3. 虚拟化与系统工具**
+- **qemu (9.2.3-1.2)**  
+  - 为 `qemu-system-loongarch64` 添加 `edk2-loongarch64` 依赖（类似 x86/aarch64 的标准化处理）(by wszqkzqk)。  
+  **上游参考**：EDK2 的龙架构支持需进一步验证。
+
 - **libvirt (11.1.0-2)**  
-  - 明确禁用对LoongArch不支持的`cloud-hypervisor` (by Pluto Yang)  
+  - 明确禁用 `cloud-hypervisor`（当前不支持龙架构）(by Pluto Yang)。
 
 ---
 
-### **建议上游关注的补丁**
-1. **Qt6-webengine的LoongArch支持补丁**  
-   - 路径：`qt6-webengine/add-loong64-support.patch`  
-   - 包含架构检测和构建系统调整，适合上游集成。  
-2. **Electron/Chromium的LoongArch支持**  
-   - 大量基础性补丁（如`chromium-loong64-support.patch`）可为其他基于Chromium的项目提供参考。  
+### **4. 重要问题修复**
+- **texlive-bin (2025.2-1)**  
+  - 替换为全新的 LuaJIT 补丁，解决长期存在的构建问题 (by wszqkzqk)。  
+  **历史背景**：旧补丁因代码变动频繁易失效，新补丁更稳定。
+
+- **cpu-x (5.2.0-2)**  
+  - 向后移植上游提交以修复非 x86 架构的构建问题 (by wszqkzqk)。  
+  **上游提交**：[TheTumultuousUnicornOfDarkness/CPU-X@2cde825](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/commit/2cde825ec67c5f7818846e83ffafa882117eed5b)。
 
 ---
 
-以上内容已筛选关键提交，完整变更可通过[仓库历史](https://github.com/loongarchlinux/loongarchlinux)查看。如有进一步问题，欢迎讨论！
+### **5. 其他值得关注的变更**
+- **aichat (0.29.0-1)**  
+  - 临时使用分叉的 `hnsw_rs` 库，替换 `mmap-rs` 为 `memmap2` 以修复构建 (by wszqkzqk)。  
+  **上游 PR**：[jean-pierreBoth/hnswlib-rs#23](https://github.com/jean-pierreBoth/hnswlib-rs/pull/23)。
+
+- **archinstall (3.0.3-1)**  
+  - 修复非 x86 平台（如龙架构）的 `grub-install` 目标设置逻辑 (by wszqkzqk)。
+
+---
+
+### **总结建议**
+1. **上游协作**：部分补丁（如 `pkgfile` 的架构识别、`aichat` 的 `memmap2` 切换）可尝试推送上游。
+2. **依赖管理**：Rust 生态中 `aws-lc-sys` 的预构建二进制缺失问题需跨社区协调。
+3. **测试重点**：Qt6、Electron 和 LuaJIT 的改动可能影响广泛，建议其他发行版优先验证。
+
+完整提交记录可查阅 [lcpu-club/loongarch-packages](https://github.com/lcpu-club/loongarch-packages)。
 ```
 
-LLM生成的信息未必直接可用，可能会有错误（例如这里仓库的提交链接就是错误的）或遗漏，但是确实可以帮助我们快速生成一份大致的进度信息。我们可以在此基础上进行修改和补充，最终形成一份完整的进度信息。
+LLM生成的信息未必直接可用，可能会有**错误、遗漏或者不正确的解读**，但是确实可以帮助我们快速生成一份大致的进度信息。我们可以在此基础上进行修改和补充，最终形成一份完整的进度信息。
 
 ## 附录
 
