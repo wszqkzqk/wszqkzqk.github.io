@@ -325,7 +325,7 @@ find /tmp -maxdepth 1 -name "*.png" -exec bash -c 'for f; do cwebp -lossless "$f
 笔者是Arch Linux for Loong64（Loong Arch Linux）发行版的维护者，常常需要在开发者社区的日常会议上向其他开发者介绍Loong Arch Linux的最新进展。为了提高会议效率，可以很方便地使用AIChat来生成进度信息汇总。我们可以利用之前介绍的``` `command` ```的方式，通过`git`命令，将近2周内的仓库提交信息传递给LLM,并让LLM从**这一个角度**来帮助撰写我们所需要的汇报内容。在AIChat的Chat-REPL CLI界面中输入：
 
 ```bash
-.file `git -C ~/projects/loongarch-packages/ log --since="2 weeks ago" --stat` -- 假如你是Arch Linux for Loong64社区（由北京大学学生Linux俱乐部维护，仓库地址为https://github.com/lcpu-club/loongarch-packages）的维护者，你需要向其他龙架构的开发者汇报最近两周的Loong Arch Linux发行版的开发信息。请你先从git仓库的提交记录中分析，筛选并详细总结出对其他开发者和我们的用户有参考意义，尤其是对其他发行版和上游开发者（指参与龙架构相关开发的上游开发者）的维护有潜在帮助的内容。请有选择地介绍，但是切勿遗漏重要、有价值的信息；请用括号标注出修复的贡献者，例如(by wszqkzqk)这种形式；请尽量附上相关提交的链接和向上游贡献内容的链接供参考
+.file `git -C ~/projects/loongarch-packages/ log --since="2 weeks ago" --stat` -- 假如你是Arch Linux for Loong64社区（由北京大学学生Linux俱乐部维护，仓库地址为https://github.com/lcpu-club/loongarch-packages）的维护者，你需要向其他龙架构的开发者汇报最近两周的Loong Arch Linux发行版的开发信息。请你先从git仓库的提交记录中分析，筛选并详细总结出对其他开发者和我们的用户有参考意义，尤其是对其他发行版和上游开发者（指参与龙架构相关开发的上游开发者）的维护有潜在帮助的内容。请有选择地介绍，但是切勿遗漏重要、有价值的信息；请用括号标注出修复的贡献者，例如(by wszqkzqk)这种形式；请尽量附上相关提交的链接（如果有对应PR，优先放PR链接而不是冗长的commit链接）和向上游贡献内容的链接供参考
 ```
 
 这里的`git -C ~/projects/loongarch-packages/ log --since="2 weeks ago" --stat`会将最近两周的提交记录直接传递给LLM进行处理。LLM会自动分析提交记录，并生成一份详细的进度信息汇总，例如笔者在2025.04.10时的运行结果：
