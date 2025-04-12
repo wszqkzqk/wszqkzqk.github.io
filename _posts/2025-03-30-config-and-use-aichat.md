@@ -74,7 +74,7 @@ clients:
       max_output_tokens: 8192
       supports_vision: true
 - type: openai-compatible
-  name: chutes.ai
+  name: chutes
   api_base: https://llm.chutes.ai/v1
   api_key: xxxxxx
   models:
