@@ -433,7 +433,7 @@ LLM生成的信息未必直接可用，可能会有**错误、遗漏或者不正
 
 ### 常见高性能模型性能对比
 
-摘自[Google Gemini 2.5 Pro](https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/)与[Google Gemini 2.5 Flash](https://developers.googleblog.com/en/start-building-with-gemini-25-flash/)的发布页面。
+摘自[Google Gemini 2.5 Pro](https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/)与[Google Gemini 2.5 Flash](https://developers.googleblog.com/en/start-building-with-gemini-25-flash/)的发布页面。（由于是Google发布的，可能结果中立性存疑）
 
 | 指标名称 | Gemini 2.5 Pro | Grok 3 Beta | OpenAI o4-mini | Gemini 2.5 Flash | OpenAI o3-mini | Claude 3.7 Sonnet | DeepSeek R1 | OpenAI GPT-4.5 | Gemini 2.0 Flash |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
