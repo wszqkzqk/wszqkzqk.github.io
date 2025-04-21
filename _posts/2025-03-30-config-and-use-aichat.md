@@ -431,6 +431,27 @@ LLM生成的信息未必直接可用，可能会有**错误、遗漏或者不正
 
 ## 附录
 
+### 常见高性能模型性能对比
+
+| 指标名称 | Gemini 2.5 Pro | Grok 3 Beta | OpenAI o4-mini | Gemini 2.5 Flash | OpenAI o3-mini | Claude 3.7 Sonnet | DeepSeek R1 | OpenAI GPT-4.5 | Gemini 2.0 Flash |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Humanity's Last Exam (no tools) | 18.8% | - | 14.3% | 12.1% | 14.0% | 8.9% | 8.6% | 6.4% | 5.1% |
+| GPQA diamond (single attempt) | 84.0% | 80.2% | 81.4% | 78.3% | 79.7% | 78.2% | 71.5% | 71.4% | 60.1% |
+| GPQA diamond (multiple attempts) | - | 84.6% | - | - | - | 84.8% | - | - | - |
+| AIME 2025 (single attempt) | 86.7% | 77.3% | 92.7% | 78.0% | 86.5% | 49.5% | 70.0% | - | 27.5% |
+| AIME 2024 (single attempt) | 92.0% | 83.9% | 93.4% | 88.0% | 87.3% | 61.3% | 79.8% | 36.7% | 32.0% |
+| AIME 2024 (multiple attempts) | - | 93.3% | - | - | - | 80.0% | - | - | - |
+| LiveCodeBench v5 (single attempt) | 70.4% | 70.6% | - | 63.5% | 74.1% | - | 64.3% | - | 34.5% |
+| LiveCodeBench v5 (multiple attempts) | - | 79.4% | - | - | - | - | - | - | - |
+| Aider Polyglot (whole / diff) | 74.0% / 68.6% | - | 68.9% / 58.2% | 51.1% / 44.2% | 60.4% (diff) | 64.9% (diff) | 56.9% (diff) | 44.9% (diff) | 22.2% (whole) |
+| SimpleQA | 52.9% | 43.6% | - | 29.7% | 13.8% | - | 30.1% | 62.5% | 29.9% |
+| MMMU (single attempt) | 81.7% | 76.0% | 81.6% | 76.7% | - | 75.0% | - | 74.4% | 71.7% |
+| MMMU (multiple attempts) | - | 78.0% | - | - | - | - | - | - | - |
+| Vibe-Eval (Reka) | 69.4% | - | - | 62.0% | - | - | - | - | 56.4% |
+| MRCR (128k average) | 94.5% | - | - | 84.6% | 61.4% | - | - | 64.0% | 74.2% |
+| MRCR (1M pointwise) | 83.1% | - | - | 66.3% | - | - | - | - | 48.2% |
+| Global MMLU (Lite) | 89.8% | - | - | 88.4% | - | - | - | - | 83.4% |
+
 ### 模型幻觉率榜单
 
 以下内容摘自[Hugging Face](https://huggingface.co/spaces/vectara/leaderboard)的[榜单](https://vectara-leaderboard.hf.space/?__theme=system)，使用[Hallucination](https://github.com/vectara/hallucination-leaderboard)评估，列出了当前主流模型的幻觉率、事实一致性率、回答率等指标。我们可以根据这些指标来选择合适的模型。[^1]摘录时间为2025.04.08。
