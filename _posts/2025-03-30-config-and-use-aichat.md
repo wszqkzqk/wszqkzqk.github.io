@@ -433,6 +433,8 @@ LLM生成的信息未必直接可用，可能会有**错误、遗漏或者不正
 
 ### 常见高性能模型性能对比
 
+摘自[Google Gemini 2.5 Pro](https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/)与[Google Gemini 2.5 Flash](https://developers.googleblog.com/en/start-building-with-gemini-25-flash/)的发布页面。
+
 | 指标名称 | Gemini 2.5 Pro | Grok 3 Beta | OpenAI o4-mini | Gemini 2.5 Flash | OpenAI o3-mini | Claude 3.7 Sonnet | DeepSeek R1 | OpenAI GPT-4.5 | Gemini 2.0 Flash |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Humanity's Last Exam (no tools) | 18.8% | - | 14.3% | 12.1% | 14.0% | 8.9% | 8.6% | 6.4% | 5.1% |
