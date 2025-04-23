@@ -454,6 +454,14 @@ LLM生成的信息未必直接可用，可能会有**错误、遗漏或者不正
 | MRCR (1M pointwise) | 83.1% | - | - | 66.3% | - | - | - | - | 48.2% |
 | Global MMLU (Lite) | 89.8% | - | - | 88.4% | - | - | - | - | 83.4% |
 
+### 长上下文深度理解性能
+
+以下内容摘自[Fiction.LiveBench](https://fiction.live/stories/Fiction-liveBench-April-17-2025/oQdzQvKHw8JyXbN87)。（2025年4月17日发布）
+
+|[![#~/img/llm/Fiction-LiveBench-for-Long-Context-Deep-Comprehension-lossless.webp](/img/llm/Fiction-LiveBench-for-Long-Context-Deep-Comprehension-lossless.webp)](/img/llm/Fiction-LiveBench-for-Long-Context-Deep-Comprehension-lossless.webp)|
+|:----:|
+|Fiction.LiveBench长上下文深度理解能力评测|
+
 ### 模型幻觉率榜单
 
 以下内容摘自[Hugging Face](https://huggingface.co/spaces/vectara/leaderboard)的[榜单](https://vectara-leaderboard.hf.space/?__theme=system)，使用[Hallucination](https://github.com/vectara/hallucination-leaderboard)评估，列出了当前主流模型的幻觉率、事实一致性率、回答率等指标。我们可以根据这些指标来选择合适的模型。[^1]摘录时间为2025.04.08。
