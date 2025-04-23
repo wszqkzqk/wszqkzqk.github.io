@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      配置并使用AIChat
-subtitle:   在一键部署且功能强大的命令行工具中与LLM API高效交互
+subtitle:   利用安装便捷且功能强大的命令行工具与LLM API高效交互
 date:       2025-03-30
 author:     wszqkzqk
 header-img: img/llm/ai-bg-lossless.webp
