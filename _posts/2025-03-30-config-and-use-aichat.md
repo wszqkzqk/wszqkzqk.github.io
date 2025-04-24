@@ -67,14 +67,6 @@ clients:
       max_output_tokens: 65536
       supports_vision: true
       supports_function_calling: true
-    # Qwen
-    - name: qwen/qwq-32b:free
-      max_input_tokens: 40000
-      max_output_tokens: 40000
-    - name: qwen/qwen2.5-vl-32b-instruct:free
-      max_input_tokens: 8192
-      max_output_tokens: 8192
-      supports_vision: true
 - type: openai-compatible
   name: chutes
   api_base: https://llm.chutes.ai/v1
