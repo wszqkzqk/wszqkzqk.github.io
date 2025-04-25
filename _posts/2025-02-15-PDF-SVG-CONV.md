@@ -18,7 +18,7 @@ tags:       开源软件 Vala Meson 媒体文件 PDF
 
 * 写这个项目的一大原因是现有的 ImageMagick 等工具虽然可以用于转化，但是由于**光栅化**的原因，会将矢量描述的 PDF 或者 SVG 文件转化为位图，导致信息丢失。
   * 而且 ImageMagick 似乎不支持生成 SVG。
-* 还有一大原因是现有的 `pdf2svg` 工具实在过于简单，功能实现较少。
+* 还有一大原因是现有的 pdf2svg 工具实在过于简单，功能实现较少。
 * 这些工具也都不支持多线程转化包含多页的 PDF 文件，转化速度较慢。
 * 当然最主要的原因还是笔者想尝试一下 Cairo。😉😉😉 而且这个项目本身工作量很小。
 * **本项目无论是结构设计还是代码实现都非常非常简单，也适合想要学习 Vala/Cairo 的开发者参考**。
@@ -27,8 +27,8 @@ tags:       开源软件 Vala Meson 媒体文件 PDF
 
 该项目主要提供两大功能命令行工具：
 
-* Neo PDF to SVG (`neopdf2svg`)： 将 PDF 文件转化为 SVG 文件。支持多线程处理、加密 PDF 解密、指定页码转化以及格式化输出文件名。
-* Neo SVG to PDF (`neosvg2pdf`)： 将一组 SVG 文件合并生成单个 PDF 文件。
+* PDF to SVG (`pdf2svg`)： 将 PDF 文件转化为 SVG 文件。支持多线程处理、加密 PDF 解密、指定页码转化以及格式化输出文件名。
+* SVG to PDF (`svg2pdf`)： 将一组 SVG 文件合并生成单个 PDF 文件。
 
 项目采用 Vala 编程语言和 Meson 构建系统进行开发，依赖于 GLib、Cairo、Poppler、Rsvg 等基础库。其设计思路注重并行化、模块化与跨平台兼容。由于 GLib 自带的日志系统不太适合命令行工具，因此项目中还实现了一个日志输出模块与彩色进度条显示。
 
@@ -107,7 +107,7 @@ tags:       开源软件 Vala Meson 媒体文件 PDF
 * `meson.build`  
   项目的构建脚本定义了各个模块之间的依赖关系以及编译选项。  
   * 利用 Meson 的 `vcs_tag` 指定版本信息，并生成 `version.vala` 文件；
-  * 为不同的可执行文件（`neopdf2svg` 和 `neosvg2pdf`）分别指定源文件与依赖库；
+  * 为不同的可执行文件（`pdf2svg` 和 `svg2pdf`）分别指定源文件与依赖库；
   * 同时配置了可选的 `manpage` 生成逻辑，当系统中存在 `help2man` 时会自动生成对应的手册页文件。
     * 也可以通过向 `meson` 命令传递 `-D manpage=true` 或者 `-D manpage=false` 来手动控制是否生成手册页。
 
