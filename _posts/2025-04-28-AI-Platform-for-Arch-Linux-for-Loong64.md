@@ -111,7 +111,7 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
   * **ArchWiki非常著名**，很容易被搜索引擎收录。（相比之下Arch Linux for Loong64的文档则很难直接通过搜索引擎找到）
   * 现代搜索引擎使用的检索模型远远比笔者本地部署的要强大，更容易找到正确的内容，因此在合适的提示词下可能给出比笔者特意建立的ArchWiki检索系统更准确的答案。
 
-建议一般情况下保持使用`Arch Linux for Loong64 Dev Helper`模型（可按照实际需要开启网页搜索功能），需要多模态分析拍屏或者截图时使用`@`在单轮对话中切换暂时切换到`Arch Linux for Loong64 Dev Helper VL`模型提取日志等信息，但随后仍然使用默认的`Arch Linux for Loong64 Dev Helper`模型进行分析。
+建议一般情况下保持使用`Arch Linux for Loong64 Dev Helper`模型（可按照实际需要开启网页搜索功能），需要多模态分析拍屏或者截图时使用`@`在单轮对话中切换暂时切换到`Arch Linux for Loong64 Dev Helper VL`模型提取日志等信息，但后续分析仍然使用默认的`Arch Linux for Loong64 Dev Helper`模型。
 
 需要注意，即使有了RAG加持，**模型的回答仍然可能不准确**，建议用户对模型的回答进行事实验证。由于输出内容中会包含检索引文，用户可以自行检索引文（或访问相应的文档网页）来验证模型的回答。
 
