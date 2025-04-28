@@ -13,7 +13,7 @@ tags:       AI LLM 开源软件 LoongArchLinux
 
 随着Arch Linux for Loong64项目的不断发展，我们积累了越来越多的开发文档，并形成了一套相对完整的开发流程和社区习惯。为了更好地服务于Arch Linux for Loong64的开发者与用户，笔者搭建了一个AI平台，旨在为Arch Linux for Loong64的开发者与用户提供帮助。
 
-该平台目前仅向北京大学校园网内的Arch Linux for Loong64的开发者与用户公开。
+该平台目前**仅**向**可访问北京大学校园网**的**Arch Linux for Loong64的开发者与用户**公开。
 
 ## 技术实现过程
 
