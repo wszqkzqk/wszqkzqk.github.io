@@ -1,0 +1,128 @@
+---
+layout:     post
+title:      为Arch Linux for Loong64设计的AI平台
+subtitle:   能够为Arch Linux for Loong64的开发者与用户提供帮助的AI助手
+date:       2025-04-28
+author:     wszqkzqk
+header-img: img/llm/ai-bg-lossless.webp
+catalog:    true
+tags:       AI LLM 开源软件 LoongArchLinux
+---
+
+## 前言
+
+随着Arch Linux for Loong64项目的不断发展，我们积累了越来越多的开发文档，并形成了一套相对完整的开发流程和社区习惯。为了更好地服务于Arch Linux for Loong64的开发者与用户，笔者搭建了一个AI平台，旨在为Arch Linux for Loong64的开发者与用户提供帮助。
+
+该平台目前仅向北京大学校园网内的Arch Linux for Loong64的开发者与用户公开。
+
+## 技术实现过程
+
+笔者选择了[Open WebUI](https://docs.openwebui.com/)作为前端平台，LLM均使用**开源大模型**，其中单模态模型使用[DeepSeek v3 0324](https://api-docs.deepseek.com/zh-cn/news/news250325)，多模态模型使用[Llama 4 Maverick](https://www.llama.com/models/llama-4/)。这两个模型基本上是目前（2025.04.28）开源的单模态和多模态模型（尤其是文字识别应用）中性能最好的模型。（不过LLama 4 Maverick的日常处理和代码能力确实不敢恭维……）
+
+笔者主要希望通过增强问答（RAG，Retrieval-Augmented Generation）来赋予模型帮助Arch Linux for Loong64开发者和用户的能力。
+
+### Open WebUI配置
+
+#### 基本
+
+笔者在16核16 GB内存的AMD Zen 3虚拟机（CLab）上部署了Open WebUI，笔者并没有使用Docker，而是直接通过`pacman`从`archlinuxcn`安装了Open WebUI。
+
+```bash
+sudo pacman -S open-webui
+```
+
+安装完成后，还需要启用Open WebUI的服务：
+
+```bash
+sudo systemctl enable open-webui.service --now
+```
+
+Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http://<IP>:8080`在其他设备上访问。
+
+首次访问时会提示注册管理员账号并设置密码。随后，可以点击头像，进入管理员设置界面（或者直接访问`http://<IP>:8080/admin/settings`），随后通过`设置 -> 管理OpenAI API连接 -> +`添加API连接，需要输入API Key和API URL。完成之后点击`保存`，即可完成API连接的设置。
+
+### RAG配置
+
+随后，找到`文档`进行设置。由于笔者的机器没有GPU，性能受限，笔者只能在效果和速度之间进行权衡。笔者发现Embedding模型如果选择更准确、更受欢迎的`BGE-m3`，在面对大量文档的检索时会慢到不可接受，因此笔者最后还是回退到了默认的`sentence-transformers/all-MiniLM-L6-v2`模型，这一模型的参数量仅有`22 M`，速度快，效果尚可。
+
+而有关检索的设置，笔者启用了混合检索模式，使用`BAAI/bge-reranker-base`作为重排序模型，设置`块大小 (Chunk Size)`为`1024`，`块重叠 (Chunk Overlap)`为`100`，`Top K`为`50`，`Top K Reranker`为`20`，并设置`Relevance Threshold`为`0.1`，这样的设置虽然有所妥协，效果基本上也能接受。
+
+### 添加文档
+
+点击UI左侧的`工作空间`，点击上方的`知识库`（或者直接访问`http://<IP>:8080/workspace/knowledge`），点击右上角的`+`，按照要求补充信息，并上传文档即可。笔者建立了两个相关知识库：
+
+* Arch Linux for Loong64
+  * 笔者撰写的Arch Linux for Loong64的开发文档，包括自己的相关博客和GitHub上的Wiki文档
+  * 龙芯公开的[龙芯架构参考手册 - 卷一](https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-Vol1-v1.10-CN.pdf)
+* ArchWiki
+  * Arch Linux上游的ArchWiki文档
+
+### 创建模型
+
+点击UI左侧的`工作空间`，随后点击上方的`模型`（或者直接访问`http://<IP>:8080/workspace/models`），点击右上角的`+`，补充信息并创建用于Arch Linux for Loong64助手的模型。笔者创建了3个模型：
+
+* Arch Linux for Loong64 Dev Helper
+  * 回答有关Arch Linux for Loong64维护的问题
+  * 使用`DeepSeek v3 0324`作为LLM
+  * 可访问`Arch Linux for Loong64`知识库
+  * 系统提示词为：
+    ```
+    你是一个帮助Arch Linux for Loong64维护者工作的助手，在Arch Linux for Loong64知识库中有答案时优先根据知识库回答，如果知识库中没有答案但是有检索得到的上下文参考时可以参考可信较高的检索内容（不要参考劣质****博客），否则结合自身知识（给出结合自身知识的说明），并按照你认为最合理的方式回答
+    ```
+* Arch Linux for Loong64 Dev Helper VL
+  * 多模态模型，可用于拍屏/截图日志分析，回答有关Arch Linux for Loong64维护的问题（仅建议用于多模态用途）
+  * 使用`Llama 4 Maverick`作为LLM
+  * 可访问`Arch Linux for Loong64`知识库
+  * 系统提示词为：
+    ```
+    你是一个帮助Arch Linux for Loong64维护者工作的助手，在Arch Linux for Loong64知识库中有答案时优先根据知识库回答，如果知识库中没有答案但是有检索得到的上下文参考时可以参考可信较高的检索内容（不要参考劣质****博客），否则结合自身知识（给出结合自身知识的说明），并按照你认为最合理的方式回答。作为一个多模态模型，你需要准确识别用户可能发送的截图、拍屏，并精准完整地提炼信息。
+    ```
+* Arch Linux for Loong64 Generic Helper (Beta)
+  * 更通用的Arch Linux for Loong64助手（Beta），除Arch Linux for Loong64外还拥有ArchWiki的知识（但检索较慢且效果可能不如启用网页搜索后的开发助手）
+  * 使用`DeepSeek v3 0324`作为LLM
+  * 可访问`Arch Linux for Loong64`和`ArchWiki`知识库
+  * 系统提示词为：
+    ```
+    你是一个帮助Arch Linux或者Arch Linux for Loong64维护者及用户的助手（没有特殊说明架构的时候假定架构为Loong64）。在知识库中有答案时优先根据知识库回答，注意有关Loong64架构的问题应当优先按照Arch Linux for Loong64的文档说明和社区习惯回答；如果知识库中没有答案但是有检索得到的上下文参考时可以参考可信较高的检索内容（不要参考劣质****博客）；否则结合自身知识（给出结合自身知识的说明），并按照你认为最合理的方式回答
+    ```
+
+创建完成后，将这些模型设置为`公开`，或者对Arch Linux for Loong64的用户组开放。在`管理员面板 -> 设置 -> 模型 -> （右上角齿轮图标）`中设置模型，将这些助手模型添加到默认模型列表中。
+
+## 使用方法
+
+* 对于Arch Linux for Loong64用户组，笔者设定了默认模型为`Arch Linux for Loong64 Dev Helper`，理论上注册后激活即开箱即用。
+* 如果遇到不便于分析日志的拍屏、截图等问题，可以使用`Arch Linux for Loong64 Dev Helper VL`模型进行分析。
+  * 在输入框中输入`@`即可在单轮对话中切换模型。
+  * 由于`Llama 4 Maverick`逻辑能力与代码能力均较差，建议仅使用该模型提取多模态信息，分析工作仍然交给`Arch Linux for Loong64 Dev Helper`来完成。
+* 目前`Arch Linux for Loong64 Generic Helper (Beta)`模型的效果并不理想，检索速度较慢，且准确性一般。
+  * 建议使用`Arch Linux for Loong64 Dev Helper`模型并开启网页搜索功能替代。
+
+建议一般情况下保持使用`Arch Linux for Loong64 Dev Helper`模型（可按照实际需要开启网页搜索功能），需要多模态分析拍屏或者截图时使用`@`在单轮对话中切换暂时切换到`Arch Linux for Loong64 Dev Helper VL`模型提取日志等信息，但随后仍然使用默认的`Arch Linux for Loong64 Dev Helper`模型进行分析。
+
+需要注意，即使有了RAG加持，**模型的回答仍然可能不准确**，建议用户对模型的回答进行事实验证。由于输出内容中会包含检索引文，用户可以自行检索引文（或访问相应的文档网页）来验证模型的回答。
+
+## 效果展示
+
+|[![#~/img/llm/arch-linux-for-loong64-helper.webp](/img/llm/arch-linux-for-loong64-helper.webp)](/img/llm/arch-linux-for-loong64-helper.webp)|
+|:----:|
+|Arch Linux for Loong64 Dev Helper（默认）|
+
+|[![#~/img/llm/arch-linux-for-loong64-helper-vl.webp](/img/llm/arch-linux-for-loong64-helper-vl.webp)](/img/llm/arch-linux-for-loong64-helper-vl.webp)|
+|:----:|
+|Arch Linux for Loong64 Dev Helper VL|
+
+|[![#~/img/llm/arch-linux-for-loong64-helper-generic.webp](/img/llm/arch-linux-for-loong64-helper-generic.webp)](/img/llm/arch-linux-for-loong64-helper-generic.webp)|
+|:----:|
+|Arch Linux for Loong64 Generic Helper (Beta)|
+
+|[![#~/img/llm/answer1-arch-linux-for-loong64-helper-lossless.webp](/img/llm/answer1-arch-linux-for-loong64-helper-lossless.webp)](/img/llm/answer1-arch-linux-for-loong64-helper-lossless.webp)|
+|:----:|
+|回答效果示例|
+
+|[![#~/img/llm/answer2-arch-linux-for-loong64-helper-lossless.webp](/img/llm/answer2-arch-linux-for-loong64-helper-lossless.webp)](/img/llm/answer2-arch-linux-for-loong64-helper-lossless.webp)|
+|:----:|
+|回答效果示例|
+
+|[![#~/img/llm/answer3-arch-linux-for-loong64-helper-lossless.webp](/img/llm/answer3-arch-linux-for-loong64-helper-lossless.webp)](/img/llm/answer3-arch-linux-for-loong64-helper-lossless.webp)|
+|:----:|
+|回答效果示例|
