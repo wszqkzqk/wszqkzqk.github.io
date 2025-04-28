@@ -53,9 +53,9 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
 
 * Arch Linux for Loong64
   * 笔者撰写的Arch Linux for Loong64的开发文档，包括自己的相关博客和GitHub上的Wiki文档
-  * 龙芯公开的[龙芯架构参考手册 - 卷一](https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-Vol1-v1.10-CN.pdf)
+  * 龙芯公开的手册：[龙芯架构参考手册 - 卷一](https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-Vol1-v1.10-CN.pdf)
 * ArchWiki
-  * Arch Linux上游的ArchWiki文档
+  * Arch Linux上游的ArchWiki的全部内容（获取自`arch-wiki-docs`包）
 
 ### 创建模型
 
