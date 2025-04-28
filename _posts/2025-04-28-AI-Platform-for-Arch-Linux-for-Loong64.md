@@ -17,7 +17,7 @@ tags:       AI LLM 开源软件 LoongArchLinux
 
 ## 技术实现过程
 
-笔者选择了[Open WebUI](https://docs.openwebui.com/)作为前端平台，LLM均使用**开源大模型**，其中单模态模型使用[DeepSeek v3 0324](https://api-docs.deepseek.com/zh-cn/news/news250325)，多模态模型使用[Llama 4 Maverick](https://www.llama.com/models/llama-4/)。这两个模型基本上是目前（2025.04.28）开源的单模态和多模态模型（尤其是文字识别应用）中性能最好的模型。（不过LLama 4 Maverick的日常处理和代码能力确实不敢恭维……）
+笔者选择了[Open WebUI](https://docs.openwebui.com/)作为前端平台，LLM均使用**开源大模型**，其中单模态模型使用[DeepSeek v3 0324](https://api-docs.deepseek.com/zh-cn/news/news250325)，多模态模型使用[Llama 4 Maverick](https://www.llama.com/models/llama-4/)。这两个模型基本上是目前（2025.04.28）开源的单模态和多模态模型（尤其是文字识别应用）中性能最好的。（不过LLama 4 Maverick的日常处理和代码能力确实不敢恭维……）
 
 笔者主要希望通过增强问答（RAG，Retrieval-Augmented Generation）来赋予模型帮助Arch Linux for Loong64开发者和用户的能力。
 
@@ -95,7 +95,9 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
   * 在输入框中输入`@`即可在单轮对话中切换模型。
   * 由于`Llama 4 Maverick`逻辑能力与代码能力均较差，建议仅使用该模型提取多模态信息，分析工作仍然交给`Arch Linux for Loong64 Dev Helper`来完成。
 * 目前`Arch Linux for Loong64 Generic Helper (Beta)`模型的效果并不理想，检索速度较慢，且准确性一般。
-  * 建议使用`Arch Linux for Loong64 Dev Helper`模型并开启网页搜索功能替代。
+  * 建议使用`Arch Linux for Loong64 Dev Helper`模型并开启**网页搜索**功能替代。
+  * **ArchWiki非常著名**，很容易被搜索引擎收录。（相比之下Arch Linux for Loong64的文档则很难直接通过搜索引擎找到）
+  * 现代搜索引擎使用的检索模型远远比笔者本地部署的要强大，更容易找到正确的内容，因此在合适的提示词下可能给出比笔者特意建立的ArchWiki检索系统更准确的答案。
 
 建议一般情况下保持使用`Arch Linux for Loong64 Dev Helper`模型（可按照实际需要开启网页搜索功能），需要多模态分析拍屏或者截图时使用`@`在单轮对话中切换暂时切换到`Arch Linux for Loong64 Dev Helper VL`模型提取日志等信息，但随后仍然使用默认的`Arch Linux for Loong64 Dev Helper`模型进行分析。
 
