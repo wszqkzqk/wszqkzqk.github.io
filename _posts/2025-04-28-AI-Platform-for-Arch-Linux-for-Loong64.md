@@ -19,11 +19,25 @@ tags:       AI LLM 开源软件 LoongArchLinux
 
 笔者选择了[Open WebUI](https://docs.openwebui.com/)作为前端平台，LLM均使用**开源大模型**，其中单模态模型使用[DeepSeek v3 0324](https://api-docs.deepseek.com/zh-cn/news/news250325)，多模态模型使用[Llama 4 Maverick](https://www.llama.com/models/llama-4/)。这两个模型基本上是目前（2025.04.28）开源的单模态和多模态模型（尤其是文字识别应用）中性能最好的。（不过LLama 4 Maverick的日常处理和代码能力确实不敢恭维……）
 
-截至2024.04.29，Qwen 3发布，Qwen 3 235B A22B的**性能**似乎更强，但是**上下文长度**支持似乎是一个短板：
+2024.04.29，[Qwen 3发布](https://qwenlm.github.io/zh/blog/qwen3/)，Qwen 3 235B A22B的**性能**似乎更强：
+
+|          | Qwen3-235B-A22B MoE | Qwen3-32B Dense | OpenAI-o1 2024-12-17 | Deepseek-R1 | Grok 3 Beta Think | Gemini2.5-Pro | OpenAI-o3-mini Medium |
+|----------|--------------------|-----------------|----------------------|-------------|-------------------|----------------|------------------------|
+| ArenaHard | 95.6               | 93.8            | 92.1                 | 93.2        | -                 | 96.4           | 89.0                   |
+| AIME'24   | 85.7               | 81.4            | 74.3                 | 79.8        | 83.9              | 92.0           | 79.6                   |
+| AIME'25   | 81.5               | 72.9            | 79.2                 | 70.0        | 77.3              | 86.7           | 74.8                   |
+| LiveCodeBench v5, 2024.10-2025.02 | 70.7               | 65.7            | 63.9                 | 64.3        | 70.6              | 70.4           | 66.3                   |
+| CodeForces Elo Rating | 2056               | 1977            | 1891                 | 2029        | -                 | 2001           | 2036                   |
+| Aider Pass@2 | 61.8               | 50.2            | 61.7                 | 56.9        | 53.3              | 72.9           | 53.8                   |
+| LiveBench 2024-11-25 | 77.1               | 74.9            | 75.7                 | 71.6        | -                 | 82.4           | 70.0                   |
+| BFCL v3    | 70.8               | 70.3            | 67.8                 | 56.9        | -                 | 62.9           | 64.6                   |
+| MultilF 8 Languages | 71.9               | 73.0            | 48.8                 | 67.7        | -                 | 77.8           | 48.4                   |
+
+但是**上下文长度**支持似乎是一个短板：
 
 > It natively handles a 32K token context window and extends up to 131K tokens using YaRN-based scaling.
 
-Qwen 3 235B A22B原生仅支持32 K的上下文窗口，扩展到131 K的上下文窗口需要借助YaRN-based scaling，也许不适合包含大量文档的RAG场景，因此笔者尚未改变设置。
+Qwen 3 235B A22B原生仅支持32 K的上下文窗口，扩展到131 K的上下文窗口需要借助YaRN-based scaling，也许不适合包含**大量文档的RAG场景**，因此笔者尚未改变设置。
 
 笔者主要希望通过增强问答（RAG，Retrieval-Augmented Generation）来赋予模型帮助Arch Linux for Loong64开发者和用户的能力。
 
