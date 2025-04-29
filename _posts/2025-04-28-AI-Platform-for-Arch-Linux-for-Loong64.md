@@ -19,6 +19,12 @@ tags:       AI LLM 开源软件 LoongArchLinux
 
 笔者选择了[Open WebUI](https://docs.openwebui.com/)作为前端平台，LLM均使用**开源大模型**，其中单模态模型使用[DeepSeek v3 0324](https://api-docs.deepseek.com/zh-cn/news/news250325)，多模态模型使用[Llama 4 Maverick](https://www.llama.com/models/llama-4/)。这两个模型基本上是目前（2025.04.28）开源的单模态和多模态模型（尤其是文字识别应用）中性能最好的。（不过LLama 4 Maverick的日常处理和代码能力确实不敢恭维……）
 
+截至2024.04.29，Qwen 3发布，Qwen 3 235B A22B的**性能**似乎更强，但是**上下文长度**支持似乎是一个短板：
+
+> It natively handles a 32K token context window and extends up to 131K tokens using YaRN-based scaling.
+
+Qwen 3 235B A22B原生仅支持32 K的上下文窗口，扩展到131 K的上下文窗口需要借助YaRN-based scaling，也许不适合包含大量文档的RAG场景，因此笔者尚未改变设置。
+
 笔者主要希望通过增强问答（RAG，Retrieval-Augmented Generation）来赋予模型帮助Arch Linux for Loong64开发者和用户的能力。
 
 ### Open WebUI配置
