@@ -19,7 +19,7 @@ tags:       AI LLM 开源软件 LoongArchLinux
 
 笔者选择了[Open WebUI](https://docs.openwebui.com/)作为前端平台，LLM均使用**开源大模型**，其中单模态模型使用[DeepSeek v3 0324](https://api-docs.deepseek.com/zh-cn/news/news250325)，多模态模型使用[Llama 4 Maverick](https://www.llama.com/models/llama-4/)。这两个模型基本上是目前（2025.04.28）开源的单模态和多模态模型（尤其是文字识别应用）中性能最好的。（不过LLama 4 Maverick的日常处理和代码能力确实不敢恭维……）
 
-2024.04.29，[Qwen 3发布](https://qwenlm.github.io/zh/blog/qwen3/)，Qwen 3 235B A22B的**性能**似乎更强：
+* 更新：2024.04.29，[Qwen 3发布](https://qwenlm.github.io/zh/blog/qwen3/)，Qwen 3 235B A22B的**性能**似乎更强：
 
 |          | Qwen3-235B-A22B MoE | Qwen3-32B Dense | OpenAI-o1 2024-12-17 | Deepseek-R1 | Grok 3 Beta Think | Gemini2.5-Pro | OpenAI-o3-mini Medium |
 |----------|--------------------|-----------------|----------------------|-------------|-------------------|----------------|------------------------|
@@ -37,7 +37,7 @@ tags:       AI LLM 开源软件 LoongArchLinux
 
 > It natively handles a 32K token context window and extends up to 131K tokens using YaRN-based scaling.
 
-Qwen 3 235B A22B原生仅支持32 K的上下文窗口，扩展到131 K的上下文窗口需要借助YaRN-based scaling，也许不适合包含**大量文档的RAG场景**，因此笔者尚未改变设置。
+Qwen 3 235B A22B原生仅支持32 K的上下文窗口，扩展到131 K的上下文窗口需要借助YaRN-based scaling，在**大量文档的RAG场景**以及冗长的构建日志分析中可能会超出上下文窗口的限制而报错。因此笔者仅将其作为可选项，默认模型仍然是DeepSeek v3 0324。（由于DeepSeek v3 0324是非推理模型，而Qwen 3 235B A22B是推理模型，用户也正好可以按照实际需要选择使用）
 
 笔者主要希望通过增强问答（RAG，Retrieval-Augmented Generation）来赋予模型帮助Arch Linux for Loong64开发者和用户的能力。
 
@@ -101,6 +101,14 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
     ```
     你是一个帮助Arch Linux for Loong64维护者工作的助手，在Arch Linux for Loong64知识库中有答案时优先根据知识库回答，如果知识库中没有答案但是有检索得到的上下文参考时可以参考可信较高的检索内容（不要参考劣质****博客），否则结合自身知识（给出结合自身知识的说明），并按照你认为最合理的方式回答
     ```
+* Arch Linux for Loong64 Dev Helper (Reasoning)
+  * 回答有关Arch Linux for Loong64维护的问题
+  * 使用`Qwen 3 235B A22B`作为LLM
+  * 可访问`Arch Linux for Loong64`知识库
+  * 系统提示词为：
+    ```
+    你是一个帮助Arch Linux for Loong64维护者工作的助手，在Arch Linux for Loong64知识库中有答案时优先根据知识库回答，如果知识库中没有答案但是有检索得到的上下文参考时可以参考可信较高的检索内容（不要参考劣质****博客），否则结合自身知识（给出结合自身知识的说明），并按照你认为最合理的方式回答
+    ```
 * Arch Linux for Loong64 Dev Helper VL
   * 多模态模型，可用于拍屏/截图日志分析，回答有关Arch Linux for Loong64维护的问题（仅建议用于多模态用途）
   * 使用`Llama 4 Maverick`作为LLM
@@ -122,16 +130,17 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
 
 ## 使用方法
 
-* 对于Arch Linux for Loong64用户组，笔者设定了默认模型为`Arch Linux for Loong64 Dev Helper`，理论上注册后激活即开箱即用。
-* 如果遇到不便于分析日志的拍屏、截图等问题，可以使用`Arch Linux for Loong64 Dev Helper VL`模型进行分析。
-  * 在输入框中输入`@`即可在单轮对话中切换模型。
+* 对于Arch Linux for Loong64用户组，笔者设定了默认模型为`Arch Linux for Loong64 Dev Helper`，理论上注册后激活即**开箱即用**。
+* 如果遇到需要**深度推理**的问题且上下文长度不算太大，可以使用`Arch Linux for Loong64 Dev Helper (Reasoning)`模型进行分析。
+* 如果遇到不便于分析日志的**拍屏、截图**等问题，可以使用`Arch Linux for Loong64 Dev Helper VL`模型进行分析。
+  * 在输入框中输入`@`即可在对话中切换模型。
   * 由于`Llama 4 Maverick`逻辑能力与代码能力均较差，建议仅使用该模型提取多模态信息，分析工作仍然交给`Arch Linux for Loong64 Dev Helper`来完成。
 * 目前`Arch Linux for Loong64 Generic Helper (Beta)`模型的效果并不理想，检索速度较慢，且准确性一般。
   * 建议使用`Arch Linux for Loong64 Dev Helper`模型并开启**网页搜索**功能替代。
   * **ArchWiki非常著名**，很容易被搜索引擎收录。（相比之下Arch Linux for Loong64的文档则很难直接通过搜索引擎找到）
   * 现代搜索引擎使用的检索模型远远比笔者本地部署的要强大，更容易找到正确的内容，因此在合适的提示词下可能给出比笔者特意建立的ArchWiki检索系统更准确的答案。
 
-建议一般情况下保持使用`Arch Linux for Loong64 Dev Helper`模型（可按照实际需要开启网页搜索功能），需要多模态分析拍屏或者截图时使用`@`在单轮对话中切换暂时切换到`Arch Linux for Loong64 Dev Helper VL`模型提取日志等信息，但后续分析仍然使用默认的`Arch Linux for Loong64 Dev Helper`模型。
+建议一般情况下使用`Arch Linux for Loong64 Dev Helper`或者`Arch Linux for Loong64 Dev Helper (Reasoning)`模型（可按照实际需要开启网页搜索功能），需要多模态分析拍屏或者截图时使用`@`在对话中切换暂时切换到`Arch Linux for Loong64 Dev Helper VL`模型提取日志等信息，但后续分析仍然使用默认的`Arch Linux for Loong64 Dev Helper`模型。
 
 需要注意，即使有了RAG加持，**模型的回答仍然可能不准确**，建议用户对模型的回答进行事实验证。由于输出内容中会包含检索引文，用户可以自行检索引文（或访问相应的文档网页）来验证模型的回答。
 
