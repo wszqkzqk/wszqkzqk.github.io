@@ -80,9 +80,7 @@ Qwen 3 235B A22B原生仅支持32 K的上下文窗口，扩展到131 K的上下�
 
 笔者主要希望通过增强问答（RAG，Retrieval-Augmented Generation）来赋予模型帮助Arch Linux for Loong64开发者和用户的能力。
 
-### Open WebUI配置
-
-#### 基本
+### Open WebUI基本配置
 
 笔者在16核16 GB内存的AMD Zen 3虚拟机（CLab）上部署了Open WebUI，笔者并没有使用Docker，而是直接通过`pacman`从`archlinuxcn`安装了Open WebUI。
 
