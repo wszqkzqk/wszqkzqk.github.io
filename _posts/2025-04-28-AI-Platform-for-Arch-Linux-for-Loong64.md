@@ -82,7 +82,7 @@ tags:       AI LLM 开源软件 LoongArchLinux
 
 Qwen 3 235B A22B原生仅支持32 K的上下文窗口，扩展到131 K的上下文窗口需要借助YaRN-based scaling，在**大量文档的RAG场景**以及冗长的构建日志分析中可能会超出上下文窗口的限制而报错。（不过在**不超过其窗口范围**时上下文理解表现尚可）因此笔者仅将其作为可选项。（由于DeepSeek v3 0324是非推理模型，而Qwen 3 235B A22B是推理模型，用户也正好可以按照实际需要选择使用）
 
-RAG除了性能外，幻觉率也是一个很重要的考虑因素，以下是笔者于2025.04.30在[vectara](https://vectara-leaderboard.hf.space/?__theme=system)上摘录的结果：
+除了性能外，幻觉率也是一个很重要的考虑因素，以下是笔者于2025.04.30在[vectara](https://vectara-leaderboard.hf.space/?__theme=system)上摘录的结果：
 
 | Model                     | Hallucination Rate | Factual Consistency Rate | Answer Rate | Summary Length (Words) |
 |--------------------------|--------------------:|---------------------------:|------------:|------------------------:|
