@@ -771,6 +771,110 @@ git remote set-url origin <upstream-repo-url>
 
 然后就可以在这个非bare仓库中进行修改、测试、应用Patch了。
 
+## 大规模重构建中升级的包因为soname被某依赖锁定版本，导致安装老版本包使得重构建无效怎么办？
+
+在大规模重构建中，由于依赖关系复杂，可能会存在我们的local repo中有更新的包，但是由于某个依赖锁定了版本，导致重构建的时候安装了老版本的包（或者中途降级为老版本的包），导致重构建无效。这一问题本质上是构建顺序不合理导致的。如果我们遇到了这样的问题，可以利用Arch Linux的`pactree`等工具方便地**排查到底是哪个依赖锁定了版本**。
+
+`pactree`是Arch Linux的一个命令行工具，可以用来查看软件包的依赖关系树。我们可以使用以下命令来查看某个软件包的依赖关系：
+
+```bash
+pactree -s <package-name>
+```
+
+锁定了soname版本的依赖在`pactree`的输出中会呈现出一定的特征。一般情况下，如果没有在依赖中显式指定soname，那么`pactree`的输出中会显示为：
+
+```log
+├─xz
+├─zlib
+├─zstd
+```
+
+如果在依赖中显式指定了soname，那么`pactree`的输出中则类似：
+
+```log
+├─xz provides liblzma.so=5-64
+├─zlib provides libz.so=1-64
+├─zstd provides libzstd.so=1-64
+```
+
+我们只需要用`grep`找出这样的特征即可。
+
+### 安装`depends`时即锁定了旧的依赖
+
+对于这种情况，一般体现为构建过程中直接安装了老版本的依赖包。我们可以使用`pactree`来查看我们待构建的这个包的依赖关系树，找出锁定了旧版本的依赖包：
+
+```bash
+pactree -s <package-name>
+```
+
+在其中找到`<soname发生变化的依赖> provides <soname>=<old-version>`的行，表示这个依赖包锁定了旧版本的依赖，向上一级即为导致版本锁定的依赖包。
+
+例如，如果我们需要对`libxml2`升级进行重构建，并且在构建`cmake`的时候发现了版本锁定，需要排查其依赖关系，运行：
+
+```bash
+pactree -s cmake
+```
+
+输出如下：
+
+```log
+cmake
+（省略）
+├─libarchive
+│ ├─acl
+│ ├─acl provides libacl.so=1-64
+│ ├─bzip2
+│ │ ├─glibc
+│ │ └─bash provides sh
+│ ├─bzip2 provides libbz2.so=1.0-64
+│ ├─glibc
+│ ├─libxml2
+│ │ ├─bash
+│ │ ├─glibc
+│ │ ├─icu
+│ │ │ ├─gcc-libs
+│ │ │ ├─glibc
+│ │ │ └─bash provides sh
+│ │ ├─readline
+│ │ ├─xz
+│ │ └─zlib
+│ ├─libxml2 provides libxml2.so=16-64
+│ ├─lz4
+│ ├─openssl
+│ ├─openssl provides libcrypto.so=3-64
+│ ├─xz
+│ ├─xz provides liblzma.so=5-64
+│ ├─zlib
+│ ├─zlib provides libz.so=1-64
+│ ├─zstd
+│ └─zstd provides libzstd.so=1-64
+```
+
+找到`libxml2 provides ……`这一行，并向上追溯一个层级，发现是`libarchive`锁定了旧版本的依赖。这表明我们蓄意先将`libarchive`来针对新版本的`libxml2`进行重构建，然后才能重构建`cmake`。
+
+### 安装`makedepends`/`checkdepends`时锁定了旧的依赖
+
+对于这种情况，可能体现为构建过程中先安装了新版本的依赖包，然后在安装`makedepends`/`checkdepends`的时候又降级为了老版本。这种情况我们需要对`makedepends`/`checkdepends`进行排查，找出锁定了旧版本的依赖包。首先在Bash（或者其他兼容POSIX的Shell，**不能用Fish**）中从`PKGBUILD`导出`makedepends`/`checkdepends`数组，并遍历初筛造成影响的直接依赖：
+
+```bash
+makedepends=$(source PKGBUILD && echo "${makedepends[@]}")
+checkdepends=$(source PKGBUILD && echo "${checkdepends[@]}")
+
+for dep in $makedepends; do
+    if pactree -s $dep | grep -q "<soname发生变化的依赖> provides"; then
+        echo "$dep"
+    fi
+done
+
+for dep in $checkdepends; do
+    if pactree -s $dep | grep -q "<soname发生变化的依赖> provides"; then
+        echo "$dep"
+    fi
+done
+```
+
+这样即得到了造成版本锁定的直接依赖包，接下来，按照[**安装depends时即锁定了旧的依赖**的方法](#安装depends时即锁定了旧的依赖)来排查这些依赖包的依赖关系树，找出应该首先重构建的包。
+
 # 更多阅读材料
 
 * [龙芯的Arch Linux移植工作流程 by wszqkzqk](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)
