@@ -819,35 +819,11 @@ pactree -s cmake
 
 ```log
 cmake
-（省略）
+├─ ……（省略）
 ├─libarchive
-│ ├─acl
-│ ├─acl provides libacl.so=1-64
-│ ├─bzip2
-│ │ ├─glibc
-│ │ └─bash provides sh
-│ ├─bzip2 provides libbz2.so=1.0-64
-│ ├─glibc
-│ ├─libxml2
-│ │ ├─bash
-│ │ ├─glibc
-│ │ ├─icu
-│ │ │ ├─gcc-libs
-│ │ │ ├─glibc
-│ │ │ └─bash provides sh
-│ │ ├─readline
-│ │ ├─xz
-│ │ └─zlib
+│ ├─ ……（省略）
 │ ├─libxml2 provides libxml2.so=16-64
-│ ├─lz4
-│ ├─openssl
-│ ├─openssl provides libcrypto.so=3-64
-│ ├─xz
-│ ├─xz provides liblzma.so=5-64
-│ ├─zlib
-│ ├─zlib provides libz.so=1-64
-│ ├─zstd
-│ └─zstd provides libzstd.so=1-64
+│ ├─ ……（省略）
 ```
 
 找到`libxml2 provides ……`这一行，并向上追溯一个层级，发现是`libarchive`锁定了旧版本的依赖。这表明我们蓄意先将`libarchive`来针对新版本的`libxml2`进行重构建，然后才能重构建`cmake`。
