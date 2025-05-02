@@ -832,7 +832,7 @@ cmake
 
 对于这种情况，可能体现为构建过程中先安装了新版本的依赖包，然后在安装`makedepends`/`checkdepends`的时候又降级为了老版本。这种情况我们需要对`makedepends`/`checkdepends`进行排查，找出锁定了旧版本的依赖包。首先在Bash（或者其他兼容POSIX的Shell，**不能用Fish**）中从`PKGBUILD`导出`makedepends`/`checkdepends`数组，并遍历初筛造成影响的直接依赖：
 
-```bash
+```
 makedepends=$(source PKGBUILD && echo "${makedepends[@]}")
 checkdepends=$(source PKGBUILD && echo "${checkdepends[@]}")
 
