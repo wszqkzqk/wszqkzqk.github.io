@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      为Arch Linux for Loong64设计的AI平台
-subtitle:   能够为Arch Linux for Loong64的开发者与用户提供帮助的AI助手
+subtitle:   利用Open WebUI与RAG技术构建基于开源大模型的AI助手
 date:       2025-04-28
 author:     wszqkzqk
 header-img: img/llm/ai-bg-lossless.webp
