@@ -39,7 +39,7 @@ pacman -S mingw-w64-ucrt-x86_64-aichat
 
 如果我们还想要添加多个模型服务商，可以在配置文件中手动添加。配置文件位于用户数据目录下的`aichat/config.yaml`（在Linux上默认为`~/.config/aichat/config.yaml`，在Windows上默认为`%APPDATA%\aichat\config.yaml`）。
 
-此外，AIChat默认的上下文压缩阈值较小，为`4000`，现在比较强大的大模型普遍支持128 K及以上的上下文，我们将阈值设定为`100000`一般是合理的。笔者在一般聊天中更喜欢使用DeepSeek v3 0324模型（Google Gemini 2.5 Pro非常强大但是近期OpenRouter提供的Google Gemini 2.5 Pro有时候容易无响应），以下是笔者的示例配置文件：
+此外，AIChat默认的上下文压缩阈值较小，为`4000`，现在比较强大的大模型普遍支持128 K及以上的上下文，我们将阈值设定为`100000`一般是合理的。笔者在一般聊天中更喜欢使用DeepSeek v3 0324模型（Google Gemini 2.5 Pro非常强大但是近期OpenRouter提供的Google Gemini 2.5 Pro有时候容易无响应，而且现在将配置缩减到了1 RPM,这一意味着一般的智能体的操作均无法使用），以下是笔者的示例配置文件：
 
 ```yaml
 compress_threshold: 100000
@@ -67,24 +67,16 @@ clients:
       max_output_tokens: 65536
       supports_vision: true
       supports_function_calling: true
-- type: openai-compatible
-  name: chutes
-  api_base: https://llm.chutes.ai/v1
-  api_key: xxxxxx
-  models:
-    # DeepSeek
-    - name: deepseek-ai/DeepSeek-V3-0324
-      max_input_tokens: 131072
-      max_output_tokens: 131072
-      supports_function_calling: true
-    - name: deepseek-ai/DeepSeek-R1
-      max_input_tokens: 163840
-      max_output_tokens: 163840
     # Meta
-    - name: chutesai/Llama-4-Maverick-17B-128E-Instruct-FP8
-      max_input_tokens: 1000000
+    - name: meta-llama/llama-4-maverick:free
+      max_input_tokens: 256000
       max_output_tokens: 256000
-      supports_vision: true
+      supports_function_calling: true
+    # Qwen
+    - name: qwen/qwen3-235b-a22b:free
+      max_input_tokens: 40960
+      max_output_tokens: 40960
+      supports_function_calling: true
 ```
 
 ## 使用
