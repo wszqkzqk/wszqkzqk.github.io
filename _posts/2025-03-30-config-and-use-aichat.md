@@ -55,8 +55,8 @@ clients:
   models:
     # Deepseek
     - name: deepseek/deepseek-chat-v3-0324:free
-      max_input_tokens: 131072
-      max_output_tokens: 131072
+      max_input_tokens: 163840
+      max_output_tokens: 163840
       supports_function_calling: true
     - name: deepseek/deepseek-r1:free
       max_input_tokens: 163840
