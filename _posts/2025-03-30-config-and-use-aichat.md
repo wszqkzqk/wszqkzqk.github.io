@@ -71,7 +71,7 @@ clients:
     - name: meta-llama/llama-4-maverick:free
       max_input_tokens: 256000
       max_output_tokens: 256000
-      supports_function_calling: true
+      supports_vision: true
     # Qwen
     - name: qwen/qwen3-235b-a22b:free
       max_input_tokens: 40960
