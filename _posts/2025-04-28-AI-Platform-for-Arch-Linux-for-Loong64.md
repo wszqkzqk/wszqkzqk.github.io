@@ -131,7 +131,7 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
 
 找到`文档`进行设置。由于笔者的机器没有GPU，性能受限，笔者只能在效果和速度之间进行权衡。笔者发现嵌入模型如果选择更准确、更受欢迎的`BGE-m3`，在面对**大量文档**的检索时会**慢**到不可接受，因此笔者最后还是回退到了默认的`sentence-transformers/all-MiniLM-L6-v2`模型，这一模型的参数量仅有**22 M**（0.022 B），速度快，效果尚可。
 
-而有关检索的设置，笔者启用了混合检索模式，使用小模型`BAAI/bge-reranker-base`作为**重排序**模型（同样是因为效果更好的`BAAI/bge-reranker-v2-m3`性能开销不可接受），设置`块大小 (Chunk Size)`为`1024`，`块重叠 (Chunk Overlap)`为`100`，`Top K`为`50`，`Top K Reranker`为`20`，并设置`Relevance Threshold`为`0.1`，这样的设置虽然有所妥协，效果基本上也能接受。
+而有关检索的设置，笔者启用了混合检索模式，使用小模型`BAAI/bge-reranker-base`作为**重排序**模型（同样是因为效果更好的`BAAI/bge-reranker-v2-m3`性能开销不可接受），设置`块大小 (Chunk Size)`为`1024`，`块重叠 (Chunk Overlap)`为`128`，`Top K`为`50`，`Top K Reranker`为`20`，并设置`Relevance Threshold`为`0.1`，这样的设置虽然有所妥协，效果基本上也能接受。
 
 这样的设置含义是：
 * `块大小 (Chunk Size)`：每个文档块大小，设置为`1024`，即每个块有1024个Token
