@@ -21,9 +21,13 @@ tags:       AI LLM 开源软件 LoongArchLinux
 
 ### 模型选择
 
-该平台LLM均使用**开源大模型**，其中单模态模型使用[DeepSeek v3 0324](https://api-docs.deepseek.com/zh-cn/news/news250325)，多模态模型使用[Llama 4 Maverick](https://www.llama.com/models/llama-4/)。这两个模型基本上是目前（2025.04.28）开源的单模态和多模态模型（尤其是文字识别应用）中性能最好的。（不过LLama 4 Maverick的日常处理和代码能力确实不敢恭维……）
+该平台LLM均使用**开源大模型**，其中单模态模型使用[DeepSeek V3 0324](https://api-docs.deepseek.com/zh-cn/news/news250325)，多模态模型使用[Llama 4 Maverick](https://www.llama.com/models/llama-4/)。这两个模型基本上是目前（2025.04.28）开源的单模态和多模态模型（尤其是文字识别应用）中性能最好的。（不过LLama 4 Maverick的日常处理和代码能力确实不敢恭维……）
 
-* 更新：2024.04.29，[Qwen 3发布](https://qwenlm.github.io/zh/blog/qwen3/)，Qwen 3 235B A22B的**性能**似乎更强：
+笔者主要希望通过增强问答（RAG，Retrieval-Augmented Generation）来赋予模型帮助Arch Linux for Loong64开发者和用户的能力。
+
+#### 2024.04.29更新：引入Qwen 3 235B A22B作为推理模型
+
+2024.04.29，[Qwen 3发布](https://qwenlm.github.io/zh/blog/qwen3/)，Qwen 3 235B A22B的**性能**似乎更强：
 
 |          | Qwen3-235B-A22B MoE | Qwen3-32B Dense | OpenAI-o1 2024-12-17 | Deepseek-R1 | Grok 3 Beta Think | Gemini2.5-Pro | OpenAI-o3-mini Medium |
 |----------|--------------------|-----------------|----------------------|-------------|-------------------|----------------|------------------------|
@@ -80,7 +84,7 @@ tags:       AI LLM 开源软件 LoongArchLinux
 | llama-3.3-70b-instruct | 75.0 | 66.7 | 69.4 | 55.6 | 41.7 | 36.1 | 33.3 | 33.3 | 33.3 | - |
 | grok-3-beta | 75.0 | 72.2 | 63.9 | 55.6 | 55.6 | 52.8 | 58.3 | 55.6 | 63.9 | 58.3 |
 
-Qwen 3 235B A22B原生仅支持32 K的上下文窗口，扩展到131 K的上下文窗口需要借助YaRN-based scaling，在**大量文档的RAG场景**以及冗长的构建日志分析中可能会超出上下文窗口的限制而报错。（不过在**不超过其窗口范围**时上下文理解表现尚可）因此笔者仅将其作为可选项。（由于DeepSeek v3 0324是非推理模型，而Qwen 3 235B A22B是推理模型，用户也正好可以按照实际需要选择使用）
+Qwen 3 235B A22B原生仅支持32 K的上下文窗口，扩展到131 K的上下文窗口需要借助YaRN-based scaling，在**大量文档的RAG场景**以及冗长的构建日志分析中可能会超出上下文窗口的限制而报错。（不过在**不超过其窗口范围**时上下文理解表现尚可）因此笔者仅将其作为可选项。（由于DeepSeek V3 0324是非推理模型，而Qwen 3 235B A22B是推理模型，用户也正好可以按照实际需要选择使用）
 
 除了性能外，幻觉率也是一个很重要的考虑因素，以下是笔者于2025.04.30在[vectara](https://vectara-leaderboard.hf.space/?__theme=system)上摘录的结果：
 
@@ -105,9 +109,52 @@ Qwen 3 235B A22B原生仅支持32 K的上下文窗口，扩展到131 K的上下�
 | Qwen3-235b-a22b           | 13.0 %             | 87.0 %                   | 99.2 %      | 86.6                   |
 | DeepSeek-R1               | 14.3 %             | 85.7 %                   | 100.0 %     | 77.1                   |
 
-可见其实Qwen 3 235B A22B的**幻觉率相当高**，所以默认还是使用DeepSeek v3 0324作为RAG相对合理。
+可见其实Qwen 3 235B A22B的**幻觉率相当高**，所以默认还是使用DeepSeek V3 0324作为RAG相对合理。
 
-笔者主要希望通过增强问答（RAG，Retrieval-Augmented Generation）来赋予模型帮助Arch Linux for Loong64开发者和用户的能力。
+#### 2025.05.29更新：使用DeepSeek R1 0528作为新的推理模型
+
+2025.05.28，DeepSeek R1模型进行了小版本更新，升级后的DeepSeek R1 0528模型性能提升十分明显，夺回了开源大模型的单模态性能王座。
+
+| Category | Benchmark (Metric)               | DeepSeek R1     | DeepSeek R1 0528
+|----------|----------------------------------|-----------------|---|
+| General  |
+|          | MMLU-Redux (EM)                   | 92.9            | 93.4
+|          | MMLU-Pro (EM)                     | 84.0            | 85.0
+|          | GPQA-Diamond (Pass@1)             | 71.5            | 81.0
+|          | SimpleQA (Correct)                | 30.1            | 27.8
+|          | FRAMES (Acc.)                     | 82.5            | 83.0
+|          | Humanity's Last Exam (Pass@1)                     | 8.5            | 17.7
+| Code |
+|          | LiveCodeBench (2408-2505) (Pass@1)        | 63.5          | 73.3
+|          | Codeforces-Div1 (Rating)          | 1530            | 1930
+|          | SWE Verified (Resolved)           | 49.2            | 57.6
+|          | Aider-Polyglot (Acc.)             | 53.3            | 71.6
+| Math |
+|          | AIME 2024 (Pass@1)                | 79.8            | 91.4
+|          | AIME 2025 (Pass@1)                     | 70.0           | 87.5
+|          | HMMT 2025 (Pass@1)            | 41.7 | 79.4 |
+|          | CNMO 2024 (Pass@1)                | 78.8            | 86.9
+| Tools |
+|          | BFCL_v3_MultiTurn (Acc)     | -            | 37.0 |
+|          | Tau-Bench   (Pass@1)       | -            | 53.5(Airline)/63.9(Retail)
+
+| Benchmarks                        | DeepSeek-R1-0528 | OpenAI-o3 | Gemini-2.5-Pro-0506 | Qwen3-235B | DeepSeek-R1 |
+|-----------------------------------|------------------|-----------|---------------------|------------|--------------|
+| AIME 2024                         | 91.4             | 91.6      | 90.8                | 85.7       | 79.8         |
+| AIME 2025                         | 87.5             | 88.9      | 83.0                | 81.5       | 70.0         |
+| GPQA Diamond                      | 81.0             | 83.3      | 83.0                | 71.1       | 71.5         |
+| LiveCodeBench                     | 73.3             | 77.3      | 71.8                | 66.5       | 63.5         |
+| Aider                             | 71.6             | 79.6      | 76.9                | 65.0       | 57.0         |
+| Humanity's Last Exam              | 17.7             | 20.6      | 18.4                | 11.75      | 8.5          |
+
+DeepSeek R1 0528优势明显：
+  * 目前性能几乎**全面优于**Qwen 3 235B A22B等其他开源模型
+  * 支持**128k上下文长度**
+  * 幻觉得到了有效控制：根据DeepSeek官方的[发布公告](https://api-docs.deepseek.com/zh-cn/news/news250528)，更新后的模型在改写润色、总结摘要、阅读理解等场景中，幻觉率降低了 45～50% 左右
+
+因此，笔者将Arch Linux for Loong64 Dev Helper (Reasoning)的后端模型更改为DeepSeek R1 0528。
+
+由于更新后的DeepSeek R1 0528模型性能十分强大，笔者现在**推荐在遇到复杂问题时使用Arch Linux for Loong64 Dev Helper (Reasoning)模型**。
 
 ### Open WebUI基本配置
 
@@ -145,8 +192,6 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
 
 经过测试，即使是添加了这样简单的重排序模型，也可对检索的准确率带来显著提升。（似乎收益比使用更强大的`BGE-m3`作为嵌入模型但不添加重排序模型的效果要好）对于块大小似乎不宜设置得更大，否则检索速度会严重降低。
 
-* 虽然这套方法在Qwen 3发布前即设计并推出，这样最大召回上下文不太长（20 k左右）的RAG方法也正好适合给上下文长度有限（原生32 k）的Qwen 3系列模型使用
-
 ### 添加文档
 
 点击UI左侧的`工作空间`，点击上方的`知识库`（或者直接访问`http://<IP>:8080/workspace/knowledge`），点击右上角的`+`，按照要求补充信息，并上传文档即可。笔者建立了两个相关知识库：
@@ -159,25 +204,28 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
 
 ### 创建模型
 
-点击UI左侧的`工作空间`，随后点击上方的`模型`（或者直接访问`http://<IP>:8080/workspace/models`），点击右上角的`+`，补充信息并创建用于Arch Linux for Loong64助手的模型。笔者创建了3个模型：
+点击UI左侧的`工作空间`，随后点击上方的`模型`（或者直接访问`http://<IP>:8080/workspace/models`），点击右上角的`+`，补充信息并创建用于Arch Linux for Loong64助手的模型。笔者创建了4个模型：
 
 * Arch Linux for Loong64 Dev Helper
+  * 简称`Dev Helper`
   * 回答有关Arch Linux for Loong64维护的问题
-  * 使用`DeepSeek v3 0324`作为LLM
+  * 使用`DeepSeek V3 0324`作为LLM
   * 可访问`Arch Linux for Loong64`知识库
   * 系统提示词为：
     ```
     你是一个帮助Arch Linux for Loong64维护者工作的助手，在Arch Linux for Loong64知识库中有答案时优先根据知识库回答，如果知识库中没有答案但是有检索得到的上下文参考时可以参考可信较高的检索内容（不要参考劣质****博客），否则结合自身知识（给出结合自身知识的说明），并按照你认为最合理的方式回答
     ```
 * Arch Linux for Loong64 Dev Helper (Reasoning)
+  * 简称`Dev Helper (Reasoning)`
   * 回答有关Arch Linux for Loong64维护的问题
-  * 使用`Qwen 3 235B A22B`作为LLM
+  * 使用`DeepSeek R1 0528`作为LLM
   * 可访问`Arch Linux for Loong64`知识库
   * 系统提示词为：
     ```
     你是一个帮助Arch Linux for Loong64维护者工作的助手，在Arch Linux for Loong64知识库中有答案时优先根据知识库回答，如果知识库中没有答案但是有检索得到的上下文参考时可以参考可信较高的检索内容（不要参考劣质****博客），否则结合自身知识（给出结合自身知识的说明），并按照你认为最合理的方式回答
     ```
 * Arch Linux for Loong64 Dev Helper VL
+  * 简称`Dev Helper VL`
   * 多模态模型，可用于拍屏/截图日志分析，回答有关Arch Linux for Loong64维护的问题（仅建议用于多模态用途）
   * 使用`Llama 4 Maverick`作为LLM
   * 可访问`Arch Linux for Loong64`知识库
@@ -186,8 +234,9 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
     你是一个帮助Arch Linux for Loong64维护者工作的助手，在Arch Linux for Loong64知识库中有答案时优先根据知识库回答，如果知识库中没有答案但是有检索得到的上下文参考时可以参考可信较高的检索内容（不要参考劣质****博客），否则结合自身知识（给出结合自身知识的说明），并按照你认为最合理的方式回答。作为一个多模态模型，你需要准确识别用户可能发送的截图、拍屏，并精准完整地提炼信息。
     ```
 * Arch Linux for Loong64 Generic Helper (Beta)
+  * 简称`Generic Helper`
   * 更通用的Arch Linux for Loong64助手（Beta），除Arch Linux for Loong64外还拥有ArchWiki的知识（但检索较慢且效果可能不如启用网页搜索后的开发助手）
-  * 使用`DeepSeek v3 0324`作为LLM
+  * 使用`DeepSeek V3 0324`作为LLM
   * 可访问`Arch Linux for Loong64`和`ArchWiki`知识库
   * 系统提示词为：
     ```
@@ -198,17 +247,17 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
 
 ## 使用方法
 
-* 对于Arch Linux for Loong64用户组，笔者设定了默认模型为`Arch Linux for Loong64 Dev Helper`，理论上注册后激活即**开箱即用**。
-* 如果遇到需要**深度推理**的问题且上下文长度不算太大，可以使用`Arch Linux for Loong64 Dev Helper (Reasoning)`模型进行分析。
-* 如果遇到不便于分析日志的**拍屏、截图**等问题，可以使用`Arch Linux for Loong64 Dev Helper VL`模型进行分析。
+* 如果主要目标是知识的检索与查询，不涉及太复杂的推理，可以使用`Dev Helper`模型，避免深度的推理耗费大量时间。
+* 如果遇到需要**深度推理**的问题，比如代码的辅助编写、报错原因的排查、工具设计架构的规划等，可以使用`Dev Helper (Reasoning)`模型进行分析。
+* 如果遇到不便于分析日志的**拍屏、截图**等信息形式，可以使用`Dev Helper VL`模型进行分析。
   * 在输入框中输入`@`即可在对话中切换模型。
-  * 由于`Llama 4 Maverick`逻辑能力与代码能力均较差，建议仅使用该模型提取多模态信息，分析工作仍然交给`Arch Linux for Loong64 Dev Helper`来完成。
-* 目前`Arch Linux for Loong64 Generic Helper (Beta)`模型的效果并不理想，检索速度较慢，且准确性一般。
-  * 建议使用`Arch Linux for Loong64 Dev Helper`模型并开启**网页搜索**功能替代。
+  * 由于`Llama 4 Maverick`逻辑能力与代码能力均较差，建议仅使用该模型提取多模态信息，分析工作仍然交给`Dev Helper`与`Dev Helper (Reasoning)`模型来完成。
+* 目前`Generic Helper (Beta)`模型的效果并不理想，检索速度较慢，且准确性一般。
+  * 建议使用`Dev Helper`与`Dev Helper (Reasoning)`模型并开启**网页搜索**功能替代。
   * **ArchWiki非常著名**，很容易被搜索引擎收录。（相比之下Arch Linux for Loong64的文档则很难直接通过搜索引擎找到）
   * 现代搜索引擎使用的检索模型远远比笔者本地部署的要强大，更容易找到正确的内容，因此在合适的提示词下可能给出比笔者特意建立的ArchWiki检索系统更准确的答案。
 
-建议一般情况下使用`Arch Linux for Loong64 Dev Helper`（可按照实际需要开启网页搜索功能），需要多模态分析拍屏或者截图时使用`@`在对话中切换暂时切换到`Arch Linux for Loong64 Dev Helper VL`模型提取日志等信息，但后续分析仍然使用默认的`Arch Linux for Loong64 Dev Helper`模型。
+建议一般情况下按需使用`Dev Helper`与`Dev Helper (Reasoning)`（可按照实际需要开启网页搜索功能），需要多模态分析拍屏或者截图时使用`@`在对话中切换暂时切换到`Dev Helper VL`模型提取日志等信息，但后续分析仍然使用推荐的`Dev Helper`与`Dev Helper (Reasoning)`模型。
 
 需要注意，即使有了RAG加持，**模型的回答仍然可能不准确**，建议用户对模型的回答进行事实验证。由于输出内容中会包含检索引文，用户可以自行检索引文（或访问相应的文档网页）来验证模型的回答。
 
@@ -216,7 +265,11 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
 
 |[![#~/img/llm/arch-linux-for-loong64-helper.webp](/img/llm/arch-linux-for-loong64-helper.webp)](/img/llm/arch-linux-for-loong64-helper.webp)|
 |:----:|
-|Arch Linux for Loong64 Dev Helper（默认）|
+|Arch Linux for Loong64 Dev Helper|
+
+|[![#~/img/llm/arch-linux-for-loong64-helper-reasoning.webp](/img/llm/arch-linux-for-loong64-helper-reasoning.webp)](/img/llm/arch-linux-for-loong64-helper-reasoning.webp)|
+|:----:|
+|Arch Linux for Loong64 Dev Helper (Reasoning)|
 
 |[![#~/img/llm/arch-linux-for-loong64-helper-vl.webp](/img/llm/arch-linux-for-loong64-helper-vl.webp)](/img/llm/arch-linux-for-loong64-helper-vl.webp)|
 |:----:|
