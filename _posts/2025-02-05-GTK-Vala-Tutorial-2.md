@@ -599,8 +599,13 @@ public static int main (string[] args) {
       `eqtime_minutes = 229.18 * (0.000075 + 0.001868 * cos(gamma_rad) ...)`：计算均时差（分钟），真太阳时（True Solar Time，基于太阳真实位置）与均太阳时（Mean Solar Time，假设太阳匀速运行）之差，主要由地球轨道偏心率和黄赤交角引起，反映钟表时间和日晷时间的偏差。将本地平时（分钟 `i`）修正为真太阳时（分钟），以保证后续时角、太阳高度角计算的天文精度。
         - 真太阳时：基于太阳在天空中的实际位置计算，由于地球轨道离心率和黄赤交角的影响，真太阳日的长度在一年中变化可达±30秒。
         - 平太阳时：虚构一个匀速运动的“平太阳”作为参考，将一天固定为24小时（86,400秒），消除季节性波动。这是日常钟表时间的基准。
-    - **真太阳时 (True Solar Time, TST) 计算**：
-      `tst_minutes = i + eqtime_minutes - 4.0 * (longitude_deg - 15.0 * timezone_offset_hrs)`：将本地钟表时间（分钟 `i`）通过均时差和经度、时区修正，得到真太阳时（分钟）。
+    - **真太阳时 (True Solar Time, TST) 计算**：  
+      `tst_minutes = i + eqtime_minutes + 4.0 * longitude_deg - 60.0 * timezone_offset_hrs`  
+      将本地钟表时间（分钟 `i`）先加上均时差修正（`eqtime_minutes`），再加上因经度（每向东 1 度 +4 分钟）带来的分钟偏移，最后减去因时区带来的分钟差，得到真太阳时（分钟）。  
+      - `longitude_deg`：经度（度），正值为东经、负值为西经；  
+      - `timezone_offset_hrs`：时区偏移（小时），正值为东区、负值为西区；  
+      - `4.0 * longitude_deg`：将经度转换为分钟偏移；  
+      - `60.0 * timezone_offset_hrs`：将时区小时数转换为分钟偏移；
     - **时角 (Hour Angle, HA) 计算**：
       `ha_deg = (tst_minutes / 4.0) - 180.0`：根据真太阳时计算时角（度），表示太阳相对于本地子午线的角距离。
     - **太阳高度角计算**：
@@ -856,10 +861,10 @@ public class SolarAngleApp : Gtk.Application {
                 - 0.040849 * Math.sin (2.0 * gamma_rad));
 
             // True Solar Time (TST) in minutes, correcting local clock by EoT and longitude
-            double tst_minutes = i + eqtime_minutes - 4.0 * (longitude_deg - 15.0 * timezone_offset_hrs);
+            double tst_minutes = i + eqtime_minutes + 4.0 * longitude_deg - 60.0 * timezone_offset_hrs;
 
             // Hour angle H (°) relative to solar noon
-            double ha_deg = (tst_minutes / 4.0) - 180.0;
+            double ha_deg = tst_minutes / 4.0 - 180.0;
             double ha_rad = ha_deg * DEG2RAD;
 
             // cos(phi): cosine of zenith angle via spherical trig
