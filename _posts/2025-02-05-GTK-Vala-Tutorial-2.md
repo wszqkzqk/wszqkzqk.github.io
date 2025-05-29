@@ -553,9 +553,9 @@ public static int main (string[] args) {
 
 # 构建应用：太阳高度角计算与绘制工具
 
-在了解了白昼时长计算程序后，我们再来看一个与天文计算相关的 GTK4 应用程序。这个程序用于计算并绘制地球上任意位置（纬度、经度）、任意日期和时区下，太阳高度角随一天中时间变化的曲线。它将进一步展示 GTK4 中 `Gtk.SpinButton` 和 `Gtk.Calendar` 等组件的使用，以及 Cairo 绘图更精细的控制，例如绘制阴影区域。
+在了解了白昼时长计算程序后，我们再来看一个逻辑与布局更加复杂的 GTK4 应用程序。这个程序用于计算并绘制地球上任意位置（纬度、经度）、任意日期和时区下，太阳高度角随一天中时间变化的曲线。它将进一步展示 GTK4 中 `Gtk.SpinButton`、`Gtk.Calendar` 和 `Gtk.Grid` 等组件的使用，以及 Cairo 绘图更精细的控制，例如绘制阴影区域。
 
-为了达到更高的精度，程序现在不仅使用 [NOAA 赤纬公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF) 来计算太阳赤纬角，还引入了均时差（Equation of Time）和真太阳时（True Solar Time）的计算，以更精确地确定太阳的实际位置。该赤纬公式通过保留更多傅里叶级数项来提高精度。
+为了达到更高的精度，程序现在使用更精确的 [NOAA 赤纬公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF) 来计算太阳赤纬角，该赤纬公式通过保留更多傅里叶级数项来提高精度。笔者还引入了均时差（Equation of Time）和真太阳时（True Solar Time）的计算，以更精确地确定太阳的实际位置。
 
 该程序同样做了一些简化：
 
@@ -596,7 +596,7 @@ public static int main (string[] args) {
       $$
 
     - **均时差 (Equation of Time, EoT) 计算**：
-      `eqtime_minutes = 229.18 * (0.000075 + 0.001868 * cos(gamma_rad) ...)`：计算均时差（分钟），真太阳时（True Solar Time，基于太阳真实位置）与均太阳时（Mean Solar Time，假设太阳匀速运行）之差，主要由地球轨道偏心率和黄赤交角引起，反映钟表时间和日晷时间的偏差。将本地平时（分钟 i）修正为真太阳时（分钟），以保证后续时角、太阳高度角计算的天文精度。
+      `eqtime_minutes = 229.18 * (0.000075 + 0.001868 * cos(gamma_rad) ...)`：计算均时差（分钟），真太阳时（True Solar Time，基于太阳真实位置）与均太阳时（Mean Solar Time，假设太阳匀速运行）之差，主要由地球轨道偏心率和黄赤交角引起，反映钟表时间和日晷时间的偏差。将本地平时（分钟 `i`）修正为真太阳时（分钟），以保证后续时角、太阳高度角计算的天文精度。
         - 真太阳时：基于太阳在天空中的实际位置计算，由于地球轨道离心率和黄赤交角的影响，真太阳日的长度在一年中变化可达±30秒。
         - 平太阳时：虚构一个匀速运动的“平太阳”作为参考，将一天固定为24小时（86,400秒），消除季节性波动。这是日常钟表时间的基准。
     - **真太阳时 (True Solar Time, TST) 计算**：
@@ -613,12 +613,20 @@ public static int main (string[] args) {
 
 ## 界面与事件处理
 
-- `Gtk.SpinButton` (纬度)：范围 [-90, 90]，步长 0.1，信号 `value_changed`。
-- `Gtk.SpinButton` (经度)：范围 [-180, 180]，步长 1.0，信号 `value_changed`。
-- `Gtk.SpinButton` (时区)：范围 [-12, 14]，步长 0.5，信号 `value_changed`。
-- `Gtk.Calendar`：信号 `day_selected`。
-- 上述控件的信号均会触发 `update_plot_data ()` 并调用 `drawing_area.queue_draw ()` 重绘图表。
-- “Export Image”按钮：打开 `Gtk.FileDialog`，用户选择路径和格式后，调用 `export_chart (filepath)` 导出图表。
+- **主布局**：
+    - `main_box (Gtk.Box)`：水平布局，包含左侧控制面板和右侧绘图区域。
+    - `left_panel (Gtk.Box)`：垂直布局，用于组织各类输入控件。
+- **位置和时间设置**：
+    - 使用 `Gtk.Grid` 控件 (`settings_grid`) 来组织纬度、经度和时区设置相关的标签和 `Gtk.SpinButton` 输入框，使布局更整齐。
+        - `latitude_label` 和 `latitude_spin`：用于输入纬度，范围 [-90, 90]，步长 0.1。
+        - `longitude_label` 和 `longitude_spin`：用于输入经度，范围 [-180, 180]，步长 1.0。
+        - `timezone_label` 和 `timezone_spin`：用于输入时区，范围 [-12, 14]，步长 0.5。
+    - 每个 `Gtk.SpinButton` 的 `value_changed` 信号连接到回调函数，当值改变时，会触发 `update_plot_data ()` 并调用 `drawing_area.queue_draw ()` 重绘图表。
+- **日期选择**：
+    - `Gtk.Calendar` (`calendar`)：允许用户选择日期。
+    - `day_selected` 信号连接到回调函数，当日期被选中时，会触发 `update_plot_data ()` 并调用 `drawing_area.queue_draw ()` 重绘图表。
+- **图表导出**：
+    - “Export Image”按钮 (`export_button`)：点击后打开 `Gtk.FileDialog`，用户选择保存路径和文件格式（PNG, SVG, PDF）后，调用 `export_chart (filepath)` 导出当前绘制的图表。
 
 ## 绘图函数
 
@@ -694,7 +702,6 @@ public class SolarAngleApp : Gtk.Application {
         };
 
         var left_panel = new Gtk.Box (Gtk.Orientation.VERTICAL, 15) {
-            width_request = 320,
             hexpand = false,
             margin_start = 10,
             margin_end = 10,
@@ -709,13 +716,18 @@ public class SolarAngleApp : Gtk.Application {
         };
         location_time_group.append (location_time_label);
 
-        var latitude_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 10);
-        var latitude_input_label = new Gtk.Label ("Latitude (deg):");
-        latitude_input_label.halign = Gtk.Align.START;
+        var settings_grid = new Gtk.Grid () {
+            column_spacing = 10,
+            row_spacing = 8,
+            margin_top = 5,
+        };
+
+        var latitude_label = new Gtk.Label ("Latitude (deg):") {
+            halign = Gtk.Align.START,
+        };
         latitude_spin = new Gtk.SpinButton.with_range (-90, 90, 0.1) {
             value = latitude,
             digits = 2,
-            width_request = 100,
         };
         latitude_spin.value_changed.connect (() => {
             latitude = latitude_spin.value;
@@ -723,46 +735,40 @@ public class SolarAngleApp : Gtk.Application {
             drawing_area.queue_draw ();
         });
 
-        latitude_box.append (latitude_input_label);
-        latitude_box.append (latitude_spin);
-        location_time_group.append (latitude_box);
-
-        // Longitude input
-        var longitude_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 10);
-        var longitude_input_label = new Gtk.Label ("Longitude (deg):");
-        longitude_input_label.halign = Gtk.Align.START;
+        var longitude_label = new Gtk.Label ("Longitude (deg):") {
+            halign = Gtk.Align.START,
+        };
         longitude_spin = new Gtk.SpinButton.with_range (-180.0, 180.0, 1.0) {
             value = longitude,
             digits = 1,
-            width_request = 100,
         };
         longitude_spin.value_changed.connect (() => {
             longitude = longitude_spin.value;
             update_plot_data ();
             drawing_area.queue_draw ();
         });
-        longitude_box.append (longitude_input_label);
-        longitude_box.append (longitude_spin);
-        location_time_group.append (longitude_box);
 
-        // Timezone input
-        var timezone_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 10);
-        var timezone_input_label = new Gtk.Label ("Timezone (hours):");
-        timezone_input_label.halign = Gtk.Align.START;
+        var timezone_label = new Gtk.Label ("Timezone (hour):") {
+            halign = Gtk.Align.START,
+        };
         timezone_spin = new Gtk.SpinButton.with_range (-12.0, 14.0, 0.5) {
             value = timezone_offset_hours,
             digits = 1,
-            width_request = 100,
         };
         timezone_spin.value_changed.connect (() => {
             timezone_offset_hours = timezone_spin.value;
             update_plot_data ();
             drawing_area.queue_draw ();
         });
-        timezone_box.append (timezone_input_label);
-        timezone_box.append (timezone_spin);
-        location_time_group.append (timezone_box);
 
+        settings_grid.attach (latitude_label, 0, 0, 1, 1);
+        settings_grid.attach (latitude_spin, 1, 0, 1, 1);
+        settings_grid.attach (longitude_label, 0, 1, 1, 1);
+        settings_grid.attach (longitude_spin, 1, 1, 1, 1);
+        settings_grid.attach (timezone_label, 0, 2, 1, 1);
+        settings_grid.attach (timezone_spin, 1, 2, 1, 1);
+
+        location_time_group.append (settings_grid);
 
         var date_group = new Gtk.Box (Gtk.Orientation.VERTICAL, 8);
         var date_label = new Gtk.Label ("<b>Date Selection</b>") {
@@ -835,19 +841,19 @@ public class SolarAngleApp : Gtk.Application {
 
             // Solar declination delta (rad) via Fourier series approximation
             double decl_rad = 0.006918
-                - 0.399912 * Math.cos(gamma_rad)
-                + 0.070257 * Math.sin(gamma_rad)
-                - 0.006758 * Math.cos(2.0 * gamma_rad)
-                + 0.000907 * Math.sin(2.0 * gamma_rad)
-                - 0.002697 * Math.cos(3.0 * gamma_rad)
-                + 0.001480 * Math.sin(3.0 * gamma_rad);
+                - 0.399912 * Math.cos (gamma_rad)
+                + 0.070257 * Math.sin (gamma_rad)
+                - 0.006758 * Math.cos (2.0 * gamma_rad)
+                + 0.000907 * Math.sin (2.0 * gamma_rad)
+                - 0.002697 * Math.cos (3.0 * gamma_rad)
+                + 0.001480 * Math.sin (3.0 * gamma_rad);
 
             // Equation of Time (EoT) in minutes
             double eqtime_minutes = 229.18 * (0.000075
-                + 0.001868 * Math.cos(gamma_rad)
-                - 0.032077 * Math.sin(gamma_rad)
-                - 0.014615 * Math.cos(2.0 * gamma_rad)
-                - 0.040849 * Math.sin(2.0 * gamma_rad));
+                + 0.001868 * Math.cos (gamma_rad)
+                - 0.032077 * Math.sin (gamma_rad)
+                - 0.014615 * Math.cos (2.0 * gamma_rad)
+                - 0.040849 * Math.sin (2.0 * gamma_rad));
 
             // True Solar Time (TST) in minutes, correcting local clock by EoT and longitude
             double tst_minutes = i + eqtime_minutes - 4.0 * (longitude_deg - 15.0 * timezone_offset_hrs);
@@ -857,12 +863,12 @@ public class SolarAngleApp : Gtk.Application {
             double ha_rad = ha_deg * DEG2RAD;
 
             // cos(phi): cosine of zenith angle via spherical trig
-            double cos_phi = sin_lat * Math.sin(decl_rad) + cos_lat * Math.cos(decl_rad) * Math.cos(ha_rad);
+            double cos_phi = sin_lat * Math.sin (decl_rad) + cos_lat * Math.cos (decl_rad) * Math.cos(ha_rad);
             // clamp to valid range
             if (cos_phi > 1.0) cos_phi = 1.0;
             if (cos_phi < -1.0) cos_phi = -1.0;
             // Zenith angle phi (rad)
-            double phi_rad = Math.acos(cos_phi);
+            double phi_rad = Math.acos (cos_phi);
 
             // Solar elevation alpha = 90° - phi, convert to degrees
             double solar_elevation_rad = Math.PI / 2.0 - phi_rad;
