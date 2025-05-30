@@ -204,6 +204,7 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
   * 龙芯公开的手册：[龙芯架构参考手册 - 卷一](https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-Vol1-v1.10-CN.pdf)
 * ArchWiki
   * Arch Linux上游的ArchWiki的全部内容（获取自`arch-wiki-docs`包）
+  * 已弃用，建议使用联网搜索功能替代
 
 ### 创建模型
 
@@ -236,7 +237,7 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
     ```
     你是一个帮助Arch Linux for Loong64维护者工作的助手，在Arch Linux for Loong64知识库中有答案时优先根据知识库回答，如果知识库中没有答案但是有检索得到的上下文参考时可以参考可信较高的检索内容（不要参考劣质****博客），否则结合自身知识（给出结合自身知识的说明），并按照你认为最合理的方式回答。作为一个多模态模型，你需要准确识别用户可能发送的截图、拍屏，并精准完整地提炼信息。
     ```
-* Arch Linux for Loong64 Generic Helper (Beta)
+* ~~Arch Linux for Loong64 Generic Helper (Beta) ~~（已下架）
   * 简称`Generic Helper`
   * 更通用的Arch Linux for Loong64助手（Beta），除Arch Linux for Loong64外还拥有ArchWiki的知识（但检索较慢且效果可能不如启用网页搜索后的开发助手）
   * 使用`DeepSeek V3 0324`作为LLM
@@ -246,7 +247,7 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
     你是一个帮助Arch Linux或者Arch Linux for Loong64维护者及用户的助手（没有特殊说明架构的时候假定架构为Loong64）。在知识库中有答案时优先根据知识库回答，注意有关Loong64架构的问题应当优先按照Arch Linux for Loong64的文档说明和社区习惯回答；如果知识库中没有答案但是有检索得到的上下文参考时可以参考可信较高的检索内容（不要参考劣质****博客）；否则结合自身知识（给出结合自身知识的说明），并按照你认为最合理的方式回答
     ```
 
-创建完成后，将这些模型设置为`公开`，或者对Arch Linux for Loong64的用户组开放。在`管理员面板 -> 设置 -> 模型 -> （右上角齿轮图标）`中设置模型，将这些助手模型添加到默认模型列表中。
+创建完成后，将这些模型设置为`公开`，或者对Arch Linux for Loong64的用户组开放。
 
 ## 使用方法
 
@@ -255,7 +256,7 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
 * 如果遇到不便于分析日志的**拍屏、截图**等信息形式，可以使用`Dev Helper VL`模型进行分析。
   * 在输入框中输入`@`即可在对话中切换模型。
   * 由于`Llama 4 Maverick`逻辑能力与代码能力均较差，建议仅使用该模型提取多模态信息，分析工作仍然交给`Dev Helper`与`Dev Helper (Reasoning)`模型来完成。
-* 目前`Generic Helper (Beta)`模型的效果并不理想，检索速度较慢，且准确性一般。
+* `Generic Helper (Beta)`模型的效果并不理想，检索速度较慢，且准确性一般，已**不再开放使用**。
   * 建议使用`Dev Helper`与`Dev Helper (Reasoning)`模型并开启**网页搜索**功能替代。
   * **ArchWiki非常著名**，很容易被搜索引擎收录。（相比之下Arch Linux for Loong64的文档则很难直接通过搜索引擎找到）
   * 现代搜索引擎使用的检索模型远远比笔者本地部署的要强大，更容易找到正确的内容，因此在合适的提示词下可能给出比笔者特意建立的ArchWiki检索系统更准确的答案。
@@ -280,7 +281,7 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
 
 |[![#~/img/llm/arch-linux-for-loong64-helper-generic.webp](/img/llm/arch-linux-for-loong64-helper-generic.webp)](/img/llm/arch-linux-for-loong64-helper-generic.webp)|
 |:----:|
-|Arch Linux for Loong64 Generic Helper (Beta)|
+| ~~Arch Linux for Loong64 Generic Helper (Beta)~~ （已下架）|
 
 |[![#~/img/llm/answer1-arch-linux-for-loong64-helper-lossless.webp](/img/llm/answer1-arch-linux-for-loong64-helper-lossless.webp)](/img/llm/answer1-arch-linux-for-loong64-helper-lossless.webp)|
 |:----:|
