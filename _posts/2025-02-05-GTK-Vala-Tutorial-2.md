@@ -631,8 +631,9 @@ public static int main (string[] args) {
 - **日期选择**：
     - `Gtk.Calendar` (`calendar`)：允许用户选择日期。
     - `day_selected` 信号连接到回调函数，当日期被选中时，会触发 `update_plot_data ()` 并调用 `drawing_area.queue_draw ()` 重绘图表。
-- **图表导出**：
+- **导出**：
     - “Export Image”按钮 (`export_button`)：点击后打开 `Gtk.FileDialog`，用户选择保存路径和文件格式（PNG, SVG, PDF）后，调用 `export_chart (filepath)` 导出当前绘制的图表。
+    - “”Export CSV”按钮 (`export_csv_button`)：点击后打开 `Gtk.FileDialog`，用户选择保存路径后，调用 `export_csv (filepath)` 导出当前数据为 CSV 表格。
 - **图表交互**：
     - 使用 `Gtk.GestureClick` 控制器附加到 `drawing_area` 上，以捕获鼠标点击事件。
     - `on_chart_clicked (int n_press, double x, double y)` 回调函数：
@@ -651,7 +652,7 @@ public static int main (string[] args) {
 - `draw_sun_angle_chart (Gtk.DrawingArea, Cairo.Context, int width, int height)`：
   * 绘制白色背景。
   * 绘制半透明灰色阴影矩形表示地平线以下区域。
-  * 绘制网格线：水平线每隔 15° 高度角，垂直线每隔 2 小时。
+  * 绘制网格线：水平线间隔 15° 高度角，垂直线间隔 2 小时。
   * 绘制坐标轴、刻度标记和数字标签。
   * 使用红色曲线绘制计算得到的太阳高度角随时间变化。
   * **如果 `has_click_point` 为 `true`**：
@@ -687,12 +688,13 @@ public class SolarAngleApp : Gtk.Application {
     private Gtk.SpinButton timezone_spin;
     private Gtk.Calendar calendar;
     private Gtk.Button export_button;
+    private Gtk.Button export_csv_button;
     private Gtk.Label click_info_label;
     private DateTime selected_date;
+    private double sun_angles[RESOLUTION_PER_MIN];
     private double latitude = 0.0;
     private double longitude = 0.0;
     private double timezone_offset_hours = 0.0;
-    private double sun_angles[RESOLUTION_PER_MIN];
     private double clicked_x = 0.0;
     private double corresponding_y = 0.0;
     private bool has_click_point = false;
@@ -715,10 +717,11 @@ public class SolarAngleApp : Gtk.Application {
      * and initializes the plot data with current settings.
      */
     protected override void activate () {
-        window = new Gtk.ApplicationWindow (this);
-        window.title = "Solar Angle Calculator";
-        window.default_width = 1000;
-        window.default_height = 700;
+        window = new Gtk.ApplicationWindow (this) {
+            title = "Solar Angle Calculator",
+            default_width = 1000,
+            default_height = 700,
+        };
 
         var main_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0) {
             margin_start = 10,
@@ -812,16 +815,27 @@ public class SolarAngleApp : Gtk.Application {
         date_group.append (calendar);
 
         var export_group = new Gtk.Box (Gtk.Orientation.VERTICAL, 8);
-        var export_label = new Gtk.Label ("<b>Export Chart</b>") {
+        var export_label = new Gtk.Label ("<b>Export</b>") {
             use_markup = true,
             halign = Gtk.Align.START,
+        };
+
+        // Create horizontal box for buttons
+        var export_buttons_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 5) {
+            homogeneous = true,
         };
 
         export_button = new Gtk.Button.with_label ("Export Image");
         export_button.clicked.connect (on_export_clicked);
 
+        export_csv_button = new Gtk.Button.with_label ("Export CSV");
+        export_csv_button.clicked.connect (on_export_csv_clicked);
+
+        export_buttons_box.append (export_button);
+        export_buttons_box.append (export_csv_button);
+
         export_group.append (export_label);
-        export_group.append (export_button);
+        export_group.append (export_buttons_box);
 
         // Add click info display group
         var click_info_group = new Gtk.Box (Gtk.Orientation.VERTICAL, 8);
@@ -829,10 +843,9 @@ public class SolarAngleApp : Gtk.Application {
             use_markup = true,
             halign = Gtk.Align.START,
         };
-        click_info_label = new Gtk.Label ("Click on chart to view data") {
+        // Initial click info label (Use an extra newline for better spacing)
+        click_info_label = new Gtk.Label ("Click on chart to view data\n") {
             halign = Gtk.Align.START,
-            wrap = true,
-            wrap_mode = Pango.WrapMode.WORD,
         };
         click_info_group.append (click_info_title);
         click_info_group.append (click_info_label);
@@ -933,7 +946,7 @@ public class SolarAngleApp : Gtk.Application {
         
         // Clear click point when data updates
         has_click_point = false;
-        click_info_label.label = "Click on chart to view data";
+        click_info_label.label = "Click on chart to view data\n";
     }
 
     /**
@@ -978,7 +991,7 @@ public class SolarAngleApp : Gtk.Application {
         } else {
             // Double click or outside plot area - clear point
             has_click_point = false;
-            click_info_label.label = "Click on chart to view data";
+            click_info_label.label = "Click on chart to view data\n";
             drawing_area.queue_draw ();
         }
     }
@@ -1162,11 +1175,10 @@ public class SolarAngleApp : Gtk.Application {
             try {
                 var file = file_dialog.save.end (res);
                 if (file != null) {
-                    string filepath = file.get_path ();
-                    export_chart (filepath);
+                    export_chart (file);
                 }
             } catch (Error e) {
-                message ("File has not been saved: %s", e.message);
+                message ("Image file has not been saved: %s", e.message);
             }
         });
     }
@@ -1177,9 +1189,9 @@ public class SolarAngleApp : Gtk.Application {
      * Supports PNG, SVG, and PDF formats based on file extension.
      * Defaults to PNG if extension is not recognized.
      *
-     * @param filepath The file path where the chart should be saved.
+     * @param file The file to export the chart to.
      */
-    private void export_chart (string filepath) {
+    private void export_chart (File file) {
         int width = drawing_area.get_width ();
         int height = drawing_area.get_height ();
 
@@ -1188,6 +1200,7 @@ public class SolarAngleApp : Gtk.Application {
             height = 600;
         }
 
+        string filepath = file.get_path ();
         string? extension = null;
         var last_dot = filepath.last_index_of_char ('.');
         if (last_dot != -1) {
@@ -1207,6 +1220,72 @@ public class SolarAngleApp : Gtk.Application {
             Cairo.Context cr = new Cairo.Context (surface);
             draw_sun_angle_chart (drawing_area, cr, width, height);
             surface.write_to_png (filepath);
+        }
+    }
+
+    /**
+     * Handles CSV export button click event.
+     *
+     * Shows a file save dialog for CSV format.
+     */
+    private void on_export_csv_clicked () {
+        var csv_filter = new Gtk.FileFilter ();
+        csv_filter.name = "CSV Files";
+        csv_filter.add_mime_type ("text/csv");
+
+        var filter_list = new ListStore (typeof (Gtk.FileFilter));
+        filter_list.append (csv_filter);
+
+        var file_dialog = new Gtk.FileDialog () {
+            modal = true,
+            initial_name = "solar_elevation_data.csv",
+            filters = filter_list
+        };
+
+        file_dialog.save.begin (window, null, (obj, res) => {
+            try {
+                var file = file_dialog.save.end (res);
+                if (file != null) {
+                    export_csv_data (file);
+                }
+            } catch (Error e) {
+                message ("CSV file has not been saved: %s", e.message);
+            }
+        });
+    }
+
+    /**
+     * Exports the solar elevation data to a CSV file.
+     *
+     * @param file The file to export the data to.
+     */
+    private void export_csv_data (File file) {
+        try {
+            var stream = file.replace (null, false, FileCreateFlags.REPLACE_DESTINATION);
+            var data_stream = new DataOutputStream (stream);
+
+            // Write CSV metadata as comments
+            data_stream.put_string ("# Solar Elevation Data\n");
+            data_stream.put_string ("# Date: %s\n".printf(selected_date.format("%Y-%m-%d")));
+            data_stream.put_string ("# Latitude: %.2f degrees\n".printf(latitude));
+            data_stream.put_string ("# Longitude: %.2f degrees\n".printf(longitude));
+            data_stream.put_string ("# Timezone: UTC%+.2f\n".printf(timezone_offset_hours));
+            data_stream.put_string ("#\n");
+
+            // Write CSV header
+            data_stream.put_string ("Time,Solar Elevation (degrees)\n");
+
+            // Write data points
+            for (int i = 0; i < RESOLUTION_PER_MIN; i += 1) {
+                int hours = i / 60;
+                int minutes = i % 60;
+                string time_str = "%02d:%02d".printf(hours, minutes);
+                data_stream.put_string ("%s,%.3f\n".printf(time_str, sun_angles[i]));
+            }
+
+            data_stream.close ();
+        } catch (Error e) {
+            message ("Error saving CSV file: %s", e.message);
         }
     }
 
