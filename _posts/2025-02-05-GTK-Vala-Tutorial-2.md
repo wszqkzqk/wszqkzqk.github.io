@@ -553,7 +553,7 @@ public static int main (string[] args) {
 
 # 构建应用：太阳高度角计算与绘制工具
 
-在了解了白昼时长计算程序后，我们再来看一个逻辑与布局更加复杂的 GTK4 应用程序。这个程序用于计算并绘制地球上任意位置（纬度、经度）、任意日期和时区下，太阳高度角随一天中时间变化的曲线。它将进一步展示 GTK4 中 `Gtk.SpinButton`、`Gtk.Calendar` 和 `Gtk.Grid` 等组件的使用，以及 Cairo 绘图更精细的控制，例如绘制阴影区域。
+在了解了白昼时长计算程序后，我们再来看一个逻辑与布局更加复杂的 GTK4 应用程序。这个程序用于计算并绘制地球上任意位置（纬度、经度）、任意日期和时区下，太阳高度角随一天中时间变化的曲线。它将进一步展示 GTK4 中 `Gtk.SpinButton`、`Gtk.Calendar`、`Gtk.GestureClick` 和 `Gtk.Grid` 等组件的使用，以及 Cairo 绘图更精细的控制，例如绘制阴影区域、绘制点击位置的标记等。
 
 为了达到更高的精度，程序现在使用更精确的 [NOAA 赤纬公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF) 来计算太阳赤纬角，该赤纬公式通过保留更多傅里叶级数项来提高精度。笔者还引入了均时差（Equation of Time）和真太阳时（True Solar Time）的计算，以更精确地确定太阳的实际位置。
 
@@ -615,6 +615,7 @@ public static int main (string[] args) {
 - `update_plot_data ()`
   - 从 `latitude_spin`、`longitude_spin`、`timezone_spin` 和 `calendar` 读取参数。
   - 调用 `generate_sun_angles` 更新太阳高度角数据。
+  - 清除任何先前在图表上选中的数据点信息（重置 `has_click_point` 和 `click_info_label` 的文本）。
 
 ## 界面与事件处理
 
@@ -632,16 +633,32 @@ public static int main (string[] args) {
     - `day_selected` 信号连接到回调函数，当日期被选中时，会触发 `update_plot_data ()` 并调用 `drawing_area.queue_draw ()` 重绘图表。
 - **图表导出**：
     - “Export Image”按钮 (`export_button`)：点击后打开 `Gtk.FileDialog`，用户选择保存路径和文件格式（PNG, SVG, PDF）后，调用 `export_chart (filepath)` 导出当前绘制的图表。
+- **图表交互**：
+    - 使用 `Gtk.GestureClick` 控制器附加到 `drawing_area` 上，以捕获鼠标点击事件。
+    - `on_chart_clicked (int n_press, double x, double y)` 回调函数：
+        - 当用户在绘图区域内单击（`n_press == 1`）时：
+            - 计算点击位置 `x` 对应的时间和太阳高度角。
+            - 在 `click_info_label` 中显示这些信息。
+            - 设置 `has_click_point = true`，并记录 `clicked_x` 和 `corresponding_y`，然后请求重绘图表以显示标记点。
+        - 当用户双击或在绘图区域外点击时：
+            - 清除选中的数据点信息（设置 `has_click_point = false`，重置 `click_info_label`），并重绘图表。
+- **`activate()` 方法**：
+    - 初始化所有UI组件。
+    - 创建并配置 `Gtk.GestureClick` 控制器，并将其连接到 `on_chart_clicked` 回调函数，然后添加到 `drawing_area`。
 
 ## 绘图函数
 
 - `draw_sun_angle_chart (Gtk.DrawingArea, Cairo.Context, int width, int height)`：
-  1. 绘制白色背景。
-  2. 绘制半透明灰色阴影矩形表示地平线以下区域。
-  3. 绘制网格线：水平线每隔 15° 高度角，垂直线每隔 2 小时。
-  4. 绘制坐标轴、刻度标记和数字标签。
-  5. 使用红色曲线绘制计算得到的太阳高度角随时间变化。
-  6. 在图表顶部绘制标题，分两行显示当前选择的日期、纬度、经度和时区。
+  * 绘制白色背景。
+  * 绘制半透明灰色阴影矩形表示地平线以下区域。
+  * 绘制网格线：水平线每隔 15° 高度角，垂直线每隔 2 小时。
+  * 绘制坐标轴、刻度标记和数字标签。
+  * 使用红色曲线绘制计算得到的太阳高度角随时间变化。
+  * **如果 `has_click_point` 为 `true`**：
+     - 在 `(clicked_x, corresponding_y)` 位置绘制一个蓝色圆点标记。
+     - 从标记点向图表的顶部和底部绘制一条半透明的蓝色垂直线。
+     - 从标记点向图表的左侧和右侧绘制一条半透明的蓝色水平线。
+  * 在图表顶部绘制标题，分两行显示当前选择的日期、纬度、经度和时区。
 
 ## 实现代码
 
@@ -670,11 +687,15 @@ public class SolarAngleApp : Gtk.Application {
     private Gtk.SpinButton timezone_spin;
     private Gtk.Calendar calendar;
     private Gtk.Button export_button;
+    private Gtk.Label click_info_label;
+    private DateTime selected_date;
     private double latitude = 0.0;
     private double longitude = 0.0;
     private double timezone_offset_hours = 0.0;
-    private DateTime selected_date;
     private double sun_angles[RESOLUTION_PER_MIN];
+    private double clicked_x = 0.0;
+    private double corresponding_y = 0.0;
+    private bool has_click_point = false;
 
     /**
      * Creates a new SolarAngleApp instance.
@@ -802,9 +823,24 @@ public class SolarAngleApp : Gtk.Application {
         export_group.append (export_label);
         export_group.append (export_button);
 
-        left_panel.append (location_time_group); // Changed from latitude_group
+        // Add click info display group
+        var click_info_group = new Gtk.Box (Gtk.Orientation.VERTICAL, 8);
+        var click_info_title = new Gtk.Label ("<b>Selected Point</b>") {
+            use_markup = true,
+            halign = Gtk.Align.START,
+        };
+        click_info_label = new Gtk.Label ("Click on chart to view data") {
+            halign = Gtk.Align.START,
+            wrap = true,
+            wrap_mode = Pango.WrapMode.WORD,
+        };
+        click_info_group.append (click_info_title);
+        click_info_group.append (click_info_label);
+
+        left_panel.append (location_time_group);
         left_panel.append (date_group);
         left_panel.append (export_group);
+        left_panel.append (click_info_group);
 
         drawing_area = new Gtk.DrawingArea () {
             hexpand = true,
@@ -813,6 +849,11 @@ public class SolarAngleApp : Gtk.Application {
             height_request = 500,
         };
         drawing_area.set_draw_func (draw_sun_angle_chart);
+
+        // Add click event controller
+        var click_controller = new Gtk.GestureClick ();
+        click_controller.pressed.connect (on_chart_clicked);
+        drawing_area.add_controller (click_controller);
 
         main_box.append (left_panel);
         main_box.append (drawing_area);
@@ -889,6 +930,57 @@ public class SolarAngleApp : Gtk.Application {
         double latitude_rad = latitude * DEG2RAD;
         int year = selected_date.get_year ();
         generate_sun_angles (latitude_rad, day_of_year, year, longitude, timezone_offset_hours);
+        
+        // Clear click point when data updates
+        has_click_point = false;
+        click_info_label.label = "Click on chart to view data";
+    }
+
+    /**
+     * Handles mouse click events on the chart.
+     *
+     * @param n_press Number of button presses.
+     * @param x X coordinate of the click.
+     * @param y Y coordinate of the click.
+     */
+    private void on_chart_clicked (int n_press, double x, double y) {
+        int width = drawing_area.get_width ();
+        int height = drawing_area.get_height ();
+
+        int ml = 70, mr = 20, mt = 50, mb = 70;
+        int pw = width - ml - mr, ph = height - mt - mb;
+        double y_min = -90, y_max = 90;
+
+        // Check if click is within plot area and single click
+        if (x >= ml && x <= width - mr && y >= mt && y <= height - mb && n_press == 1) {
+            clicked_x = x;
+
+            // Convert coordinates to time and get corresponding angle
+            double time_hours = (x - ml) / pw * 24.0;
+            int time_minutes = (int) (time_hours * 60) % RESOLUTION_PER_MIN;
+            double angle = sun_angles[time_minutes];
+
+            // Calculate Y coordinate on the curve for this angle
+            corresponding_y = mt + ph * (1 - (angle - y_min) / (y_max - y_min));
+            has_click_point = true;
+
+            // Format time display
+            int hours = (int) time_hours;
+            int minutes = (int) ((time_hours - hours) * 60);
+
+            // Update info label
+            string info_text = "Time: %02d:%02d\nSolar Elevation: %.1f°".printf(
+                hours, minutes, angle
+            );
+
+            click_info_label.label = info_text;
+            drawing_area.queue_draw ();
+        } else {
+            // Double click or outside plot area - clear point
+            has_click_point = false;
+            click_info_label.label = "Click on chart to view data";
+            drawing_area.queue_draw ();
+        }
     }
 
     /**
@@ -981,6 +1073,25 @@ public class SolarAngleApp : Gtk.Application {
             }
         }
         cr.stroke ();
+
+        // Draw click point if exists
+        if (has_click_point) {
+            cr.set_source_rgba (0, 0, 1, 0.8);
+            cr.arc (clicked_x, corresponding_y, 5, 0, 2 * Math.PI);
+            cr.fill ();
+            
+            // Draw vertical line to show time
+            cr.set_source_rgba (0, 0, 1, 0.5);
+            cr.set_line_width (1);
+            cr.move_to (clicked_x, mt);
+            cr.line_to (clicked_x, height - mb);
+            cr.stroke ();
+            
+            // Draw horizontal line to show angle
+            cr.move_to (ml, corresponding_y);
+            cr.line_to (width - mr, corresponding_y);
+            cr.stroke ();
+        }
 
         // Draw axis titles
         cr.set_source_rgb (0, 0, 0);
