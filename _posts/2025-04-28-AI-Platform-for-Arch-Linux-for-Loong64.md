@@ -110,7 +110,7 @@ Qwen 3 235B A22B原生仅支持32 K的上下文窗口，扩展到131 K的上下�
 | Aider                             | 71.6             | 79.6      | 76.9                | 65.0       | 57.0         |
 | Humanity's Last Exam              | 17.7             | 20.6      | 18.4                | 11.75      | 8.5          |
 
-以下表格摘自[Fiction.liveBench](https://fiction.live/stories/Fiction-liveBench-April-14-2025/oQdzQvKHw8JyXbN87)（2025.05.29）：
+以下表格摘自[Fiction.liveBench](https://fiction.live/stories/Fiction-liveBench-May-22-2025/oQdzQvKHw8JyXbN87)（2025.05.29）：
 
 | Model | 0 | 400 | 1k | 2k | 4k | 8k | 16k | 32k | 60k | 120k | 192k |
 |---|---|---|---|---|---|---|---|---|---|---|---|

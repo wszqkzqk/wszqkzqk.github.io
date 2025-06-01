@@ -440,7 +440,7 @@ LLM生成的信息未必直接可用，可能会有**错误、遗漏或者不正
 
 ### 长上下文深度理解性能
 
-以下内容摘自[Fiction.LiveBench](https://fiction.live/stories/Fiction-liveBench-April-17-2025/oQdzQvKHw8JyXbN87)。（2025年5月29日发布）
+以下内容摘自[Fiction.LiveBench](https://fiction.live/stories/Fiction-liveBench-May-22-2025/oQdzQvKHw8JyXbN87)。（2025年5月29日发布）
 
 | Model | 0 | 400 | 1k | 2k | 4k | 8k | 16k | 32k | 60k | 120k | 192k |
 |---|---|---|---|---|---|---|---|---|---|---|---|
