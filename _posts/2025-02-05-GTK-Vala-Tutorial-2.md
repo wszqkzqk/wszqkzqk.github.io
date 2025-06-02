@@ -779,9 +779,9 @@ public class SolarAngleApp : Gtk.Application {
         var longitude_label = new Gtk.Label ("Longitude (deg):") {
             halign = Gtk.Align.START,
         };
-        var longitude_spin = new Gtk.SpinButton.with_range (-180.0, 180.0, 1.0) {
+        var longitude_spin = new Gtk.SpinButton.with_range (-180.0, 180.0, 0.1) {
             value = longitude,
-            digits = 1,
+            digits = 2,
         };
         longitude_spin.value_changed.connect (() => {
             longitude = longitude_spin.value;
@@ -794,7 +794,7 @@ public class SolarAngleApp : Gtk.Application {
         };
         var timezone_spin = new Gtk.SpinButton.with_range (-12.0, 14.0, 0.5) {
             value = timezone_offset_hours,
-            digits = 1,
+            digits = 2,
         };
         timezone_spin.value_changed.connect (() => {
             timezone_offset_hours = timezone_spin.value;
@@ -1138,7 +1138,7 @@ public class SolarAngleApp : Gtk.Application {
 
         // Draw chart captions
         string caption_line1 = "Solar Elevation Angle - Date: %s".printf (selected_date.format ("%Y-%m-%d"));
-        string caption_line2 = "Lat: %.2f°, Lon: %.1f°, TZ: UTC%+.1f".printf (latitude, longitude, timezone_offset_hours);
+        string caption_line2 = "Lat: %.2f°, Lon: %.2f°, TZ: UTC%+.2f".printf (latitude, longitude, timezone_offset_hours);
         
         cr.set_font_size (18);
         Cairo.TextExtents cap_ext1, cap_ext2;
@@ -1280,7 +1280,7 @@ public class SolarAngleApp : Gtk.Application {
             data_stream.put_string ("# Solar Elevation Data\n");
             data_stream.put_string ("# Date: %s\n".printf (selected_date.format ("%Y-%m-%d")));
             data_stream.put_string ("# Latitude: %.2f degrees\n".printf (latitude));
-            data_stream.put_string ("# Longitude: %.1f degrees\n".printf (longitude));
+            data_stream.put_string ("# Longitude: %.2f degrees\n".printf (longitude));
             data_stream.put_string ("# Timezone: UTC%+.2f\n".printf (timezone_offset_hours));
             data_stream.put_string ("#\n");
 
@@ -1291,8 +1291,9 @@ public class SolarAngleApp : Gtk.Application {
             for (int i = 0; i < RESOLUTION_PER_MIN; i += 1) {
                 int hours = i / 60;
                 int minutes = i % 60;
-                string time_str = "%02d:%02d".printf (hours, minutes);
-                data_stream.put_string ("%s,%.3f\n".printf (time_str, sun_angles[i]));
+                data_stream.put_string (
+                    "%02d:%02d,%.3f\n".printf (hours, minutes, sun_angles[i])
+                );
             }
 
             data_stream.close ();
@@ -1565,11 +1566,11 @@ public class SolarAngleApp : Adw.Application {
             drawing_area.queue_draw ();
         });
 
-        var longitude_row = new Adw.SpinRow.with_range (-180.0, 180.0, 1.0) {
+        var longitude_row = new Adw.SpinRow.with_range (-180.0, 180.0, 0.1) {
             title = "Longitude",
             subtitle = "Degrees",
             value = longitude,
-            digits = 1,
+            digits = 2,
         };
         longitude_row.notify["value"].connect (() => {
             longitude = longitude_row.value;
@@ -1581,7 +1582,7 @@ public class SolarAngleApp : Adw.Application {
             title = "Timezone",
             subtitle = "Hours from UTC",
             value = timezone_offset_hours,
-            digits = 1,
+            digits = 2,
         };
         timezone_row.notify["value"].connect (() => {
             timezone_offset_hours = timezone_row.value;
@@ -1949,7 +1950,7 @@ public class SolarAngleApp : Adw.Application {
 
         // Draw chart captions
         string caption_line1 = "Solar Elevation Angle - Date: %s".printf (selected_date.format ("%Y-%m-%d"));
-        string caption_line2 = "Lat: %.2f°, Lon: %.1f°, TZ: UTC%+.1f".printf (latitude, longitude, timezone_offset_hours);
+        string caption_line2 = "Lat: %.2f°, Lon: %.2f°, TZ: UTC%+.2f".printf (latitude, longitude, timezone_offset_hours);
         
         cr.set_font_size (18);
         Cairo.TextExtents cap_ext1, cap_ext2;
@@ -2091,7 +2092,7 @@ public class SolarAngleApp : Adw.Application {
             data_stream.put_string ("# Solar Elevation Data\n");
             data_stream.put_string ("# Date: %s\n".printf (selected_date.format ("%Y-%m-%d")));
             data_stream.put_string ("# Latitude: %.2f degrees\n".printf (latitude));
-            data_stream.put_string ("# Longitude: %.1f degrees\n".printf (longitude));
+            data_stream.put_string ("# Longitude: %.2f degrees\n".printf (longitude));
             data_stream.put_string ("# Timezone: UTC%+.2f\n".printf (timezone_offset_hours));
             data_stream.put_string ("#\n");
 
@@ -2102,8 +2103,9 @@ public class SolarAngleApp : Adw.Application {
             for (int i = 0; i < RESOLUTION_PER_MIN; i += 1) {
                 int hours = i / 60;
                 int minutes = i % 60;
-                string time_str = "%02d:%02d".printf (hours, minutes);
-                data_stream.put_string ("%s,%.3f\n".printf (time_str, sun_angles[i]));
+                data_stream.put_string (
+                    "%02d:%02d,%.3f\n".printf (hours, minutes, sun_angles[i])
+                );
             }
 
             data_stream.close ();
