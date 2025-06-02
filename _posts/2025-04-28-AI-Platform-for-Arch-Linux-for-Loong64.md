@@ -175,11 +175,13 @@ sudo systemctl enable open-webui.service --now
 
 Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http://<IP>:8080`在其他设备上访问。
 
-首次访问时会提示注册管理员账号并设置密码。随后，可以点击头像，进入管理员设置界面（或者直接访问`http://<IP>:8080/admin/settings`），通过`设置 -> 管理OpenAI API连接 -> +`添加API连接，输入API Key和API URL。完成之后点击`保存`，即可完成API连接的设置。
+首次访问时会提示注册管理员账号并设置密码。随后，可以点击头像，进入管理员设置界面（或者直接访问`http://<IP>:8080/admin/settings`），通过`设置 -> 管理OpenAI API连接 -> +`添加API连接，输入API Key和API URL并添加所需要的模型列表（也可以不添加，使用自动获取的模型列表），完成之后点击`保存`，即可完成API连接的设置。
+
+在`界面`选项中，可以设置用于总结对话标题、生成检索查询、生成联网搜索关键词等工作的任务模型。任务模型不适合用推理模型，因此笔者选择了`DeepSeek V3 0324`。
 
 ### RAG配置
 
-找到`文档`进行设置。由于笔者的机器没有GPU，性能受限，笔者只能在效果和速度之间进行权衡。笔者发现嵌入模型如果选择更准确、更受欢迎的`BGE-m3`，在面对**大量文档**的检索时会**慢**到不可接受，因此笔者最后还是回退到了默认的`sentence-transformers/all-MiniLM-L6-v2`模型，这一模型的参数量仅有**22 M**（0.022 B），速度快，效果尚可。
+找到`文档`进行设置。由于笔者的机器没有GPU，性能受限，只能在效果和速度之间进行权衡。笔者发现嵌入模型如果选择更准确、更受欢迎的`BGE-m3`，在面对**大量文档**的检索时会**慢**到不可接受，因此笔者最后还是回退到了默认的`sentence-transformers/all-MiniLM-L6-v2`模型，这一模型的参数量仅有**22 M**（0.022 B），速度快，效果尚可。
 
 而有关检索的设置，笔者启用了混合检索模式，使用小模型`BAAI/bge-reranker-base`作为**重排序**模型（同样是因为效果更好的`BAAI/bge-reranker-v2-m3`性能开销不可接受），设置`块大小 (Chunk Size)`为`1024`，`块重叠 (Chunk Overlap)`为`128`，`Top K`为`50`，`Top K Reranker`为`20`，并设置`Relevance Threshold`为`0.1`，这样的设置虽然有所妥协，效果基本上也能接受。
 
@@ -200,7 +202,7 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
 点击UI左侧的`工作空间`，点击上方的`知识库`（或者直接访问`http://<IP>:8080/workspace/knowledge`），点击右上角的`+`，按照要求补充信息，并上传文档即可。笔者建立了两个相关知识库：
 
 * Arch Linux for Loong64
-  * 笔者撰写的Arch Linux for Loong64的开发文档，包括自己的相关博客和GitHub上的Wiki文档
+  * 笔者亲自撰写的数万字的Arch Linux for Loong64开发文档，包括自己的相关博客和GitHub上的Wiki文档
   * 龙芯公开的手册：[龙芯架构参考手册 - 卷一](https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-Vol1-v1.10-CN.pdf)
 * ArchWiki
   * Arch Linux上游的ArchWiki的全部内容（获取自`arch-wiki-docs`包）
@@ -230,14 +232,14 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
     ```
 * Arch Linux for Loong64 Dev Helper VL
   * 简称`Dev Helper VL`
-  * 多模态模型，可用于拍屏/截图日志分析，回答有关Arch Linux for Loong64维护的问题（仅建议用于多模态用途）
+  * 多模态模型，可用于拍屏/截图日志分析，也可以辅助分析异常显示的界面等，回答有关Arch Linux for Loong64维护的问题（仅建议用于多模态用途）
   * 使用`Llama 4 Maverick`作为LLM
   * 可访问`Arch Linux for Loong64`知识库
   * 系统提示词为：
     ```
     你是一个帮助Arch Linux for Loong64维护者工作的助手，在Arch Linux for Loong64知识库中有答案时优先根据知识库回答，如果知识库中没有答案但是有检索得到的上下文参考时可以参考可信较高的检索内容（不要参考劣质****博客），否则结合自身知识（给出结合自身知识的说明），并按照你认为最合理的方式回答。作为一个多模态模型，你需要准确识别用户可能发送的截图、拍屏，并精准完整地提炼信息。
     ```
-* ~~Arch Linux for Loong64 Generic Helper (Beta) ~~（已下架）
+* ~~Arch Linux for Loong64 Generic Helper (Beta)~~（已下架）
   * 简称`Generic Helper`
   * 更通用的Arch Linux for Loong64助手（Beta），除Arch Linux for Loong64外还拥有ArchWiki的知识（但检索较慢且效果可能不如启用网页搜索后的开发助手）
   * 使用`DeepSeek V3 0324`作为LLM
@@ -254,12 +256,18 @@ Open WebUI默认使用`0.0.0.0:8080`作为地址，因此直接可以通过`http
 * 如果主要目标是知识的检索与查询，不涉及太复杂的推理，可以使用`Dev Helper`模型，避免深度的推理耗费大量时间。
 * 如果遇到需要**深度推理**的问题，比如代码的辅助编写、报错原因的排查、工具设计架构的规划等，可以使用`Dev Helper (Reasoning)`模型进行分析。
 * 如果遇到不便于分析日志的**拍屏、截图**等信息形式，可以使用`Dev Helper VL`模型进行分析。
-  * 在输入框中输入`@`即可在对话中切换模型。
+  * 在输入框中输入`@`即可在对话中切换模型，也可以通过左上角模型栏UI切换模型。
   * 由于`Llama 4 Maverick`逻辑能力与代码能力均较差，建议仅使用该模型提取多模态信息，分析工作仍然交给`Dev Helper`与`Dev Helper (Reasoning)`模型来完成。
 * `Generic Helper (Beta)`模型的效果并不理想，检索速度较慢，且准确性一般，已**不再开放使用**。
   * 建议使用`Dev Helper`与`Dev Helper (Reasoning)`模型并开启**网页搜索**功能替代。
+    * 网页搜索功能目前更强大：基于Google或者DuckDuckGo的搜索引擎并使用大模型生成搜索关键词。
+    * 启用网页搜索时，首先会将上下文传递给DeepSeek V3 0324模型处理，**生成搜索的关键词**，然后使用这些关键词在Google或者DuckDuckGo上进行搜索。
+      * 这样可以更准确地找到相关内容，也增加了搜索的灵活性。
+      * 可以通过在提示词中加入对搜索内容的要求备注来引导模型生成更准确的搜索关键词。
+      * 例如：`Mold适合在哪些场景下使用？（参考英文文档）`，这里通过括号备注`参考英文文档`来引导模型生成更准确的搜索关键词，要求搜索关键词生成模型指定更合适的搜索范围。
+    * 网页检索完成后，模型会将搜索结果与知识库作相同的RAG处理，提取出相关的内容，并将其作为上下文传递给模型进行回答。
   * **ArchWiki非常著名**，很容易被搜索引擎收录。（相比之下Arch Linux for Loong64的文档则很难直接通过搜索引擎找到）
-  * 现代搜索引擎使用的检索模型远远比笔者本地部署的要强大，更容易找到正确的内容，因此在合适的提示词下可能给出比笔者特意建立的ArchWiki检索系统更准确的答案。
+  * 现代搜索引擎使用的检索模型远远比笔者本地部署的要强大，再加上搜索关键词生成模型的优化，更容易找到正确的内容，在合适的提示词下可能给出比笔者特意建立的ArchWiki检索系统更准确的答案。
 
 建议一般情况下按需使用`Dev Helper`与`Dev Helper (Reasoning)`（可按照实际需要开启网页搜索功能），需要多模态分析拍屏或者截图时使用`@`在对话中切换暂时切换到`Dev Helper VL`模型提取日志等信息，但后续分析仍然使用推荐的`Dev Helper`与`Dev Helper (Reasoning)`模型。
 

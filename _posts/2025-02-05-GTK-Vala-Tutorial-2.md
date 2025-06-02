@@ -705,12 +705,6 @@ public class SolarAngleApp : Gtk.Application {
 
     private Gtk.ApplicationWindow window;
     private Gtk.DrawingArea drawing_area;
-    private Gtk.SpinButton latitude_spin;
-    private Gtk.SpinButton longitude_spin;
-    private Gtk.SpinButton timezone_spin;
-    private Gtk.Calendar calendar;
-    private Gtk.Button export_button;
-    private Gtk.Button export_csv_button;
     private Gtk.Label click_info_label;
     private DateTime selected_date;
     private double sun_angles[RESOLUTION_PER_MIN];
@@ -741,8 +735,6 @@ public class SolarAngleApp : Gtk.Application {
     protected override void activate () {
         window = new Gtk.ApplicationWindow (this) {
             title = "Solar Angle Calculator",
-            default_width = 1000,
-            default_height = 700,
         };
 
         var main_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
@@ -771,7 +763,7 @@ public class SolarAngleApp : Gtk.Application {
         var latitude_label = new Gtk.Label ("Latitude (deg):") {
             halign = Gtk.Align.START,
         };
-        latitude_spin = new Gtk.SpinButton.with_range (-90, 90, 0.1) {
+        var latitude_spin = new Gtk.SpinButton.with_range (-90, 90, 0.1) {
             value = latitude,
             digits = 2,
         };
@@ -784,7 +776,7 @@ public class SolarAngleApp : Gtk.Application {
         var longitude_label = new Gtk.Label ("Longitude (deg):") {
             halign = Gtk.Align.START,
         };
-        longitude_spin = new Gtk.SpinButton.with_range (-180.0, 180.0, 1.0) {
+        var longitude_spin = new Gtk.SpinButton.with_range (-180.0, 180.0, 1.0) {
             value = longitude,
             digits = 1,
         };
@@ -797,7 +789,7 @@ public class SolarAngleApp : Gtk.Application {
         var timezone_label = new Gtk.Label ("Timezone (hour):") {
             halign = Gtk.Align.START,
         };
-        timezone_spin = new Gtk.SpinButton.with_range (-12.0, 14.0, 0.5) {
+        var timezone_spin = new Gtk.SpinButton.with_range (-12.0, 14.0, 0.5) {
             value = timezone_offset_hours,
             digits = 1,
         };
@@ -821,7 +813,7 @@ public class SolarAngleApp : Gtk.Application {
             use_markup = true,
             halign = Gtk.Align.START,
         };
-        calendar = new Gtk.Calendar ();
+        var calendar = new Gtk.Calendar ();
         calendar.day_selected.connect (() => {
             selected_date = calendar.get_date ();
             update_plot_data ();
@@ -842,10 +834,10 @@ public class SolarAngleApp : Gtk.Application {
             homogeneous = true,
         };
 
-        export_button = new Gtk.Button.with_label ("Export Image");
+        var export_button = new Gtk.Button.with_label ("Export Image");
         export_button.clicked.connect (on_export_clicked);
 
-        export_csv_button = new Gtk.Button.with_label ("Export CSV");
+        var export_csv_button = new Gtk.Button.with_label ("Export CSV");
         export_csv_button.clicked.connect (on_export_csv_clicked);
 
         export_buttons_box.append (export_button);
