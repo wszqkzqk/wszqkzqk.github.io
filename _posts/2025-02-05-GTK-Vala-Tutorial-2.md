@@ -65,31 +65,39 @@ tags:       开源软件 GTK Vala
   遍历一年中的每一天，调用 `compute_day_length` 计算各天日照时长，返回包含所有白昼时长数据的数组。
 
 ### 主窗口类 `DayLengthWindow`
-此类继承自 `Gtk.ApplicationWindow`，用于构建图形界面和显示绘图内容：
-- **界面组件**  
-  - 使用 `Gtk.Box` 布局，包含输入区域和绘图区域。
-  - `Gtk.Entry` 控件允许用户输入纬度和年份，并通过 `Gtk.Button` 触发绘图更新。
-- **事件处理**  
-  - “Plot” 按钮点击时调用 `update_plot_data ()` 读取输入并更新数据，再通过 `drawing_area.queue_draw ()` 重绘图表。
-  - “Export” 按钮点击时弹出文件保存对话框，用户选择保存路径后调用 `export_plot ()` 导出图表为 PNG, SVG 或 PDF 文件。
-    - 通过 `Gtk.FileDialog` 选择保存路径，设置默认文件名和过滤器（仅显示 PNG, SVG 和 PDF 文件）。
-    - 通过 `Cairo.ImageSurface`、`Cairo.SvgSurface` 或 `Cairo.PdfSurface` 创建绘图表面，再调用 `draw_plot ()` 绘制图表。
+此类继承自 `Gtk.ApplicationWindow`，是应用程序的顶层窗口，负责构建图形界面和显示绘图内容。`Gtk.ApplicationWindow` 是与 `Gtk.Application` 集成良好的窗口类型，能更好地管理应用的生命周期。
+
+- **界面组件**
+  - **布局容器 `Gtk.Box`**：GTK中最常用的布局容器之一。笔者使用了一个垂直方向的 `Gtk.Box` (`vbox_main`) 作为主容器，并在其内部放置了一个水平方向的 `Gtk.Box` (`hbox_controls`) 用于排列输入控件。`Gtk.Box` 通过 `orientation` 属性（`Gtk.Orientation.VERTICAL` 或 `Gtk.Orientation.HORIZONTAL`）和 `spacing` 属性来控制子控件的排列方式和间距，非常适合线性的布局需求。
+  - **文本输入 `Gtk.Entry`**：`latitude_entry` 和 `year_entry` 使用 `Gtk.Entry` 控件，允许用户输入单行文本。通过设置 `input_purpose` 属性（如 `Gtk.InputPurpose.NUMBER` 或 `Gtk.InputPurpose.DIGITS`），可以向输入法提示期望的输入类型，改善触摸键盘上的用户体验。`width_chars` 属性则可以粗略地根据字符数量设定输入框的初始宽度。
+  - **按钮 `Gtk.Button`**：“Plot”和“Export”按钮均使用 `Gtk.Button.with_label()` 构造，这是创建带文本标签按钮的便捷方法。按钮的核心功能通过连接其 `clicked` 信号来实现。
+  - **标签 `Gtk.Label`**：用于显示描述性文本。通过设置 `use_markup = true`，可以使用 Pango 标记语言进行简单的文本格式化，例如本例中的 `<b>Latitude (degrees):</b>` 使文本加粗。`halign = Gtk.Align.START` 确保标签文本左对齐。
+  - **绘图区域 `Gtk.DrawingArea`**：`drawing_area` 是一个空白的画布控件，专门用于自定义绘图。通过 `set_draw_func()` 方法注册一个绘图回调函数 (`draw_plot`)，当控件需要重绘时（例如窗口大小改变或调用 `queue_draw()`），该函数会被调用，并传入一个 `Cairo.Context` 对象用于绘图。设置 `hexpand = true` 和 `vexpand = true` 使绘图区域能够填充父容器的额外空间。
+
+- **事件处理**
+  - “Plot” 按钮的 `clicked` 信号连接到一个匿名函数，该函数调用 `update_plot_data()` 读取输入、更新数据，然后通过 `drawing_area.queue_draw()` 请求重绘图表。`queue_draw()` 会标记 `Gtk.DrawingArea` 为“脏”，并在下一个合适的时机触发其绘图函数。
+  - “Export” 按钮的 `clicked` 信号也连接到一个匿名函数，该函数负责弹出文件保存对话框。
+    - **文件对话框 `Gtk.FileDialog`**：这是 GTK4 中用于文件选择的现代化API。笔者创建一个 `Gtk.FileDialog` 对象，设置其为 `modal = true` 使其成为模态对话框。通过 `initial_name` 设置默认文件名。
+    - **文件过滤器 `Gtk.FileFilter`**：为了限制用户可选的文件类型，笔者创建了 `Gtk.FileFilter` 实例，并通过 `add_mime_type()` 指定支持的MIME类型（如 "image/png", "image/svg+xml", "application/pdf"）。这些过滤器被添加到一个 `ListStore` 中，并赋给 `Gtk.FileDialog` 的 `filters` 属性。
+    - **异步操作**：文件保存操作通过 `file_dialog.save.begin()` 和 `file_dialog.save.end()` 以异步方式执行，避免阻塞主线程。回调函数在操作完成（或取消）时被调用，通过 `file_dialog.save.end(res)` 获取选择的 `File` 对象。
+    - 导出时，根据文件扩展名选择创建 `Cairo.ImageSurface` (PNG)、`Cairo.SvgSurface` (SVG) 或 `Cairo.PdfSurface` (PDF) 作为绘图表面，然后调用 `draw_plot()` 在这个表面上绘制图表，最后完成文件写入。
+
 - **绘图操作**  
   - `drawing_area` 使用 `Gtk.DrawingArea`，并注册了绘图回调 `draw_plot ()`。  
   - `draw_plot ()` 中利用 `Cairo` 库完成以下工作：  
-    1. 清空背景并设置为白色。  
-    2. 定义绘图区域的边距、X/Y 轴范围。  
-    3. 绘制横向和纵向的网格线、刻度及文字标签（包括月份和小时刻度）。  
-    4. 绘制坐标轴，其中 X/Y 轴均加粗显示。  
-    5. 利用计算得到的 `day_lengths` 数据绘制红色的日照时长曲线。  
-    6. 额外绘制坐标轴标题，其中 Y 轴文字通过旋转操作实现垂直显示。
+    * 清空背景并设置为白色。  
+    * 定义绘图区域的边距、X/Y 轴范围。  
+    * 绘制横向和纵向的网格线、刻度及文字标签（包括月份和小时刻度）。  
+    * 绘制坐标轴，其中 X/Y 轴均加粗显示。  
+    * 利用计算得到的 `day_lengths` 数据绘制红色的日照时长曲线。  
+    * 额外绘制坐标轴标题，其中 Y 轴文字通过旋转操作实现垂直显示。
 
 ### 应用管理类 `DayLengthApp` 及 `main` 函数
-- **`DayLengthApp` 类**  
-  继承自 `Gtk.Application`，主要用于管理应用的生命周期和窗口创建。
-- **`activate ()` 回调函数**  
-  当应用激活时，创建 `DayLengthWindow` 并显示窗口。
-- **`main ()` 函数**  
+- **`DayLengthApp` 类**
+  继承自 `Gtk.Application`，这是管理 GTK 应用程序生命周期的核心类。它负责处理应用的初始化、激活、命令行参数以及确保应用只有一个实例在运行（通过 `application_id`）。
+- **`activate()` 回调函数**
+  当应用被激活时（通常是首次启动或用户尝试启动已运行的应用实例时），`activate` 方法会被调用。在这里，笔者创建主窗口 `DayLengthWindow` 的实例，并通过 `win.present()`将其显示给用户。
+- **`main()` 函数**
   程序的入口，创建 `DayLengthApp` 对象并启动事件循环，处理命令行参数。
 
 ## 实现代码
@@ -622,32 +630,38 @@ public static int main (string[] args) {
 ## 界面与事件处理
 
 - **主布局**：
-    - `main_box (Gtk.Box)`：水平布局，包含左侧控制面板和右侧绘图区域。
-    - `left_panel (Gtk.Box)`：垂直布局，用于组织各类输入控件。
+    - `main_box (Gtk.Box)`：依然使用 `Gtk.Box` 作为顶层水平布局容器，将界面分为左侧的控制面板和右侧的绘图区域。这种划分方式清晰直观。
+    - `left_panel (Gtk.Box)`：左侧控制面板本身是一个垂直排列的 `Gtk.Box`，用于组织纬度、经度、时区设置、日期选择、导出按钮和点击信息显示等多个控件组。设置 `hexpand = false` 确保左侧面板不会在水平方向上无限扩展，保持合适的宽度。
 - **位置和时间设置**：
-    - 使用 `Gtk.Grid` 控件 (`settings_grid`) 来组织纬度、经度和时区设置相关的标签和 `Gtk.SpinButton` 输入框，使布局更整齐。
-        - `latitude_label` 和 `latitude_spin`：用于输入纬度，范围 [-90, 90]，步长 0.1。
-        - `longitude_label` 和 `longitude_spin`：用于输入经度，范围 [-180, 180]，步长 1.0。
-        - `timezone_label` 和 `timezone_spin`：用于输入时区，范围 [-12, 14]，步长 0.5。
-    - 每个 `Gtk.SpinButton` 的 `value_changed` 信号连接到回调函数，当值改变时，会触发 `update_plot_data ()` 并调用 `drawing_area.queue_draw ()` 重绘图表。
+    - **网格布局 `Gtk.Grid`**：对于纬度、经度和时区这三组“标签 + 输入框”的布局，笔者选择了 `Gtk.Grid` (`settings_grid`)。相比于嵌套的 `Gtk.Box`，`Gtk.Grid` 提供了更强大和灵活的二维对齐方式。通过 `attach(child, column, row, width, height)` 方法，可以将子控件精确地放置在网格的指定单元格中，并可跨越多行或多列（这里仅使用了单行单列）。`column_spacing` 和 `row_spacing` 属性用于设置单元格之间的间距，使布局更加规整美观。
+    - **数字输入 `Gtk.SpinButton`**：纬度、经度和时区均使用 `Gtk.SpinButton` 进行输入。`Gtk.SpinButton` 专门用于输入有范围限制的数值，用户可以通过点击上下箭头或直接输入来改变值。
+        - `Gtk.SpinButton.with_range(min, max, step)` 是其常用的构造函数，分别设置最小值、最大值和步长。纬度范围是 [-90, 90]，步长 0.1；经度范围是 [-180, 180]，步长 1.0；时区范围是 [-12, 14]，步长 0.5。用户也可以手动输入更精确的值，并不一定要遵循步长的整数倍。
+        - `digits` 属性用于控制显示的小数位数。
+        - 其 `value_changed` 信号在数值发生改变时触发，笔者连接此信号到回调函数，以实时更新图表数据并重绘。
 - **日期选择**：
-    - `Gtk.Calendar` (`calendar`)：允许用户选择日期。
-    - `day_selected` 信号连接到回调函数，当日期被选中时，会触发 `update_plot_data ()` 并调用 `drawing_area.queue_draw ()` 重绘图表。
+    - **日历控件 `Gtk.Calendar`** (`calendar`)：提供了一个标准的日历视图，允许用户方便地选择日期。
+    - `day_selected` 信号在用户点击并选择一个新的日期时发出。笔者连接此信号到回调函数，当日期改变时，更新图表数据并重绘。`calendar.get_date()` 用于获取当前选中的 `DateTime` 对象。
 - **导出**：
-    - “Export Image”按钮 (`export_button`)：点击后打开 `Gtk.FileDialog`，用户选择保存路径和文件格式（PNG, SVG, PDF）后，调用 `export_chart (filepath)` 导出当前绘制的图表。
-    - “”Export CSV”按钮 (`export_csv_button`)：点击后打开 `Gtk.FileDialog`，用户选择保存路径后，调用 `export_csv (filepath)` 导出当前数据为 CSV 表格。
+    - “Export Image”按钮 (`export_button`) 和 “Export CSV”按钮 (`export_csv_button`)：与前一个例子类似，使用 `Gtk.Button`。点击后均通过 `Gtk.FileDialog` 弹出文件保存对话框。
+        - 图像导出支持 PNG, SVG, PDF 格式，通过 `Gtk.FileFilter` 实现。
+        - CSV 导出则只提供 CSV 格式的过滤器。
+    - 导出逻辑封装在 `export_chart (file)` 和 `export_csv_data (file)` 方法中。
 - **图表交互**：
-    - 使用 `Gtk.GestureClick` 控制器附加到 `drawing_area` 上，以捕获鼠标点击事件。
+    - **手势控制器 `Gtk.GestureClick`**：使用手势（Gesture）系统来处理输入事件。笔者将一个 `Gtk.GestureClick` 控制器附加到 `drawing_area` 上，以捕获鼠标点击事件。
+    - `click_controller.pressed.connect(on_chart_clicked)`：当用户在 `drawing_area` 上按下鼠标按钮时（手势开始时），`pressed` 信号会发出，并调用 `on_chart_clicked` 回调函数。此回调函数接收按下次數 (`n_press`) 以及点击位置的x、y坐标。
     - `on_chart_clicked (int n_press, double x, double y)` 回调函数：
-        - 当用户在绘图区域内单击（`n_press == 1`）时：
-            - 计算点击位置 `x` 对应的时间和太阳高度角。
-            - 在 `click_info_label` 中显示这些信息。
-            - 设置 `has_click_point = true`，并记录 `clicked_x` 和 `corresponding_y`，然后请求重绘图表以显示标记点。
-        - 当用户双击或在绘图区域外点击时：
-            - 清除选中的数据点信息（设置 `has_click_point = false`，重置 `click_info_label`），并重绘图表。
+        - 首先判断点击是否在绘图区域内且为单击 (`n_press == 1`)。
+        - 如果是有效单击，则根据点击的 `x` 坐标计算对应的时间（分钟数），并从 `sun_angles` 数组中获取该时间的太阳高度角。
+        - 计算出该太阳高度角在图表上对应的 `y` 坐标 (`corresponding_y`)。
+        - 设置 `has_click_point = true`，并记录 `clicked_x`（鼠标原始x坐标）和 `corresponding_y`。
+        - 在 `click_info_label` (一个 `Gtk.Label`) 中显示格式化后的时间和太阳高度角信息。
+        - 调用 `drawing_area.queue_draw()` 请求重绘，以便在图表上显示标记点和辅助线。
+        - 如果是双击或在绘图区域外点击，则清除选中的数据点信息（设置 `has_click_point = false`，重置 `click_info_label` 的文本），并重绘图表。
 - **`activate()` 方法**：
-    - 初始化所有UI组件。
-    - 创建并配置 `Gtk.GestureClick` 控制器，并将其连接到 `on_chart_clicked` 回调函数，然后添加到 `drawing_area`。
+    - 此方法负责在应用启动时构建整个用户界面。
+    - 初始化所有UI组件，包括各种 `Gtk.Box`、`Gtk.Grid`、`Gtk.Label`、`Gtk.SpinButton`、`Gtk.Calendar`、`Gtk.Button` 和 `Gtk.DrawingArea`。
+    - 创建并配置 `Gtk.GestureClick` 控制器，将其 `pressed` 信号连接到 `on_chart_clicked` 回调函数，然后通过 `drawing_area.add_controller(click_controller)` 将手势控制器添加到绘图区域，使其能够响应点击事件。
+    - 最后，将主布局 `main_box` 设置为窗口的子控件，并调用 `window.present()` 显示窗口。
 
 ## 绘图函数
 
@@ -679,9 +693,15 @@ public static int main (string[] args) {
  * and displays a real-time chart of solar elevation angles with export capabilities.
  */
 public class SolarAngleApp : Gtk.Application {
+    // Constants for solar angle calculations
     private const double DEG2RAD = Math.PI / 180.0;
     private const double RAD2DEG = 180.0 / Math.PI;
     private const int RESOLUTION_PER_MIN = 1440; // 1 sample per minute
+    // Constants for margins in the drawing area
+    private const int MARGIN_LEFT = 70;
+    private const int MARGIN_RIGHT = 20;
+    private const int MARGIN_TOP = 50;
+    private const int MARGIN_BOTTOM = 70;
 
     private Gtk.ApplicationWindow window;
     private Gtk.DrawingArea drawing_area;
@@ -725,12 +745,7 @@ public class SolarAngleApp : Gtk.Application {
             default_height = 700,
         };
 
-        var main_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0) {
-            margin_start = 10,
-            margin_end = 10,
-            margin_top = 10,
-            margin_bottom = 10,
-        };
+        var main_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
 
         var left_panel = new Gtk.Box (Gtk.Orientation.VERTICAL, 15) {
             hexpand = false,
@@ -924,7 +939,7 @@ public class SolarAngleApp : Gtk.Application {
             double ha_rad = ha_deg * DEG2RAD;
 
             // cos(phi): cosine of zenith angle via spherical trig
-            double cos_phi = sin_lat * Math.sin (decl_rad) + cos_lat * Math.cos (decl_rad) * Math.cos(ha_rad);
+            double cos_phi = sin_lat * Math.sin (decl_rad) + cos_lat * Math.cos (decl_rad) * Math.cos (ha_rad);
             // clamp to valid range
             if (cos_phi > 1.0) cos_phi = 1.0;
             if (cos_phi < -1.0) cos_phi = -1.0;
@@ -962,21 +977,20 @@ public class SolarAngleApp : Gtk.Application {
         int width = drawing_area.get_width ();
         int height = drawing_area.get_height ();
 
-        int ml = 70, mr = 20, mt = 50, mb = 70;
-        int pw = width - ml - mr, ph = height - mt - mb;
-        double y_min = -90, y_max = 90;
+        int chart_width = width - MARGIN_LEFT - MARGIN_RIGHT;
+        int chart_height = height - MARGIN_TOP - MARGIN_BOTTOM;
 
         // Check if click is within plot area and single click
-        if (x >= ml && x <= width - mr && y >= mt && y <= height - mb && n_press == 1) {
+        if (x >= MARGIN_LEFT && x <= width - MARGIN_RIGHT && y >= MARGIN_TOP && y <= height - MARGIN_BOTTOM && n_press == 1) {
             clicked_x = x;
 
             // Convert coordinates to time and get corresponding angle
-            double time_hours = (x - ml) / pw * 24.0;
+            double time_hours = (x - MARGIN_LEFT) / chart_width * 24.0;
             int time_minutes = (int) (time_hours * 60) % RESOLUTION_PER_MIN;
             double angle = sun_angles[time_minutes];
 
             // Calculate Y coordinate on the curve for this angle
-            corresponding_y = mt + ph * (1 - (angle - y_min) / (y_max - y_min));
+            corresponding_y = MARGIN_TOP + chart_height * (90.0 - angle) / 180.0;
             has_click_point = true;
 
             // Format time display
@@ -984,7 +998,7 @@ public class SolarAngleApp : Gtk.Application {
             int minutes = (int) ((time_hours - hours) * 60);
 
             // Update info label
-            string info_text = "Time: %02d:%02d\nSolar Elevation: %.1f°".printf(
+            string info_text = "Time: %02d:%02d\nSolar Elevation: %.1f°".printf (
                 hours, minutes, angle
             );
 
@@ -1000,78 +1014,81 @@ public class SolarAngleApp : Gtk.Application {
 
     /**
      * Draws the solar elevation chart.
+     *
+     * @param area The drawing area widget.
+     * @param cr The Cairo context for drawing.
+     * @param width The width of the drawing area.
+     * @param height The height of the drawing area.
      */
     private void draw_sun_angle_chart (Gtk.DrawingArea area, Cairo.Context cr, int width, int height) {
         // Fill background
         cr.set_source_rgb (1, 1, 1);
         cr.paint ();
 
-        int ml = 70, mr = 20, mt = 50, mb = 70;
-        int pw = width - ml - mr, ph = height - mt - mb;
+        int chart_width = width - MARGIN_LEFT - MARGIN_RIGHT;
+        int chart_height = height - MARGIN_TOP - MARGIN_BOTTOM;
 
-        double y_min = -90, y_max = 90;
-
-        double horizon_y = mt + ph * (1 - (0 - y_min) / (y_max - y_min));
+        double horizon_y = MARGIN_TOP + chart_height * 0.5; // 0° is at middle of -90° to +90° range
         
         // Shade area below horizon
         cr.set_source_rgba (0.7, 0.7, 0.7, 0.3);
-        cr.rectangle (ml, horizon_y, pw, height - mb - horizon_y);
+        cr.rectangle (MARGIN_LEFT, horizon_y, chart_width, height - MARGIN_BOTTOM - horizon_y);
         cr.fill ();
 
         // Draw horizontal grid every 15°
         cr.set_source_rgba (0.5, 0.5, 0.5, 0.5);
         cr.set_line_width (1);
-        for (int a = -90; a <= 90; a += 15) {
-            double yv = mt + ph * (1 - (a - y_min) / (y_max - y_min));
-            cr.move_to (ml, yv);
-            cr.line_to (width - mr, yv);
+        for (int angle = -90; angle <= 90; angle += 15) {
+            double tick_y = MARGIN_TOP + chart_height * (90 - angle) / 180.0;
+            cr.move_to (MARGIN_LEFT, tick_y);
+            cr.line_to (width - MARGIN_RIGHT, tick_y);
             cr.stroke ();
         }
         // Draw vertical grid every 2 hours
         for (int h = 0; h <= 24; h += 2) {
-            double xv = ml + pw * (h / 24.0);
-            cr.move_to (xv, mt);
-            cr.line_to (xv, height - mb);
+            double tick_x = MARGIN_LEFT + chart_width * (h / 24.0);
+            cr.move_to (tick_x, MARGIN_TOP);
+            cr.line_to (tick_x, height - MARGIN_BOTTOM);
             cr.stroke ();
         }
 
         // Draw axes and horizon
         cr.set_source_rgb (0, 0, 0);
         cr.set_line_width (2);
-        cr.move_to (ml, height - mb);
-        cr.line_to (width - mr, height - mb);
+        cr.move_to (MARGIN_LEFT, height - MARGIN_BOTTOM);
+        cr.line_to (width - MARGIN_RIGHT, height - MARGIN_BOTTOM);
         cr.stroke ();
-        cr.move_to (ml, mt);
-        cr.line_to (ml, height - mb);
+        cr.move_to (MARGIN_LEFT, MARGIN_TOP);
+        cr.line_to (MARGIN_LEFT, height - MARGIN_BOTTOM);
         cr.stroke ();
         // Horizon line
-        cr.move_to (ml, horizon_y);
-        cr.line_to (width - mr, horizon_y);
+        cr.move_to (MARGIN_LEFT, horizon_y);
+        cr.line_to (width - MARGIN_RIGHT, horizon_y);
         cr.stroke ();
 
         // Draw axis ticks and labels
         cr.set_line_width (1);
         cr.set_font_size (20);
-        for (int a = -90; a <= 90; a += 15) {
-            double yv = mt + ph * (1 - (a - y_min) / (y_max - y_min));
-            cr.move_to (ml - 5, yv);
-            cr.line_to (ml, yv);
+        for (int angle = -90; angle <= 90; angle += 15) {
+            double tick_y = MARGIN_TOP + chart_height * (90 - angle) / 180.0;
+            cr.move_to (MARGIN_LEFT - 5, tick_y);
+            cr.line_to (MARGIN_LEFT, tick_y);
             cr.stroke ();
             var te = Cairo.TextExtents ();
-            var txt = a.to_string ();
+            var txt = angle.to_string ();
             cr.text_extents (txt, out te);
-            cr.move_to (ml - 10 - te.width, yv + te.height / 2);
+            cr.move_to (MARGIN_LEFT - 10 - te.width, tick_y + te.height / 2);
             cr.show_text (txt);
         }
         for (int h = 0; h <= 24; h += 2) {
-            double xv = ml + pw * (h / 24.0);
-            cr.move_to (xv, height - mb);
-            cr.line_to (xv, height - mb + 5);
+            double tick_x = MARGIN_LEFT + chart_width * (h / 24.0);
+            cr.move_to (tick_x, height - MARGIN_BOTTOM);
+            cr.line_to (tick_x, height - MARGIN_BOTTOM + 5);
             cr.stroke ();
             var te = Cairo.TextExtents ();
             var txt = h.to_string ();
             cr.text_extents (txt, out te);
-            cr.move_to (xv - te.width / 2, height - mb + 25);
+            cr.move_to (tick_x - te.width / 2, height - MARGIN_BOTTOM + 25);
             cr.show_text (txt);
         }
 
@@ -1079,8 +1096,8 @@ public class SolarAngleApp : Gtk.Application {
         cr.set_source_rgb (1, 0, 0);
         cr.set_line_width (2);
         for (int i = 0; i < RESOLUTION_PER_MIN; i += 1) {
-            double x = ml + pw * (i / (double)(RESOLUTION_PER_MIN - 1));
-            double y = mt + ph * (1 - (sun_angles[i] - y_min) / (y_max - y_min));
+            double x = MARGIN_LEFT + chart_width * (i / (double) (RESOLUTION_PER_MIN - 1));
+            double y = MARGIN_TOP + chart_height * (90.0 - sun_angles[i]) / 180.0;
             if (i == 0) {
                 cr.move_to (x, y);
             } else {
@@ -1098,13 +1115,13 @@ public class SolarAngleApp : Gtk.Application {
             // Draw vertical line to show time
             cr.set_source_rgba (0, 0, 1, 0.5);
             cr.set_line_width (1);
-            cr.move_to (clicked_x, mt);
-            cr.line_to (clicked_x, height - mb);
+            cr.move_to (clicked_x, MARGIN_TOP);
+            cr.line_to (clicked_x, height - MARGIN_BOTTOM);
             cr.stroke ();
             
             // Draw horizontal line to show angle
-            cr.move_to (ml, corresponding_y);
-            cr.line_to (width - mr, corresponding_y);
+            cr.move_to (MARGIN_LEFT, corresponding_y);
+            cr.line_to (width - MARGIN_RIGHT, corresponding_y);
             cr.stroke ();
         }
 
@@ -1114,33 +1131,33 @@ public class SolarAngleApp : Gtk.Application {
         string x_title = "Time (Hour)";
         Cairo.TextExtents x_ext;
         cr.text_extents (x_title, out x_ext);
-        cr.move_to ((double) width / 2 - x_ext.width / 2, height - mb + 55);
+        cr.move_to ((double) width / 2 - x_ext.width / 2, height - MARGIN_BOTTOM + 55);
         cr.show_text (x_title);
         string y_title = "Solar Elevation (°)";
         Cairo.TextExtents y_ext;
         cr.text_extents (y_title, out y_ext);
         cr.save ();
-        cr.translate (ml - 45, (double)height / 2);
+        cr.translate (MARGIN_LEFT - 45, (double)height / 2);
         cr.rotate (-Math.PI / 2);
         cr.move_to (-y_ext.width / 2, 0);
         cr.show_text (y_title);
         cr.restore ();
 
         // Draw chart captions
-        string caption_line1 = "Solar Elevation Angle - Date: %s".printf(selected_date.format("%Y-%m-%d"));
-        string caption_line2 = "Lat: %.2f°, Lon: %.1f°, TZ: UTC%+.1f".printf(latitude, longitude, timezone_offset_hours);
+        string caption_line1 = "Solar Elevation Angle - Date: %s".printf (selected_date.format ("%Y-%m-%d"));
+        string caption_line2 = "Lat: %.2f°, Lon: %.1f°, TZ: UTC%+.1f".printf (latitude, longitude, timezone_offset_hours);
         
-        cr.set_font_size(18);
+        cr.set_font_size (18);
         Cairo.TextExtents cap_ext1, cap_ext2;
-        cr.text_extents(caption_line1, out cap_ext1);
-        cr.text_extents(caption_line2, out cap_ext2);
+        cr.text_extents (caption_line1, out cap_ext1);
+        cr.text_extents (caption_line2, out cap_ext2);
 
         double total_caption_height = cap_ext1.height + cap_ext2.height + 5;
 
-        cr.move_to((width - cap_ext1.width) / 2, (mt - total_caption_height) / 2 + cap_ext1.height);
-        cr.show_text(caption_line1);
-        cr.move_to((width - cap_ext2.width) / 2, (mt - total_caption_height) / 2 + cap_ext1.height + 5 + cap_ext2.height);
-        cr.show_text(caption_line2);
+        cr.move_to ((width - cap_ext1.width) / 2, (MARGIN_TOP - total_caption_height) / 2 + cap_ext1.height);
+        cr.show_text (caption_line1);
+        cr.move_to ((width - cap_ext2.width) / 2, (MARGIN_TOP - total_caption_height) / 2 + cap_ext1.height + 5 + cap_ext2.height);
+        cr.show_text (caption_line2);
     }
 
     /**
@@ -1170,7 +1187,7 @@ public class SolarAngleApp : Gtk.Application {
         var file_dialog = new Gtk.FileDialog () {
             modal = true,
             initial_name = "solar_elevation_chart.png",
-            filters = filter_list
+            filters = filter_list,
         };
 
         file_dialog.save.begin (window, null, (obj, res) => {
@@ -1241,7 +1258,7 @@ public class SolarAngleApp : Gtk.Application {
         var file_dialog = new Gtk.FileDialog () {
             modal = true,
             initial_name = "solar_elevation_data.csv",
-            filters = filter_list
+            filters = filter_list,
         };
 
         file_dialog.save.begin (window, null, (obj, res) => {
@@ -1268,10 +1285,10 @@ public class SolarAngleApp : Gtk.Application {
 
             // Write CSV metadata as comments
             data_stream.put_string ("# Solar Elevation Data\n");
-            data_stream.put_string ("# Date: %s\n".printf(selected_date.format("%Y-%m-%d")));
-            data_stream.put_string ("# Latitude: %.2f degrees\n".printf(latitude));
-            data_stream.put_string ("# Longitude: %.2f degrees\n".printf(longitude));
-            data_stream.put_string ("# Timezone: UTC%+.2f\n".printf(timezone_offset_hours));
+            data_stream.put_string ("# Date: %s\n".printf (selected_date.format ("%Y-%m-%d")));
+            data_stream.put_string ("# Latitude: %.2f degrees\n".printf (latitude));
+            data_stream.put_string ("# Longitude: %.1f degrees\n".printf (longitude));
+            data_stream.put_string ("# Timezone: UTC%+.2f\n".printf (timezone_offset_hours));
             data_stream.put_string ("#\n");
 
             // Write CSV header
@@ -1281,8 +1298,8 @@ public class SolarAngleApp : Gtk.Application {
             for (int i = 0; i < RESOLUTION_PER_MIN; i += 1) {
                 int hours = i / 60;
                 int minutes = i % 60;
-                string time_str = "%02d:%02d".printf(hours, minutes);
-                data_stream.put_string ("%s,%.3f\n".printf(time_str, sun_angles[i]));
+                string time_str = "%02d:%02d".printf (hours, minutes);
+                data_stream.put_string ("%s,%.3f\n".printf (time_str, sun_angles[i]));
             }
 
             data_stream.close ();
