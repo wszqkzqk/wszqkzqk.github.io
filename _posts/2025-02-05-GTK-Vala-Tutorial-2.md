@@ -651,9 +651,9 @@ public static int main (string[] args) {
     - `click_controller.pressed.connect(on_chart_clicked)`：当用户在 `drawing_area` 上按下鼠标按钮时（手势开始时），`pressed` 信号会发出，并调用 `on_chart_clicked` 回调函数。此回调函数接收按下次數 (`n_press`) 以及点击位置的x、y坐标。
     - `on_chart_clicked (int n_press, double x, double y)` 回调函数：
         - 首先判断点击是否在绘图区域内且为单击 (`n_press == 1`)。
-        - 如果是有效单击，则根据点击的 `x` 坐标计算对应的时间（分钟数），并从 `sun_angles` 数组中获取该时间的太阳高度角。
-        - 计算出该太阳高度角在图表上对应的 `y` 坐标 (`corresponding_y`)。
-        - 设置 `has_click_point = true`，并记录 `clicked_x`（鼠标原始x坐标）和 `corresponding_y`。
+        - 如果是有效单击，则根据点击的 `x` 坐标计算对应的时间浮点数（小时），存储到 `clicked_time_hours`。
+        - 计算出对应的分钟索引（`time_minutes`），并从 `sun_angles` 数组中获取该时间点的太阳高度角，存储到 `corresponding_angle`。
+        - 设置 `has_click_point = true`。
         - 在 `click_info_label` (一个 `Gtk.Label`) 中显示格式化后的时间和太阳高度角信息。
         - 调用 `drawing_area.queue_draw()` 请求重绘，以便在图表上显示标记点和辅助线。
         - 如果是双击或在绘图区域外点击，则清除选中的数据点信息（设置 `has_click_point = false`，重置 `click_info_label` 的文本），并重绘图表。
@@ -672,7 +672,8 @@ public static int main (string[] args) {
   * 绘制坐标轴、刻度标记和数字标签。
   * 使用红色曲线绘制计算得到的太阳高度角随时间变化。
   * **如果 `has_click_point` 为 `true`**：
-     - 在 `(clicked_x, corresponding_y)` 位置绘制一个蓝色圆点标记。
+     - 根据存储的 `clicked_time_hours` 和 `corresponding_angle` 计算标记点的 x 和 y 坐标。
+     - 在标记点处绘制一个蓝色圆点。
      - 从标记点向图表的顶部和底部绘制一条半透明的蓝色垂直线。
      - 从标记点向图表的左侧和右侧绘制一条半透明的蓝色水平线。
   * 在图表顶部绘制标题，分两行显示当前选择的日期、纬度、经度和时区。
@@ -711,8 +712,8 @@ public class SolarAngleApp : Gtk.Application {
     private double latitude = 0.0;
     private double longitude = 0.0;
     private double timezone_offset_hours = 0.0;
-    private double clicked_x = 0.0;
-    private double corresponding_y = 0.0;
+    private double clicked_time_hours = 0.0;
+    private double corresponding_angle = 0.0;
     private bool has_click_point = false;
 
     /**
@@ -735,6 +736,8 @@ public class SolarAngleApp : Gtk.Application {
     protected override void activate () {
         window = new Gtk.ApplicationWindow (this) {
             title = "Solar Angle Calculator",
+            default_width = 1000,
+            default_height = 700,
         };
 
         var main_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
@@ -970,28 +973,22 @@ public class SolarAngleApp : Gtk.Application {
         int height = drawing_area.get_height ();
 
         int chart_width = width - MARGIN_LEFT - MARGIN_RIGHT;
-        int chart_height = height - MARGIN_TOP - MARGIN_BOTTOM;
 
         // Check if click is within plot area and single click
         if (x >= MARGIN_LEFT && x <= width - MARGIN_RIGHT && y >= MARGIN_TOP && y <= height - MARGIN_BOTTOM && n_press == 1) {
-            clicked_x = x;
-
             // Convert coordinates to time and get corresponding angle
-            double time_hours = (x - MARGIN_LEFT) / chart_width * 24.0;
-            int time_minutes = (int) (time_hours * 60) % RESOLUTION_PER_MIN;
-            double angle = sun_angles[time_minutes];
-
-            // Calculate Y coordinate on the curve for this angle
-            corresponding_y = MARGIN_TOP + chart_height * (90.0 - angle) / 180.0;
+            clicked_time_hours = (x - MARGIN_LEFT) / chart_width * 24.0;
+            int time_minutes = (int) (clicked_time_hours * 60) % RESOLUTION_PER_MIN;
+            corresponding_angle = sun_angles[time_minutes];
             has_click_point = true;
 
             // Format time display
-            int hours = (int) time_hours;
-            int minutes = (int) ((time_hours - hours) * 60);
+            int hours = (int) clicked_time_hours;
+            int minutes = (int) ((clicked_time_hours - hours) * 60);
 
             // Update info label
             string info_text = "Time: %02d:%02d\nSolar Elevation: %.1f°".printf (
-                hours, minutes, angle
+                hours, minutes, corresponding_angle
             );
 
             click_info_label.label = info_text;
@@ -1100,6 +1097,10 @@ public class SolarAngleApp : Gtk.Application {
 
         // Draw click point if exists
         if (has_click_point) {
+            // Calculate current coordinates from stored time and angle
+            double clicked_x = MARGIN_LEFT + chart_width * (clicked_time_hours / 24.0);
+            double corresponding_y = MARGIN_TOP + chart_height * (90.0 - corresponding_angle) / 180.0;
+
             cr.set_source_rgba (0, 0, 1, 0.8);
             cr.arc (clicked_x, corresponding_y, 5, 0, 2 * Math.PI);
             cr.fill ();
@@ -1434,8 +1435,8 @@ public class SolarAngleApp : Adw.Application {
     private double latitude = 0.0;
     private double longitude = 0.0;
     private double timezone_offset_hours = 0.0;
-    private double clicked_x = 0.0;
-    private double corresponding_y = 0.0;
+    private double clicked_time_hours = 0.0;
+    private double corresponding_angle = 0.0;
     private bool has_click_point = false;
 
     // Color theme struct for chart drawing
@@ -1537,7 +1538,6 @@ public class SolarAngleApp : Adw.Application {
 
         var main_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
 
-        // Remove scrolled window, use direct left panel
         var left_panel = new Gtk.Box (Gtk.Orientation.VERTICAL, 12) {
             hexpand = false,
             vexpand = true,
@@ -1781,28 +1781,22 @@ public class SolarAngleApp : Adw.Application {
         int height = drawing_area.get_height ();
 
         int chart_width = width - MARGIN_LEFT - MARGIN_RIGHT;
-        int chart_height = height - MARGIN_TOP - MARGIN_BOTTOM;
 
         // Check if click is within plot area and single click
         if (x >= MARGIN_LEFT && x <= width - MARGIN_RIGHT && y >= MARGIN_TOP && y <= height - MARGIN_BOTTOM && n_press == 1) {
-            clicked_x = x;
-
             // Convert coordinates to time and get corresponding angle
-            double time_hours = (x - MARGIN_LEFT) / chart_width * 24.0;
-            int time_minutes = (int) (time_hours * 60) % RESOLUTION_PER_MIN;
-            double angle = sun_angles[time_minutes];
-
-            // Calculate Y coordinate on the curve for this angle
-            corresponding_y = MARGIN_TOP + chart_height * (90.0 - angle) / 180.0;
+            clicked_time_hours = (x - MARGIN_LEFT) / chart_width * 24.0;
+            int time_minutes = (int) (clicked_time_hours * 60) % RESOLUTION_PER_MIN;
+            corresponding_angle = sun_angles[time_minutes];
             has_click_point = true;
 
             // Format time display
-            int hours = (int) time_hours;
-            int minutes = (int) ((time_hours - hours) * 60);
+            int hours = (int) clicked_time_hours;
+            int minutes = (int) ((clicked_time_hours - hours) * 60);
 
             // Update info label
             string info_text = "Time: %02d:%02d\nSolar Elevation: %.1f°".printf (
-                hours, minutes, angle
+                hours, minutes, corresponding_angle
             );
 
             click_info_label.label = info_text;
@@ -1914,6 +1908,10 @@ public class SolarAngleApp : Adw.Application {
 
         // Draw click point if exists
         if (has_click_point) {
+            // Calculate current coordinates from stored time and angle
+            double clicked_x = MARGIN_LEFT + chart_width * (clicked_time_hours / 24.0);
+            double corresponding_y = MARGIN_TOP + chart_height * (90.0 - corresponding_angle) / 180.0;
+
             cr.set_source_rgba (colors.point_r, colors.point_g, colors.point_b, 0.8);
             cr.arc (clicked_x, corresponding_y, 5, 0, 2 * Math.PI);
             cr.fill ();
