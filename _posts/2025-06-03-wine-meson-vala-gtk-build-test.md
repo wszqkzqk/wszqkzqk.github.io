@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      在Linux下跨平台构建与测试适用于Windows平台的GTK/Vala应用
+title:      在Linux下使用Wine构建与测试Windows应用
 subtitle:   在Wine环境中使用Meson/Vala构建GTK应用并进行测试
 date:       2025-06-03
 author:     wszqkzqk
@@ -11,9 +11,9 @@ tags:       开源软件 MSYS2 Wine Meson Vala GTK
 
 ## 前言
 
-大多数习惯写GTK或者Vala程序的人一般都倾向于使用Linux作为开发环境，但是为了验证程序的跨平台兼容性，我们通常还需要切换到Windows下进行编译和测试，反复重启切换系统会非常不便。因此，笔者探索了能够在Linux下通过Wine来构建与测试GTK/Vala应用的方法。
+许多开发者倾向于使用Linux作为主力开发环境，但在开发需要支持Windows平台的应用程序时，为了验证程序的跨平台兼容性，通常还需要切换到Windows下进行编译和测试，**反复重启切换系统会非常不便**。本文将介绍一种通用方法，通过配置**Wine**环境，在Linux下实现针对Windows平台的各类应用的**构建**与**测试**。本文方法实际上不仅仅局限于特定的工具链与语言，也可以用于其他需要在Windows平台上构建的应用程序。通过这种方式，开发者可以在Linux环境下高效地完成Windows平台的构建与初步验证，甚至可以将Linux和Windows的构建集成到同一个工作流。
 
-本文将从Windows下的GTK/Vala应用构建出发，讲解如何方便地安装Windows下GTK/Vala开发的相关环境，并通过配置Wine环境来在Linux下实现针对Windows平台的GTK/Vala应用的构建与测试。
+为了具体说明这一流程，本文将以Windows下的GTK/Vala应用构建为例，讲解如何配置Wine环境来在Linux下实现其构建与测试。通过这种方式，开发者可以在Linux环境下高效地完成Windows平台的**构建、分发与初步验证**。
 
 ## 安装Windows下的GTK/Vala开发环境
 
@@ -80,17 +80,16 @@ winepath -w /mnt/msys64
 # 输出为：'Z:\mnt\msys64'，将输出的路径替换到上面的'<MSYS2路径>'中即可
 ```
 
-如果没有，则：
-- 右键点击右侧窗格的空白区域
-   - 选择 `新建` → `字符串值`
-   - 将新值命名为 **`Path`**，添加默认路径和MSYS2的`ucrt64/bin`以及`usr/bin`路径：
-     ```
-     C:\windows\system32;C:\windows;<MSYS2路径>\ucrt64\bin;<MSYS2路径>\usr\bin
-     ```
+如果没有，则右键点击右侧窗格的空白区域
+- 选择 `新建` → `字符串值`
+- 将新值命名为 **`Path`**，添加默认路径和MSYS2的`ucrt64/bin`以及`usr/bin`路径：
+  ```
+  C:\windows\system32;C:\windows;<MSYS2路径>\ucrt64\bin;<MSYS2路径>\usr\bin
+  ```
 
 ### 注意：防止环境变量干扰
 
-很多时候（例如安装了flatpak的情况下），Linux下会设置`$XDG_DATA_DIRS`，这个变量在Linux下与Windows下**均会被GLib读取**，但是Linux使用`:`分隔符，而Windows使用`;`分隔符，因此在Linux下运行Wine时，如果Wine**继承**了`$XDG_DATA_DIRS`变量，可能会导致GLib等优先读取`$XDG_DATA_DIRS`的程序无法正确解析路径。
+很多时候（例如安装了flatpak的情况下），Linux下会设置`$XDG_DATA_DIRS`，这个变量在Linux下与Windows下**均会被GLib读取**，但是Linux使用`:`分隔符，而Windows使用`;`分隔符。在Linux下运行Wine时，如果Wine**继承**了`$XDG_DATA_DIRS`变量，GLib等库中的实现会按照Windows的规则来处理`$XDG_DATA_DIRS`，但实际上接受到的却是Linux的风格，无法按照正确的分隔符拆分，导致程序无法正确解析系统数据路径。
 
 因此，我们需要确保Wine不会继承Linux下的`$XDG_DATA_DIRS`变量。如果没有必要使用`$XDG_DATA_DIRS`，可以清除该变量；如果需要使用，可以**在Wine中覆盖该变量**。同样使用`wine regedit`命令打开Wine的注册表编辑器，找到：
 
@@ -98,7 +97,7 @@ winepath -w /mnt/msys64
 HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment
 ```
 
-右键点击右侧窗格的空白区域
+右键点击右侧窗格的空白区域：
 - 选择 `新建` → `字符串值`
 - 将新值命名为 **`XDG_DATA_DIRS`**，添加默认路径和MSYS2的`ucrt64/share`路径：
   ```
@@ -107,7 +106,7 @@ HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment
 
 ## 在Wine中构建
 
-经过上述配置后，我们就可以在Linux下使用Wine来构建Windows平台的GTK/Vala应用了。由于相关路径已经添加到了Wine的环境变量中，我们可以直接在Linux终端中使用`wine <命令>`的方式来运行构建命令。
+经过上述配置后，我们就可以在Linux下使用Wine来构建Windows平台的GTK/Vala应用了。由于相关路径已经添加到了Wine的环境变量中，我们可以直接在Linux终端中使用`wine <命令>`的方式来运行构建命令。这几乎只是在Linux的对应命令前加上一个`wine`，十分方便。
 
 例如，配置Meson构建目录：
 
@@ -121,7 +120,7 @@ wine meson setup release --buildtype=release
 wine meson compile -C release
 ```
 
-由于Wine对Python、Meson、Vala、GCC等工具的兼容性较好，因此在大多数情况下，这些命令可以直接在Wine环境中完成构建。
+由于Wine对Python、Meson、Vala、GCC等工具的兼容性较好，在大多数情况下，使用这些命令可以直接在Wine环境中完成构建。
 
 构建失败往往是文档等内容依赖了`msys`环境下的工具（如`help2man`）等，依赖`libmsys-2.0.dll`的这些非Windows原生工具暂时无法在Wine中运行，此时需要在构建选项中关闭文档等内容的生成，例如：
 
@@ -135,7 +134,7 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
 
 由于我们已经将相关路径添加到Wine的环境变量中，因此可以直接在Wine环境中运行测试程序，无论是GUI应用还是命令行工具。对于受支持的DE，如果配置了XDG打开方式，也可以直接双击`.exe`文件来运行应用。
 
-笔者构建的[GTK4/Vala示例应用](https://wszqkzqk.github.io/2025/02/05/GTK-Vala-Tutorial-2/)，无论是否基于Libadwaita，在Wine下构建、运行均相对顺利。
+笔者编写的[GTK4/Vala示例应用](https://wszqkzqk.github.io/2025/02/05/GTK-Vala-Tutorial-2/)，无论是否基于Libadwaita，在Wine下构建均较为顺利。但在测试运行的时候哦，显示与渲染上效果相对较差，基于Libadwaita的应用存在较大的黑边，纯GTK4应用也有较小的黑边，两者在某些时候偶尔有闪烁现象，但整体上仍然可以正常运行。
 
 |[![#~/img/wine/wine-solarangleadw.webp](/img/wine/wine-solarangleadw.webp)](/img/wine/wine-solarangleadw.webp)|[![#~/img/wine/wine-solarangleadw-black.webp](/img/wine/wine-solarangleadw-black.webp)](/img/wine/wine-solarangleadw-black.webp)|
 |:----:|:----:|
@@ -144,3 +143,13 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
 |[![#~/img/wine/wine-daylengthgtk.webp](/img/wine/wine-daylengthgtk.webp)](/img/wine/wine-daylengthgtk.webp)|[![#~/img/wine/wine-solaranglegtk.webp](/img/wine/wine-solaranglegtk.webp)](/img/wine/wine-solaranglegtk.webp)|
 |:----:|:----:|
 |纯GTK4程序(1)|纯GTK4程序(2)|
+
+同样，非GUI的程序也可以这样构建与运行。笔者也测试了在Wine中构建出的这些程序在Windows下的运行情况，均能正常运行。
+
+一般来说，Wine对构建工具的支持相当好，对非GUI的程序的支持一般也很不错。由于图形界面渲染适配难度较大，复杂的GUI程序的兼容性风险往往相对更大。在笔者的示例中，几个GTK4/Vala应用在Wine下的运行效果都还可以接受，虽然有些小问题，但基本上可以使用。
+
+## 总结
+
+本文详细介绍了一种在Linux环境下通过Wine实现跨平台构建与测试Windows平台应用的通用方法，并以GTK/Vala应用为例展示了其具体实现。这种方法使开发者能够在仅使用Linux开发环境的情况下，高效验证各类应用在Windows平台的兼容性。
+
+该方法能够显著简化需要支持Windows平台的应用的开发流程，使开发者能够在Linux环境下高效完成Windows平台的构建与初步验证，甚至可以将Linux和Windows的构建集成到同一个工作流。随着Wine和MSYS2等工具的持续改进，该工作流将更加完善，为各类应用的跨平台开发提供有力支持。
