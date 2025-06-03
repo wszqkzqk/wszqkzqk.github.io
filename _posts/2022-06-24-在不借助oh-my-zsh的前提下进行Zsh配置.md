@@ -21,7 +21,9 @@ Zsh、Fish甚至从Windows下发展而来的PowerShell相较Bash而言都极具�
 
 由于Linux下有十分成熟的内存缓存机制，因此当oh-my-zsh在系统启动后完成过一次加载，之后便可以直接从内存中读取已经缓存的内容，能够做到瞬间启动。然而，Windows下的内存缓冲机制则没有这么友好，如果使用oh-my-zsh，Zsh的加载时间将会特别长。此外，由于Windows下的Unix Shell环境均是移植而来，利用了Cygwin或衍生库将Unix API Calls转化为Windows API Calls，有显著的性能损失，对于Unix的`fork()`API转化效率尤其低下，再加上无论是Cygwin还是MSYS2都将Unix Shell内置的`echo`、`[`等功能拆分成了独立`.exe`文件，增加了调用性能开销（不过WSL的原生实现可能要好一点）。因此，在Windows下使用本来就比较吃资源的oh-my-zsh十分卡顿，体验并不好。
 
-### 准备
+### Windows下MSYS2环境的准备
+
+#### MSYS2的安装
 
 考虑到有的读者可能对Windows下的终端配置不熟悉，在这里我简单列出一下Windows下安装Zsh的方法。
 
@@ -32,6 +34,8 @@ MSYS2已经包含在了winget的软件库中，可以直接通过命令安装：
 ```powershell
 winget install msys2.msys2
 ```
+
+#### 环境变量的配置
 
 安装完成后，需要在系统环境变量（现在的Windows系统应该只需要在开始菜单的搜索框中输入`path`就能弹出）中添加如下变量，其中设定`MSYS2_PATH_TYPE`为`inherit`是让MSYS2的环境变量继承Windows系统的环境变量所必须的，其余的是笔者的习惯，可选：
 
@@ -57,7 +61,32 @@ winget install msys2.msys2
 [^2]: 注意应当写成本地MSYS2可执行文件目录所在路径或本地使用的MSYS2的MINGW环境的所在路径，且应当保证MINGW环境的所在路径排在前面
 [^3]: 注意不要删除`Path`变量中的原有内容
 
+#### MSYS2的用户主目录配置
+
 如果想要让MSYS2将Windows的用户主目录作为`$HOME`而不是MSYS2下的`/home/用户名`，可以编辑`MSYS2安装路径/etc/nsswitch.conf`文件，将`db_home`一行改为`db_home: windows`。
+
+#### 建议：选择UCRT64环境
+
+* 本建议与Zsh本身无关，但对于使用MSYS2管理开发环境的用户来说非常重要。
+
+MSYS2不仅提供了Zsh，还提供了多种原生的（`mingw-w64`环境）编译器和工具链，以及广受欢迎的GIMP、Inkscape、VLC等日用应用。
+
+MSYS2提供了多种构建环境，每种环境都有其特定的编译器、C/C++运行时库和默认的工具链。对于现代Windows开发，官方**强烈推荐并已将UCRT64作为默认环境**。
+
+*   **UCRT64 (Universal C Runtime)** 环境使用最新的Universal C Runtime库，与Microsoft Visual Studio默认使用的运行时库保持一致，提供了更好的C99兼容性和与MSVC的互操作性。
+*   相比之下，传统的MINGW64环境使用的是MSVCRT (Microsoft Visual C++ Runtime)，这是一个较旧的C运行时库，在某些方面存在兼容性问题且不完全支持C99。
+
+#### 提醒：避免包冲突
+
+* 本提醒与Zsh本身无关，但对于使用MSYS2管理开发环境的用户来说非常重要。
+
+在使用MSYS2时，理解其环境区分对于避免工具链冲突至关重要。MSYS2拥有一个`msys`环境（通常对应`/usr/bin`路径），其中包含了许多Unix风格的工具（如`grep`, `diff`, `git`, `make`, `file`, `coreutils`等）。这些`msys`环境下的工具是基于Cygwin运行时库的，能够正确识别和处理MSYS2风格的路径（例如`/usr/bin`、`/ucrt64/bin`等）。
+
+然而，如果你在MSYS2的**UCRT64（或其他MINGW）环境**中，安装了这些**同样名称的`mingw-w64-ucrt-x86_64-*`版本**的工具（例如 `mingw-w64-ucrt-x86_64-grep`, `mingw-w64-ucrt-x86_64-diffutils`，`mingw-w64-ucrt-x86_64-file`，`mingw-w64-ucrt-x86_64-uutils-coreutils`等），则极有可能导致包管理系统（Pacman）或构建过程出现问题。这是因为这些`mingw-w64-ucrt-x86_64-*`版本是为构建原生Windows应用而设计的，它们通常不理解MSYS2的Unix风格路径，在执行需要处理这些路径的操作时会报错。
+
+对于开发所需的库和编译器（如GTK、Vala、GCC、Clang），你当然需要安装其`mingw-w64-ucrt-x86_64-`版本，例如`mingw-w64-ucrt-x86_64-gtk4`，因为这些是用来构建原生Windows应用程序的。但对于作为Shell环境核心功能的工具，应使用`msys`环境提供的版本。
+
+### Windows下安装Zsh
 
 完成后，在MinTTY中运行MSYS2终端（如果添加了MSYS2可执行文件路径到`Path`环境变量，也可以在Windows终端的PowerShell或cmd环境中执行），安装Zsh：
 
