@@ -554,6 +554,14 @@ public static int main (string[] args) {
   - 链接数学库 (`-lm`)。
   - 各种编译优化参数（如 `-O2`、`-march=native` 等）。
 - 运行前请确保系统已安装 Vala、GTK4 以及相关编译工具（如 `gcc`）。
+  - 在 Arch Linux 上，可以使用以下命令安装所需的包：
+    ```bash
+    sudo pacman -S --needed vala gtk4
+    ```
+  - Windows 用户可以使用 MSYS2 环境，安装相关包：
+    ```bash
+    pacman -S --needed mingw-w64-ucrt-x86_64-vala mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-gtk4
+    ```
 - 可以直接执行该脚本，也可以在命令行中使用如下命令进行编译：
   ```bash
   valac --pkg gtk4 -X -lm -X -pipe -X -O2 daylengthgtk.vala
@@ -1324,6 +1332,14 @@ public class SolarAngleApp : Gtk.Application {
   - 链接数学库 (`-lm`)。
   - 各种编译优化参数（如 `-O2`、`-march=native` 等）。
 - 运行前请确保系统已安装 Vala、GTK4 以及相关编译工具（如 `gcc`）。
+  - 在 Arch Linux 上，可以使用以下命令安装所需的包：
+    ```bash
+    sudo pacman -S --needed vala gtk4
+    ```
+  - Windows 用户可以使用 MSYS2 环境，安装相关包：
+    ```bash
+    pacman -S --needed mingw-w64-ucrt-x86_64-vala mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-gtk4
+    ```
 - 可以直接执行该脚本，也可以在命令行中使用如下命令进行编译：
   ```bash
   valac --pkg gtk4 -X -lm -X -pipe -X -O2 solaranglegtk.vala
@@ -2133,6 +2149,14 @@ public class SolarAngleApp : Adw.Application {
 - 文件最上方的 shebang 指定了编译命令，除了 GTK4 和数学库外，还需要链接 Libadwaita 库：
   - `#!/usr/bin/env -S vala --pkg=gtk4 --pkg=libadwaita-1 -X -lm -X -O2 -X -march=native -X -pipe`
 - 运行前请确保系统已安装 Vala、GTK4、Libadwaita 1 (`libadwaita-1-dev` 或类似包名) 以及相关编译工具。
+  - 在 Arch Linux 上，可以使用以下命令安装所需的包：
+    ```bash
+    sudo pacman -S --needed vala gtk4 libadwaita
+    ```
+  - Windows 用户可以使用 MSYS2 环境，安装相关包：
+    ```bash
+    pacman -S --needed mingw-w64-ucrt-x86_64-vala mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-gtk4 mingw-w64-ucrt-x86_64-libadwaita
+    ```
 - 可以直接执行该脚本（如果已赋予执行权限 `chmod +x solarangleadw.vala`），也可以在命令行中使用如下命令进行编译（假设文件名保存为 `solarangleadw.vala`）：
   ```bash
   valac --pkg=gtk4 --pkg=libadwaita-1 -X -lm -X -pipe -X -O2 solarangleadw.vala -o solarangleadw
