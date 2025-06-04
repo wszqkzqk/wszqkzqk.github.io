@@ -13,6 +13,10 @@ tags:       开源软件 MSYS2 Wine Meson Vala GTK
 
 许多开发者倾向于使用Linux作为主力开发环境，但在开发需要支持Windows平台的应用程序时，为了验证程序的跨平台兼容性，通常还需要切换到Windows下进行编译和测试，**反复重启切换系统会非常不便**。本文将介绍一种通用方法，通过配置**Wine**环境，在Linux下实现针对Windows平台的各类应用的**构建**与**测试**。本文方法实际上不仅仅局限于特定的工具链与语言，也可以用于其他需要在Windows平台上构建的应用程序。通过这种方式，开发者可以在Linux环境下高效地完成Windows平台的构建与初步验证，甚至可以将Linux和Windows的构建集成到同一个工作流。
 
+相比于开销较大的虚拟机等方式，Wine通过**API转换层**（Windows Syscall → Linux Syscall）直接执行原生x86指令，不涉及虚拟化或指令集模拟。Wine具有更短的系统调用路径、更低的上下文切换开销，还可以通过宿主调度器及文件系统直接管理资源，CPU、内存、硬盘IO的开销也明显更小。
+
+通过Wine运行的纯CPU、无硬件加速的程序的性能大致与在Windows下运行的性能相当，甚至有时会更好（Wine对某些系统调用及内置函数的优化可能更好）。因此，Wine是一个非常适合在Linux下进行Windows平台应用开发和测试的工具。
+
 为了具体说明这一流程，本文将以Windows下的GTK/Vala应用构建为例，讲解如何配置Wine环境来在Linux下实现其构建与测试。通过这种方式，开发者可以在Linux环境下高效地完成Windows平台的**构建、分发与初步验证**。
 
 ## 安装Windows下的GTK/Vala开发环境
@@ -190,8 +194,6 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
 由于基于GLib的程序一般都有原生Linux版本且往往表现比Windows版更好，因此Wine下GLib程序的某些**高度依赖于平台**的行为适配可能不太合适，需要开发者自行处理相关环境。
 
 另外，由于图形界面渲染适配难度较大，**复杂GUI程序**的**兼容性风险**往往相对更大。在笔者的示例中，几个**GTK4**/Vala应用（包括纯GTK4与基于Libadwaita的GTK4应用）在Wine下的运行效果都**尚可接受**，虽然有些小问题，但基本上可以使用。
-
-通过Wine运行的纯CPU、不依赖于渲染的程序的性能大致与在Windows下运行的性能相当，甚至有时会更好（Wine对某些系统调用及内置函数的优化可能更好）。因此，Wine是一个非常适合在Linux下进行Windows平台应用开发和测试的工具。
 
 ## 总结
 
