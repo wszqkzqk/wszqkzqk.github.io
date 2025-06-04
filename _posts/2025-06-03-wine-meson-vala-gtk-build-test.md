@@ -25,13 +25,15 @@ tags:       开源软件 MSYS2 Wine Meson Vala GTK
 
 在Windows下，GTK和Vala的开发环境可以通过MSYS2来安装。MSYS2是一个轻量级包管理系统，提供了类似于Arch Linux的包管理体验。MSYS2继承了Arch Linux的哲学设计，提供了大量的开源软件包，无论是日用的GIMP、VLC、Inkscape，还是开发用的GCC、Clang、Python等，都可以通过MSYS2轻松安装。
 
-MSYS2的核心优势在于其对**原生Windows应用**的支持。不同于在Windows平台上提供Linux环境的WSL（Windows Subsystem for Linux），以及侧重于在Windows上模拟Unix环境的Cygwin，MSYS2的`ucrt64`/`mingw64`/`clang64`等mingw-w64环境构建的软件包是**完全原生的Windows二进制文件**。这意味着通过MSYS2安装的GTK、GCC/Vala编译器、Meson等工具链，这些工具本身以及编译出的应用程序都是真正的Windows本地应用，不依赖于MSYS2环境本身（除了`libmsys-2.0.dll`对于`msys`环境中的Unix工具）。这使其成为在Windows上进行原生开源软件开发（如GTK/Vala应用）的理想选择。许多知名的开源项目，例如Git for Windows、Inkscape、GTKWave、KeePassXC、Xournal++、Neovim和darktable等，都利用MSYS2来构建其Windows版本。[^1]
+MSYS2的核心优势在于其对**原生Windows应用**的支持。不同于在Windows平台上提供Linux环境的WSL（Windows Subsystem for Linux），以及侧重于在Windows上模拟Unix环境的Cygwin，MSYS2的`ucrt64`/`mingw64`/`clang64`等mingw-w64环境构建的软件包是**完全原生的Windows二进制文件**。
+
+这意味着通过MSYS2安装的GTK、GCC/Vala编译器、Meson等工具链，这些工具本身以及编译出的应用程序都是真正的Windows本地应用，不依赖于MSYS2环境本身（除了`msys`环境中的基础Unix兼容工具依赖于`libmsys-2.0.dll`进行syscall映射）。这使其成为在Windows上进行原生开源软件开发（如GTK/Vala应用）的理想选择。许多知名的开源项目，例如Git for Windows、Inkscape、GTKWave、KeePassXC、Xournal++、Neovim和darktable等，都利用MSYS2来构建其Windows版本。[^1]
 
 [^1]: 参考 MSYS2 Wiki 中的[Who is using MSYS2?](https://www.msys2.org/docs/who-is-using-msys2/)一文。
 
 ### 安装MSYS2
 
-MSYS2的安装非常简单，关于MSYS2的详细安装步骤、环境变量配置（如`MSYS2_PATH_TYPE=inherit`，`MINGW_ARCH=ucrt64`）以及与Windows终端的集成方法，请参考我之前的[博客文章](https://wszqkzqk.github.io/2022/06/24/在不借助oh-my-zsh的前提下进行Zsh配置/)。
+MSYS2的安装非常简单，从[官网](https://www.msys2.org/)下载即可一键安装。如果需要在Windows下对MSYS2进行更好的集成，可参考我之前的[博客文章](https://wszqkzqk.github.io/2022/06/24/在不借助oh-my-zsh的前提下进行Zsh配置/)。当然，如果只是用于下载和安装GTK/Vala开发环境，默认安装完成后直接使用亦可。
 
 ### 安装软件包
 
@@ -41,12 +43,11 @@ MSYS2的安装非常简单，关于MSYS2的详细安装步骤、环境变量配�
 pacman -S mingw-w64-ucrt-x86_64-gtk4 mingw-w64-ucrt-x86_64-libadwaita mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-vala mingw-w64-ucrt-x86_64-meson
 ```
 
-当然，如果希望使用其他工具链（如`clang`）、其他图形库（如`Qt`）、其他构建系统（如`CMake`）等，也可以通过类似的方式安装相应的包。在选择要安装的包时，注意笔者之前的[提醒](https://wszqkzqk.github.io/2022/06/24/%E5%9C%A8%E4%B8%8D%E5%80%9F%E5%8A%A9oh-my-zsh%E7%9A%84%E5%89%8D%E6%8F%90%E4%B8%8B%E8%BF%9B%E8%A1%8CZsh%E9%85%8D%E7%BD%AE/#%E6%8F%90%E9%86%92%E9%81%BF%E5%85%8D%E5%8C%85%E5%86%B2%E7%AA%81)。
-
+如果希望使用其他工具链（如`clang`、`rust`）、其他基础库（如`Qt`）、其他构建系统（如`CMake`）等，也可以通过类似的方式安装相应的包。
 
 ## Linux下Wine环境的配置
 
-在Linux下，我们可以通过Wine来模拟Windows环境，从而在Linux上构建和测试Windows平台的GTK/Vala应用。Wine是一个开源的兼容层，可以让Linux用户运行Windows应用程序。
+在Linux下，我们可以通过Wine来提供Windows兼容环境，从而在Linux上构建和测试Windows平台的GTK/Vala应用。Wine是一个开源的兼容层，可以让Linux用户运行Windows应用程序。
 
 ### 安装Wine
 
@@ -66,32 +67,34 @@ sudo pacman -S wine
 HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment
 ```
 
-找到`Path`变量，如果有，则双击它并将MSYS2的`ucrt64/bin`以及`usr/bin`路径添加到最后：
+找到`Path`变量，如果有，则双击它并将MSYS2的`ucrt64/bin`路径添加到最后：
 
 ```
-C:\windows\system32;C:\windows;<MSYS2路径>\ucrt64\bin;<MSYS2路径>\usr\bin
+C:\windows\system32;C:\windows;<MSYS2路径>\ucrt64\bin
 ```
 
-其中，`<MSYS2路径>`可以使用`winepath`从Linux路径转换为Wine路径，例如：
+其中，具体路径可以使用`winepath`**从Linux路径转换为Wine路径**，例如：
 
 ```bash
-winepath -w /mnt/msys64
+winepath -w /mnt/msys64/ucrt64/bin
 
-# 输出为：'Z:\mnt\msys64'，将输出的路径替换到上面的'<MSYS2路径>'中即可
+# 输出为：'Z:\mnt\msys64\ucrt64\bin\'
 ```
 
 如果没有，则右键点击右侧窗格的空白区域
 - 选择 `新建` → `字符串值`
-- 将新值命名为 **`Path`**，添加默认路径和MSYS2的`ucrt64/bin`以及`usr/bin`路径：
+- 将新值命名为 **`Path`**，添加默认路径和MSYS2的`ucrt64/bin`路径：
   ```
-  C:\windows\system32;C:\windows;<MSYS2路径>\ucrt64\bin;<MSYS2路径>\usr\bin
+  C:\windows\system32;C:\windows;<MSYS2路径>\ucrt64\bin
   ```
 
-### 注意：防止环境变量干扰
+需要注意的是，由于Wine目前尚**不能**兼容**依赖`libmsys-2.0.dll`**的**非Windows原生**的工具，因此**不应该**添加MSYS2的`usr/bin`路径到Wine的`Path`中。
 
-很多时候（例如安装了flatpak的情况下），Linux下会设置`$XDG_DATA_DIRS`，这个变量在Linux下与Windows下**均会被GLib读取**，但是Linux使用`:`分隔符，而Windows使用`;`分隔符。在Linux下运行Wine时，如果Wine**继承**了`$XDG_DATA_DIRS`变量，GLib等库中的实现会按照Windows的规则来处理`$XDG_DATA_DIRS`，但实际上接受到的却是Linux的风格，无法按照正确的分隔符拆分，导致程序无法正确解析系统数据路径。
+### 防止环境变量干扰
 
-因此，我们需要确保Wine不会继承Linux下的`$XDG_DATA_DIRS`变量。如果没有必要使用`$XDG_DATA_DIRS`，可以清除该变量；如果需要使用，可以**在Wine中覆盖该变量**。同样使用`wine regedit`命令打开Wine的注册表编辑器，找到：
+很多时候（例如安装了flatpak的情况下），Linux下会设置`$XDG_DATA_DIRS`等XDG相关的环境变量，这些变量在Linux下与Windows下**均会被GLib读取**，但是Linux使用`:`分隔符，而Windows使用`;`分隔符。在Linux下运行Wine时，如果Wine**继承**了`$XDG_DATA_DIRS`等变量，GLib等库中的实现会按照Windows的规则来处理，但实际上接受到的却是Linux的风格，程序将无法按照正确的分隔符拆分，导致程序无法正确解析系统数据路径。
+
+因此，我们需要确保Wine不会继承Linux下的`$XDG_DATA_DIRS`等变量。如果没有必要使用这些环境变量，可以清除这些变量设置；如果需要使用，可以**在Wine中覆盖该变量**。同样使用`wine regedit`命令打开Wine的注册表编辑器，找到：
 
 ```
 HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment
@@ -103,6 +106,8 @@ HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment
   ```
   C:\ProgramData;C:\Program Files\Common Files;<MSYS2路径>\ucrt64\share
   ```
+
+对于其他的环境变量（如`XDG_CONFIG_DIRS`、`XDG_CACHE_HOME`等），可以使用类似的方式进行配置。
 
 ## 在Wine中构建
 
@@ -122,13 +127,23 @@ wine meson compile -C release
 
 由于Wine对Python、Meson、Vala、GCC等工具的兼容性较好，在大多数情况下，使用这些命令可以直接在Wine环境中完成构建。
 
-构建失败往往是文档等内容依赖了`msys`环境下的工具（如`help2man`）等，依赖`libmsys-2.0.dll`的这些非Windows原生工具暂时无法在Wine中运行，此时需要在构建选项中关闭文档等内容的生成，例如：
+### `msys`环境的依赖解决
+
+#### 禁用文档生成（推荐）
+
+很多构建失败往往是文档等内容依赖了`msys`环境下的工具（如`help2man`）等。因为Wine目前无法运行依赖`libmsys-2.0.dll`的程序，我们并没有将`msys`环境的路径添加到Wine中，因此会找不到对应的程序而报错。此时可以通过关闭相关文档生成选项来解决。
 
 ```bash
 wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation=disabled
 ```
 
 具体选项视待构建的上游项目而定。
+
+#### 使用Linux原生工具代替（有风险）
+
+由于`msys`中的工具都是POSIX下常用工具的移植版本，因此在Linux下也可以找到类似的工具来代替。比如`help2man`可以使用Linux下的`help2man`命令来代替，或者直接使用`pandoc`等工具来生成文档。可以在构建的时候临时将Linux的`/usr/bin`路径添加到Wine的`Path`的末尾。
+
+不过这样做可能存在潜在风险，可能会导致某些工具的行为与预期不符，因此需要谨慎使用。
 
 ## 在Wine中测试
 
@@ -144,9 +159,19 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
 |:----:|:----:|
 |纯GTK4程序(1)|纯GTK4程序(2)|
 
-同样，非GUI的程序也可以这样构建与运行。笔者也测试了在Wine中构建出的这些程序在Windows下的运行情况，均能正常运行。
+同样，非GUI的程序也可以这样构建与运行。笔者也测试了在Wine中构建出的这些程序在Windows下的运行情况。需要注意的是，Wine**暂时不支持**GLib的`Win32.get_command_line()`函数，只能通过正常的`argv`参数来获取命令行参数，否则在获取参数时可能会提示`fixme:reg:NtNotifyChangeMultipleKeys Unimplemented optional parameter`且无法正常解析：
 
-一般来说，Wine对构建工具的支持相当好，对非GUI的程序的支持一般也很不错。由于图形界面渲染适配难度较大，复杂的GUI程序的兼容性风险往往相对更大。在笔者的示例中，几个GTK4/Vala应用在Wine下的运行效果都还可以接受，虽然有些小问题，但基本上可以使用。
+|[![#~/img/wine/wine-live-photo-conv.webp](/img/wine/wine-live-photo-conv.webp)](/img/wine/wine-live-photo-conv.webp)|
+|:----:|
+|使用`GLib.Win32.get_command_line()`获取参数的程序在Wine下解析参数会出现异常|
+
+因此使用`GLib.Win32.get_command_line()`的程序在Wine下运行时可能会遇到问题。其实`Win32.get_command_line()`函数在Windows下也相当鸡肋，本身用于处理Unicode，却很容易因为编码问题而无法正常解析。。。直接使用`argv`参数（Vala中的`string[] args`）来获取命令行参数也不错。
+
+一般来说，Wine对GCC、Meson等基础构建工具和编译器的支持相当好，对非GUI的程序的支持一般也很不错。但是Wine对复杂的Win32 API调用（甚至像`libmsys-2.0.dll`这样的Hack）的支持可能并不理想。
+
+由于基于GLib的程序一般都有原生Linux版本且往往表现比Windows版更好，因此Wine下GLib程序的某些行为适配可能不太合适，需要开发者自行处理相关环境。
+
+另外，由于图形界面渲染适配难度较大，复杂的GUI程序的兼容性风险往往相对更大。在笔者的示例中，几个GTK4/Vala应用在Wine下的运行效果都尚可接受，虽然有些小问题，但基本上可以使用。
 
 ## 总结
 
