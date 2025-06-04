@@ -3,7 +3,7 @@ layout:       post
 title:        记录从Manjaro直接切换到Arch Linux的过程
 subtitle:     折腾日志
 date:         2022-06-20
-author:       星外之神
+author:       wszqkzqk
 header-img:   img/switch-manjaro-to-archlinux-bg.webp
 catalog:      true
 tags:         Linux Manjaro archlinux Pacman 开源软件 系统配置 系统安装

@@ -33,7 +33,7 @@ MSYS2的核心优势在于其对**原生Windows应用**的支持。不同于在W
 
 ### 安装MSYS2
 
-MSYS2的安装非常简单，从[官网](https://www.msys2.org/)下载即可一键安装。如果需要在Windows下对MSYS2进行更好的集成，可参考我之前的[博客文章](https://wszqkzqk.github.io/2022/06/24/在不借助oh-my-zsh的前提下进行Zsh配置/)。当然，如果只是用于下载和安装GTK/Vala开发环境，默认安装完成后直接使用亦可。
+MSYS2的安装非常简单，从[官网](https://www.msys2.org/)下载即可一键安装。如果需要在Windows下对MSYS2进行更好的集成，可参考我之前的[博客文章](https://wszqkzqk.github.io/2022/06/24/在不借助oh-my-zsh的前提下进行Zsh配置/)。当然，如果只是用于下载和安装GTK/Vala开发环境，默认安装完成后直接使用亦可。（推荐使用`ucrt64`环境）
 
 ### 安装软件包
 

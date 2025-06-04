@@ -3,7 +3,7 @@ layout:       post
 title:        在不借助oh-my-zsh的前提下进行Zsh配置
 subtitle:     Windows(MSYS2)或Arch Linux平台下Zsh的配置
 date:         2022-06-24
-author:       星外之神
+author:       wszqkzqk
 header-img:   img/shell-config-bg.webp
 catalog:      true
 tags:         Linux Windows MSYS2 Zsh 开源软件 Pacman 系统配置
@@ -46,7 +46,7 @@ winget install msys2.msys2
 |   MINGW_ARCH[^5]          | ucrt64    |
 
 [^1]: 指定MSYS2程序读取的环境变量类型，`inherit`表示将系统变量合并到MSYS2环境变量
-[^4]: 指定MSYS2的软链接方式为`winsymlinks:native`，即使用Windows的软链接方式
+[^4]: 指定MSYS2的软链接方式为`winsymlinks:native`，即使用Windows的软链接方式。如果设置了这个变量以后，记得在`MSYS2安装路径/etc/makepkg.conf`与`MSYS2安装路径/etc/makepkg_mingw.conf`末尾添加`export MSYS='winsymlinks:deepcopy'`，保证在打包中的软链接仍然通过`deepcopy`方式复制，而不是直接创建软链接文件，否则打包安装后路径发生变化可能会导致软链接失效。
 [^5]: 指定MSYS2使用的MINGW环境类型，`ucrt64`表示使用UCRT64环境
 
 其实也可以把MSYS2的相关路径（使用的MinGW-w64工具链路径`MSYS2安装路径/使用的MinGW类型/bin`以及MSYS2路径`MSYS2安装路径/usr/bin`）添加到`Path`变量中，方便直接在Windows的cmd或者PowerShell中调用MSYS2命令，但是据说可能会出现一些冲突，然而笔者添加了以后并没有发现什么问题，因此这也可以作为一个可选项。
@@ -75,6 +75,30 @@ MSYS2提供了多种构建环境，每种环境都有其特定的编译器、C/C
 
 *   **UCRT64 (Universal C Runtime)** 环境使用最新的Universal C Runtime库，与Microsoft Visual Studio默认使用的运行时库保持一致，提供了更好的C99兼容性和与MSVC的互操作性。
 *   相比之下，传统的MINGW64环境使用的是MSVCRT (Microsoft Visual C++ Runtime)，这是一个较旧的C运行时库，在某些方面存在兼容性问题且不完全支持C99。
+
+对不需要使用的环境，可以到`MSYS2安装路径/etc/pacman.conf`中将其注释掉，减少`pacman`同步时拉取`.db`文件的时间。例如：
+
+```unix-config
+# [clangarm64]
+# Include = /etc/pacman.d/mirrorlist.mingw
+# 
+# [mingw32]
+# Include = /etc/pacman.d/mirrorlist.mingw
+# 
+# [mingw64]
+# Include = /etc/pacman.d/mirrorlist.mingw
+
+[ucrt64]
+Include = /etc/pacman.d/mirrorlist.mingw
+
+# [clang64]
+# Include = /etc/pacman.d/mirrorlist.mingw
+
+[msys]
+Include = /etc/pacman.d/mirrorlist.msys
+```
+
+注意千万不要注释掉`[msys]`环境，因为Zsh等Shell工具需要使用`msys`环境提供的工具。
 
 #### 提醒：避免包冲突
 
