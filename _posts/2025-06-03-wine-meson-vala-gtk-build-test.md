@@ -167,19 +167,19 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
   |:----:|
   |默认情况下控制序列直接被输出（上），关闭颜色输出后则不再显示（下）|
 
-* 非ASCII字符在GLib的`-h`/`--help`等帮助信息中无法正常输出，从第一个非ASCII字符开始输出被截断。其他输出一般正常。（甚至在其他地方打印的与`--help`一样的帮助信息也正常）但是同样都有可能因为非ASCII字符而导致输出被截断，在测试过程中应当尽量避免使用非ASCII字符。
+* 非ASCII字符在GLib的`-h`/`--help`等帮助信息中无法正常输出，从第一个非ASCII字符开始输出被截断。其他输出一般正常。（甚至在其他地方打印的与`--help`一样的帮助信息也正常）但是同样都有可能因为**非ASCII字符**而导致输出被**截断**，在测试过程中应当尽量**避免使用非ASCII字符**。
 
   |[![#~/img/wine/wine-live-photo-conv-help.webp](/img/wine/wine-live-photo-conv-help.webp)](/img/wine/wine-live-photo-conv-help.webp)|
   |:----:|
   |`-h`输出分别因为中文（上）和非ASCII的`…`（中）而被截断，而非`-h`情况即使包含同样内容（下）也能正常输出|
 
-* GStreamer的硬件加速解码不可用（程序依赖CPU运算的基础功能在Wine下都能正常运行）。
+* **GStreamer的硬件加速解码**不可用（但依赖CPU运算的基础功能在Wine下都能正常运行）。
 
   |[![#~/img/wine/wine-live-photo-conv-gst.webp](/img/wine/wine-live-photo-conv-gst.webp)](/img/wine/wine-live-photo-conv-gst.webp)|
   |:----:|
   |在Wine下运行的[Live Photo转换程序](https://github.com/wszqkzqk/live-photo-conv)，纯CPU完成的图片视频导出及元数据修改完全正常，但D3D硬件加速的逐帧导出解码在Gstreamer中卡住|
 
-  这一问题可以使用FFmpeg代替来解决。笔者的[Live Photo转换程序](https://github.com/wszqkzqk/live-photo-conv)也提供了FFmpeg后端，可以直接使用。
+  这一问题可以**使用FFmpeg代替**来解决。笔者的[Live Photo转换程序](https://github.com/wszqkzqk/live-photo-conv)也提供了FFmpeg后端，可以直接通过`--use-ffmpeg`使用，运行**完全正常**。
 
   |[![#~/img/wine/wine-live-photo-conv-ffmpeg.webp](/img/wine/wine-live-photo-conv-ffmpeg.webp)](/img/wine/wine-live-photo-conv-ffmpeg.webp)|
   |:----:|
