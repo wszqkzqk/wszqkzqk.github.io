@@ -27,9 +27,9 @@ tags:       开源软件 MSYS2 Wine Meson Vala GTK
 
 MSYS2的核心优势在于其对**原生Windows应用**的支持。不同于在Windows平台上提供Linux环境的WSL（Windows Subsystem for Linux），以及侧重于在Windows上模拟Unix环境的Cygwin，MSYS2的`ucrt64`/`mingw64`/`clang64`等mingw-w64环境构建的软件包是**完全原生的Windows二进制文件**。
 
-这意味着通过MSYS2安装的GTK、GCC/Vala编译器、Meson等工具链，这些工具本身以及编译出的应用程序都是真正的Windows本地应用，不依赖于MSYS2环境本身（除了`msys`环境中的基础Unix兼容工具依赖于`libmsys-2.0.dll`进行syscall映射）。这使其成为在Windows上进行原生开源软件开发（如GTK/Vala应用）的理想选择。许多知名的开源项目，例如Git for Windows、Inkscape、GTKWave、KeePassXC、Xournal++、Neovim和darktable等，都利用MSYS2来构建其Windows版本。[^1]
+这意味着通过MSYS2安装的GTK、GCC/Vala编译器、Meson等工具链，这些工具本身以及编译出的应用程序都是真正的Windows本地应用，不依赖于MSYS2环境本身（除了`msys`环境中的基础Unix兼容工具依赖于`msys-2.0.dll`进行syscall映射）。这使其成为在Windows上进行原生开源软件开发（如GTK/Vala应用）的理想选择。许多知名的开源项目，例如Git for Windows、Inkscape、GTKWave、KeePassXC、Xournal++、Neovim和darktable等，都利用MSYS2来构建其Windows版本。[^1]
 
-[^1]: 参考 MSYS2 Wiki 中的[Who is using MSYS2?](https://www.msys2.org/docs/who-is-using-msys2/)一文。
+[^1]: 参考 MSYS2 Wiki 中的[“Who is using MSYS2?”](https://www.msys2.org/docs/who-is-using-msys2/)一文。
 
 ### 安装MSYS2
 
@@ -88,7 +88,7 @@ winepath -w /mnt/msys64/ucrt64/bin
   C:\windows\system32;C:\windows;<MSYS2路径>\ucrt64\bin
   ```
 
-需要注意的是，由于Wine目前尚**不能**兼容**依赖`libmsys-2.0.dll`**的**非Windows原生**的工具，因此**不应该**添加MSYS2的`usr/bin`路径到Wine的`Path`中。
+需要注意的是，由于Wine目前尚**不能**兼容**依赖`msys-2.0.dll`**的**非Windows原生**的工具，因此**不应该**添加MSYS2的`usr/bin`路径到Wine的`Path`中。
 
 ### 防止环境变量干扰
 
@@ -131,7 +131,7 @@ wine meson compile -C release
 
 #### 禁用文档生成（推荐）
 
-很多构建失败往往是文档等内容依赖了`msys`环境下的工具（如`help2man`）等。因为Wine目前无法运行依赖`libmsys-2.0.dll`的程序，我们并没有将`msys`环境的路径添加到Wine中，因此会找不到对应的程序而报错。此时可以通过关闭相关文档生成选项来解决。
+很多构建失败往往是文档等内容依赖了`msys`环境下的工具（如`help2man`）等。因为Wine目前无法运行依赖`msys-2.0.dll`的程序，我们并没有将`msys`环境的路径添加到Wine中，因此会找不到对应的程序而报错。此时可以通过关闭相关文档生成选项来解决。
 
 ```bash
 wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation=disabled
@@ -167,7 +167,7 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
 
 因此使用`GLib.Win32.get_command_line()`的程序在Wine下运行时可能会遇到问题。其实`Win32.get_command_line()`函数在Windows下也相当鸡肋，本身用于处理Unicode，却很容易因为编码问题而无法正常解析。。。直接使用`argv`参数（Vala中的`string[] args`）来获取命令行参数也不错。
 
-一般来说，Wine对GCC、Meson等**基础构建工具**的支持**相当好**，对非GUI的程序的支持一般也很不错。但是Wine对非常复杂的Win32 API调用（甚至像`libmsys-2.0.dll`这样的Hack）的支持可能并不理想。
+一般来说，Wine对GCC、Meson等**基础构建工具**的支持**相当好**，对非GUI的程序的支持一般也很不错。但是Wine对非常复杂的Win32 API调用（甚至像`msys-2.0.dll`这样的Hack）的支持可能并不理想。
 
 由于基于GLib的程序一般都有原生Linux版本且往往表现比Windows版更好，因此Wine下GLib程序的某些**高度依赖于平台**的行为适配可能不太合适，需要开发者自行处理相关环境。
 
