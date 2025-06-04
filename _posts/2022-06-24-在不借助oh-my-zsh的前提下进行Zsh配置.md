@@ -163,7 +163,7 @@ winget install JanDeDobbeleer.OhMyPosh
 Arch Linux系发行版则是（使用paru）：
 
 ```bash
-sudo paru -S oh-my-posh-bin
+paru -S oh-my-posh
 ```
 
 #### 预览
@@ -303,7 +303,7 @@ Windows下则需要手动下载并安装，官方推荐的字体是[Meslo LGM NF
 我已经将这个简单的`.zshrc`文件打包并[推送到了AUR](https://aur.archlinux.org/packages/easy-zsh-config)，大大简化了安装流程，现在Arch Linux下安装只需要：
 
 ```zsh
-yay -S easy-zsh-config
+paru -S easy-zsh-config
 ```
 
 然后再复制配置文件即可使用：
