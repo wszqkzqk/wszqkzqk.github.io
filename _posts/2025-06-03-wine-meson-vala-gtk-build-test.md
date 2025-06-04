@@ -104,7 +104,7 @@ HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment
 - 选择 `新建` → `字符串值`
 - 将新值命名为 **`XDG_DATA_DIRS`**，添加默认路径和MSYS2的`ucrt64/share`路径：
   ```
-  C:\ProgramData;C:\Program Files\Common Files;<MSYS2路径>\ucrt64\share
+  C:\ProgramData;C:\users\Public\Documents;<MSYS2路径>\ucrt64\share
   ```
 
 对于其他的环境变量（如`XDG_CONFIG_DIRS`、`XDG_CACHE_HOME`等），可以使用类似的方式进行配置。
@@ -167,11 +167,11 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
 
 因此使用`GLib.Win32.get_command_line()`的程序在Wine下运行时可能会遇到问题。其实`Win32.get_command_line()`函数在Windows下也相当鸡肋，本身用于处理Unicode，却很容易因为编码问题而无法正常解析。。。直接使用`argv`参数（Vala中的`string[] args`）来获取命令行参数也不错。
 
-一般来说，Wine对GCC、Meson等基础构建工具和编译器的支持相当好，对非GUI的程序的支持一般也很不错。但是Wine对复杂的Win32 API调用（甚至像`libmsys-2.0.dll`这样的Hack）的支持可能并不理想。
+一般来说，Wine对GCC、Meson等**基础构建工具**的支持**相当好**，对非GUI的程序的支持一般也很不错。但是Wine对非常复杂的Win32 API调用（甚至像`libmsys-2.0.dll`这样的Hack）的支持可能并不理想。
 
-由于基于GLib的程序一般都有原生Linux版本且往往表现比Windows版更好，因此Wine下GLib程序的某些行为适配可能不太合适，需要开发者自行处理相关环境。
+由于基于GLib的程序一般都有原生Linux版本且往往表现比Windows版更好，因此Wine下GLib程序的某些**高度依赖于平台**的行为适配可能不太合适，需要开发者自行处理相关环境。
 
-另外，由于图形界面渲染适配难度较大，复杂的GUI程序的兼容性风险往往相对更大。在笔者的示例中，几个GTK4/Vala应用在Wine下的运行效果都尚可接受，虽然有些小问题，但基本上可以使用。
+另外，由于图形界面渲染适配难度较大，**复杂GUI程序**的兼容性风险往往相对更大。在笔者的示例中，几个GTK4/Vala应用在Wine下的运行效果都尚可接受，虽然有些小问题，但基本上可以使用。
 
 ## 总结
 
