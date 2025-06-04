@@ -149,7 +149,7 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
 
 由于我们已经将相关路径添加到Wine的环境变量中，因此可以直接在Wine环境中运行测试程序，无论是GUI应用还是命令行工具。对于受支持的DE，如果配置了XDG打开方式，也可以直接双击`.exe`文件来运行应用。
 
-笔者编写的[GTK4/Vala示例应用](https://wszqkzqk.github.io/2025/02/05/GTK-Vala-Tutorial-2/)，无论是否基于Libadwaita，在Wine下构建均较为顺利。但在测试运行的时候哦，显示与渲染上效果相对较差，基于Libadwaita的应用存在较大的黑边，纯GTK4应用也有较小的黑边，两者在某些时候偶尔有闪烁现象，但整体上仍然可以正常运行。
+笔者编写的[GTK4/Vala示例应用](https://wszqkzqk.github.io/2025/02/05/GTK-Vala-Tutorial-2/)，无论是否基于Libadwaita，在Wine下构建均较为顺利。但在测试运行的时候，显示与渲染上效果相对欠佳，基于Libadwaita的应用存在较大的黑边，纯GTK4应用也有较小的黑边，两者在某些时候偶尔有闪烁现象，但整体上仍然可以正常运行和操作。
 
 |[![#~/img/wine/wine-solarangleadw.webp](/img/wine/wine-solarangleadw.webp)](/img/wine/wine-solarangleadw.webp)|[![#~/img/wine/wine-solarangleadw-black.webp](/img/wine/wine-solarangleadw-black.webp)](/img/wine/wine-solarangleadw-black.webp)|
 |:----:|:----:|
@@ -159,19 +159,39 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
 |:----:|:----:|
 |纯GTK4程序(1)|纯GTK4程序(2)|
 
-同样，非GUI的程序也可以这样构建与运行。笔者也测试了在Wine中构建出的这些程序在Windows下的运行情况。需要注意的是，Wine**暂时不支持**GLib的`Win32.get_command_line()`函数，只能通过正常的`argv`参数来获取命令行参数，否则在获取参数时可能会提示`fixme:reg:NtNotifyChangeMultipleKeys Unimplemented optional parameter`且无法正常解析：
+同样，非GUI的程序也可以这样构建与运行。笔者也测试了在Wine中构建出的这些程序在Windows下的运行情况，普遍较GUI的好，但是同样可能存在一些问题。以下是一些典型问题：
 
-|[![#~/img/wine/wine-live-photo-conv.webp](/img/wine/wine-live-photo-conv.webp)](/img/wine/wine-live-photo-conv.webp)|
-|:----:|
-|使用`GLib.Win32.get_command_line()`获取参数的程序在Wine下解析参数会出现异常|
+* 在Linux下和较新Windows下可以通过**ANSI转义序列**直接控制终端输出颜色的程序，目前Wine则会将ANSI转义序列直接输出到终端，这是Wine中存在已久的已知问题。
 
-因此使用`GLib.Win32.get_command_line()`的程序在Wine下运行时可能会遇到问题。其实`Win32.get_command_line()`函数在Windows下也相当鸡肋，本身用于处理Unicode，却很容易因为编码问题而无法正常解析。。。直接使用`argv`参数（Vala中的`string[] args`）来获取命令行参数也不错。
+  |[![#~/img/wine/wine-live-photo-conv.webp](/img/wine/wine-live-photo-conv.webp)](/img/wine/wine-live-photo-conv.webp)|
+  |:----:|
+  |默认情况下控制序列直接被输出（上），关闭颜色输出后则不再显示（下）|
+
+* 非ASCII字符在GLib的`-h`/`--help`等帮助信息中无法正常输出，从第一个非ASCII字符开始输出被截断。其他输出一般正常。（甚至在其他地方打印的与`--help`一样的帮助信息也正常）但是同样都有可能因为非ASCII字符而导致输出被截断，在测试过程中应当尽量避免使用非ASCII字符。
+
+  |[![#~/img/wine/wine-live-photo-conv-help.webp](/img/wine/wine-live-photo-conv-help.webp)](/img/wine/wine-live-photo-conv-help.webp)|
+  |:----:|
+  |`-h`输出分别因为中文（上）和非ASCII的`…`（中）而被截断，而非`-h`情况即使包含同样内容（下）也能正常输出|
+
+* GStreamer的硬件加速解码不可用（程序依赖CPU运算的基础功能在Wine下都能正常运行）。
+
+  |[![#~/img/wine/wine-live-photo-conv-gst.webp](/img/wine/wine-live-photo-conv-gst.webp)](/img/wine/wine-live-photo-conv-gst.webp)|
+  |:----:|
+  |在Wine下运行的[Live Photo转换程序](https://github.com/wszqkzqk/live-photo-conv)，纯CPU完成的图片视频导出及元数据修改完全正常，但D3D硬件加速的逐帧导出解码在Gstreamer中卡住|
+
+  这一问题可以使用FFmpeg代替来解决。笔者的[Live Photo转换程序](https://github.com/wszqkzqk/live-photo-conv)也提供了FFmpeg后端，可以直接使用。
+
+  |[![#~/img/wine/wine-live-photo-conv-ffmpeg.webp](/img/wine/wine-live-photo-conv-ffmpeg.webp)](/img/wine/wine-live-photo-conv-ffmpeg.webp)|
+  |:----:|
+  |使用FFmpeg后端的Live Photo转换程序，能够正常逐帧导出|
 
 一般来说，Wine对GCC、Meson等**基础构建工具**的支持**相当好**，对非GUI的程序的支持一般也很不错。但是Wine对非常复杂的Win32 API调用（甚至像`msys-2.0.dll`这样的Hack）的支持可能并不理想。
 
 由于基于GLib的程序一般都有原生Linux版本且往往表现比Windows版更好，因此Wine下GLib程序的某些**高度依赖于平台**的行为适配可能不太合适，需要开发者自行处理相关环境。
 
-另外，由于图形界面渲染适配难度较大，**复杂GUI程序**的兼容性风险往往相对更大。在笔者的示例中，几个GTK4/Vala应用在Wine下的运行效果都尚可接受，虽然有些小问题，但基本上可以使用。
+另外，由于图形界面渲染适配难度较大，**复杂GUI程序**的**兼容性风险**往往相对更大。在笔者的示例中，几个**GTK4**/Vala应用（包括纯GTK4与基于Libadwaita的GTK4应用）在Wine下的运行效果都**尚可接受**，虽然有些小问题，但基本上可以使用。
+
+通过Wine运行的纯CPU、不依赖于渲染的程序的性能大致与在Windows下运行的性能相当，甚至有时会更好（Wine对某些系统调用及内置函数的优化可能更好）。因此，Wine是一个非常适合在Linux下进行Windows平台应用开发和测试的工具。
 
 ## 总结
 
