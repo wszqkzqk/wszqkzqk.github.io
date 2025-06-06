@@ -153,7 +153,7 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
 
 由于我们已经将相关路径添加到Wine的环境变量中，因此可以直接在Wine环境中运行测试程序，无论是GUI应用还是命令行工具。对于受支持的DE，如果配置了XDG打开方式，也可以直接双击`.exe`文件来运行应用。
 
-笔者编写的[GTK4/Vala示例应用](https://wszqkzqk.github.io/2025/02/05/GTK-Vala-Tutorial-2/)，无论是否基于Libadwaita，在Wine下构建均较为顺利。但在测试运行的时候，显示与渲染上效果相对欠佳，基于Libadwaita的应用存在较大的黑边，纯GTK4应用也有较小的黑边，两者在某些时候偶尔有闪烁现象，但整体上仍然可以正常运行和操作。
+笔者编写的[GTK4/Vala示例应用](https://wszqkzqk.github.io/2025/02/05/GTK-Vala-Tutorial-2/)，无论是否基于Libadwaita，在Wine下构建均较为顺利。但在测试运行的时候，显示与渲染上效果相对欠佳，基于Libadwaita的应用存在黑边，纯GTK4应用也有较小的黑边，两者在某些时候偶尔有闪烁现象，但整体上仍然可以正常运行和操作。
 
 |[![#~/img/wine/wine-solarangleadw.webp](/img/wine/wine-solarangleadw.webp)](/img/wine/wine-solarangleadw.webp)|[![#~/img/wine/wine-solarangleadw-black.webp](/img/wine/wine-solarangleadw-black.webp)](/img/wine/wine-solarangleadw-black.webp)|
 |:----:|:----:|
@@ -161,7 +161,7 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
 
 |[![#~/img/wine/wine-daylengthgtk.webp](/img/wine/wine-daylengthgtk.webp)](/img/wine/wine-daylengthgtk.webp)|[![#~/img/wine/wine-solaranglegtk.webp](/img/wine/wine-solaranglegtk.webp)](/img/wine/wine-solaranglegtk.webp)|
 |:----:|:----:|
-|纯GTK4程序(1)|纯GTK4程序(2)|
+|纯GTK4程序 (1)|纯GTK4程序 (2)|
 
 同样，非GUI的程序也可以这样构建与运行。笔者也测试了在Wine中构建出的这些程序在Windows下的运行情况，普遍较GUI的好，但是同样可能存在一些问题。以下是一些典型问题：
 
@@ -200,3 +200,9 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
 本文详细介绍了一种在Linux环境下通过Wine实现跨平台构建与测试Windows平台应用的通用方法，并以GTK/Vala应用为例展示了其具体实现。这种方法使开发者能够在仅使用Linux开发环境的情况下，高效验证各类应用在Windows平台的兼容性。
 
 该方法能够显著简化需要支持Windows平台的应用的开发流程，使开发者能够在Linux环境下高效完成Windows平台的构建与初步验证，甚至可以将Linux和Windows的构建集成到同一个工作流。随着Wine和MSYS2等工具的持续改进，该工作流将更加完善，为各类应用的跨平台开发提供有力支持。
+
+在结束本文前，我想分享对Wine定位的重新思考。**曾经，我也将Wine视为单纯在Linux下运行Windows生态软件（如微信、QQ）的兼容层工具**，但后来，我逐渐意识到它犹如一把双刃剑：短期虽能解决应用缺失的痛点，长期却可能削弱开发者适配原生Linux版本的意愿（毕竟“能用Wine运行”可能降低原生开发的意愿）。  
+
+而今，随着主流软件陆续推出原生Linux版本（如微信、QQ官方客户端），Wine运行方案的局限性愈发凸显：兼容性问题频发、性能远逊原生版本。这让我开始探索Wine更可持续的价值方向——**将其转化为跨平台开发的基础设施**。  
+
+本文演示的实践正是这种转型的体现：通过Wine在Linux环境下**直接构建、测试Windows原生应用**，开发者既能保持使用自己习惯的Linux高效开发环境，又能无缝初步验证Windows平台兼容性。这种模式不仅可以提升开发效率（避免双系统切换），更重要的是，它**聚焦于创造而非妥协**——不再依赖Wine填补生态缺口，而是将其转化为**赋能开源项目实现跨平台支持**的技术桥梁。当开源开发者能如此便捷地在Linux下为Windows跨平台构建原生应用时，Linux桌面生态的长期繁荣，或许才能真正筑牢根基。
