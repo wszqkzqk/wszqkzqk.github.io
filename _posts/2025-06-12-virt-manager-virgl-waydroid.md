@@ -85,5 +85,9 @@ sudo waydroid init
 waydroid show-full-ui
 ```
 
+|[![#~/img/qemu/waydroid-in-linux-in-virt-manager.webp](/img/qemu/waydroid-in-linux-in-virt-manager.webp)](/img/qemu/waydroid-in-linux-in-virt-manager.webp)|
+|:----:|
+|在virt-manager的虚拟机Linux中“套娃”运行的Waydroid|
+
 也可以从起动器中选择Android应用。
 
