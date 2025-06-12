@@ -6,7 +6,7 @@ date:       2023-06-18
 author:     wszqkzqk
 header-img: img/loongarch/loongson-mother-board.webp
 catalog:    true
-tags:       开源软件 国产硬件 社团活动 系统配置 虚拟化 容器
+tags:       开源软件 国产硬件 社团活动 系统配置 虚拟化 容器 QEMU
 ---
 
 ## 前言

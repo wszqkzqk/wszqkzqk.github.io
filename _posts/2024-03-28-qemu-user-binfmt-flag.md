@@ -6,7 +6,7 @@ date:       2024-03-28
 author:     wszqkzqk
 header-img: img/media/bg-modern-img-comp.webp
 catalog:    true
-tags:       系统配置 系统维护 开源软件 龙芯 LoongArchLinux 容器
+tags:       系统配置 系统维护 开源软件 龙芯 LoongArchLinux 容器 QEMU
 ---
 
 ## 前言
