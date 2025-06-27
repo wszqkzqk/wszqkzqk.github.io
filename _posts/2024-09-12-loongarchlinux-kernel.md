@@ -39,7 +39,7 @@ Linux的kernel config非常复杂，Loong Arch Linux作为Arch Linux的龙芯移
 这一文件仍然混入了不少来自AOSC的发行版相关配置，笔者进一步对其进行了**系统化**清理。生成`defconfig.arch`与新的`defconfig`的`diff`，并进行提取：
 
 * 仅提取以`+CONFIG_`开头的行
-* 仅提取以`y`或`m`结尾的行
+* 不提取以`n`结尾的行
 * 去掉开头的`+`
 
 该过程可以用Python脚本实现：
