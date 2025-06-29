@@ -851,6 +851,28 @@ done
 
 这样即得到了造成版本锁定的直接依赖包，接下来，按照[**安装depends时即锁定了旧的依赖**的方法](#安装depends时即锁定了旧的依赖)来排查这些依赖包的依赖关系树，找出应该首先重构建的包。
 
+## `check()`阶段实在无法通过怎么办？
+
+一般来说：
+
+* 如果打包过程在`check()`阶段无法通过，应该尽可能**向上游反馈**，并**尽量修复**问题
+* 如果无法做到（比如上游尚未接受LoongArch的支持，或者失败原因复杂，牵涉很多依赖体系），优先**禁用已知的、影响有限的极个别的**失败的测试用例，以保证`check()`阶段可以通过
+* 如果不支持单独禁用测试用例，则优先**在运行的测试命令后面**加上`|| echo "Watch out for failed tests!"`，使得`check()`阶段不会因为测试失败而导致整个打包过程失败，同时也保证了测试失败的**日志可以查看**。例如：
+  ```bash
+  check() {
+    cd "$pkgname-$pkgver"
+ 
+    meson test -C build --print-errorlogs || echo "Watch out for failed tests!"
+  }
+  ```
+* 如果是测试阶段会卡死或者内存泄漏，根本无法运行`check()`函数，可以在`PKGBUILD`最后加上：
+  ```bash
+  check() {
+    echo "Skipping check() phase due to……"
+  }
+  ```
+  这样可以覆盖原`check()`函数以便跳过`check()`阶段，并且输出了跳过`check()`阶段的详细原因，方便其他开发者了解。
+
 # 更多阅读材料
 
 * [龙芯的Arch Linux移植工作流程 by wszqkzqk](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)
