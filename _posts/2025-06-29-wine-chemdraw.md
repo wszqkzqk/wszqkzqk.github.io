@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      在Linux下使用Wine运行ChemDraw/Chem3D
-subtitle:   在Linux下无缝使用ChemOffice组件的复杂功能
+subtitle:   在Linux下无缝使用ChemOffice化学组件的复杂功能
 date:       2025-06-29
 author:     wszqkzqk
 header-img: img/wine/wine-bg.webp
@@ -20,6 +20,8 @@ ChemOffice是一个广泛使用的化学绘图和分子建模软件套件，包�
 ```bash
 sudo pacman -S --needed wine winetricks 7zip
 ```
+
+笔者测试的Wine版本为10.9和10.11，Arch Linux的`extra/wine`包已经切换到WoW64模式，不再依赖任何32位库，但截至目前（2025.06.29），`winetricks`仍然在`multilib`仓库中（虽然它并不是32位程序，也并不依赖32位库），因此需要启用`multilib`仓库。
 
 ## 在Wine中安装ChemOffice
 
@@ -98,7 +100,9 @@ ChemOffice/
 winetricks vcrun2013 dotnet48 mfc140
 ```
 
-其中前两个依赖是通用所需，`mfc140`是Chem3D所需的MFC库。运行之后，程序会弹出不同GUI安装程序的窗口，按照提示完成安装即可。
+其中前两个依赖是通用所需，`mfc140`是Chem3D所需的MFC库。运行之后，程序会弹出不同GUI安装程序的窗口，按照提示完成安装即可。[^1]
+
+[^1]: 笔者在[之前的博客](https://wszqkzqk.github.io/2025/06/17/archlinux-wine-wow64-config/)中提到，Wine WoW64模式下一般需要安装`dxvk`和`vkd3d`来解决渲染性能问题，但似乎ChemOffice的组件并不需要，`dxvk`和`vkd3d`主要用于游戏和图形密集型应用，当然在这里安装也无妨。
 
 随后，再运行ChemOffice的安装程序：
 
@@ -120,12 +124,12 @@ wine ChemOffice/PerkinElmer/ChemOffice/PerkinElmer_ChemOffice_Suite_22.2.0.msi
 
 激活完成后，你就可以在Linux上无缝使用ChemOffice的各个组件了。ChemDraw可以用于化学结构绘制，Chem3D可以用于分子建模和计算等。经过笔者的测试，无论是ChemDraw的结构绘制，还是Chem3D的分子建模、MM2力场优化与动态模拟计算等功能，都能在Wine中流畅运行，且效果良好。
 
-笔者还在目前较新的Wine WoW64及实验性支持的原生Wayland下测试了ChemDraw和Chem3D，均能正常运行，且效果良好。（Wine版本为10.11）
+笔者还在目前较新的Wine WoW64及实验性支持的原生Wayland下测试了ChemDraw和Chem3D，均能正常运行，且效果良好。
 
 |[![#~/img/wine/chem/chemdraw.webp](/img/wine/chem/chemdraw.webp)](/img/wine/chem/chemdraw.webp)|
 |:----:|
 |ChemDraw运行效果展示（原生Wayland）|
-|[![#~/img/wine/chem/chem3d-01.webp](/img/wine/chem/chem3d-01.webp)](/img/wine/chem/chem3d-01.webp)|
-|Chem3D运行效果展示（原生Wayland）|
 |[![#~/img/wine/chem/chem3d-02.webp](/img/wine/chem/chem3d-02.webp)](/img/wine/chem/chem3d-02.webp)|
+|Chem3D运行效果展示（原生Wayland）|
+|[![#~/img/wine/chem/chem3d-03.webp](/img/wine/chem/chem3d-03.webp)](/img/wine/chem/chem3d-03.webp)|
 |Chem3D运行效果展示（原生Wayland）|
