@@ -175,3 +175,13 @@ repo-add /srv/local-repo/local-repo.db.tar.gz
 ```
 
 此外，当`devtools-loong64`的`conf`更新后，需要重新编辑`local-loong64.conf`/`local-testing-loong64.conf`/`local-staging-loong64.conf`文件，**同步上游的变化**。
+
+## `pkgrel`更改命令
+
+在某些时候如果我们需要批量或者自动修改软件包的`pkgrel`，可以参考以下命令：
+
+```bash
+perl -i -pe 's{(^[^#]*?\bpkgrel\s*=\s*)(\d+)(?:\.(\d+))?}{$1 . $2 . "." . (defined($3) ? $3 + 1 : 1)}e' PKGBUILD
+```
+
+这样可以按照本项目的维护规范，自动将`pkgrel`的小数部分加1，或者如果没有小数部分则将其设置为1。
