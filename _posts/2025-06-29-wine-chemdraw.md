@@ -100,7 +100,7 @@ ChemOffice/
 winetricks vcrun2013 dotnet48 mfc140
 ```
 
-其中前两个依赖是通用所需，`mfc140`是Chem3D所需的MFC库。运行之后，程序会弹出不同GUI安装程序的窗口，按照提示完成安装即可。[^1]
+其中前两个依赖是通用所需，`mfc140`是Chem3D所需的MFC库。运行之后，程序会弹出不同GUI安装程序的窗口，按照提示完成安装即可。[^1]注意这里的`dotnet48`不可以用`wine-mono`替代。
 
 [^1]: 笔者在[之前的博客](https://wszqkzqk.github.io/2025/06/17/archlinux-wine-wow64-config/)中提到，Wine WoW64模式下一般需要安装`dxvk`和`vkd3d`来解决渲染性能问题，但似乎ChemOffice的组件并不需要，`dxvk`和`vkd3d`主要用于游戏和图形密集型应用，当然在这里安装也无妨。
 
