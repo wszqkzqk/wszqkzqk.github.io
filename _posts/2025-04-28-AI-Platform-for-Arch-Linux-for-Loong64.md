@@ -6,7 +6,7 @@ date:       2025-04-28
 author:     wszqkzqk
 header-img: img/llm/ai-bg-lossless.webp
 catalog:    true
-tags:       AI LLM 开源软件 LoongArchLinux
+tags:       AI LLM 开源软件 archlinux LoongArchLinux
 ---
 
 ## 前言
