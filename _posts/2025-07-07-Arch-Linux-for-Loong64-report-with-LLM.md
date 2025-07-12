@@ -21,11 +21,176 @@ tags:       AI LLM 开源软件 archlinux LoongArchLinux
 
 ### 安装与准备
 
-软件包升级情况需要利用`expac`工具来获取（注意需要在**Arch Linux for Loong64环境或者基于QEMU User的systemd-nspawn等透明容器环境**中运行才能获取**Arch Linux for Loong64的升级信息**，注意直接在x86下运行的结果是Arch Linux上游的信息，对我们没有直接意义）。`expac`是一个用于格式化Arch Linux软件包数据库的工具，可以通过以下命令安装：
+#### 软件包升级情况获取准备
+
+现在推荐使用笔者编写的脚本来获取软件包升级情况：
+
+```bash
+#!/usr/bin/env python3
+
+import argparse
+import pyalpm
+import urllib.request
+import shutil
+from typing import Optional
+import gi
+gi.require_version('GLib', '2.0')
+from gi.repository import GLib # type: ignore
+import os
+import sys
+from datetime import datetime, timedelta
+
+CACHE_DIR: str = os.path.join(GLib.get_user_cache_dir(), "devtools-loong64")
+LOONG64_REPOS: tuple = ("core", "extra")
+LOONG64_DB_PATH: str = os.path.join(CACHE_DIR, "repo-db", "loong64")
+DEFAULT_MIRROR: str = "https://loongarchlinux.lcpu.dev/loongarch/archlinux"
+
+def download_file(source: str, dest: str) -> None:
+    """
+    Download a file from a given URL to a local destination.
+
+    Args:
+        source (str): The URL of the file to download
+        dest (str): The local path where the file should be saved
+
+    Raises:
+        Exception: If the download fails for any reason
+    """
+    headers = {"User-Agent": "Mozilla/5.0"}
+    repo_path = os.path.dirname(dest)
+    os.makedirs(repo_path, exist_ok=True)
+
+    try:
+        print(f"Downloading {source} to {dest}")
+        req = urllib.request.Request(source, headers=headers)
+        with urllib.request.urlopen(req) as response, open(dest, 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
+    except Exception as e:
+        print(f"Error downloading file: {e}", file=sys.stderr)
+        raise
+
+def update_loong64_repos(mirror_loong64: str) -> None:
+    """
+    Update the local loong64 repository databases from a specified mirror.
+
+    Args:
+        mirror_loong64 (str): The base URL of the loong64 package mirror
+    """
+    print("Updating loong64 repositories...")
+    for repo in LOONG64_REPOS:
+        db_url = f"{mirror_loong64}/{repo}/os/loong64/{repo}.db"
+        db_path = os.path.join(LOONG64_DB_PATH, "sync", f"{repo}.db")
+        try:
+            download_file(db_url, db_path)
+        except Exception:
+            print(f"Failed to download {repo}.db, skipping.", file=sys.stderr)
+            continue
+    print("Loong64 repositories updated.")
+
+def load_repo(dir_path: str, repo: str) -> Optional[pyalpm.DB]:
+    """
+    Load a package repository database.
+
+    Args:
+        dir_path (str): The directory path where the repository database is located
+        repo (str): The name of the repository to load
+
+    Returns:
+        Optional[pyalpm.DB]: The loaded repository database, or None if loading fails
+    """
+    handle = pyalpm.Handle("/", dir_path)
+    try:
+        db = handle.register_syncdb(repo, 0)
+        return db
+    except pyalpm.error as e:
+        print(f"Failed to load repo {dir_path}/{repo}: {e}", file=sys.stderr)
+        return None
+
+def main() -> None:
+    """
+    Main function to query package information.
+    """
+    parser = argparse.ArgumentParser(
+        description="Query package information from LoongArch repositories.",
+        formatter_class=argparse.RawTextHelpFormatter)
+
+    parser.add_argument(
+        '-S', '--sync',
+        action='store_true',
+        help='Download and update the loong64 repository databases.'
+    )
+    parser.add_argument(
+        '-d', '--days',
+        type=int,
+        default=7,
+        help='List packages updated in the last n days (default: %(default)s).'
+    )
+    parser.add_argument(
+        '-m', '--mirror',
+        default=DEFAULT_MIRROR,
+        help='Mirror URL for LoongArch repository database (default: %(default)s)',
+        metavar='URL'
+    )
+
+    args = parser.parse_args()
+
+    if args.sync:
+        update_loong64_repos(args.mirror)
+
+    repos_to_load = LOONG64_REPOS
+    databases = []
+    for repo_name in repos_to_load:
+        db_path = os.path.join(LOONG64_DB_PATH, "sync", f"{repo_name}.db")
+        if not os.path.exists(db_path):
+            print(f"Database for '{repo_name}' not found. Please run with -S to download.", file=sys.stderr)
+            continue
+        db = load_repo(LOONG64_DB_PATH, repo_name)
+        if db:
+            databases.append(db)
+
+    if not databases:
+        print("No databases loaded. Exiting.", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"\nPackages updated in the last {args.days} days:")
+    print("-" * 100)
+    print(f"{'Package':<30} {'Version':<25} {'Packager':<25} {'Build Date':<20}")
+    print("-" * 100)
+
+    cutoff_date = datetime.now() - timedelta(days=args.days)
+    
+    updated_packages = []
+
+    for db in databases:
+        for pkg in db.pkgcache:
+            build_date = datetime.fromtimestamp(pkg.builddate)
+            if build_date > cutoff_date:
+                updated_packages.append(pkg)
+
+    # Sort by build date, newest first
+    updated_packages.sort(key=lambda p: p.builddate)
+
+    for pkg in updated_packages:
+        build_date_str = datetime.fromtimestamp(pkg.builddate).strftime('%Y-%m-%d %H:%M')
+        print(f"{pkg.name:<30} {pkg.version:<25} {pkg.packager:<25} {build_date_str:<20}")
+
+if __name__ == "__main__":
+    main()
+```
+
+这个脚本可以直接运行，获取最近一段时间内的软件包升级情况。你可以通过以下命令运行：
+
+```bash
+python3 query_loong64.py -S -d 14
+```
+
+当然，在**Arch Linux for Loong64环境或者基于QEMU User的systemd-nspawn等透明容器环境**中，软件包升级情况可以直接利用`expac`工具来获取。`expac`是一个用于格式化Arch Linux软件包数据库的工具，可以通过以下命令安装：
 
 ```bash
 sudo pacman -S expac
 ```
+
+#### 软件包修复变动获取准备
 
 软件包修复变动可以从[Arch Linux for Loong64的补丁集仓库](https://github.com/lcpu-club/loongarch-packages)获取。如果是使用过`devtools-loong64`的环境，在`$XDG_CACHE_HOME/devtools-loong64`（一般是`~/.cache/devtools-loong64`）目录下即有`loongarch-packages`补丁集仓库。如果没有使用过`devtools-loong64`，也可以自己克隆到其他目录下：
 
@@ -57,9 +222,14 @@ expac -S "%b %-30n %v" --timefmt=%s | sort | awk -v cutoff=$(date -d '2 weeks ag
 
 可以自行将这些信息整理并提交给LLM。如果按照笔者的建议安装了`aichat`，则可以大大简化，直接运行`aichat`并在其中一步操作即可将上下文和提示词一次性便捷地传递给LLM。
 
-```
-.file `git -C ~/.cache/devtools-loong64/loongarch-packages/ log --since="2 weeks ago" --stat` `expac -S "%b %-30n %v" --timefmt=%s | sort | awk -v cutoff=$(date -d '2 weeks ago' +%s) '$1 > cutoff'` -- 假如你是Arch Linux for Loong64社区（由北京大学学生Linux俱乐部维护，仓库地址为https://github.com/lcpu-club/loongarch-packages）的维护者，你需要向其他龙架构的开发者以及Arch Linux for Loong64的用户汇报最近两周的Loong Arch Linux发行版的开发信息。请你从git仓库的提交记录中分析，筛选并详细总结出对其他开发者和我们的用户有参考意义，包括对其他发行版和上游开发者（指参与龙架构相关开发的上游开发者）的维护有潜在帮助的内容。切勿遗漏重要、有价值的信息；请用括号标注出修复的贡献者，例如(by wszqkzqk)这种形式；请尽量附上相关提交的链接（如果有对应PR，优先放PR链接而不是冗长的commit链接）和向上游贡献内容的链接供参考。另外，根据近期软件包的更新汇总，请你指出值得用户关注的重要升级
-```
+* 使用笔者的脚本获取软件包升级信息
+  ```
+  .file `git -C ~/.cache/devtools-loong64/loongarch-packages/ log --since="2 weeks ago" --stat` `python3 query_loong64.py -S -d 14` -- 假如你是Arch Linux for Loong64社区（由北京大学学生Linux俱乐部维护，仓库地址为https://github.com/lcpu-club/loongarch-packages）的维护者，你需要向其他龙架构的开发者以及Arch Linux for Loong64的用户汇报最近两周的Loong Arch Linux发行版的开发信息。请你从git仓库的提交记录中分析，筛选并详细总结出对其他开发者和我们的用户有参考意义，包括对其他发行版和上游开发者（指参与龙架构相关开发的上游开发者）的维护有潜在帮助的内容。切勿遗漏重要、有价值的信息；请用括号标注出修复的贡献者，例如(by wszqkzqk)这种形式；请尽量附上相关提交的链接（如果有对应PR，优先放PR链接而不是冗长的commit链接）和向上游贡献内容的链接供参考。另外，根据近期软件包的更新汇总，请你指出值得用户关注的重要升级
+  ```
+* 使用`expac`
+  ```
+  .file `git -C ~/.cache/devtools-loong64/loongarch-packages/ log --since="2 weeks ago" --stat` `expac -S "%b %-30n %v" --timefmt=%s | sort | awk -v cutoff=$(date -d '2 weeks ago' +%s) '$1 > cutoff'` -- 假如你是Arch Linux for Loong64社区（由北京大学学生Linux俱乐部维护，仓库地址为https://github.com/lcpu-club/loongarch-packages）的维护者，你需要向其他龙架构的开发者以及Arch Linux for Loong64的用户汇报最近两周的Loong Arch Linux发行版的开发信息。请你从git仓库的提交记录中分析，筛选并详细总结出对其他开发者和我们的用户有参考意义，包括对其他发行版和上游开发者（指参与龙架构相关开发的上游开发者）的维护有潜在帮助的内容。切勿遗漏重要、有价值的信息；请用括号标注出修复的贡献者，例如(by wszqkzqk)这种形式；请尽量附上相关提交的链接（如果有对应PR，优先放PR链接而不是冗长的commit链接）和向上游贡献内容的链接供参考。另外，根据近期软件包的更新汇总，请你指出值得用户关注的重要升级
+  ```
 
 LLM会根据提供的信息和提示词，生成一份详细的开发进展报告。
 
