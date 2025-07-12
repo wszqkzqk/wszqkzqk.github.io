@@ -25,7 +25,7 @@ tags:       AI LLM 开源软件 archlinux LoongArchLinux
 
 现在推荐使用笔者编写的脚本来获取软件包升级情况：
 
-```bash
+```python
 #!/usr/bin/env python3
 
 import argparse
@@ -153,9 +153,9 @@ def main() -> None:
         sys.exit(1)
 
     print(f"\nPackages updated in the last {args.days} days:")
-    print("-" * 100)
-    print(f"{'Package':<30} {'Version':<25} {'Packager':<25} {'Build Date':<20}")
-    print("-" * 100)
+    print("-" * 75)
+    print(f"{'Package':<30} {'Version':<25} {'Build Date':<20}")
+    print("-" * 75)
 
     cutoff_date = datetime.now() - timedelta(days=args.days)
     
@@ -172,7 +172,7 @@ def main() -> None:
 
     for pkg in updated_packages:
         build_date_str = datetime.fromtimestamp(pkg.builddate).strftime('%Y-%m-%d %H:%M')
-        print(f"{pkg.name:<30} {pkg.version:<25} {pkg.packager:<25} {build_date_str:<20}")
+        print(f"{pkg.name:<30} {pkg.version:<25} {build_date_str:<20}")
 
 if __name__ == "__main__":
     main()
@@ -181,7 +181,7 @@ if __name__ == "__main__":
 这个脚本可以直接运行，获取最近一段时间内的软件包升级情况。你可以通过以下命令运行：
 
 ```bash
-python3 query_loong64.py -S -d 14
+python3 query-pkgs.py -S -d 14
 ```
 
 当然，在**Arch Linux for Loong64环境或者基于QEMU User的systemd-nspawn等透明容器环境**中，软件包升级情况可以直接利用`expac`工具来获取。`expac`是一个用于格式化Arch Linux软件包数据库的工具，可以通过以下命令安装：
@@ -224,7 +224,7 @@ expac -S "%b %-30n %v" --timefmt=%s | sort | awk -v cutoff=$(date -d '2 weeks ag
 
 * 使用笔者的脚本获取软件包升级信息
   ```
-  .file `git -C ~/.cache/devtools-loong64/loongarch-packages/ log --since="2 weeks ago" --stat` `python3 query_loong64.py -S -d 14` -- 假如你是Arch Linux for Loong64社区（由北京大学学生Linux俱乐部维护，仓库地址为https://github.com/lcpu-club/loongarch-packages）的维护者，你需要向其他龙架构的开发者以及Arch Linux for Loong64的用户汇报最近两周的Loong Arch Linux发行版的开发信息。请你从git仓库的提交记录中分析，筛选并详细总结出对其他开发者和我们的用户有参考意义，包括对其他发行版和上游开发者（指参与龙架构相关开发的上游开发者）的维护有潜在帮助的内容。切勿遗漏重要、有价值的信息；请用括号标注出修复的贡献者，例如(by wszqkzqk)这种形式；请尽量附上相关提交的链接（如果有对应PR，优先放PR链接而不是冗长的commit链接）和向上游贡献内容的链接供参考。另外，根据近期软件包的更新汇总，请你指出值得用户关注的重要升级
+  .file `git -C ~/.cache/devtools-loong64/loongarch-packages/ log --since="2 weeks ago" --stat` `python3 query-pkgs.py -S -d 14` -- 假如你是Arch Linux for Loong64社区（由北京大学学生Linux俱乐部维护，仓库地址为https://github.com/lcpu-club/loongarch-packages）的维护者，你需要向其他龙架构的开发者以及Arch Linux for Loong64的用户汇报最近两周的Loong Arch Linux发行版的开发信息。请你从git仓库的提交记录中分析，筛选并详细总结出对其他开发者和我们的用户有参考意义，包括对其他发行版和上游开发者（指参与龙架构相关开发的上游开发者）的维护有潜在帮助的内容。切勿遗漏重要、有价值的信息；请用括号标注出修复的贡献者，例如(by wszqkzqk)这种形式；请尽量附上相关提交的链接（如果有对应PR，优先放PR链接而不是冗长的commit链接）和向上游贡献内容的链接供参考。另外，根据近期软件包的更新汇总，请你指出值得用户关注的重要升级
   ```
 * 使用`expac`
   ```
