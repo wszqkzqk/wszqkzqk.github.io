@@ -178,6 +178,13 @@ if __name__ == "__main__":
     main()
 ```
 
+也可以通过`wget`直接下载：
+
+```bash
+wget https://raw.githubusercontent.com/wszqkzqk/loongarchlinux-scriptlet/refs/heads/master/query-pkgs.py
+chmod +x query-pkgs.py
+```
+
 这个脚本可以直接运行，获取最近一段时间内的软件包升级情况。你可以通过以下命令运行：
 
 ```bash
