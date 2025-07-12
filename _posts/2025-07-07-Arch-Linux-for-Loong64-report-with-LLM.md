@@ -23,7 +23,7 @@ tags:       AI LLM 开源软件 archlinux LoongArchLinux
 
 #### 软件包升级情况获取准备
 
-现在推荐使用笔者编写的脚本来获取软件包升级情况：
+现在推荐使用笔者编写的脚本来获取软件包升级情况（环境要求与[devtools-loong64](https://aur.archlinux.org/packages/devtools-loong64)完全相同，不要求架构）：
 
 ```python
 #!/usr/bin/env python3
@@ -167,7 +167,6 @@ def main() -> None:
             if build_date > cutoff_date:
                 updated_packages.append(pkg)
 
-    # Sort by build date, newest first
     updated_packages.sort(key=lambda p: p.builddate)
 
     for pkg in updated_packages:
@@ -221,7 +220,13 @@ sudo pacman -S aichat
 git -C ~/.cache/devtools-loong64/loongarch-packages log --since="2 weeks ago" --stat
 ```
 
-对于这段时间内的软件包版本升级信息，可以通过以下命令获取：
+对于这段时间内的软件包版本升级信息，可以通过以下命令获取。使用笔者的脚本：
+
+```bash
+python3 ~/query-pkgs.py -S -d 14
+```
+
+使用`expac`：
 
 ```bash
 expac -S "%b %-30n %v" --timefmt=%s | sort | awk -v cutoff=$(date -d '2 weeks ago' +%s) '$1 > cutoff'
@@ -231,7 +236,7 @@ expac -S "%b %-30n %v" --timefmt=%s | sort | awk -v cutoff=$(date -d '2 weeks ag
 
 * 使用笔者的脚本获取软件包升级信息
   ```
-  .file `git -C ~/.cache/devtools-loong64/loongarch-packages/ log --since="2 weeks ago" --stat` `python3 query-pkgs.py -S -d 14` -- 假如你是Arch Linux for Loong64社区（由北京大学学生Linux俱乐部维护，仓库地址为https://github.com/lcpu-club/loongarch-packages）的维护者，你需要向其他龙架构的开发者以及Arch Linux for Loong64的用户汇报最近两周的Loong Arch Linux发行版的开发信息。请你从git仓库的提交记录中分析，筛选并详细总结出对其他开发者和我们的用户有参考意义，包括对其他发行版和上游开发者（指参与龙架构相关开发的上游开发者）的维护有潜在帮助的内容。切勿遗漏重要、有价值的信息；请用括号标注出修复的贡献者，例如(by wszqkzqk)这种形式；请尽量附上相关提交的链接（如果有对应PR，优先放PR链接而不是冗长的commit链接）和向上游贡献内容的链接供参考。另外，根据近期软件包的更新汇总，请你指出值得用户关注的重要升级
+  .file `git -C ~/.cache/devtools-loong64/loongarch-packages/ log --since="2 weeks ago" --stat` `python3 ~/query-pkgs.py -S -d 14` -- 假如你是Arch Linux for Loong64社区（由北京大学学生Linux俱乐部维护，仓库地址为https://github.com/lcpu-club/loongarch-packages）的维护者，你需要向其他龙架构的开发者以及Arch Linux for Loong64的用户汇报最近两周的Loong Arch Linux发行版的开发信息。请你从git仓库的提交记录中分析，筛选并详细总结出对其他开发者和我们的用户有参考意义，包括对其他发行版和上游开发者（指参与龙架构相关开发的上游开发者）的维护有潜在帮助的内容。切勿遗漏重要、有价值的信息；请用括号标注出修复的贡献者，例如(by wszqkzqk)这种形式；请尽量附上相关提交的链接（如果有对应PR，优先放PR链接而不是冗长的commit链接）和向上游贡献内容的链接供参考。另外，根据近期软件包的更新汇总，请你指出值得用户关注的重要升级
   ```
 * 使用`expac`
   ```
