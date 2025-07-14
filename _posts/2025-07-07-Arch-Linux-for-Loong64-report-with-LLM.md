@@ -187,7 +187,7 @@ chmod +x query-pkgs.py
 这个脚本可以直接运行，获取最近一段时间内的软件包升级情况。你可以通过以下命令运行：
 
 ```bash
-python3 query-pkgs.py -S -d 14
+./query-pkgs.py -S -d 14
 ```
 
 当然，在**Arch Linux for Loong64环境或者基于QEMU User的systemd-nspawn等透明容器环境**中，软件包升级情况可以直接利用`expac`工具来获取。`expac`是一个用于格式化Arch Linux软件包数据库的工具，可以通过以下命令安装：
