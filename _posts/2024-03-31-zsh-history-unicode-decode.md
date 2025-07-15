@@ -6,7 +6,7 @@ date:       2024-03-31
 author:     wszqkzqk
 header-img: img/media/bg-modern-img-comp.webp
 catalog:    true
-tags:       系统配置 系统维护 开源软件
+tags:       系统配置 系统维护 开源软件 Zsh
 ---
 
 ## 前言
@@ -19,7 +19,7 @@ tags:       系统配置 系统维护 开源软件
 
 ## 原因
 
-`zsh`的历史记录并非直接使用UTF-8编码，而是使用了一种特殊的元格式编码。这种编码的格式如下：
+`zsh`的历史记录并非直接使用UTF-8编码，而是使用了一种[特殊的元格式编码](https://www.zsh.org/mla/users/2011/msg00154.html)。这种编码的格式如下：
 
 * Unicode字节前加上了元字节`0x83`开头
 * 后续的内容需要与`32`进行异或运算才能得到原始值
