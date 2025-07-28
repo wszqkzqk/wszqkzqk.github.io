@@ -189,7 +189,7 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
   |:----:|
   |使用FFmpeg后端的Live Photo转换程序，能够正常逐帧导出|
 
-FFmpeg的D3D11VA和DXVA2硬件加速API在Wine下也不能正常工作，但**Vulkan API的硬件加速解码在Wine中也可以正常工作**。
+FFmpeg的D3D11VA和DXVA2硬件加速API在Wine下也不能正常工作，但**Vulkan API的硬件加速解码在Wine中也可以正常工作**（硬件编码仍然不可用）。
 
 一般来说，Wine对GCC、Meson等**基础构建工具**的支持**相当好**，对非GUI的程序的支持一般也很不错。但是Wine对非常复杂的Win32 API调用（甚至像`msys-2.0.dll`这样的Hack）的支持可能并不理想。
 
