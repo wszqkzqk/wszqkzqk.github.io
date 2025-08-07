@@ -155,6 +155,8 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
 
 笔者编写的[GTK4/Vala示例应用](https://wszqkzqk.github.io/2025/02/05/GTK-Vala-Tutorial-2/)，无论是否基于Libadwaita，在Wine下构建均较为顺利。但在测试运行的时候，显示与渲染上效果相对欠佳，基于Libadwaita的应用存在黑边，纯GTK4应用也有较小的黑边，两者在某些时候偶尔有闪烁现象，但整体上仍然可以正常运行和操作。
 
+* 更新：截至2025.08.07，使用Wine 10.12/GTK 4.18.6/LibAdwaita后，不再出现闪烁现象，表现更加稳定。
+
 |[![#~/img/wine/wine-solarangleadw.webp](/img/wine/wine-solarangleadw.webp)](/img/wine/wine-solarangleadw.webp)|[![#~/img/wine/wine-solarangleadw-black.webp](/img/wine/wine-solarangleadw-black.webp)](/img/wine/wine-solarangleadw-black.webp)|
 |:----:|:----:|
 |基于Libadwaita的GTK4程序|基于Libadwaita的GTK4程序(深色模式)|
