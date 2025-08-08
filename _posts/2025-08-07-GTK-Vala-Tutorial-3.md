@@ -182,7 +182,7 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 ### 1. 太阳高度角计算
 
-`generate_sun_angles` 函数是应用计算的核心函数。它基于标准的太阳位置算法（SPA）的简化版本，通过一系列公式计算太阳高度角。
+`generate_sun_angles` 函数是应用计算的核心函数。它基于[NOAA赤纬公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF)来计算太阳高度角。这个公式保留了较多了傅里叶级数项，计算精度较高。
 
 - **日行轨迹组分与年角计算**：
   - `fractional_day_component = day_of_year - 1 + ((double) i) / RESOLUTION_PER_MIN`：计算一年中的具体时刻（以天为单位，包含小数部分）。
@@ -671,7 +671,7 @@ public class SolarAngleApp : Adw.Application {
             try {
                 get_location_async.end (res);
             } catch (Error e) {
-                show_location_error (e.message);
+                show_error_dialog ("Location Detection Failed", e.message);
             }
 
             location_button.sensitive = true;
@@ -691,11 +691,11 @@ public class SolarAngleApp : Adw.Application {
         try {
             var stream = yield file.read_async (Priority.DEFAULT, null);
             var data_stream = new DataInputStream (stream);
-            
+
             // Read the entire response
             var response_text = new StringBuilder ();
             string? line = null;
-            
+
             while ((line = yield data_stream.read_line_async (Priority.DEFAULT, null)) != null) {
                 response_text.append (line);
             }
@@ -723,9 +723,9 @@ public class SolarAngleApp : Adw.Application {
         try {
             var parser = new Json.Parser ();
             parser.load_from_data (json_text);
-            
+
             var root_object = parser.get_root ().get_object ();
-            
+
             // Check if the response contains an error
             if (root_object.has_member ("error") && root_object.get_boolean_member ("error")) {
                 var reason = root_object.has_member ("reason") ? 
@@ -776,15 +776,16 @@ public class SolarAngleApp : Adw.Application {
     }
 
     /**
-     * Shows location detection error to user.
-     * 
+     * Shows a generic error dialog and logs the error message.
+     *
+     * @param title The title of the error dialog.
      * @param error_message The error message to display.
      */
-    private void show_location_error (string error_message) {
-        // Create a simple error dialog
-        var dialog = new Adw.AlertDialog ("Location detection failed", error_message);
+    private void show_error_dialog (string title, string error_message) {
+        var dialog = new Adw.AlertDialog (title, error_message);
         dialog.add_response ("ok", "OK");
         dialog.present (window);
+        message ("%s: %s", title, error_message);
     }
 
     /**
@@ -1199,7 +1200,7 @@ public class SolarAngleApp : Adw.Application {
 
             data_stream.close ();
         } catch (Error e) {
-            message ("Error saving CSV file: %s", e.message);
+            show_error_dialog ("CSV export failed", e.message);
         }
     }
 

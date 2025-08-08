@@ -571,7 +571,7 @@ public static int main (string[] args) {
 
 在了解了白昼时长计算程序后，我们再来看一个逻辑与布局更加复杂的 GTK4 应用程序。这个程序用于计算并绘制地球上任意位置（纬度、经度）、任意日期和时区下，太阳高度角随一天中时间变化的曲线。它将进一步展示 GTK4 中 `Gtk.SpinButton`、`Gtk.Calendar`、`Gtk.GestureClick` 和 `Gtk.Grid` 等组件的使用，以及 Cairo 绘图更精细的控制，例如绘制阴影区域、绘制点击位置的标记等。
 
-为了达到更高的精度，程序现在使用更精确的[NOAA赤纬公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF) 来计算太阳赤纬角，该赤纬公式通过保留更多傅里叶级数项来提高精度。笔者还根据NOAA的这一文档，引入了均时差和真太阳时的计算，以更精确地确定太阳的实际位置。
+为了达到更高的精度，程序现在使用更精确的[NOAA赤纬公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF)来计算太阳赤纬角，该赤纬公式通过保留更多傅里叶级数项来提高精度。笔者还根据NOAA的这一文档，引入了均时差和真太阳时的计算，以更精确地确定太阳的实际位置。
 
 该程序同样做了一些简化：
 
