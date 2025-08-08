@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      GTK4/Vala 教程：使用 LibAdwaita 构建现代桌面应用
-subtitle:   GTK/Vala开发基础教程 3
+subtitle:   GTK/Vala 开发基础教程 3
 date:       2025-08-07
 author:     wszqkzqk
 header-img: img/GTK-logo.webp
@@ -9,11 +9,11 @@ catalog:    true
 tags:       开源软件 GTK Vala
 ---
 
-本文采用[**CC-BY-SA-4.0**](https://creativecommons.org/licenses/by-sa/4.0/)协议发布，但本文代码采用[**LGPL v2.1+**](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)协议公开
-
 ## 前言
 
-欢迎来到这篇 Vala 和 GTK4 的实战教程！
+欢迎来到这篇 Vala 和 GTK4 的实战教程！[^1]
+
+[^1]: 本文采用[**CC-BY-SA-4.0**](https://creativecommons.org/licenses/by-sa/4.0/)协议发布，但本文代码采用[**LGPL v2.1+**](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)协议公开
 
 许多入门教程止步于“Hello, World!”或简单控件演示，这样一方面各部分间缺乏组织逻辑，不便进行复杂演示，另一方面也难以指导你如何开发一个真正实用、现代、体验良好的桌面应用。本教程将以“太阳高度角计算器”这一完整项目为例，带你从需求分析、界面设计、核心算法、异步网络、数据导出等多个维度，系统梳理 Vala/GTK4/LibAdwaita 的开发流程。
 
@@ -40,17 +40,17 @@ tags:       开源软件 GTK Vala
 
 在编写任何代码之前，清晰地构思应用的功能和设计是至关重要的。
 
-### 1. 应用目标
+### 应用目标
 
 我们的目标是创建一个工具，能够：
-1. 接收用户输入的**地理位置（经纬度）**、**时区**和**日期**。
-2. 计算出该地点在指定日期内，一天中每一分钟的**太阳高度角**。
-3. 将计算结果以**直观的图表**形式可视化展示出来。
-4. 提供**交互功能**，用户可以点击图表上的任意点，查看具体时间的太阳高度角。
-5. 支持**自动定位**功能，通过网络服务获取用户当前位置。
-6. 允许用户将**图表导出为图片**，或将**原始数据导出为 CSV 文件**。
+* 接收用户输入的**地理位置（经纬度）**、**时区**和**日期**。
+* 计算出该地点在指定日期内，一天中每一分钟的**太阳高度角**。
+* 将计算结果以**直观的图表**形式可视化展示出来。
+* 提供**交互功能**，用户可以点击图表上的任意点，查看具体时间的太阳高度角。
+* 支持**自动定位**功能，通过网络服务获取用户当前位置。
+* 允许用户将**图表导出为图片**，或将**原始数据导出为 CSV 文件**。
 
-### 2. UI/UX 设计哲学
+### UI/UX 设计哲学
 
 为了让应用看起来现代化且用户友好，我们选择使用 **LibAdwaita**。它是 GTK4 的一个辅助库，旨在帮助开发者构建遵循 [GNOME 人机界面指南 (HIG)](https://developer.gnome.org/hig/) 的应用。
 
@@ -66,7 +66,7 @@ Vala 代码需要被编译成 C 代码，然后再编译成可执行文件。Val
 
 读者不妨先**编译并试用**该应用，再继续阅读。这样可以更好地理解每个功能的意义。
 
-### 1. 依赖项
+### 依赖项
 
 完成本教程涉及的代码编译需要确保系统已安装 Vala、GTK4、LibAdwaita，以及用于 JSON 解析的 `json-glib` 库，以及 C 编译工具（如 `gcc`）。笔者在此列举了在 Arch Linux 和 Windows MSYS2 环境下的安装命令：
 
@@ -93,7 +93,7 @@ Vala 代码需要被编译成 C 代码，然后再编译成可执行文件。Val
 
 对于不熟悉 Shebang 的读者：Shebang 是 Unix/Linux 系统中脚本文件的第一行，用于指定可执行文件的解释器。例如，`#!/usr/bin/env -S vala` 表示使用 `vala` 编译器来执行该脚本。需要注意的是，虽然看起来像是直接运行 Vala 代码，但实际上它会在后台调用 `valac` 编译器来处理代码，并不涉及解释执行。
 
-### 2. 编译与运行
+### 编译与运行
 
 读者可以将[教程最后的完整代码](#附：完整源代码)保存为 `solarangle.vala`。你可以直接运行这个脚本文件（如果它有执行权限 `chmod +x solarangle.vala`），或者使用以下命令手动编译：
 
@@ -107,7 +107,7 @@ valac --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -march=
 
 现在，让我们深入 `activate` 方法，看看 UI 是如何一步步构建起来的。
 
-### 1. 应用与主窗口
+### 应用与主窗口
 
 基于 LibAdwaita/GTK4 的应用的入口点是一个继承自 `Adw.Application` 的类。在 `activate` 方法中，我们创建了主窗口 `Adw.ApplicationWindow`。
 
@@ -127,7 +127,7 @@ public class SolarAngleApp : Adw.Application {
 }
 ```
 
-### 2. 布局结构：`Adw.ToolbarView`
+### 布局结构：`Adw.ToolbarView`
 
 我们使用 `Adw.ToolbarView` 作为顶级布局容器。它天生支持顶部栏（`HeaderBar`）和主内容区域，是构建现代 LibAdwaita 应用的理想选择。
 
@@ -141,7 +141,7 @@ toolbar_view.add_top_bar (header_bar);
 window.content = toolbar_view;
 ```
 
-### 3. 左侧输入面板
+### 左侧输入面板
 
 左侧面板是一个垂直的 `Gtk.Box`，里面包含了几个 `Adw.PreferencesGroup`，用于对设置项进行逻辑分组。
 
@@ -165,7 +165,7 @@ window.content = toolbar_view;
 
 * **日期选择 `Gtk.Calendar`**：`Gtk.Calendar` 控件提供了直观的日期选择功能。我们将其放入一个 `Adw.ActionRow` 中，以保持与其他设置项风格的统一。
 
-### 4. 右侧绘图区域
+### 右侧绘图区域
 
 右侧区域的核心就是 `Gtk.DrawingArea`。它本质上是一块空白画布，我们可以通过 `set_draw_func` 注册一个绘图函数，来完全控制其显示内容。
 
@@ -180,9 +180,9 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 现在，我们来实现应用的核心功能：计算与表达。
 
-### 1. 太阳高度角计算
+### 太阳高度角计算
 
-`generate_sun_angles` 函数是应用计算的核心函数。它基于[NOAA赤纬公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF)来计算太阳高度角。这个公式保留了较多了傅里叶级数项，计算精度较高。
+`generate_sun_angles` 函数是应用计算的核心函数。它基于 [NOAA 赤纬公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF)来计算太阳高度角。这个公式保留了较多了傅里叶级数项，计算精度较高。
 
 - **日行轨迹组分与年角计算**：
   - `fractional_day_component = day_of_year - 1 + ((double) i) / RESOLUTION_PER_MIN`：计算一年中的具体时刻（以天为单位，包含小数部分）。
@@ -220,7 +220,7 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
   使用球面三角公式，结合纬度 `latitude_rad`、太阳赤纬 `decl_rad` 和时角 `ha_rad` 计算太阳天顶角 `phi_rad`，进而得到太阳高度角 `(90° - phi_rad)`。
   - 结果填充到 `sun_angles` 数组（单位：°），每分钟一个采样点。
 
-### 2. 自定义绘图与 Cairo
+### 自定义绘图与 Cairo
 
 `draw_sun_angle_chart` 函数是应用的绘制核心。它接收一个 `Cairo.Context` 对象（通常简写为 `cr`），你可以把它想象成一支画笔，拥有颜色、粗细、字体等属性。
 
@@ -231,7 +231,7 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 4. **绘制交互点**：如果用户点击了图表 (`has_click_point` 为 `true`)，我们会在对应位置绘制一个圆点和十字参考线，为用户提供即时反馈。
 5. **绘制标题**：在图表顶部添加动态标题，显示当前的日期和位置信息。
 
-### 3. 交互式图表：`Gtk.GestureClick`
+### 交互式图表：`Gtk.GestureClick`
 
 为了响应用户的点击，我们给 `drawing_area` 添加了一个 `Gtk.GestureClick` 控制器。
 
@@ -247,7 +247,7 @@ drawing_area.add_controller (click_controller);
 4. 更新 `click_info_label` 的文本，显示选定点的信息。
 5. 设置 `has_click_point = true` 并调用 `drawing_area.queue_draw()`，请求重绘以显示点击标记。
 
-### 4. 异步网络请求与 JSON 解析
+### 异步网络请求与 JSON 解析
 
 自动定位功能是本应用的一个亮点，它完美地展示了 Vala 强大的**异步处理**能力：网络请求是耗时的 I/O 操作，如果我们在主线程中**直接请求**，在收到网络响应前整个应用的 **UI 会被冻结**，这会带来极差的用户体验；因此，我们使用 Vala 的异步编程特性来处理这一问题。
 
@@ -282,7 +282,31 @@ drawing_area.add_controller (click_controller);
 * **UI 更新**
   所有 GTK 控件的更新都必须在主线程中进行。由于异步方法的回调可能在其他线程中执行，我们使用 `Idle.add()` 来安全地将 UI 更新操作（如设置 `SpinRow` 的值）调度回主线程执行。
 
-### 5. 文件导出
+### 错误处理的用户交互：`Adw.AlertDialog`
+
+在涉及网络请求等可能失败的操作时，提供明确的错误反馈至关重要。我们使用 `Adw.AlertDialog` 来创建符合 GNOME HIG 规范的现代化错误对话框：
+
+```vala
+private void show_error_dialog (string title, string error_message) {
+    var dialog = new Adw.AlertDialog (
+        title,  // 主标题
+        error_message  // 详细描述
+    );
+
+    // 添加确认按钮（自动遵循当前主题）
+    dialog.add_response ("ok", "OK");
+
+    // 显示对话框并关联到主窗口
+    dialog.present (window); 
+
+    // 同时输出到终端
+    message ("%s: %s", title, error_message); 
+}
+```
+
+`Adw.AlertDialog` 自动适应深浅色模式，符合 GNOME 人机界面指南。而且无需复杂布局，标题+描述+交互按钮三步完成创建，十分方便。
+
+### 文件导出
 
 * **`Gtk.FileDialog`**
   为了提供现代化的文件保存体验，我们使用 `Gtk.FileDialog`。它取代了旧的 `Gtk.FileChooserDialog`，通过异步回调函数处理用户的选择。
@@ -295,23 +319,23 @@ drawing_area.add_controller (click_controller);
       }
   });
   ```
-* **导出为图片**
+* **导出为图片**:
   Cairo 的一个强大之处在于其“设备无关性”。我们的 `draw_sun_angle_chart` 函数不仅可以向屏幕绘图，也可以向不同的**表面 (Surface)** 绘图。通过创建 `Cairo.SvgSurface`、`Cairo.PdfSurface` 或 `Cairo.ImageSurface`，我们可以将完全相同的绘图代码重定向到文件，从而轻松实现 SVG、PDF 和 PNG 格式的导出。
-* **导出为 CSV**
+* **导出为 CSV**:
   CSV 导出则是一个标准的文本文件写入过程。我们使用 `DataOutputStream` 来高效地将格式化的字符串写入文件。在数据之前，我们还写入了以 `#` 开头的注释行，作为元数据，这是一种良好的实践。
 
 ## 使用
 
-1. **启动应用**：运行编译后的程序。
-2. **设置位置**：
+* **启动应用**：运行编译后的程序。
+* **设置位置**：
     * **手动**：在左侧面板中，拖动或输入你的纬度（Latitude）、经度（Longitude）和时区（Timezone）。图表会实时更新。
     * **自动**：点击“Auto-detect Location”按钮。应用会尝试通过网络获取你当前的位置和时区，并自动填充这些值。
-3. **选择日期**：点击左侧的日历，选择你感兴趣的任何日期。
-4. **分析图表**：
+* **选择日期**：点击左侧的日历，选择你感兴趣的任何日期。
+* **分析图表**：
     * 右侧的图表显示了从 0 点到 24 点的太阳高度角变化。
     * 水平的黑线代表地平线（0°）。曲线在地平线上方表示白天，下方表示夜晚。
     * 点击图表上的任意位置，左下角的“Selected Point”区域会显示该精确时间的太阳高度角，同时图表上会出现一个蓝色的标记点和参考线。
-5. **导出结果**：
+* **导出结果**：
     * **图片**：点击“Export Image”，在弹出的对话框中选择保存位置、文件名和格式（PNG, SVG, PDF）。
     * **数据**：点击“Export CSV”，可以将当天每分钟的太阳高度角数据保存为 CSV 文件，以便在电子表格软件（如 LibreOffice Calc, Excel）中进行进一步分析。
 
@@ -325,6 +349,7 @@ drawing_area.add_controller (click_controller);
 
 ```vala
 #!/usr/bin/env -S vala --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -march=native -X -pipe
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
 
 /**
  * Solar Angle Calculator Application.
