@@ -91,18 +91,19 @@ Vala 代码需要被编译成 C 代码，然后再编译成可执行文件。Val
   pacman -S --needed mingw-w64-ucrt-x86_64-vala mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-gtk4 mingw-w64-ucrt-x86_64-libadwaita mingw-w64-ucrt-x86_64-json-glib
   ```
 
-我们的应用的编译参数还可以指定到文件的 Shebang 中，这样在 Linux 操作系统上授予可执行权限后，Vala 编译器会自动帮你编译并运行程序，一条龙完成。（Windows不支持 Shebang）
+我们的应用的编译参数还可以指定到文件的 Shebang 中，这样在 Linux 操作系统上授予可执行权限后直接执行源代码时，Vala 编译器会自动帮你**编译并运行**程序，一条龙完成。（Windows不支持 Shebang）
+
+对于不熟悉 Shebang 的读者：Shebang 是 Unix/Linux 系统中脚本文件的第一行，用于指定可执行文件的解释器。例如，`#!/usr/bin/env -S vala` 表示使用 `vala` 编译器来执行该脚本。需要注意的是，虽然看起来像是直接运行 Vala 代码，但实际上它会在后台调用 `valac` 编译器来处理代码，并不涉及解释执行。
 
 ```vala
 #!/usr/bin/env -S vala --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -march=native -X -pipe
 ```
+
 * `--pkg=gtk4`: GTK4 核心库，用于构建 UI。
 * `--pkg=libadwaita-1`: LibAdwaita 库，用于现代化窗口和控件。
 * `--pkg=json-glib-1.0`: GLib 的 JSON 支持库，用于解析 JSON 数据。
 * `-X -lm`: 传递 `-lm` 链接选项给 C 编译器，因为我们的计算代码使用了数学库 (`math.h`)。
-* `-X -O2 -X -march=native -X -pipe`: 这些是传递给 C 编译器的优化选项，用于提升性能。
-
-对于不熟悉 Shebang 的读者：Shebang 是 Unix/Linux 系统中脚本文件的第一行，用于指定可执行文件的解释器。例如，`#!/usr/bin/env -S vala` 表示使用 `vala` 编译器来执行该脚本。需要注意的是，虽然看起来像是直接运行 Vala 代码，但实际上它会在后台调用 `valac` 编译器来处理代码，并不涉及解释执行。
+* `-X -O2 -X -march=native -X -pipe`: 这些是传递给 C 编译器的参数。在脚本中应用编译优化存在一些独特考量：`-O2` 提供了良好的优化级别，既明显提升运行时性能，又避免激进优化可能导致的编译时间显著延长 —— 这点尤为重要，**因为每次执行脚本都会重新编译**，编译耗时直接影响用户体验；`-march=native` 利用当前 CPU 的全部指令集特性进行优化。由于编译产物**仅在当前机器上运行且不被保留**，不存在跨设备兼容性风险，这有望带来本地性能提升。
 
 ### 编译与运行
 
