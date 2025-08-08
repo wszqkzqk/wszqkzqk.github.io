@@ -19,7 +19,7 @@ tags:       开源软件 GTK Vala
 
 本教程适合有一定编程基础、希望深入学习 Vala 语言和 GTK4 框架、并渴望开发高质量应用的开发者。
 
-我们将以“太阳高度角计算器”的完整应用为例，深入剖析其从概念设计到功能实现的每一个环节。这个应用不仅能进行科学计算，还拥有一个使用 LibAdwaita 构建的、支持深色模式的现代化用户界面，并具备异步网络请求、JSON 解析、自定义绘图和文件导出等高级功能。
+本教程将以“太阳高度角计算器”的完整应用为例，深入剖析其从概念设计到功能实现的每一个环节。这个应用不仅能进行科学计算，还拥有一个使用 LibAdwaita 构建的、支持深色模式的现代化用户界面，并具备异步网络请求、JSON 解析、自定义绘图和文件导出等高级功能。
 
 | [![#~/img/GTK-examples/pku-light-solar-angle-250807.webp](/img/GTK-examples/pku-light-solar-angle-250807.webp)](/img/GTK-examples/pku-light-solar-angle-250807.webp) | [![#~/img/GTK-examples/pku-dark-solar-angle-250807.webp](/img/GTK-examples/pku-dark-solar-angle-250807.webp)](/img/GTK-examples/pku-dark-solar-angle-250807.webp)
 | :--: | :--: |
@@ -59,6 +59,17 @@ tags:       开源软件 GTK Vala
 * **右侧主区域**：用于展示核心内容——太阳高度角图表。这部分将使用 `Gtk.DrawingArea` 进行完全的自定义绘制。
 
 这种设计不仅结构清晰，也为未来可能的响应式布局（例如在小屏幕上将左侧面板收起到侧边栏）打下了基础。
+
+现代桌面应用越来越重视**主题一致性**和**深色模式支持**。LibAdwaita 天生支持系统主题切换，能够自动适配浅色/深色模式，为用户带来舒适的视觉体验。在本项目中，我们不仅让应用自动响应系统主题，还在标题栏右上角提供了**深色模式切换按钮**，用户可以随时手动切换浅色/深色界面。
+
+主题切换的实现思路如下：
+
+* 通过 `Adw.StyleManager` 检测当前系统主题（`dark` 属性）。
+* 在 `HeaderBar` 添加一个 `Gtk.ToggleButton`，点击时切换 `color_scheme` 属性，实现强制浅色或深色。
+* 所有自定义绘图（如 Cairo 绘制图表）都根据当前主题动态选择配色方案，确保视觉风格统一。
+* 主题切换时，主动触发重绘，保证界面即时更新。
+
+这种做法不仅让应用外观与系统保持一致，也为自定义控件和绘图区域带来了良好的主题适配体验。
 
 ## 第二部分：项目设置与编译
 
@@ -143,9 +154,36 @@ window.content = toolbar_view;
 
 ### 左侧输入面板
 
-左侧面板是一个垂直的 `Gtk.Box`，里面包含了几个 `Adw.PreferencesGroup`，用于对设置项进行逻辑分组。
+左侧面板是一个垂直的 `Gtk.Box`，里面包含了几个 `Adw.PreferencesGroup`，用于对设置项进行逻辑分组。这些控件负责收集用户输入，并提供操作入口。
 
-* **输入控件 `Adw.SpinRow`**：对于经纬度和时区这类数值输入，`Adw.SpinRow` 是一个完美的控件。它将一个标签、一个描述和一个可调数值的微调器组合在一起。
+#### 处理加载状态：Gtk.Stack 与 Gtk.Spinner
+
+在现代应用中，为耗时操作（如网络请求）提供即时反馈至关重要。当用户点击“自动获取位置”时，我们不希望界面冻结无响应，也不希望界面无反应。一个常见的模式是在操作期间用一个**加载指示器（如提供旋转加载动画的 `Gtk.Spinner`）**替换原始控件（如 `Gtk.Button`）。
+
+然而，一个朴素的实现——简单地移除按钮并添加 `Gtk.Spinner`——可能会导致界面布局发生变化，因为两个控件的大小可能不同。这会造成视觉上的“抖动”，影响用户体验。
+
+为了解决这个问题，我们采用了一种更优雅的方案：`Gtk.Stack`。`Gtk.Stack` 是一个容器，它一次只显示其众多子控件中的一个，就像一叠卡片。将按钮和 `Gtk.Spinner` 都放入同一个 `Gtk.Stack` 中，并设置其 `hhomogeneous` 和 `vhomogeneous` 属性为 `true` 时，`Gtk.Stack` 会确保其分配的空间足以容纳其最大的子控件，并让所有子控件都占用同样大小的空间。此外，设置 `transition_type` 为 `Gtk.StackTransitionType.CROSSFADE` 可以实现平滑的淡入淡出过渡效果。
+
+```vala
+// Use a stack to keep consistent allocation and avoid layout jitter
+location_stack = new Gtk.Stack () {
+    hhomogeneous = true,
+    vhomogeneous = true,
+    transition_type = Gtk.StackTransitionType.CROSSFADE,
+};
+location_spinner = new Gtk.Spinner ();
+location_button = new Gtk.Button () { /* ... */ };
+
+location_stack.add_child (location_button);
+location_stack.add_child (location_spinner);
+location_stack.visible_child = location_button;
+```
+
+这样，当我们通过 `location_stack.visible_child = location_spinner;` 在按钮和加载器之间切换时，容器的尺寸保持不变，从而彻底消除了界面抖动。再配合 `transition_type` 设置一个淡入淡出的过渡效果，用户体验就非常平滑了。
+
+#### 输入与交互控件
+
+* **输入控件 `Adw.SpinRow`**：对于经纬度和时区这类数值输入，`Adw.SpinRow` 是一个非常合适的控件。它将一个标签、一个描述和一个数值调节器组合在一起，美观且便于使用。
     ```vala
     latitude_row = new Adw.SpinRow.with_range (-90, 90, 0.1) {
         title = "Latitude",
@@ -163,18 +201,18 @@ window.content = toolbar_view;
     });
     ```
 
-* **日期选择 `Gtk.Calendar`**：`Gtk.Calendar` 控件提供了直观的日期选择功能。我们将其放入一个 `Adw.ActionRow` 中，以保持与其他设置项风格的统一。
+* **日期选择 `Gtk.Calendar`**：`Gtk.Calendar` 控件提供了直观的日期选择功能，用户可以直接在日历界面中选择所需要的日期。我们将其放入一个 `Adw.ActionRow` 中，以保持与其他设置项风格的统一。
 
 ### 右侧绘图区域
 
-右侧区域的核心就是 `Gtk.DrawingArea`。它本质上是一块空白画布，我们可以通过 `set_draw_func` 注册一个绘图函数，来完全控制其显示内容。
+右侧区域的核心是 `Gtk.DrawingArea`。它本质上是一块空白画布，我们可以通过 `set_draw_func` 注册一个绘图函数，来控制其显示内容。
 
 ```vala
 drawing_area = new Gtk.DrawingArea () { /* ... */ };
 drawing_area.set_draw_func (draw_sun_angle_chart);
 ```
 
-每当需要重绘时（例如窗口大小改变、数据更新），这个函数就会被调用。我们也可以通过 `drawing_area.queue_draw()` 主动请求一次重绘。
+每当需要重绘时（例如窗口大小改变、数据更新），这个函数就会被调用。此外，在需要的时候，我们也可以通过 `drawing_area.queue_draw()` 主动发起一次重绘。
 
 ## 第四部分：核心功能实现
 
@@ -240,8 +278,9 @@ var click_controller = new Gtk.GestureClick ();
 click_controller.pressed.connect (on_chart_clicked);
 drawing_area.add_controller (click_controller);
 ```
+
 在 `on_chart_clicked` 回调函数中：
-1. 我们获取点击的 `x`, `y` 坐标。
+1. 获取点击的 `x`, `y` 坐标。
 2. 将 `x` 坐标从像素值转换回一天中的时间（小时）。
 3. 根据时间从 `sun_angles` 数组中查找到对应的太阳高度角。
 4. 更新 `click_info_label` 的文本，显示选定点的信息。
@@ -252,10 +291,9 @@ drawing_area.add_controller (click_controller);
 自动定位功能是本应用的一个亮点，它完美地展示了 Vala 强大的**异步处理**能力：网络请求是耗时的 I/O 操作，如果我们在主线程中**直接请求**，在收到网络响应前整个应用的 **UI 会被冻结**，这会带来极差的用户体验；因此，我们使用 Vala 的异步编程特性来处理这一问题。
 
 * **Vala 的 `async` / `yield`**
-  Vala 借鉴了 C# 的 `async/await` 语法（在 Vala 中是 `async/yield`），使得异步编程像写同步代码一样直观。
+  Vala 借鉴了 C# 的 `async/await` 语法，使得异步编程像写同步代码一样直观。
   1. 我们将网络请求逻辑放在一个 `async` 方法 `get_location_async` 中。
   2. 当遇到耗时操作时（如 `file.read_async`），我们使用 `yield` 关键字。这会“暂停”当前方法的执行，将控制权交还给主事件循环（让 UI 保持响应），当 I/O 操作完成后，方法会自动从 `yield` 的地方继续执行。
-
   ```vala
   private async void get_location_async () throws IOError {
       var file = File.new_for_uri ("https://ipapi.co/json/");
@@ -264,7 +302,7 @@ drawing_area.add_controller (click_controller);
       // 下载完成后，代码从这里继续
       // ...
   }
-    ```
+  ```
 
 * **JSON-GLib 解析**
   JSON-GLib 提供了一套健壮的 API 来遍历和提取 JSON 结构中的数据，并能很好地处理潜在的错误。获取到 JSON 字符串后，我们使用 `Json.Parser` 来解析它。
@@ -328,8 +366,8 @@ private void show_error_dialog (string title, string error_message) {
 
 * **启动应用**：运行编译后的程序。
 * **设置位置**：
+    * **自动**：点击“Auto-detect Location”按钮。应用会尝试通过网络获取你当前的位置和时区，自动填充这些值并更新图表。
     * **手动**：在左侧面板中，拖动或输入你的纬度（Latitude）、经度（Longitude）和时区（Timezone）。图表会实时更新。
-    * **自动**：点击“Auto-detect Location”按钮。应用会尝试通过网络获取你当前的位置和时区，并自动填充这些值。
 * **选择日期**：点击左侧的日历，选择你感兴趣的任何日期。
 * **分析图表**：
     * 右侧的图表显示了从 0 点到 24 点的太阳高度角变化。
@@ -341,9 +379,9 @@ private void show_error_dialog (string title, string error_message) {
 
 ## 总结
 
-这个太阳高度角计算器虽然功能集中，但它“麻雀虽小，五脏俱全”。它综合运用了 Vala 语言的现代特性、GTK4/LibAdwaita 的 UI 构建能力、Cairo 的强大绘图功能，以及 GLib 提供的异步处理和数据解析工具。
+这个太阳高度角计算器功能集中，“麻雀虽小，五脏俱全”。它综合运用了 Vala 语言的现代特性、GTK4/LibAdwaita 的 UI 构建能力、Cairo 的强大绘图功能，以及 GLib 提供的异步处理和数据解析工具。
 
-通过剖析这个实例，我们不仅学会了如何使用这些独立的工具，更重要的是，我们看到了如何将它们有机地结合起来，构建一个功能完整、体验良好、代码结构清晰的现代桌面应用程序。希望这个教程能为你未来的 Vala/GTK 开发之旅提供坚实的垫脚石。
+在这个实例中，读者不仅可以学会如何使用这些独立的工具，更重要的是，读者还可以了看到如何将它们有机地结合起来，构建一个功能完整、体验良好、代码结构清晰的现代桌面应用程序。希望这个教程能为你未来的 Vala/GTK 开发之旅提供坚实的垫脚石。
 
 ## 附：完整源代码
 
