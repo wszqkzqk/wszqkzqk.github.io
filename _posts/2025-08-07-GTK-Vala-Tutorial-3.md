@@ -144,10 +144,19 @@ public class SolarAngleApp : Adw.Application {
 
 ### 布局结构：`Adw.ToolbarView`
 
-我们使用 `Adw.ToolbarView` 作为顶级布局容器。它天生支持顶部栏（`HeaderBar`）和主内容区域，是构建现代 LibAdwaita 应用的理想选择。
+我们使用 `Adw.ToolbarView` 作为顶级布局容器。它天生支持顶部栏（`HeaderBar`）和主内容区域，是构建现代 LibAdwaita 应用的理想选择。`Adw.HeaderBar`作为应用的顶部栏，不仅承载了窗口标题，还提供了放置按钮等交互元素的区域。在本应用中，我们利用 `Adw.HeaderBar` 来显示应用标题，并在其右侧集成了深色模式切换按钮，为用户提供便捷的主题控制。
 
 ```vala
 var header_bar = new Adw.HeaderBar ();
+// Add dark mode toggle button
+var dark_mode_button = new Gtk.ToggleButton () {
+    icon_name = "weather-clear-night-symbolic",
+    tooltip_text = "Toggle dark mode",
+    active = style_manager.dark,
+};
+// ...
+header_bar.pack_end (dark_mode_button);
+
 var toolbar_view = new Adw.ToolbarView ();
 toolbar_view.add_top_bar (header_bar);
 
