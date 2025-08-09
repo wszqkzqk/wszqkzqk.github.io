@@ -291,39 +291,51 @@ drawing_area.add_controller (click_controller);
 
 自动定位功能是本应用的一个亮点，它完美地展示了 Vala 强大的**异步处理**能力：网络请求是耗时的 I/O 操作，如果我们在主线程中**直接请求**，在收到网络响应前整个应用的 **UI 会被冻结**，这会带来极差的用户体验；因此，我们使用 Vala 的异步编程特性来处理这一问题。
 
-* **Vala 的 `async` / `yield`**
-  Vala 借鉴了 C# 的 `async/await` 语法，使得异步编程像写同步代码一样直观。
-  1. 我们将网络请求逻辑放在一个 `async` 方法 `get_location_async` 中。
-  2. 当遇到耗时操作时（如 `file.read_async`），我们使用 `yield` 关键字。这会“暂停”当前方法的执行，将控制权交还给主事件循环（让 UI 保持响应），当 I/O 操作完成后，方法会自动从 `yield` 的地方继续执行。
-  ```vala
-  private async void get_location_async () throws IOError {
-      var file = File.new_for_uri ("https://ipapi.co/json/");
-      // 'yield' 在这里暂停，等待数据下载，但 UI 不会卡住
-      var stream = yield file.read_async (Priority.DEFAULT, null);
-      // 下载完成后，代码从这里继续
-      // ...
-  }
-  ```
+*   **Vala 的 `async` / `yield`**
+    Vala 借鉴了 C# 的 `async/await` 语法，使得异步编程像写同步代码一样直观。
+    * 我们将网络请求逻辑放在一个 `async` 方法 `get_location_async` 中。
+    * 当遇到耗时操作时（如 `file.read_async`），我们使用 `yield` 关键字。这会“暂停”当前方法的执行，将控制权交还给主事件循环（让 UI 保持响应），当 I/O 操作完成后，方法会自动从 `yield` 的地方继续执行。
+    * 为了避免网络请求长时间无响应，我们还引入了**超时机制**。通过 `GLib.Cancellable` 和 `GLib.Timeout.add_seconds`，我们可以在指定时间（例如 5 秒）后取消网络请求，并向用户显示错误信息，提升应用的健壮性。
+      ```vala
+      private async void get_location_async () throws IOError {
+          var file = File.new_for_uri ("https://ipapi.co/json/");
+          var cancellable = new Cancellable ();
 
-* **JSON-GLib 解析**
-  JSON-GLib 提供了一套健壮的 API 来遍历和提取 JSON 结构中的数据，并能很好地处理潜在的错误。获取到 JSON 字符串后，我们使用 `Json.Parser` 来解析它。
-  ```vala
-  var parser = new Json.Parser ();
-  parser.load_from_data (json_text);
-  var root_object = parser.get_root ().get_object ();
-  
-  // 安全地获取数据
-  if (root_object.has_member ("latitude")) {
-      parsed_lat = root_object.get_double_member ("latitude");
-  }
-  ```
+          // 设置 5 秒超时
+          Timeout.add_seconds (5, () => {
+              cancellable.cancel ();
+              return false;
+          });
 
-* **UI 更新**
-  所有 GTK 控件的更新都必须在主线程中进行。由于异步方法的回调可能在其他线程中执行，我们使用 `Idle.add()` 来安全地将 UI 更新操作（如设置 `SpinRow` 的值）调度回主线程执行。
+          try {
+              var stream = yield file.read_async (Priority.DEFAULT, cancellable);
+              // ...
+          } catch (Error e) {
+              // ...
+          }
+      }
+      ```
+*   **JSON-GLib 解析**
+    JSON-GLib 提供了一套健壮的 API 来遍历和提取 JSON 结构中的数据，并能很好地处理潜在的错误。获取到网络响应后，我们使用 `Json.Parser` 来解析它。得益于 JSON-GLib 与 GLib/GObject/GIO 生态的强大集成，我们可以直接方便地使用 `parser.load_from_stream_async` 从网络流中异步加载和解析 JSON 数据，无需手动处理字节流。
+    ```vala
+    var parser = new Json.Parser ();
+    yield parser.load_from_stream_async (stream, cancellable);
+    var root_object = parser.get_root ().get_object ();
+    
+    // 安全地获取数据
+    if (root_object.has_member ("latitude")) {
+        parsed_lat = root_object.get_double_member ("latitude");
+    }
+    // ...
+    ```
+*   **时区冲突处理**
+    在自动定位时，网络服务返回的时区信息可能与用户系统当前设置的时区不同。为了提供更好的用户体验，应用会检测这种差异。如果发现网络时区与系统时区不一致，应用会弹出一个 `Adw.AlertDialog` （详见后文）对话框，询问用户希望使用哪个时区。用户选择后，应用会根据用户的决定更新时区设置。这种交互通过 `yield dialog.choose(window, null)` 实现，它会异步等待用户的选择，并在用户做出选择后继续执行代码。
+*   **UI 更新**
+    所有 GTK 控件的更新都必须在主线程中进行。由于异步方法的回调可能在其他线程中执行，我们使用 `Idle.add()` 来安全地将 UI 更新操作（如设置 `SpinRow` 的值）调度回主线程执行。
 
-### 错误处理的用户交互：`Adw.AlertDialog`
+### 错误处理与用户交互：`Adw.AlertDialog`
 
-在涉及网络请求等可能失败的操作时，提供明确的错误反馈至关重要。我们使用 `Adw.AlertDialog` 来创建符合 GNOME HIG 规范的现代化错误对话框：
+在涉及网络请求等可能失败的操作时，提供明确的错误反馈至关重要。我们使用 `Adw.AlertDialog` 来创建符合 GNOME HIG 规范的现代化错误对话框。此外，`Adw.AlertDialog` 不仅可以用于显示简单的错误信息，还可以通过 `add_response` 和 `choose` 方法实现更复杂的异步用户选择，在本示例中是本地与 IP 时区冲突时让用户选择使用哪个时区：
 
 ```vala
 private void show_error_dialog (string title, string error_message) {
@@ -334,34 +346,61 @@ private void show_error_dialog (string title, string error_message) {
 
     // 添加确认按钮（自动遵循当前主题）
     dialog.add_response ("ok", "OK");
-
     // 显示对话框并关联到主窗口
     dialog.present (window); 
-
     // 同时输出到终端
     message ("%s: %s", title, error_message); 
 }
+
+// 利用 Adw.AlertDialog 给用户提供选择
+private async void handle_timezone_mismatch (double network_tz_offset, double local_tz_offset) {
+    var dialog = new Adw.AlertDialog (
+        "Timezone Mismatch",
+        "The timezone from the network (UTC%+.2f) differs from your system's timezone (UTC%+.2f).\n\nWhich one would you like to use?".printf (
+            network_tz_offset,
+            local_tz_offset
+        )
+    );
+    dialog.add_response ("network", "Use Network Timezone");
+    dialog.add_response ("local", "Use System Timezone");
+    dialog.default_response = "network"; // 默认选择网络时区
+
+    // 异步等待用户的选择
+    string choice = yield dialog.choose (window, null);
+
+    if (choice == "network") {
+        timezone_offset_hours = network_tz_offset;
+    } else {
+        timezone_offset_hours = local_tz_offset;
+    }
+    // ... 更新 UI ...
+}
 ```
 
-`Adw.AlertDialog` 自动适应深浅色模式，符合 GNOME 人机界面指南。而且无需复杂布局，标题+描述+交互按钮三步完成创建，十分方便。
+`Adw.AlertDialog` 自动适应深浅色模式，符合 GNOME 人机界面指南。而且无需复杂布局，标题+描述+交互按钮三步完成创建，十分方便。对于文件保存对话框，当用户取消操作时，我们现在会更优雅地处理，避免弹出不必要的错误提示框，只在终端输出日志。
 
 ### 文件导出
 
-* **`Gtk.FileDialog`**
-  为了提供现代化的文件保存体验，我们使用 `Gtk.FileDialog`。它取代了旧的 `Gtk.FileChooserDialog`，通过异步回调函数处理用户的选择。
-  ```vala
-  var file_dialog = new Gtk.FileDialog () { /* ... */ };
-  file_dialog.save.begin (window, null, (obj, res) => {
-      var file = file_dialog.save.end (res);
-      if (file != null) {
-          export_chart (file);
-      }
-  });
-  ```
-* **导出为图片**:
-  Cairo 的一个强大之处在于其“设备无关性”。我们的 `draw_sun_angle_chart` 函数不仅可以向屏幕绘图，也可以向不同的**表面 (Surface)** 绘图。通过创建 `Cairo.SvgSurface`、`Cairo.PdfSurface` 或 `Cairo.ImageSurface`，我们可以将完全相同的绘图代码重定向到文件，从而轻松实现 SVG、PDF 和 PNG 格式的导出。
-* **导出为 CSV**:
-  CSV 导出则是一个标准的文本文件写入过程。我们使用 `DataOutputStream` 来高效地将格式化的字符串写入文件。在数据之前，我们还写入了以 `#` 开头的注释行，作为元数据，这是一种良好的实践。
+*   **`Gtk.FileDialog`**
+    为了提供现代化的文件保存体验，我们使用 `Gtk.FileDialog`。它取代了旧的 `Gtk.FileChooserDialog`，通过异步回调函数处理用户的选择。
+    ```vala
+    var file_dialog = new Gtk.FileDialog () { /* ... */ };
+    file_dialog.save.begin (window, null, (obj, res) => {
+        try {
+            var file = file_dialog.save.end (res);
+            if (file != null) {
+                export_chart (file);
+            }
+        } catch (Error e) {
+            // 用户取消操作时，不显示警告对话框
+            message ("Image file has not been saved: %s", e.message);
+        }
+    });
+    ```
+*   **导出为图片**:
+    Cairo 的一个强大之处在于其“设备无关性”。我们的 `draw_sun_angle_chart` 函数不仅可以向屏幕绘图，也可以向不同的**表面 (Surface)** 绘图。通过创建 `Cairo.SvgSurface`、`Cairo.PdfSurface` 或 `Cairo.ImageSurface`，我们可以将完全相同的绘图代码重定向到文件，从而轻松实现 SVG、PDF 和 PNG 格式的导出。
+*   **导出为 CSV**:
+    CSV 导出则是一个标准的文本文件写入过程。我们使用 `DataOutputStream` 来高效地将格式化的字符串写入文件。在数据之前，我们还写入了以 `#` 开头的注释行，作为元数据，这是一种良好的实践。
 
 ## 使用
 
@@ -746,96 +785,92 @@ public class SolarAngleApp : Adw.Application {
      }
 
     /**
-     * Asynchronously gets current location using IP geolocation service.
+     * Asynchronously gets current location using IP geolocation service with timeout.
      */
     private async void get_location_async () throws IOError {
-        // Use ipapi.co which provides free IP geolocation
         var file = File.new_for_uri ("https://ipapi.co/json/");
+        var cancellable = new Cancellable ();
+
+        // Set up a 5-second timeout
+        Timeout.add_seconds (5, () => {
+            cancellable.cancel ();
+            return false;
+        });
 
         try {
-            var stream = yield file.read_async (Priority.DEFAULT, null);
-            var data_stream = new DataInputStream (stream);
-
-            // Read the entire response
-            var response_text = new StringBuilder ();
-            string? line = null;
-
-            while ((line = yield data_stream.read_line_async (Priority.DEFAULT, null)) != null) {
-                response_text.append (line);
-            }
-
-            stream.close ();
-            data_stream.close ();
-
-            if (response_text.len == 0) {
-                throw new IOError.FAILED ("Empty response from location service");
-            }
-
-            parse_location_response (response_text.str);
-            
-        } catch (Error e) {
-            throw new IOError.FAILED ("Failed to get location: %s".printf (e.message));
-        }
-    }
-
-    /**
-     * Parses the JSON response from the location service.
-     * 
-     * @param json_text The JSON response as string.
-     */
-    private void parse_location_response (string json_text) throws IOError {
-        try {
+            var stream = yield file.read_async (Priority.DEFAULT, cancellable);
             var parser = new Json.Parser ();
-            parser.load_from_data (json_text);
+            yield parser.load_from_stream_async (stream, cancellable);
 
             var root_object = parser.get_root ().get_object ();
-
-            // Check if the response contains an error
             if (root_object.has_member ("error") && root_object.get_boolean_member ("error")) {
-                var reason = root_object.has_member ("reason") ? 
-                    root_object.get_string_member ("reason") : "Unknown error";
-                throw new IOError.FAILED ("Location service error: %s".printf (reason));
+                throw new IOError.FAILED ("Location service error: %s", root_object.get_string_member ("reason") ?? "Unknown error");
             }
 
-            // Extract location data
-            double parsed_lat = 0.0;
-            double parsed_lon = 0.0;
-
             if (root_object.has_member ("latitude")) {
-                parsed_lat = root_object.get_double_member ("latitude");
+                latitude = root_object.get_double_member ("latitude");
             } else {
                 throw new IOError.FAILED ("No latitude found in response");
             }
 
             if (root_object.has_member ("longitude")) {
-                parsed_lon = root_object.get_double_member ("longitude");
+                longitude = root_object.get_double_member ("longitude");
             } else {
                 throw new IOError.FAILED ("No longitude found in response");
             }
 
+            double network_tz_offset = 0.0;
+            bool has_network_tz = false;
+
+            if (root_object.has_member ("utc_offset")) {
+                var offset_str = root_object.get_string_member ("utc_offset");
+                network_tz_offset = double.parse (offset_str) / 100.0;
+                has_network_tz = true;
+            }
+
+            // Get local system's current timezone offset
             var timezone = new TimeZone.local ();
             var time_interval = timezone.find_interval (GLib.TimeType.UNIVERSAL, selected_date.to_unix ());
-            timezone_offset_hours = timezone.get_offset (time_interval) / 3600.0;
+            var local_tz_offset = timezone.get_offset (time_interval) / 3600.0;
 
-            // Update UI in main thread
+            const double TZ_EPSILON = 0.01; // Epsilon for floating point comparison
+            if (has_network_tz && (!(-TZ_EPSILON < (network_tz_offset - local_tz_offset) < TZ_EPSILON))) {
+                // Timezones differ, prompt user for a choice
+                var dialog = new Adw.AlertDialog (
+                    "Timezone Mismatch",
+                    "The timezone from the network (UTC%+.2f) differs from your system's timezone (UTC%+.2f).\n\nWhich one would you like to use?".printf (
+                        network_tz_offset,
+                        local_tz_offset
+                    )
+                );
+                dialog.add_response ("network", "Use Network Timezone");
+                dialog.add_response ("local", "Use System Timezone");
+                dialog.default_response = "network";
+
+                // Asynchronously wait for the user's choice
+                string choice = yield dialog.choose (window, null);
+
+                if (choice == "network") {
+                    timezone_offset_hours = network_tz_offset;
+                } else {
+                    timezone_offset_hours = local_tz_offset;
+                }
+            } else {
+                // Network's timezone is the same as local's or unavailable
+                timezone_offset_hours = local_tz_offset;
+            }
+
             Idle.add (() => {
-                latitude = parsed_lat;
-                longitude = parsed_lon;
-
-                // Update the spin rows
                 latitude_row.value = latitude;
                 longitude_row.value = longitude;
                 timezone_row.value = timezone_offset_hours;
-
-                // Update plot
                 update_plot_data ();
                 drawing_area.queue_draw ();
-
                 return false;
             });
 
         } catch (Error e) {
-            throw new IOError.FAILED ("Failed to parse location data: %s".printf (e.message));
+            throw new IOError.FAILED ("Failed to get location: %s", e.message);
         }
     }
 
@@ -1156,6 +1191,7 @@ public class SolarAngleApp : Adw.Application {
                     export_chart (file);
                 }
             } catch (Error e) {
+                // Dismissed by user, so do not show alert dialog
                 message ("Image file has not been saved: %s", e.message);
             }
         });
@@ -1227,6 +1263,7 @@ public class SolarAngleApp : Adw.Application {
                     export_csv_data (file);
                 }
             } catch (Error e) {
+                // Dismissed by user, so do not show alert dialog
                 message ("CSV file has not been saved: %s", e.message);
             }
         });
