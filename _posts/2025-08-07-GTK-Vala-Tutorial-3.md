@@ -81,16 +81,16 @@ Vala 代码需要被编译成 C 代码，然后再编译成可执行文件。Val
 
 ### 依赖项
 
-完成本教程涉及的代码编译需要确保系统已安装 Vala、GTK4、LibAdwaita，以及用于 JSON 解析的 `json-glib` 库，以及 C 编译工具（如 `gcc`）。笔者在此列举了在 Arch Linux 和 Windows MSYS2 环境下的安装命令：
+完成本教程涉及的代码编译需要确保系统已安装 Vala、GTK4、LibAdwaita，用于 JSON 解析的 `json-glib` 库，用于在 GLib 中实现网络请求的 `glib-networking` 库，以及 C 编译工具（如 `gcc`）。笔者在此列举了在 Arch Linux 和 Windows MSYS2 环境下的安装命令：
 
 * Arch Linux：
   ```bash
-  sudo pacman -S --needed vala gtk4 libadwaita json-glib
+  sudo pacman -S --needed vala gtk4 libadwaita json-glib glib-networking
   ```
 * Windows MSYS2：
   在 MSYS2 UCRT64 环境中：
   ```bash
-  pacman -S --needed mingw-w64-ucrt-x86_64-vala mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-gtk4 mingw-w64-ucrt-x86_64-libadwaita mingw-w64-ucrt-x86_64-json-glib
+  pacman -S --needed mingw-w64-ucrt-x86_64-vala mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-gtk4 mingw-w64-ucrt-x86_64-libadwaita mingw-w64-ucrt-x86_64-json-glib mingw-w64-ucrt-x86_64-glib-networking
   ```
 
 我们的应用的编译参数还可以指定到文件的 Shebang 中，这样在 Linux 操作系统上授予可执行权限后直接执行源代码时，Vala 编译器会自动帮你**编译并运行**程序，一条龙完成。（Windows不支持 Shebang）
