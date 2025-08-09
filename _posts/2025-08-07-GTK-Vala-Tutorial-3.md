@@ -21,9 +21,11 @@ tags:       开源软件 GTK Vala
 
 本教程将以“太阳高度角计算器”的完整应用为例，深入剖析其从概念设计到功能实现的每一个环节。这个应用不仅能进行科学计算，还拥有一个使用 LibAdwaita 构建的、支持深色模式的现代化用户界面，并具备异步网络请求、JSON 解析、自定义绘图和文件导出等高级功能。
 
-| [![#~/img/GTK-examples/pku-light-solar-angle-250807.webp](/img/GTK-examples/pku-light-solar-angle-250807.webp)](/img/GTK-examples/pku-light-solar-angle-250807.webp) | [![#~/img/GTK-examples/pku-dark-solar-angle-250807.webp](/img/GTK-examples/pku-dark-solar-angle-250807.webp)](/img/GTK-examples/pku-dark-solar-angle-250807.webp)
+| [![#~/img/GTK-examples/pku-light-solar-angle-250807.webp](/img/GTK-examples/pku-light-solar-angle-250807.webp)](/img/GTK-examples/pku-light-solar-angle-250807.webp) | [![#~/img/GTK-examples/pku-dark-solar-angle-250807.webp](/img/GTK-examples/pku-dark-solar-angle-250807.webp)](/img/GTK-examples/pku-dark-solar-angle-250807.webp) |
 | :--: | :--: |
 | 太阳高度角计算器（浅色模式）| 太阳高度角计算器（深色模式）|
+| [![#~/img/GTK-examples/fetching-location-solarangle.webp](/img/GTK-examples/fetching-location-solarangle.webp)](/img/GTK-examples/fetching-location-solarangle.webp) | [![#~/img/GTK-examples/timezone-mismatch-solarangle.webp](/img/GTK-examples/timezone-mismatch-solarangle.webp)](/img/GTK-examples/timezone-mismatch-solarangle.webp) |
+| 获取地理位置时的加载动画 | 提示与选择 |
 
 通过本教程，你将学到：
 
