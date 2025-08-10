@@ -19,7 +19,7 @@ tags:       开源软件 GTK Vala
 
 本教程适合有一定编程基础、希望深入学习 Vala 语言和 GTK4 框架、并渴望开发高质量应用的开发者。
 
-本教程将以“太阳高度角计算器”的完整应用为例，深入剖析其从概念设计到功能实现的每一个环节。这个应用不仅能进行科学计算，还拥有一个使用 LibAdwaita 构建的、支持深色模式的现代化用户界面，并具备异步网络请求、JSON 解析、自定义绘图和文件导出等高级功能。
+本教程将以笔者实现的[“太阳高度角计算器”](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangle.vala)的完整应用为例，深入剖析其从概念设计到功能实现的每一个环节。这个应用不仅能进行科学计算，还拥有一个使用 LibAdwaita 构建的、支持深色模式的现代化用户界面，并具备异步网络请求、JSON 解析、自定义绘图和文件导出等高级功能。
 
 | [![#~/img/GTK-examples/pku-light-solar-angle-250807.webp](/img/GTK-examples/pku-light-solar-angle-250807.webp)](/img/GTK-examples/pku-light-solar-angle-250807.webp) | [![#~/img/GTK-examples/pku-dark-solar-angle-250807.webp](/img/GTK-examples/pku-dark-solar-angle-250807.webp)](/img/GTK-examples/pku-dark-solar-angle-250807.webp) |
 | :--: | :--: |
@@ -112,7 +112,7 @@ Vala 代码需要被编译成 C 代码，然后再编译成可执行文件。Val
 
 ### 编译与运行
 
-读者可以将[教程最后的完整代码](#附：完整源代码)保存为 `solarangle.vala`。你可以直接运行这个脚本文件（如果它有执行权限 `chmod +x solarangle.vala`），或者使用以下命令手动编译，避免每次运行前都自动编译带来的启动延迟：
+读者可以将[教程最后的完整代码](#完整源代码)保存为 `solarangle.vala`。你可以直接运行这个脚本文件（如果它有执行权限 `chmod +x solarangle.vala`），或者使用以下命令手动编译，避免每次运行前都自动编译带来的启动延迟：
 
 ```bash
 valac --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -march=native -X -pipe solarangle.vala
@@ -171,7 +171,7 @@ window.content = toolbar_view;
 
 左侧面板是一个垂直的 `Gtk.Box`，里面包含了几个 `Adw.PreferencesGroup`，用于对设置项进行逻辑分组。这些控件负责收集用户输入，并提供操作入口。
 
-#### 处理加载状态：Gtk.Stack 与 Gtk.Spinner
+#### 处理加载状态：`Gtk.Stack` 与 `Gtk.Spinner`
 
 在现代应用中，为耗时操作（如网络请求）提供即时反馈至关重要。当用户点击“自动获取位置”时，我们不希望界面冻结无响应，也不希望界面无反应。一个常见的模式是在操作期间用一个**加载指示器（如提供旋转加载动画的 `Gtk.Spinner`）**替换原始控件（如 `Gtk.Button`）。
 
@@ -437,7 +437,7 @@ private async void handle_timezone_mismatch (double network_tz_offset, double lo
 
 在这个实例中，读者不仅可以学会如何使用这些独立的工具，更重要的是，读者还可以了看到如何将它们有机地结合起来，构建一个功能完整、体验良好、代码结构清晰的现代桌面应用程序。希望这个教程能为你未来的 Vala/GTK 开发之旅提供坚实的垫脚石。
 
-## 附：完整源代码
+## 完整源代码
 
 ```vala
 #!/usr/bin/env -S vala --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -march=native -X -pipe
@@ -951,8 +951,11 @@ public class SolarAngleApp : Adw.Application {
             // cos(phi): cosine of zenith angle via spherical trig
             double cos_phi = sin_lat * Math.sin (decl_rad) + cos_lat * Math.cos (decl_rad) * Math.cos (ha_rad);
             // clamp to valid range
-            if (cos_phi > 1.0) cos_phi = 1.0;
-            if (cos_phi < -1.0) cos_phi = -1.0;
+            if (cos_phi > 1.0) {
+                cos_phi = 1.0;
+            } else if (cos_phi < -1.0) {
+                cos_phi = -1.0;
+            }
             // Zenith angle phi (rad)
             double phi_rad = Math.acos (cos_phi);
 
