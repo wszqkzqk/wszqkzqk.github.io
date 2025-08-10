@@ -406,7 +406,7 @@ private async void handle_timezone_mismatch (double network_tz_offset, double lo
                 export_chart (file);
             }
         } catch (Error e) {
-            // 用户取消操作时，不显示警告对话框
+            // 用户取消操作时，不显示警告对话框，仅在终端输出日志
             message ("Image file has not been saved: %s", e.message);
         }
     });
@@ -817,8 +817,8 @@ public class SolarAngleApp : Adw.Application {
             yield parser.load_from_stream_async (stream, cancellable);
 
             var root_object = parser.get_root ().get_object ();
-            if (root_object.has_member ("error") && root_object.get_boolean_member ("error")) {
-                throw new IOError.FAILED ("Location service error: %s", root_object.get_string_member ("reason") ?? "Unknown error");
+            if (root_object.get_boolean_member_with_default ("error", false)) {
+                throw new IOError.FAILED ("Location service error: %s", root_object.get_string_member_with_default ("reason", "Unknown error"));
             }
 
             if (root_object.has_member ("latitude")) {
@@ -885,7 +885,6 @@ public class SolarAngleApp : Adw.Application {
                 drawing_area.queue_draw ();
                 return false;
             });
-
         } catch (Error e) {
             throw new IOError.FAILED ("Failed to get location: %s", e.message);
         }
