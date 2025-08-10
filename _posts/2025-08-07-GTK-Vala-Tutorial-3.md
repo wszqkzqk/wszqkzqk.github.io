@@ -275,7 +275,7 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 ### 自定义绘图与 Cairo
 
-`draw_sun_angle_chart` 函数是应用的绘制核心。它接收一个 `Cairo.Context` 对象（通常简写为 `cr`），你可以把它想象成一支画笔，拥有颜色、粗细、字体等属性。
+`draw_sun_angle_chart` 函数是应用的绘制核心。它接收一个 `Cairo.Context` 对象（通常简写为 `cr`），你可以把它想象成 Cairo 的画笔，拥有颜色、粗细、字体等属性。
 
 绘图过程遵循一个清晰的层次结构：
 1. **主题颜色**：我们定义了一个 `ThemeColors` 结构体，并准备了 `LIGHT_THEME` 和 `DARK_THEME` 两套颜色。在绘图开始时，根据 `style_manager.dark` 的状态选择合适的颜色方案，实现了对系统深色/浅色模式的自适应。
@@ -336,9 +336,11 @@ drawing_area.add_controller (click_controller);
     yield parser.load_from_stream_async (stream, cancellable);
     var root_object = parser.get_root ().get_object ();
     
-    // 安全地获取数据
-    if (root_object.has_member ("latitude")) {
-        parsed_lat = root_object.get_double_member ("latitude");
+    if (root_object.has_member ("latitude") && root_object.has_member ("longitude")) {
+        latitude = root_object.get_double_member ("latitude");
+        longitude = root_object.get_double_member ("longitude");
+    } else {
+        throw new IOError.FAILED ("No coordinates found in the response");
     }
     // ...
     ```
@@ -821,16 +823,11 @@ public class SolarAngleApp : Adw.Application {
                 throw new IOError.FAILED ("Location service error: %s", root_object.get_string_member_with_default ("reason", "Unknown error"));
             }
 
-            if (root_object.has_member ("latitude")) {
+            if (root_object.has_member ("latitude") && root_object.has_member ("longitude")) {
                 latitude = root_object.get_double_member ("latitude");
-            } else {
-                throw new IOError.FAILED ("No latitude found in response");
-            }
-
-            if (root_object.has_member ("longitude")) {
                 longitude = root_object.get_double_member ("longitude");
             } else {
-                throw new IOError.FAILED ("No longitude found in response");
+                throw new IOError.FAILED ("No coordinates found in the response");
             }
 
             double network_tz_offset = 0.0;
