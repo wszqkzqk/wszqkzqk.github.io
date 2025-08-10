@@ -456,7 +456,7 @@ public class SolarAngleApp : Adw.Application {
     private const double DEG2RAD = Math.PI / 180.0;
     private const double RAD2DEG = 180.0 / Math.PI;
     private const int RESOLUTION_PER_MIN = 1440; // 1 sample per minute
-    // Constants for margins in the drawing area
+    // Constants for drawing area
     private const int MARGIN_LEFT = 70;
     private const int MARGIN_RIGHT = 20;
     private const int MARGIN_TOP = 50;
@@ -849,6 +849,9 @@ public class SolarAngleApp : Adw.Application {
 
             const double TZ_EPSILON = 0.01; // Epsilon for floating point comparison
             if (has_network_tz && (!(-TZ_EPSILON < (network_tz_offset - local_tz_offset) < TZ_EPSILON))) {
+                const string RESPONSE_NETWORK = "network"; // ID for network timezone
+                const string RESPONSE_LOCAL = "local"; // ID for local timezone
+
                 // Timezones differ, prompt user for a choice
                 var dialog = new Adw.AlertDialog (
                     "Timezone Mismatch",
@@ -857,14 +860,14 @@ public class SolarAngleApp : Adw.Application {
                         local_tz_offset
                     )
                 );
-                dialog.add_response ("network", "Use Network Timezone");
-                dialog.add_response ("local", "Use System Timezone");
-                dialog.default_response = "network";
+                dialog.add_response (RESPONSE_NETWORK, "Use Network Timezone");
+                dialog.add_response (RESPONSE_LOCAL, "Use System Timezone");
+                dialog.default_response = RESPONSE_NETWORK;
 
                 // Asynchronously wait for the user's choice
                 string choice = yield dialog.choose (window, null);
 
-                if (choice == "network") {
+                if (choice == RESPONSE_NETWORK) {
                     timezone_offset_hours = network_tz_offset;
                 } else {
                     timezone_offset_hours = local_tz_offset;
