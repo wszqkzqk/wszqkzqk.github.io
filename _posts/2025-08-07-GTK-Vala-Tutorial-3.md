@@ -21,7 +21,7 @@ tags:       开源软件 GTK Vala
 
 本教程将以笔者实现的[“太阳高度角计算器”](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangle.vala)的完整应用为例，深入剖析其从概念设计到功能实现的每一个环节。这个应用不仅能进行科学计算，还拥有一个使用 LibAdwaita 构建的、支持深色模式的现代化用户界面，并具备异步网络请求、JSON 解析、自定义绘图和文件导出等高级功能。
 
-| [![#~/img/GTK-examples/pku-light-solar-angle-250807.webp](/img/GTK-examples/pku-light-solar-angle-250807.webp)](/img/GTK-examples/pku-light-solar-angle-250807.webp) | [![#~/img/GTK-examples/pku-dark-solar-angle-250807.webp](/img/GTK-examples/pku-dark-solar-angle-250807.webp)](/img/GTK-examples/pku-dark-solar-angle-250807.webp) |
+| [![#~/img/GTK-examples/pku-light-solar-angle-250814.webp](/img/GTK-examples/pku-light-solar-angle-250814.webp)](/img/GTK-examples/pku-light-solar-angle-250814.webp) | [![#~/img/GTK-examples/pku-dark-solar-angle-250814.webp](/img/GTK-examples/pku-dark-solar-angle-250814.webp)](/img/GTK-examples/pku-dark-solar-angle-250814.webp) |
 | :--: | :--: |
 | 太阳高度角计算器（浅色模式）| 太阳高度角计算器（深色模式）|
 | [![#~/img/GTK-examples/fetching-location-solarangle.webp](/img/GTK-examples/fetching-location-solarangle.webp)](/img/GTK-examples/fetching-location-solarangle.webp) | [![#~/img/GTK-examples/timezone-mismatch-solarangle.webp](/img/GTK-examples/timezone-mismatch-solarangle.webp)](/img/GTK-examples/timezone-mismatch-solarangle.webp) |
@@ -510,7 +510,7 @@ public class SolarAngleApp : Adw.Application {
         grid_r: 0.5, grid_g: 0.5, grid_b: 0.5, grid_a: 0.5, // Gray grid
         axis_r: 0.0, axis_g: 0.0, axis_b: 0.0,              // Black axes
         text_r: 0.0, text_g: 0.0, text_b: 0.0,              // Black text
-        curve_r: 1.0, curve_g: 0.0, curve_b: 0.0,           // Red curve
+        curve_r: 1.0, curve_g: 0.5, curve_b: 0.0,           // Red curve
         shade_r: 0.7, shade_g: 0.7, shade_b: 0.7, shade_a: 0.3, // Light gray shade
         point_r: 0.0, point_g: 0.0, point_b: 1.0,           // Blue point
         line_r: 0.0, line_g: 0.0, line_b: 1.0, line_a: 0.5  // Blue guide lines
@@ -522,7 +522,7 @@ public class SolarAngleApp : Adw.Application {
         grid_r: 0.5, grid_g: 0.5, grid_b: 0.5, grid_a: 0.5, // Light gray grid
         axis_r: 1.0, axis_g: 1.0, axis_b: 1.0,              // White axes
         text_r: 1.0, text_g: 1.0, text_b: 1.0,              // White text
-        curve_r: 1.0, curve_g: 0.0, curve_b: 0.0,           // Bright red curve
+        curve_r: 1.0, curve_g: 0.5, curve_b: 0.0,           // Bright red curve
         shade_r: 0.3, shade_g: 0.3, shade_b: 0.3, shade_a: 0.7, // Dark gray shade
         point_r: 0.3, point_g: 0.7, point_b: 1.0,           // Light blue point
         line_r: 0.3, line_g: 0.7, line_b: 1.0, line_a: 0.7  // Light blue guide lines
