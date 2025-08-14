@@ -19,7 +19,7 @@ tags:       开源软件 GTK Vala
 
 本教程适合有一定编程基础，希望深入学习 Vala 语言和最新的 GTK4、LibAdwaita 等开发框架，并渴望开发高质量应用的开发者。
 
-本教程将以笔者实现的[“太阳高度角计算器”](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangle.vala)的完整应用为例，深入剖析其从概念设计到功能实现的每一个环节。这个应用不仅能进行科学计算，还拥有一个使用 LibAdwaita 构建的、支持深色模式的现代化用户界面，并具备异步网络请求、JSON 解析、自定义绘图和文件导出等高级功能。
+本教程将以笔者实现的[“太阳高度角计算器”](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangleadw.vala)的完整应用为例，深入剖析其从概念设计到功能实现的每一个环节。这个应用不仅能进行科学计算，还拥有一个使用 LibAdwaita 构建的、支持深色模式的现代化用户界面，并具备异步网络请求、JSON 解析、自定义绘图和文件导出等高级功能。
 
 | [![#~/img/GTK-examples/pku-light-solar-angle-250814.webp](/img/GTK-examples/pku-light-solar-angle-250814.webp)](/img/GTK-examples/pku-light-solar-angle-250814.webp) | [![#~/img/GTK-examples/pku-dark-solar-angle-250814.webp](/img/GTK-examples/pku-dark-solar-angle-250814.webp)](/img/GTK-examples/pku-dark-solar-angle-250814.webp) |
 | :--: | :--: |
@@ -112,10 +112,10 @@ Vala 代码需要被编译成 C 代码，然后再编译成可执行文件。Val
 
 ### 编译与运行
 
-读者可以将[教程最后的完整代码](#完整源代码)保存为 `solarangle.vala`。你可以直接运行这个脚本文件（如果它有执行权限 `chmod +x solarangle.vala`），或者使用以下命令手动编译，避免每次运行前都自动编译带来的启动延迟：
+读者可以将[教程最后的完整代码](#完整源代码)保存为 `solarangleadw.vala`。你可以直接运行这个脚本文件（如果它有执行权限 `chmod +x solarangleadw.vala`），或者使用以下命令手动编译，避免每次运行前都自动编译带来的启动延迟：
 
 ```bash
-valac --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -march=native -X -pipe solarangle.vala
+valac --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -march=native -X -pipe solarangleadw.vala
 ```
 
 需要注意的是，与“执行”用的 `vala` 不同，编译需要使用 `valac` 命令。
