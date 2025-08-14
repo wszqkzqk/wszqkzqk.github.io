@@ -235,7 +235,7 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 ### 太阳高度角计算
 
-`generate_sun_angles` 函数是应用计算的核心函数。它基于 [NOAA 赤纬公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF)来计算太阳高度角。这个公式保留了较多了傅里叶级数项，计算精度较高。
+`generate_sun_angles` 函数是应用计算的核心函数。它基于 [NOAA 赤纬公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF)来计算太阳高度角。这个公式保留了较多傅里叶级数项（三阶正余弦），计算精度较高。
 
 - **日行轨迹组分与年角计算**：
   - `fractional_day_component = day_of_year - 1 + ((double) i) / RESOLUTION_PER_MIN`：计算一年中的具体时刻（以天为单位，包含小数部分）。
@@ -245,12 +245,13 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
   $$
   \begin{aligned}
-  \delta &= 0.006918 - 0.399912 \cos(\gamma)
-          + 0.070257 \sin(\gamma) \\
-      &\quad - 0.006758 \cos(2 \times \gamma)
-          + 0.000907 \sin(2 \times \gamma) \\
-      &\quad - 0.002697 \cos(3 \times \gamma)
-          + 0.001480 \sin(3 \times \gamma)
+  \delta &= 0.006918 \\
+      &\quad {}- 0.399912 \cos(\gamma) \\
+      &\quad {}+ 0.070257 \sin(\gamma) \\
+      &\quad {}- 0.006758 \cos(2 \times \gamma) \\
+      &\quad {}+ 0.000907 \sin(2 \times \gamma) \\
+      &\quad {}- 0.002697 \cos(3 \times \gamma) \\
+      &\quad {}+ 0.001480 \sin(3 \times \gamma)
   \end{aligned}
   $$
 
