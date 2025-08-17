@@ -314,18 +314,20 @@ drawing_area.add_controller (click_controller);
       ```vala
       private async void get_location_async () throws IOError {
           var file = File.new_for_uri ("https://ipapi.co/json/");
-          var cancellable = new Cancellable ();
+          var parser = new Json.Parser ();
 
           // 设置 5 秒超时
-          Timeout.add_seconds (5, () => {
+          var cancellable = new Cancellable ();
+          var timeout_id = Timeout.add_seconds_once (5, () => {
               cancellable.cancel ();
-              return false;
           });
 
           try {
               var stream = yield file.read_async (Priority.DEFAULT, cancellable);
               // ...
           } catch (Error e) {
+              // ...
+          } finally {
               // ...
           }
       }
@@ -347,8 +349,6 @@ drawing_area.add_controller (click_controller);
     ```
 *   **时区冲突处理**
     在自动定位时，网络服务返回的时区信息可能与用户系统当前设置的时区不同。为了提供更好的用户体验，应用会检测这种差异。如果发现网络时区与系统时区不一致，应用会弹出一个 `Adw.AlertDialog` （详见后文）对话框，询问用户希望使用哪个时区。用户选择后，应用会根据用户的决定更新时区设置。这种交互通过 `yield dialog.choose(window, null)` 实现，它会异步等待用户的选择，并在用户做出选择后继续执行代码。
-*   **UI 更新**
-    所有 GTK 控件的更新都必须在主线程中进行。由于异步方法的回调可能在其他线程中执行，我们使用 `Idle.add()` 来安全地将 UI 更新操作（如设置 `SpinRow` 的值）调度回主线程执行。
 
 ### 错误处理与用户交互：`Adw.AlertDialog`
 
@@ -448,7 +448,7 @@ private async void handle_timezone_mismatch (double network_tz_offset, double lo
 
 /**
  * Solar Angle Calculator Application.
- *
+ * Copyright (C) 2025 wszqkzqk <wszqkzqk@qq.com>
  * A libadwaita application that calculates and visualizes solar elevation angles
  * throughout the day for a given location and date. The application provides
  * an interactive interface for setting latitude, longitude, timezone, and date,
@@ -465,19 +465,21 @@ public class SolarAngleApp : Adw.Application {
     private const int MARGIN_TOP = 50;
     private const int MARGIN_BOTTOM = 70;
 
-    private Adw.ApplicationWindow window;
-    private Gtk.DrawingArea drawing_area;
-    private Gtk.Label click_info_label;
+    // Model / persistent state
     private DateTime selected_date;
     private double sun_angles[RESOLUTION_PER_MIN];
     private double latitude = 0.0;
     private double longitude = 0.0;
     private double timezone_offset_hours = 0.0;
+    // Interaction / transient UI state
     private double clicked_time_hours = 0.0;
     private double corresponding_angle = 0.0;
     private bool has_click_point = false;
 
-    // Location detection widgets
+    // UI widgets
+    private Adw.ApplicationWindow window;
+    private Gtk.DrawingArea drawing_area;
+    private Gtk.Label click_info_label;
     private Gtk.Stack location_stack;
     private Gtk.Spinner location_spinner;
     private Gtk.Button location_button;
@@ -487,43 +489,35 @@ public class SolarAngleApp : Adw.Application {
 
     // Color theme struct for chart drawing
     private struct ThemeColors {
-        // Background colors
-        double bg_r; double bg_g; double bg_b;
-        // Grid colors with alpha
-        double grid_r; double grid_g; double grid_b; double grid_a;
-        // Axis colors
-        double axis_r; double axis_g; double axis_b;
-        // Text colors
-        double text_r; double text_g; double text_b;
-        // Curve colors
-        double curve_r; double curve_g; double curve_b;
-        // Shaded area colors with alpha
-        double shade_r; double shade_g; double shade_b; double shade_a;
-        // Click point colors
-        double point_r; double point_g; double point_b;
-        // Guide line colors with alpha
-        double line_r; double line_g; double line_b; double line_a;
+        double bg_r; double bg_g; double bg_b; // Background
+        double grid_r; double grid_g; double grid_b; double grid_a; // Grid with alpha
+        double axis_r; double axis_g; double axis_b; // Axes
+        double text_r; double text_g; double text_b; // Text
+        double curve_r; double curve_g; double curve_b; // Curve
+        double shade_r; double shade_g; double shade_b; double shade_a; // Shaded area with alpha
+        double point_r; double point_g; double point_b; // Click point
+        double line_r; double line_g; double line_b; double line_a; // Guide line with alpha
     }
 
-    // Light theme color constants
-    private ThemeColors LIGHT_THEME = {
+    // Light theme
+    private static ThemeColors LIGHT_THEME = {
         bg_r: 1.0, bg_g: 1.0, bg_b: 1.0,                    // White background
         grid_r: 0.5, grid_g: 0.5, grid_b: 0.5, grid_a: 0.5, // Gray grid
         axis_r: 0.0, axis_g: 0.0, axis_b: 0.0,              // Black axes
         text_r: 0.0, text_g: 0.0, text_b: 0.0,              // Black text
-        curve_r: 1.0, curve_g: 0.5, curve_b: 0.0,           // Red curve
+        curve_r: 1.0, curve_g: 0.5, curve_b: 0.0,           // Orange curve
         shade_r: 0.7, shade_g: 0.7, shade_b: 0.7, shade_a: 0.3, // Light gray shade
         point_r: 0.0, point_g: 0.0, point_b: 1.0,           // Blue point
         line_r: 0.0, line_g: 0.0, line_b: 1.0, line_a: 0.5  // Blue guide lines
     };
 
-    // Dark theme color constants
-    private ThemeColors DARK_THEME = {
+    // Dark theme
+    private static ThemeColors DARK_THEME = {
         bg_r: 0.0, bg_g: 0.0, bg_b: 0.0,                    // Black background
-        grid_r: 0.5, grid_g: 0.5, grid_b: 0.5, grid_a: 0.5, // Light gray grid
+        grid_r: 0.5, grid_g: 0.5, grid_b: 0.5, grid_a: 0.5, // Gray grid
         axis_r: 1.0, axis_g: 1.0, axis_b: 1.0,              // White axes
         text_r: 1.0, text_g: 1.0, text_b: 1.0,              // White text
-        curve_r: 1.0, curve_g: 0.5, curve_b: 0.0,           // Bright red curve
+        curve_r: 1.0, curve_g: 0.5, curve_b: 0.0,           // Orange curve
         shade_r: 0.3, shade_g: 0.3, shade_b: 0.3, shade_a: 0.7, // Dark gray shade
         point_r: 0.3, point_g: 0.7, point_b: 1.0,           // Light blue point
         line_r: 0.3, line_g: 0.7, line_b: 1.0, line_a: 0.7  // Light blue guide lines
@@ -563,11 +557,7 @@ public class SolarAngleApp : Adw.Application {
             active = style_manager.dark,
         };
         dark_mode_button.toggled.connect (() => {
-            if (dark_mode_button.active) {
-                style_manager.color_scheme = Adw.ColorScheme.FORCE_DARK;
-            } else {
-                style_manager.color_scheme = Adw.ColorScheme.FORCE_LIGHT;
-            }
+            style_manager.color_scheme = (dark_mode_button.active) ? Adw.ColorScheme.FORCE_DARK : Adw.ColorScheme.FORCE_LIGHT;
             drawing_area.queue_draw ();
         });
 
@@ -806,86 +796,81 @@ public class SolarAngleApp : Adw.Application {
      */
     private async void get_location_async () throws IOError {
         var file = File.new_for_uri ("https://ipapi.co/json/");
-        var cancellable = new Cancellable ();
+        var parser = new Json.Parser ();
 
-        // Set up a 5-second timeout
-        Timeout.add_seconds (5, () => {
+        var cancellable = new Cancellable ();
+        var timeout_id = Timeout.add_seconds_once (5, () => {
             cancellable.cancel ();
-            return false;
         });
 
         try {
             var stream = yield file.read_async (Priority.DEFAULT, cancellable);
-            var parser = new Json.Parser ();
             yield parser.load_from_stream_async (stream, cancellable);
-
-            var root_object = parser.get_root ().get_object ();
-            if (root_object.get_boolean_member_with_default ("error", false)) {
-                throw new IOError.FAILED ("Location service error: %s", root_object.get_string_member_with_default ("reason", "Unknown error"));
-            }
-
-            if (root_object.has_member ("latitude") && root_object.has_member ("longitude")) {
-                latitude = root_object.get_double_member ("latitude");
-                longitude = root_object.get_double_member ("longitude");
-            } else {
-                throw new IOError.FAILED ("No coordinates found in the response");
-            }
-
-            double network_tz_offset = 0.0;
-            bool has_network_tz = false;
-
-            if (root_object.has_member ("utc_offset")) {
-                var offset_str = root_object.get_string_member ("utc_offset");
-                network_tz_offset = double.parse (offset_str) / 100.0;
-                has_network_tz = true;
-            }
-
-            // Get local system's current timezone offset
-            var timezone = new TimeZone.local ();
-            var time_interval = timezone.find_interval (GLib.TimeType.UNIVERSAL, selected_date.to_unix ());
-            var local_tz_offset = timezone.get_offset (time_interval) / 3600.0;
-
-            const double TZ_EPSILON = 0.01; // Epsilon for floating point comparison
-            if (has_network_tz && (!(-TZ_EPSILON < (network_tz_offset - local_tz_offset) < TZ_EPSILON))) {
-                const string RESPONSE_NETWORK = "network"; // ID for network timezone
-                const string RESPONSE_LOCAL = "local"; // ID for local timezone
-
-                // Timezones differ, prompt user for a choice
-                var dialog = new Adw.AlertDialog (
-                    "Timezone Mismatch",
-                    "The timezone from the network (UTC%+.2f) differs from your system's timezone (UTC%+.2f).\n\nWhich one would you like to use?".printf (
-                        network_tz_offset,
-                        local_tz_offset
-                    )
-                );
-                dialog.add_response (RESPONSE_NETWORK, "Use Network Timezone");
-                dialog.add_response (RESPONSE_LOCAL, "Use System Timezone");
-                dialog.default_response = RESPONSE_NETWORK;
-
-                // Asynchronously wait for the user's choice
-                string choice = yield dialog.choose (window, null);
-
-                if (choice == RESPONSE_NETWORK) {
-                    timezone_offset_hours = network_tz_offset;
-                } else {
-                    timezone_offset_hours = local_tz_offset;
-                }
-            } else {
-                // Network's timezone is the same as local's or unavailable
-                timezone_offset_hours = local_tz_offset;
-            }
-
-            Idle.add (() => {
-                latitude_row.value = latitude;
-                longitude_row.value = longitude;
-                timezone_row.value = timezone_offset_hours;
-                update_plot_data ();
-                drawing_area.queue_draw ();
-                return false;
-            });
         } catch (Error e) {
             throw new IOError.FAILED ("Failed to get location: %s", e.message);
+        } finally {
+            // MUST free the timeout here (local variable `cancellable` is NOT owned by Timeout)
+            if (!cancellable.is_cancelled ()) {
+                Source.remove (timeout_id);
+            }
         }
+
+        var root_object = parser.get_root ().get_object ();
+        if (root_object.get_boolean_member_with_default ("error", false)) {
+            throw new IOError.FAILED ("Location service error: %s", root_object.get_string_member_with_default ("reason", "Unknown error"));
+        }
+
+        if (root_object.has_member ("latitude") && root_object.has_member ("longitude")) {
+            latitude = root_object.get_double_member ("latitude");
+            longitude = root_object.get_double_member ("longitude");
+        } else {
+            throw new IOError.FAILED ("No coordinates found in the response");
+        }
+
+        double network_tz_offset = 0.0;
+        bool has_network_tz = false;
+
+        if (root_object.has_member ("utc_offset")) {
+            var offset_str = root_object.get_string_member ("utc_offset");
+            network_tz_offset = double.parse (offset_str) / 100.0;
+            has_network_tz = true;
+        }
+
+        // Get local system's current timezone offset
+        var timezone = new TimeZone.local ();
+        var time_interval = timezone.find_interval (GLib.TimeType.UNIVERSAL, selected_date.to_unix ());
+        var local_tz_offset = timezone.get_offset (time_interval) / 3600.0;
+
+        const double TZ_EPSILON = 0.01; // Epsilon for floating point comparison
+        if (has_network_tz && (!(-TZ_EPSILON < (network_tz_offset - local_tz_offset) < TZ_EPSILON))) {
+            const string RESPONSE_NETWORK = "network"; // ID for network timezone
+            const string RESPONSE_LOCAL = "local"; // ID for local timezone
+
+            // Timezones differ, prompt user for a choice
+            var dialog = new Adw.AlertDialog (
+                "Timezone Mismatch",
+                "The timezone from the network (UTC%+.2f) differs from your system's timezone (UTC%+.2f).\n\nWhich one would you like to use?".printf (
+                    network_tz_offset,
+                    local_tz_offset
+                )
+            );
+            dialog.add_response (RESPONSE_NETWORK, "Use Network Timezone");
+            dialog.add_response (RESPONSE_LOCAL, "Use System Timezone");
+            dialog.default_response = RESPONSE_NETWORK;
+
+            // Asynchronously wait for the user's choice
+            unowned var choice = yield dialog.choose (window, null);
+            timezone_offset_hours = (choice == RESPONSE_NETWORK) ? network_tz_offset : local_tz_offset;
+        } else {
+            // Network's timezone is the same as local's or unavailable
+            timezone_offset_hours = local_tz_offset;
+        }
+
+        latitude_row.value = latitude;
+        longitude_row.value = longitude;
+        timezone_row.value = timezone_offset_hours;
+        update_plot_data ();
+        drawing_area.queue_draw ();
     }
 
     /**
