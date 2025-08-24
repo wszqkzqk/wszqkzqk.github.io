@@ -108,6 +108,13 @@ def create_binary_symlink(source_binary, target_name):
 接下来，我们使用 Meson 的 `custom_target` 在构建时调用上述 Python 脚本，为每一个别名生成对应的文件。
 
 ```
+# meson.build
+...
+# 获取 Python 解释器
+python = import('python').find_installation()
+```
+
+```
 # src/meson.build
 
 symlink_script = meson.project_source_root() / 'scripts' / 'create-binary-symlinks.py'
@@ -136,9 +143,18 @@ endforeach
 
 ### 解决安装阶段的陷阱
 
-最棘手的部分在于安装。Meson 的 `custom_target` 在处理符号链接的安装时存在一些问题（参见 [Meson issue #12710](https://github.com/mesonbuild/meson/issues/12710)）。如果直接在 `custom_target` 中设置 `install: true`，Meson 会将符号链接解引用，安装其指向的源文件，而不是链接本身。这就破坏了我们的设计，没有达到在类Unix平台上使用软链接的目的。
+最棘手的部分在于安装。Meson 的 `custom_target` 在处理符号链接的安装时存在一些问题。如果直接在 `custom_target` 中设置 `install: true`，Meson 在目前的默认行为下（`follow_symlinks: true`）会将符号链接解引用，安装其指向的源文件，而不是链接本身；由于Meson以后的默认行为会改为`follow_symlinks: false`，我们还会收到一个警告：
 
-为了绕过这个坑，笔者采用了分平台处理的策略：
+```log
+Warning: trying to copy a symlink that points to a file. This currently copies
+the file by default, but will be changed in a future version of Meson to copy
+the link instead.  Set follow_symlinks to true to preserve current behavior, or
+false to copy the link.
+```
+
+而Meson目前又**不支持在`custom_target`中设定`follow_symlinks`参数**。这就破坏了我们的设计，没有达到在类Unix平台上使用软链接的目的。（参见 [Meson issue #12710](https://github.com/mesonbuild/meson/issues/12710)）
+
+为了绕过这个坑，笔者在`meson.build`中仍采用了分平台处理的策略：
 
 ```
 # src/meson.build (在 foreach 循环内部)
@@ -169,6 +185,13 @@ endforeach
 ### 集成 Man Page 生成
 
 既然我们在安装阶段有了多个“可执行文件”，通过 `help2man` 和 `custom_target`，我们便很容易为所有主程序和别名生成文档。
+
+```
+# meson.build
+...
+# 获取 help2man 程序
+help2man_prog = find_program('help2man', required: get_option('manpages'))
+```
 
 ```
 # src/meson.build
