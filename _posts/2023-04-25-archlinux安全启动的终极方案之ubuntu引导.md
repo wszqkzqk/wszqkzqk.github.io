@@ -6,7 +6,7 @@ date:       2023-04-25
 author:     wszqkzqk
 header-img: img/Linux-distro-logo/archlinux.webp
 catalog:    true
-tags:       开源软件 系统引导 系统配置 系统安装
+tags:       开源软件 系统引导 系统配置 系统安装 GRUB
 ---
 
 ## 前言

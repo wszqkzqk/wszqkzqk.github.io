@@ -6,7 +6,7 @@ date:       2023-05-04
 author:     wszqkzqk
 header-img: img/ventoy/ventoy_bg.webp
 catalog:    true
-tags:       开源软件 系统安装 系统配置 系统引导
+tags:       开源软件 系统安装 系统配置 系统引导 GRUB
 ---
 
 ## 前言
