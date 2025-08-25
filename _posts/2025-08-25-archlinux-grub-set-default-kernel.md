@@ -44,7 +44,7 @@ GRUB_DEFAULT=saved
 GRUB_SAVEDEFAULT=true
 ```
 
-然而，对于`/boot`分区在Btrfs上的情况，由于GRUB至今仍只有对Btrfs的只读支持，这一方法**并不适用**。（其他文件系统要么根本不支持，要么有读写支持，仅Btrfs一个特例）
+然而，对于`/boot`分区在Btrfs上的情况，由于GRUB至今仍只有对Btrfs的只读支持，这一方法**并不适用**。（其他文件系统要么根本不支持，要么有读写支持，仅Btrfs一个特例）目前我们无法在GRUB中向位于Btrfs下的`/boot/grub/grubenv`写入内容。
 
 ### 手动指定默认启动项
 
@@ -82,7 +82,7 @@ menuentry 'Arch Linux，使用 Linux linux-zen' --class arch --class gnu-linux -
 
 由于GRUB可以**读取**Btrfs的内容，`GRUB_DEFAULT=saved`仍然会生效，只是我们**无法**通过`GRUB_SAVEDEFAULT=true`来**保存**上次的选择。（故此时**不应**添加`GRUB_SAVEDEFAULT=true`这一参数）
 
-然而，我们仍然可以手动运行`grub-set-default`命令来设置默认启动项，支持设置的参数与[手动指定默认启动项](#手动指定默认启动项)这一小节完全相同，支持数字、启动项标题，和启动项的标识符三种形式。例如：
+然而，我们仍然可以手动运行`grub-set-default`命令来设置默认启动项，Linux下是有Btrfs的读写支持的，在Linux操作系统内当然可以正常修改`/boot/grub/grubenv`。该方法支持设置的参数与[手动指定默认启动项](#手动指定默认启动项)这一小节完全相同，支持数字、启动项标题，和启动项的标识符三种形式。例如：
 
 ```bash
 sudo grub-set-default 'gnulinux-linux-zen-advanced-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
