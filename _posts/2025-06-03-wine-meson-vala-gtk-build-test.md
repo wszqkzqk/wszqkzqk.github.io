@@ -133,9 +133,9 @@ wine meson compile -C release
 
 ### `msys`环境的依赖解决
 
-#### 禁用文档生成（推荐）
+#### 禁用依赖`msys`环境的功能
 
-很多构建失败往往是文档等内容依赖了`msys`环境下的工具（如`help2man`）等。因为Wine目前无法运行依赖`msys-2.0.dll`的程序，我们并没有将`msys`环境的路径添加到Wine中，因此会找不到对应的程序而报错。此时可以通过关闭相关文档生成选项来解决。
+很多构建失败往往是依赖了`msys`环境下的工具（常见于文档等工具，如`help2man`）等。因为Wine目前无法运行依赖`msys-2.0.dll`的程序，我们并没有将`msys`环境的路径添加到Wine中，因此会找不到对应的程序而报错。此时可以通过关闭相关文档生成选项来解决。
 
 ```bash
 wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation=disabled
