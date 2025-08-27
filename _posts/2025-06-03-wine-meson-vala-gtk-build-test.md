@@ -147,7 +147,7 @@ wine meson setup release --buildtype=release -Dmanpages=disabled -Ddocumentation
 
 由于`msys`中的工具都是POSIX下常用工具的移植版本，因此在Linux下也可以找到类似的工具来代替。比如`help2man`可以使用Linux下的`help2man`命令来代替，或者直接使用`pandoc`等工具来生成文档。可以在构建的时候临时将Linux的`/usr/bin`路径添加到Wine的`Path`的末尾。
 
-不过这样做可能存在潜在风险，可能会导致某些工具的行为与预期不符，因此需要谨慎使用。
+不过这样做可能存在潜在风险，可能会导致某些工具的行为与预期不符，因此需要谨慎使用。（最大的问题可能是Linux原生工具不接受Wine路径）
 
 ## 在Wine中测试
 
