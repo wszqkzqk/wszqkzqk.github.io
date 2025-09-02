@@ -88,7 +88,7 @@ menuentry 'Arch Linux，使用 Linux linux-zen' --class arch --class gnu-linux -
 sudo grub-set-default 'gnulinux-linux-zen-advanced-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
 ```
 
-手动在支持Btrfs读写的Linux操作系统中设置后，在重启时，GRUB会读取Btrfs上的配置，遵守用户对默认启动项的设置。
+手动在支持Btrfs读写的Linux操作系统中设置后，在重启时，GRUB会读取Btrfs上的配置，遵守用户对默认启动项的设置。这一过程完全**没有要求GRUB**对Btrfs进行写入。
 
 ## 提醒与总结
 
