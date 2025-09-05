@@ -873,6 +873,41 @@ done
   ```
   这样可以覆盖原`check()`函数以便跳过`check()`阶段，并且输出了跳过`check()`阶段的详细原因，方便其他开发者了解。
 
+## GO语言程序构建中遇到无信息的失败怎么办？
+
+有时候GO程序在构建的时候会无信息地失败（尤其是构建依赖链的时候），找不到排查的线索。此时我们可以关注构建命令，看看`go build`命令是不是传递了`-v`参数，如果存在，可以尝试去掉`-v`参数再进行构建，此时一般会输出具体的失败位置，例如在`vehicle-command`这个软件包的`PKGBUILD`中，将`go build -v -o build -ldflags "-compressdwarf=false -linkmode external" ./...`中的`-v`去掉：
+
+```log
+# github.com/cronokirby/saferith                                                          
+../pkg/mod/github.com/cronokirby/saferith@v0.33.0/arith_decl.go:11:6: missing function body
+../pkg/mod/github.com/cronokirby/saferith@v0.33.0/arith_decl.go:12:6: missing function body  
+../pkg/mod/github.com/cronokirby/saferith@v0.33.0/arith_decl.go:13:6: missing function body
+../pkg/mod/github.com/cronokirby/saferith@v0.33.0/arith_decl.go:14:6: missing function body
+../pkg/mod/github.com/cronokirby/saferith@v0.33.0/arith_decl.go:15:6: missing function body 
+../pkg/mod/github.com/cronokirby/saferith@v0.33.0/arith_decl.go:16:6: missing function body
+../pkg/mod/github.com/cronokirby/saferith@v0.33.0/arith_decl.go:17:6: missing function body
+../pkg/mod/github.com/cronokirby/saferith@v0.33.0/arith_decl.go:18:6: missing function body                                                                                           
+../pkg/mod/github.com/cronokirby/saferith@v0.33.0/arith_decl.go:19:6: missing function body                                                                                           
+```
+
+这里就可以看到具体的错误信息了。错误发生在`github.com/cronokirby/saferith`这个依赖中。这很可能是依赖版本过低，尚未支持loong64平台。
+
+我们可以查看该仓库，检索对loong64支持的情况。如果存在**支持**的**版本**或者**提交**，则可以在`PKGBUILD`的`go build`命令前插入升级依赖的命令，例如修改到特定提交：
+
+```bash
+go mod edit -replace=github.com/cronokirby/saferith=github.com/cronokirby/saferith@1f11f94ce4880e030f853dcdd85d7f115626f00b
+go mod tidy
+```
+
+或者修改到特定版本：
+
+```bash
+go mod edit -replace=github.com/creack/goselect=github.com/creack/goselect@v0.1.3
+go mod tidy
+```
+
+当然，如果上游并没有支持loong64的版本或者提交，则可以自行fork并修复，再向上游提交PR。如果上游暂时没有合并，则同样可以在`PKGBUILD`中通过`go mod edit -replace=...`来使用我们自己的fork。
+
 # 更多阅读材料
 
 * [龙芯的Arch Linux移植工作流程 by wszqkzqk](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)
