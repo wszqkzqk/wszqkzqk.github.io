@@ -11,7 +11,11 @@ tags:       Wine archlinux 系统配置 开源软件 Vala
 
 ## 前言
 
-在某些场景下，Wine的行为可能与Windows存在不同，可能会要求我们单独适配。Wine官方建议我们仅**检测功能支持情况**，而[**不应当**检测**是否在Wine中运行**](https://gitlab.winehq.org/wine/wine/-/wikis/Developer-FAQ#how-can-i-detect-wine)。然而，有时检测功能支持的API行为可能也不符合预期，存在“假阳性”或“假阴性”的情况。因此，在某些场合下，我们可能需要**检测程序是否在Wine中运行**，以便进行特定的处理。
+某些时候，我们可能希望程序能够检测自身是否在**Wine**环境下运行。部分开发者可能需要据此做一个环境的统计，分析通过Wine运行程序的用户比例。
+
+然而，对于功能适配，Wine官方建议我们仅**检测功能支持情况**，而[**不应当**检测**是否在Wine中运行**](https://gitlab.winehq.org/wine/wine/-/wikis/Developer-FAQ#how-can-i-detect-wine)。本文介绍的方法仅为暂时可行的技术手段，但**任何**检测程序在Wine下运行的方法都**不受Wine官方推荐**，并且将来可能会在没有任何警告的情况下失效。
+
+本文介绍了几种在不同编程语言中检测程序是否在Wine环境下运行的方法，可供有需要的开发者参考。
 
 ## 原理
 
@@ -25,6 +29,7 @@ tags:       Wine archlinux 系统配置 开源软件 Vala
 
 ```c
 #include <stdio.h>
+
 #include <windows.h>
 
 BOOL is_running_under_wine() {
@@ -75,7 +80,7 @@ if __name__ == "__main__":
 Vala中如果要直接使用Windows API，一般需要自己写VAPI或者声明`extern`函数，可能不那么方便，因此笔者不推荐这种方式。笔者建议直接使用GLib中**GModule**实现的**动态库加载**功能来检测：
 
 ```vala
-private static bool is_wine () {
+private static bool is_running_under_wine () {
     void* symbol;
     Module? module = Module.open ("ntdll.dll", ModuleFlags.LAZY);
     if (module == null) {
@@ -85,7 +90,7 @@ private static bool is_wine () {
 }
 
 void main () {
-    if (is_wine ()) {
+    if (is_running_under_wine ()) {
         print ("Running under Wine\n");
     } else {
         print ("Not running under Wine\n");
@@ -98,7 +103,7 @@ void main () {
 下面的代码还进一步展示了如何获取Wine的版本号：
 
 ```vala
-private static bool is_wine () {
+private static bool is_running_under_wine () {
     void* symbol;
     Module? module = Module.open ("ntdll.dll", ModuleFlags.LAZY);
     if (module == null) {
@@ -127,7 +132,7 @@ private static string? get_wine_version () {
 }
 
 void main () {
-    if (is_wine ()) {
+    if (is_running_under_wine ()) {
         print ("Running under Wine\n");
         string? version = get_wine_version ();
         if (version != null) {
@@ -139,11 +144,11 @@ void main () {
 }
 ```
 
-这段Vala代码定义了两个函数：`is_wine`用于检测是否在Wine中运行，`get_wine_version`用于获取Wine的版本号。对于`get_wine_version`函数，笔者在这里还声明了一个`WineVersionFunc`的委托类型，以便将获取到的符号转换为函数指针并调用。
+这段Vala代码定义了两个函数：`is_running_under_wine`用于检测是否在Wine中运行，`get_wine_version`用于获取Wine的版本号。对于`get_wine_version`函数，笔者在这里还声明了一个`WineVersionFunc`的委托类型，以便将获取到的符号转换为函数指针并调用。
 
 ## 背后的故事
 
-笔者写这一篇文章的初衷，实际上是因为在使用Vala编写的命令行程序中遇到了一个问题：**在Wine环境下输出ANSI转义序列会导致输出混乱**。
+笔者写这一篇文章的初衷，实际上并非是想统计Wine使用情况，而是因为在使用Vala编写的命令行程序中遇到了一个问题：**在Wine环境下输出ANSI转义序列会导致输出混乱**。
 
 Windows自Windows 10 1511开始已经支持了ANSI转义序列（ANSI Escape Code Sequence），可以在命令行中使用颜色等功能。然而，在Wine中运行的程序如果直接用标准库的输出函数（如`printf`、`puts`等）输出ANSI转义序列时，无法正确显示颜色等效果，只会显示原始的转义序列，造成输出混乱。
 
@@ -151,6 +156,13 @@ Windows自Windows 10 1511开始已经支持了ANSI转义序列（ANSI Escape Cod
 
 因此，笔者一度计划使用上述的检测方法来判断程序是否在Wine中运行，从而在决定是否输出ANSI转义序列时进行特殊处理，避免在Wine下输出ANSI转义序列导致的输出混乱问题。
 
-然而，考虑到Wine官方对于检测Wine的态度，笔者一直没有实施这一计划。
+然而，考虑到Wine官方[对于检测Wine的态度](https://gitlab.winehq.org/wine/wine/-/wikis/Developer-FAQ#how-can-i-detect-wine)，笔者**一直没有实施**这一计划。
 
-最近，GLib发布了2.86.0版本，修复了`g_print`（`print`）等函数在Windows下的字符集编码问题，补充了正确的编码转化过程。现在，虽然在Wine下标准的输出函数仍然无法正确处理ANSI转义序列，但GLib提供的输出函数**已经可以正确处理ANSI转义序列**，可以正确显示颜色等效果。因此，笔者最终是将程序的输出函数从标准库的函数改为GLib的实现，从而解决了在Wine下输出ANSI转义序列的问题，实际上从未引入是否在Wine中运行的检测。
+> #### How can I detect Wine?
+> This is a bad idea. The goal of Wine is to be compatible enough that an
+application should see no difference in behavior, and therefore should
+not apply any workarounds, different paths, etc. So any method to detect
+running under Wine is unsupported and may break without warning in the
+future.
+
+幸运的是，笔者遇到的这一问题在现在已能够得到妥善解决。目前，GLib已经发布了2.86.0版本，修复了`g_print`（`print`）等函数在Windows下的字符集编码问题，补充了正确的**编码转化**过程。现在，虽然在Wine下标准的输出函数仍然无法正确处理ANSI转义序列，但**GLib提供的输出函数已经可以在Windows下正确处理ANSI转义序列**，可以正确显示颜色等效果。因此，笔者最终是将程序的输出函数从标准库的函数改为GLib的实现，从而解决了在Wine下输出ANSI转义序列的问题，实际上从未引入是否在Wine中运行的检测。
