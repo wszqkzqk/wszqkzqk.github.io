@@ -6,7 +6,7 @@ date:       2023-09-16
 author:     wszqkzqk
 header-img: img/stellarium/stellarium-bg.webp
 catalog:    true
-tags:       开源软件 社团活动
+tags:       开源软件
 ---
 
 ## 前言

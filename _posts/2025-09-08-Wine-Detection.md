@@ -98,7 +98,7 @@ void main () {
 }
 ```
 
-程序使用GModule中统一实现的`Module.open`方法加载`ntdll.dll`模块，然后检查是否存在`wine_get_version`符号，更符合GLib/Vala程序的风格，也更加简洁。
+程序使用GModule中统一实现的跨平台`Module.open`方法加载`ntdll.dll`模块，然后检查是否存在`wine_get_version`符号，更符合GLib/Vala程序的风格，也更加简洁。
 
 下面的代码还进一步展示了如何获取Wine的版本号：
 
