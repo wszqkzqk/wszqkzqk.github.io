@@ -328,7 +328,10 @@ drawing_area.add_controller (click_controller);
           } catch (Error e) {
               // ...
           } finally {
-              // ...
+              // 取消超时回调
+              if (!cancellable.is_cancelled ()) {
+                  Source.remove (timeout_id);
+              }
           }
       }
       ```
