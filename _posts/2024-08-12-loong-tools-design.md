@@ -147,6 +147,12 @@ get-loong64-pkg erofs-utils
 cd erofs-utils
 ```
 
+为了明确软件包的构建者信息，方便追踪问题，建议**在构建前设置环境变量**`PACKAGER`，明确构建者身份，例如：
+
+```bash
+export PACKAGER="Your Name <you@example.com>"
+```
+
 一般来说，软件包的构建命令是`extra-loong64-build`。由于原软件包`PKGBUILD`是针对x86_64的，其`arch`数组并不包含`loong64`，未经修改并不能够直接用无参数的`extra-loong64-build`构建。虽然说修改`arch`数组也可以算是需要针对`PKGBUILD`的patch，但是我们默认在我们的移植中，所有`arch`字段不为`any`的软件包的`arch`字段都应该包含`loong64`，因此对`arch`的修改**不应当**出现在维护的patch中。
 
 对此，我们可以有两种选择，一种是先修改`PKGBUILD`，将`loong64`添加到`arch`数组中，然后再使用`extra-loong64-build`构建（如果需要导出补丁则需要改回来，不推荐）。
