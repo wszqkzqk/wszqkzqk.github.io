@@ -192,6 +192,10 @@ qemu-system-loongarch64 \
 * `-bios ./QEMU_EFI.fd`：指定QEMU使用的EFI固件
   * 该固件可以在本项目的`edk2-loongarch64`软件包中获取
   * 在镜像站中下载该软件包，解压后可以在解压后目录下的`usr/share/edk2/loongarch64/QEMU_EFI.fd`找到
+  * 如果不想在镜像站中手动寻找或者手动拉取，可以通过这条命令一键下载：
+    ```bash
+    wget "https://loongarchlinux.lcpu.dev/loongarch/archlinux/extra/os/loong64/$(curl -s https://loongarchlinux.lcpu.dev/loongarch/archlinux/extra/os/loong64/ | grep -o 'href="edk2-loongarch64[^"]*\.pkg\.tar\.zst"' | sed 's/.*href=\"//; s/\"$//')"
+    ```
   * 此外，由于`edk2-loongarch64`是`any`包，也可以直接在非`loong64`架构的机器上安装该软件包
 * `-hda <path-to-your-image>`：指定虚拟机使用的qcow2镜像
 * `-virtfs local,path=<path-to-your-sharing-directory>,mount_tag=host0,security_model=passthrough,id=host0`：将宿主机的目录目录共享给虚拟机
