@@ -198,6 +198,8 @@ qemu-system-loongarch64 \
 
 如果不需要启动GUI，**只在终端中操作**,可以去掉`-serial stdio`,并**加入`-nographic`参数**。
 
+如果在启动早期（例如加载了initramfs后）即发生内核panic，日志难以查看，可以在内核参数中加入`console=ttyS0`来将日志输出到串口，随后可以在启动QEMU的终端中查看日志。例如，如果使用的是GRUB引导，可以在GRUB的启动项中按`e`键编辑内核参数，在`linux`开头这行的末尾添加`console=ttyS0`，然后按`Ctrl+X`启动即可。
+
 对于需要传递给虚拟机的软件包，可以复制或者`bind mount`到共享目录下，供虚拟机使用。
 
 在虚拟机中，可以使用以下命令挂载共享目录：
