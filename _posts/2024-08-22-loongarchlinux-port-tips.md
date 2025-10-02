@@ -173,7 +173,7 @@ qemu-system-loongarch64 \
     -m 6G \
     -cpu la464-loongarch-cpu \
     -machine virt \
-    -smp 16 \
+    -smp $(nproc) \
     -bios ./QEMU_EFI.fd \
     -serial stdio \
     -device virtio-gpu-pci \
