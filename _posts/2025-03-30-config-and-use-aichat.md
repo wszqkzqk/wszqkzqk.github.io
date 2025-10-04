@@ -44,7 +44,7 @@ pacman -S mingw-w64-ucrt-x86_64-aichat
 ```yaml
 compress_threshold: 100000
 
-model: chutes:deepseek-ai/DeepSeek-V3-0324
+model: openrouter:deepseek/deepseek-chat-v3.1:free
 clients:
 - type: gemini
   api_key: xxxxxx
@@ -58,14 +58,13 @@ clients:
       max_input_tokens: 163840
       max_output_tokens: 163840
       supports_function_calling: true
-    - name: deepseek/deepseek-r1:free
+    - name: deepseek/deepseek-r1-0528:free
       max_input_tokens: 163840
       max_output_tokens: 163840
-    # Google Gemini
-    - name: google/gemini-2.5-pro-exp-03-25
-      max_input_tokens: 1000000
-      max_output_tokens: 65536
-      supports_vision: true
+      supports_function_calling: true
+    - name: deepseek/deepseek-chat-v3.1:free
+      max_input_tokens: 64000
+      max_output_tokens: 64000
       supports_function_calling: true
     # Meta
     - name: meta-llama/llama-4-maverick:free
@@ -73,9 +72,14 @@ clients:
       max_output_tokens: 256000
       supports_vision: true
     # Qwen
-    - name: qwen/qwen3-235b-a22b:free
-      max_input_tokens: 40960
-      max_output_tokens: 40960
+    - name: qwen/qwen3-coder:free
+      max_input_tokens: 262144
+      max_output_tokens: 262144
+      supports_function_calling: true
+    # MoonshotAI
+    - name: moonshotai/kimi-k2:free
+      max_input_tokens: 65536
+      max_output_tokens: 65536
       supports_function_calling: true
 ```
 
