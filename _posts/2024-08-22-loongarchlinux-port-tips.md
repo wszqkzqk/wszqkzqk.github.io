@@ -365,6 +365,26 @@ PR参考示例：[GitHub Google/libultrahdr PR#303](https://github.com/google/li
   * 命令示例：`git checkout -b <package-name>`
   * 开发分支仅用于对应包的补丁提交，不用于同步
 
+为了方便，可以将原仓库的地址添加为`upstream`远程：
+
+```bash
+git remote add upstream https://github.com/lcpu-club/loongarch-packages.git
+```
+
+主分支（`master`）只用于同步上游的`loongarch-packages`的`master`分支：
+
+```bash
+git checkout master
+git pull upstream master --rebase
+```
+
+然后为要修复的包**单独建立**以包名命名的分支：
+
+```bash
+git checkout -b <package-name>
+# 进行后续的提交
+```
+
 # 有关LoongArch64的编译器预定义宏
 
 以下指导原则来自[xen0n](https://github.com/xen0n/)：
