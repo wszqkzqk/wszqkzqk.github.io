@@ -248,10 +248,10 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
   \delta &= 0.006918 \\
       &\quad {}- 0.399912 \cos(\gamma) \\
       &\quad {}+ 0.070257 \sin(\gamma) \\
-      &\quad {}- 0.006758 \cos(2 \times \gamma) \\
-      &\quad {}+ 0.000907 \sin(2 \times \gamma) \\
-      &\quad {}- 0.002697 \cos(3 \times \gamma) \\
-      &\quad {}+ 0.001480 \sin(3 \times \gamma)
+      &\quad {}- 0.006758 \cos(2\gamma) \\
+      &\quad {}+ 0.000907 \sin(2\gamma) \\
+      &\quad {}- 0.002697 \cos(3\gamma) \\
+      &\quad {}+ 0.001480 \sin(3\gamma)
   \end{aligned}
   $$
 
@@ -306,7 +306,7 @@ drawing_area.add_controller (click_controller);
 
 自动定位功能是本应用的一个亮点，它完美地展示了 Vala 强大的**异步处理**能力：网络请求是耗时的 I/O 操作，如果我们在主线程中**直接请求**，在收到网络响应前整个应用的 **UI 会被冻结**，这会带来极差的用户体验；因此，我们使用 Vala 的异步编程特性来处理这一问题。
 
-*   **Vala 的 `async` / `yield`**
+*   **Vala 的 `async` / `yield`**：
     Vala 借鉴了 C# 的 `async/await` 语法，使得异步编程像写同步代码一样直观。
     * 我们将网络请求逻辑放在一个 `async` 方法 `get_location_async` 中。
     * 当遇到耗时操作时（如 `file.read_async`），我们使用 `yield` 关键字。这会“暂停”当前方法的执行，将控制权交还给主事件循环（让 UI 保持响应），当 I/O 操作完成后，方法会自动从 `yield` 的地方继续执行。
@@ -335,7 +335,7 @@ drawing_area.add_controller (click_controller);
           }
       }
       ```
-*   **JSON-GLib 解析**
+*   **JSON-GLib 解析**：
     JSON-GLib 提供了一套健壮的 API 来遍历和提取 JSON 结构中的数据，并能很好地处理潜在的错误。获取到网络响应后，我们使用 `Json.Parser` 来解析它。得益于 JSON-GLib 与 GLib/GObject/GIO 生态的强大集成，我们可以直接方便地使用 `parser.load_from_stream_async` 从网络流中异步加载和解析 JSON 数据，无需手动处理字节流。
     ```vala
     var parser = new Json.Parser ();
@@ -350,7 +350,7 @@ drawing_area.add_controller (click_controller);
     }
     // ...
     ```
-*   **时区冲突处理**
+*   **时区冲突处理**：
     在自动定位时，网络服务返回的时区信息可能与用户系统当前设置的时区不同。为了提供更好的用户体验，应用会检测这种差异。如果发现网络时区与系统时区不一致，应用会弹出一个 `Adw.AlertDialog` （详见后文）对话框，询问用户希望使用哪个时区。用户选择后，应用会根据用户的决定更新时区设置。这种交互通过 `yield dialog.choose(window, null)` 实现，它会异步等待用户的选择，并在用户做出选择后继续执行代码。
 
 ### 错误处理与用户交互：`Adw.AlertDialog`
