@@ -17,7 +17,7 @@ tags:       开源软件 GTK Vala
 
 许多入门教程止步于“Hello, World!”或简单控件演示，这样一方面各部分间缺乏组织逻辑，不便进行复杂演示，另一方面也难以指导读者开发一个真正实用、现代、体验良好的应用。本教程将通过一个**完整的项目案例**，带你从需求分析、界面设计、核心算法、异步网络、数据导出等多个维度，系统梳理依托 GLib/GObject 世界生态的 Vala 开发流程。
 
-本教程适合有一定编程基础，希望深入学习 Vala 语言和最新的 GTK4、LibAdwaita 等开发框架，并渴望开发高质量应用的开发者。
+本教程适合有一定编程基础，希望深入学习 Vala 语言和最新的 GTK4、LibAdwaita 等开发框架，并渴望开发高质量应用的开发者。如果你还不熟悉 Vala 语言，可以阅读 [Vala 官方文档](https://docs.vala.dev/)，如果想查阅基础库的使用方法，可以参考 [Valadoc.org 提供的 API 参考](https://valadoc.org/)，也欢迎阅读笔者先前写的 [GTK/Vala 开发基础教程](https://wszqkzqk.github.io/2023/01/19/GTK-Vala-Tutorial/)与 [GTK/Vala 开发基础教程 2](https://wszqkzqk.github.io/2025/02/05/GTK-Vala-Tutorial-2/)。
 
 本教程将以笔者实现的[“太阳高度角计算器”](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangleadw.vala)的完整应用为例，深入剖析其从概念设计到功能实现的每一个环节。这个应用不仅能进行科学计算，还拥有一个使用 LibAdwaita 构建的、支持深色模式的现代化用户界面，并具备异步网络请求、JSON 解析、自定义绘图和文件导出等高级功能。
 
