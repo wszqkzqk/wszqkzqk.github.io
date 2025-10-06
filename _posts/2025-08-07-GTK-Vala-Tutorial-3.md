@@ -1325,7 +1325,7 @@ public class SolarAngleApp : Adw.Application {
 }
 ```
 
-## 番外
+## 番外：白昼时长计算器
 
 用几乎一样的思路，笔者还实现了一个计算某一纬度处全年中每天的白昼时长的程序，代码也在 [GitHub](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala) 上，感兴趣的读者可以参考。
 
