@@ -1360,7 +1360,7 @@ public class SolarAngleApp : Adw.Application {
 * **计算昼长**：通过反余弦函数 `acos` 得到时角 $\omega_0$（以弧度为单位）。由于时角代表的是从正午到日落（或从日出到正午）的时间，根据“均太阳假设”，相同时角近似对应相同时间，所以总昼长对应 $2\omega_0$ 的弧度。最后，将这个弧度值转换为小时单位，即可得到最终的昼长。
 
   $$
-  \text{t (hours)} = \frac{2 \cdot \omega_0}{2\pi} \times 24 = \frac{24 \cdot \omega_0}{\pi}
+  t \text{(hours)} = \frac{2 \cdot \omega_0}{2\pi} \times 24 = \frac{24 \cdot \omega_0}{\pi}
   $$
 
 这种方法在一般应用中已经足够精确，避免了逐分钟的迭代求解，计算效率显著更高。由于篇幅关系，这里就不贴代码了，读者可以参考项目在 [GitHub 上的源代码](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)，其中包含了详细的注释和完整的逻辑。
