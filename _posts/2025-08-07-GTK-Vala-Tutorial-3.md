@@ -238,7 +238,7 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 `generate_sun_angles` 函数是应用计算的核心函数。它基于 [NOAA 赤纬公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF)来计算太阳高度角。这个公式保留了较多傅里叶级数项（三阶正余弦），计算精度较高。
 
 - **日行轨迹组分与年角计算**：
-  - `fractional_day_component = day_of_year - 1 + ((double) i) / RESOLUTION_PER_MIN`：计算一年中的具体时刻（以天为单位，包含小数部分）。
+  - `fractional_day_component = day_of_year - 1 + ((double) i) / RESOLUTION_PER_MIN`：计算一年中的具体时刻（以天为单位，包含小数部分）。这里减去1是为了保证跨年时的连续性，同时也是为了避免重复计入当前日的分数部分，保证符合公式的形式。
   - `gamma_rad = (2.0 * Math.PI / days_in_year) * fractional_day_component`：计算年角（弧度），表示地球在轨道上的精确位置。
 - **太阳赤纬 `δ` 计算**（使用 NOAA 傅里叶级数近似公式）：
   将上述 `gamma_rad` 代入经验公式：
