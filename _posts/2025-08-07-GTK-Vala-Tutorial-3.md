@@ -906,6 +906,7 @@ public class SolarAngleApp : Adw.Application {
 
         for (int i = 0; i < RESOLUTION_PER_MIN; i += 1) {
             // fractional_day_component: day of year plus fraction of the day
+            // -1 to avoid discontinuity at year start (Dec 31 to Jan 1)
             double fractional_day_component = day_of_year - 1 + ((double) i) / RESOLUTION_PER_MIN;
             // gamma: fractional year angle in radians
             double gamma_rad = (2.0 * Math.PI / days_in_year) * fractional_day_component;
