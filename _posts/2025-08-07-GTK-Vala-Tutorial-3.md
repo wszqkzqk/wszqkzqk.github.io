@@ -937,11 +937,7 @@ public class SolarAngleApp : Adw.Application {
             // cos(phi): cosine of zenith angle via spherical trig
             double cos_phi = sin_lat * Math.sin (decl_rad) + cos_lat * Math.cos (decl_rad) * Math.cos (ha_rad);
             // clamp to valid range
-            if (cos_phi > 1.0) {
-                cos_phi = 1.0;
-            } else if (cos_phi < -1.0) {
-                cos_phi = -1.0;
-            }
+            cos_phi = cos_phi.clamp (-1.0, 1.0);
             // Zenith angle phi (rad)
             double phi_rad = Math.acos (cos_phi);
 
