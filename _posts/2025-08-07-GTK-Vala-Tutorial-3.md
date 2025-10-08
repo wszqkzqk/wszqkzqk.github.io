@@ -235,6 +235,12 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 ### 太阳高度角计算
 
+> **【2025年10月更新】**
+>
+> 本文末尾的完整代码已更新为一套更精确、更复杂的天文算法。下面的章节将介绍最初版本中使用的、更简洁直观的 NOAA 近似公式，它依然是理解基本原理的绝佳起点。
+>
+> 如果你对高精度算法的实现细节（如儒略日、黄赤交角、方程时等）感兴趣，请移步阅读我的续篇教程：**[《GTK4/Vala 教程续：提升太阳高度角计算精度》](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation)**。
+
 `generate_sun_angles` 函数是应用计算的核心函数。它基于 [NOAA 赤纬公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF)来计算太阳高度角。这个公式保留了较多傅里叶级数项（三阶正余弦），计算精度较高。
 
 - **日行轨迹组分与年角计算**：
@@ -1321,41 +1327,3 @@ public class SolarAngleApp : Adw.Application {
     }
 }
 ```
-
-## 番外：白昼时长计算器
-
-用几乎一样的思路，笔者还实现了一个计算某一纬度处全年中每天的白昼时长的程序，代码也在 [GitHub](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala) 上，感兴趣的读者可以参考。
-
-### 效果
-
-|[![#~/img/GTK-examples/day-length-pku-light.webp](/img/GTK-examples/day-length-pku-light.webp)](/img/GTK-examples/day-length-pku-light.webp)|[![#~/img/GTK-examples/day-length-chongqing-dark.webp](/img/GTK-examples/day-length-chongqing-dark.webp)](/img/GTK-examples/day-length-chongqing-dark.webp)|
-|:----:|:----:|
-|浅色模式|深色模式|
-
-### 计算方法
-
-这里笔者采用了直接的昼长计算方法，通过公式直接求解，无需迭代。其基本思路如下：
-
-* **计算太阳赤纬**：具体的傅里叶级数公式已在本文[太阳高度角计算](#太阳高度角计算)一节中详细介绍，此处不再赘述。
-* **应用日出/日落时角公式**：太阳高度角、观察者纬度、太阳赤纬和时角（Hour Angle）之间存在一个基本关系，正如前文所述。当太阳处于地平线时（即太阳高度角为地平线修正角，通常取-0.83°以考虑大气折射），我们可以通过该关系反解出此时的太阳时角。公式如下：
-  
-  $$
-  \cos(\omega_0) = \frac{\sin(\alpha) - \sin(\phi)\sin(\delta)}{\cos(\phi)\cos(\delta)}
-  $$
-
-  其中：
-  -   $\omega_0$ 是日出或日落时的太阳时角。
-  -   $\alpha$ 是地平线修正角（Horizon Angle）。
-  -   $\phi$ 是观察者所在地的纬度。
-  -   $\delta$ 是太阳赤纬。
-* **处理边界情况**：防止因为浮点计算误差导致后续的 `acos` 函数返回 `NaN`。
-  -   如果计算出的 $\cos(\omega_0)$ 值大于等于 1，意味着太阳全天都无法升至地平线以上，即出现**极夜**，昼长为 0 小时。
-  -   如果计算出的 $\cos(\omega_0)$ 值小于等于 -1，意味着太阳全天都在地平线以上，即出现**极昼**，昼长为 24 小时。
-  -   对于无效的计算结果 `NaN`，程序会返回一个默认值以保证稳定性。
-* **计算昼长**：通过反余弦函数 `acos` 得到时角 $\omega_0$（以弧度为单位）。由于时角代表的是从正午到日落（或从日出到正午）的时间，根据“均太阳假设”，相同时角近似对应相同时间，所以总昼长对应 $2\omega_0$ 的弧度。最后，将这个弧度值转换为小时单位，即可得到最终的昼长。
-
-  $$
-  t \text{(hours)} = \frac{2 \cdot \omega_0}{2\pi} \times 24 = \frac{24 \cdot \omega_0}{\pi}
-  $$
-
-这种方法在一般应用中已经足够精确，避免了逐分钟的迭代求解，计算效率显著更高。由于篇幅关系，这里就不贴代码了，读者可以参考项目在 [GitHub 上的源代码](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)，其中包含了详细的注释和完整的逻辑。
