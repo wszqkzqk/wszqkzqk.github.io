@@ -897,59 +897,84 @@ public class SolarAngleApp : Adw.Application {
 
     /**
      * Calculates solar elevation angles for each minute of the day.
+     * Based on http://www.jgiesen.de/elevaz/basics/meeus.htm
      *
      * @param latitude_rad Latitude in radians.
-     * @param day_of_year Day of the year (1-365/366).
-     * @param year The year.
      * @param longitude_deg Longitude in degrees.
      * @param timezone_offset_hrs Timezone offset from UTC in hours.
+     * @param julian_date GLib's Julian Date for the day (from 0001-01-01).
      */
-    private void generate_sun_angles (double latitude_rad, int day_of_year, int year, double longitude_deg, double timezone_offset_hrs) {
+    private void generate_sun_angles (double latitude_rad, double longitude_deg, double timezone_offset_hrs, double julian_date) {
         double sin_lat = Math.sin (latitude_rad);
         double cos_lat = Math.cos (latitude_rad);
-
-        double days_in_year = ((year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0))) ? 366.0 : 365.0;
-
+        // Base days from J2000.0 epoch (GLib's Julian Date is days since 0001-01-01 12:00 UTC)
+        double base_days_from_epoch = julian_date - 730120.5; // julian_date's 00:00 UTC to 2000-01-01 12:00 UTC
+        // Pre-compute obliquity with higher-order terms (changes very slowly)
+        double base_days_sq = base_days_from_epoch * base_days_from_epoch;
+        double base_days_cb = base_days_sq * base_days_from_epoch;
+        double obliquity_deg = 23.439291111 - 3.560347e-7 * base_days_from_epoch - 1.2285e-16 * base_days_sq + 1.0335e-20 * base_days_cb;
+        double obliquity_sin = Math.sin (obliquity_deg * DEG2RAD);
+        double obliquity_cos = Math.cos (obliquity_deg * DEG2RAD);
+        double ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq;
+        double ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch;
+        double ecliptic_c3 = 0.000290;
+        double tst_offset = 4.0 * longitude_deg - 60.0 * timezone_offset_hrs;
         for (int i = 0; i < RESOLUTION_PER_MIN; i += 1) {
-            // fractional_day_component: day of year plus fraction of the day
-            // -1 to avoid discontinuity at year start (Dec 31 to Jan 1)
-            double fractional_day_component = day_of_year - 1 + ((double) i) / RESOLUTION_PER_MIN;
-            // gamma: fractional year angle in radians
-            double gamma_rad = (2.0 * Math.PI / days_in_year) * fractional_day_component;
-
-            // Solar declination delta (rad) via Fourier series approximation
-            double decl_rad = 0.006918
-                - 0.399912 * Math.cos (gamma_rad)
-                + 0.070257 * Math.sin (gamma_rad)
-                - 0.006758 * Math.cos (2.0 * gamma_rad)
-                + 0.000907 * Math.sin (2.0 * gamma_rad)
-                - 0.002697 * Math.cos (3.0 * gamma_rad)
-                + 0.001480 * Math.sin (3.0 * gamma_rad);
-
-            // Equation of Time (EoT) in minutes
-            double eqtime_minutes = 229.18 * (0.000075
-                + 0.001868 * Math.cos (gamma_rad)
-                - 0.032077 * Math.sin (gamma_rad)
-                - 0.014615 * Math.cos (2.0 * gamma_rad)
-                - 0.040849 * Math.sin (2.0 * gamma_rad));
-
+            // Calculate precise time offset for this minute (in days)
+            double time_offset_days = (i / 60.0 - timezone_offset_hrs) / 24.0;
+            double days_from_epoch = base_days_from_epoch + time_offset_days;
+            double days_from_epoch_sq = days_from_epoch * days_from_epoch;
+            double days_from_epoch_cb = days_from_epoch_sq * days_from_epoch;
+            // Mean anomaly of the sun (degrees) with higher-order terms
+            double mean_anomaly_deg = 357.52910 + 0.985600282 * days_from_epoch - 1.1686e-13 * days_from_epoch_sq - 9.85e-21 * days_from_epoch_cb;
+            mean_anomaly_deg = Math.fmod (mean_anomaly_deg, 360.0);
+            if (mean_anomaly_deg < 0) {
+                mean_anomaly_deg += 360.0;
+            }
+            // Mean longitude of the sun (degrees) with higher-order terms
+            double mean_longitude_deg = 280.46645 + 0.98564736 * days_from_epoch + 2.2727e-13 * days_from_epoch_sq;
+            mean_longitude_deg = Math.fmod (mean_longitude_deg, 360.0);
+            if (mean_longitude_deg < 0) {
+                mean_longitude_deg += 360.0;
+            }
+            // Ecliptic longitude of the sun (degrees) with higher-order corrections
+            double mean_anomaly_rad = mean_anomaly_deg * DEG2RAD;
+            double ecliptic_longitude_deg = mean_longitude_deg + ecliptic_c1 * Math.sin (mean_anomaly_rad) + ecliptic_c2 * Math.sin (2.0 * mean_anomaly_rad) + ecliptic_c3 * Math.sin (3.0 * mean_anomaly_rad);
+            ecliptic_longitude_deg = Math.fmod (ecliptic_longitude_deg, 360.0);
+            if (ecliptic_longitude_deg < 0) {
+                ecliptic_longitude_deg += 360.0;
+            }
+            // Solar declination (radians) for this specific time
+            double ecliptic_longitude_rad = ecliptic_longitude_deg * DEG2RAD;
+            double ecliptic_longitude_sin = Math.sin (ecliptic_longitude_rad);
+            double ecliptic_longitude_cos = Math.cos (ecliptic_longitude_rad);
+            double declination_sin = (obliquity_sin * ecliptic_longitude_sin).clamp (-1.0, 1.0);
+            double declination_cos = Math.sqrt (1.0 - declination_sin * declination_sin);
+            // Right Ascension for Equation of Time
+            double right_ascension_rad = Math.atan2 (obliquity_cos * ecliptic_longitude_sin, ecliptic_longitude_cos);
+            double right_ascension_deg = right_ascension_rad * RAD2DEG;
+            if (right_ascension_deg < 0) {
+                right_ascension_deg += 360.0;
+            }
+            double right_ascension_hours = right_ascension_deg / 15.0;
+            // Fix quadrant ambiguity for RA
+            double mean_time = Math.fmod (mean_longitude_deg / 15.0, 24.0);
+            double delta_ra = right_ascension_hours - mean_time;
+            if (delta_ra > 12.0) {
+                right_ascension_hours -= 24.0;
+            } else if (delta_ra < -12.0) {
+                right_ascension_hours += 24.0;
+            }
+            // Equation of Time (minutes)
+            double eot_hours = mean_time - right_ascension_hours;
+            double eqtime_minutes = eot_hours * 60.0;
             // True Solar Time (TST) in minutes, correcting local clock by EoT and longitude
-            double tst_minutes = i + eqtime_minutes + 4.0 * longitude_deg - 60.0 * timezone_offset_hrs;
-
-            // Hour angle H (°) relative to solar noon
-            double ha_deg = tst_minutes / 4.0 - 180.0;
-            double ha_rad = ha_deg * DEG2RAD;
-
-            // cos(phi): cosine of zenith angle via spherical trig
-            double cos_phi = sin_lat * Math.sin (decl_rad) + cos_lat * Math.cos (decl_rad) * Math.cos (ha_rad);
-            // clamp to valid range
-            cos_phi = cos_phi.clamp (-1.0, 1.0);
-            // Zenith angle phi (rad)
-            double phi_rad = Math.acos (cos_phi);
-
-            // Solar elevation alpha = 90° - phi, convert to degrees
-            double solar_elevation_rad = Math.PI / 2.0 - phi_rad;
-            sun_angles[i] = solar_elevation_rad * RAD2DEG;
+            double tst_minutes = i + eqtime_minutes + tst_offset;
+            double hour_angle_deg = tst_minutes / 4.0 - 180.0;
+            double hour_angle_rad = hour_angle_deg * DEG2RAD;
+            // Calculate solar elevation angle directly using sin formula
+            double elevation_sine = sin_lat * declination_sin + cos_lat * declination_cos * Math.cos (hour_angle_rad);
+            sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
         }
     }
 
@@ -957,11 +982,15 @@ public class SolarAngleApp : Adw.Application {
      * Updates solar angle data for current settings.
      */
     private void update_plot_data () {
-        int day_of_year = selected_date.get_day_of_year ();
         double latitude_rad = latitude * DEG2RAD;
-        int year = selected_date.get_year ();
-        generate_sun_angles (latitude_rad, day_of_year, year, longitude, timezone_offset_hours);
-        
+        // Convert DateTime to Date and get Julian Day Number
+        var date = Date ();
+        date.set_dmy ((DateDay) selected_date.get_day_of_month (),
+                      selected_date.get_month (),
+                      (DateYear) selected_date.get_year ());
+        var julian_date = (double) date.get_julian ();
+        generate_sun_angles (latitude_rad, longitude, timezone_offset_hours, julian_date);
+
         // Clear click point when data updates
         has_click_point = false;
         click_info_label.label = "Click on chart to view data\n";
