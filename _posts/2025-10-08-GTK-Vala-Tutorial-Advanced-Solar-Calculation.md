@@ -294,7 +294,7 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
 
 ### 太阳高度角计算
 
-该函数可以用于计算一天中每分钟的太阳高度角：
+该函数可以用于计算一天中每分钟的太阳高度角，完整程序见 [GitHub](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangleadw.vala)：
 
 ```vala
     /**
@@ -400,6 +400,8 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
 ```
 
 ### 白昼时长计算
+
+该函数用于计算某一天的白昼时长，完整程序见 [GitHub](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)：
 
 ```vala
     /**
