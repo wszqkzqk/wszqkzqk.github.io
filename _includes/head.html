@@ -66,4 +66,39 @@
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Custom styles for scrollable LaTeX -->
+    <style>
+        mjx-container[display="true"] {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+            display: block !important;
+        }
+        
+        .MathJax_Display,
+        mjx-container[jax="CHTML"][display="true"] {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+        }
+        
+        mjx-container[display="true"]::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        mjx-container[display="true"]::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        mjx-container[display="true"]::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        
+        mjx-container[display="true"]::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
 </head>
