@@ -1,106 +1,210 @@
---- 
+---
 layout:     post
-title:      GTK4/Vala 教程续：提升太阳高度角计算精度
-subtitle:   从经验公式到 Meeus 算法的进阶实践
+title:      Vala 数值计算实践：高精度太阳位置算法
+subtitle:   以 Meeus 算法为例的 Vala 数值计算探讨
 date:       2025-10-08
 author:     wszqkzqk
 header-img: img/GTK-logo.webp
 catalog:    true
-tags:       开源软件 GTK Vala 天文学
+tags:       开源软件 GTK Vala 数值计算
 ---
 
 ## 前言
 
-在上一篇[《GTK4/Vala 教程：构建现代桌面应用》](https://wszqkzqk.github.io/2025/08/07/GTK-Vala-Tutorial-3/)中，我们从零到一构建了一个功能完备的太阳高度角计算器。那篇文章的重点在于展示如何将 GTK4、LibAdwaita、Cairo、异步网络和 JSON 解析等技术栈有机地结合起来，打造一个现代化的桌面应用。
+Vala 语言以其将高级语言的便利性与C语言的原始性能相结合的特点，在桌面应用开发领域（尤其是 GNOME 生态）备受青睐。然而，它的能力远不止于构建用户界面。Vala 编译到C的本质，使其在需要高性能的数值与科学计算场景中，同样是一个值得考虑的强大选项。
 
-然而，原文中为了教学的简洁性和普适性，计算太阳高度角的核心算法采用了一套基于 NOAA 的经验公式。该公式通过傅里叶级数近似，在大多数场景下表现良好，但与真正的天文模型相比，在精度上仍有提升空间。
+本文旨在探讨 Vala 在科学计算领域的应用潜力。我们将以一个经典的天文学问题——**精确计算太阳在天空中的位置**——作为核心案例，从零开始，分步详解如何用 Vala 实现国际上广受认可的 **Meeus 算法**。
 
-本文作为续篇，将深入探讨如何将计算核心升级为精度更高的 **Meeus 算法**。这不仅是一次代码上的优化，更是一次从“经验近似”到“物理建模”的思维跃迁。我们将一起探索儒略日、黄赤交角、方程时等更专业的天文概念，并用 Vala 将它们精确地实现出来。
+我们将看到，Vala 不仅能胜任复杂的数学运算，其现代化的语言特性、清晰的面向对象结构以及与 GLib 等底层库的无缝集成，都能让我们的科学计算代码变得既高效又易于维护。
 
-此外，本文还包含一个“番外”章节，其中我们将以“白昼时长计算器”为例，探讨如何应用这些天文计算原理于其他场景，从而将本文打造为一个更具主题性的“Vala 天文计算进阶实践”.
+这篇文章的算法实现，被用于笔者在上一篇教程中介绍的 [GTK4 太阳高度角计算器](https://wszqkzqk.github.io/2025/08/07/GTK-Vala-Tutorial-3.html)中，但本文的重点并非 GUI 应用本身，而是**算法的理论、实现细节及其在 Vala 语言中的最佳实践**。
 
-## 第一部分：为何需要更高精度的算法？
+## 算法背景：为何选择 Meeus 算法？
 
-你可能会问：既然原来的版本已经能画出看起来很不错的日升日落曲线了，为什么还要费心去升级算法呢？
+计算太阳位置存在不同层次的解法，复杂度与精度各不相同：
 
-1.  **追求精确性**：经验公式是对大量观测数据的拟合，它“知其然，而不知其所以然”。而基于天体运行力学的算法（如 Meeus 算法）则是从地球和太阳的运动规律出发，进行第一性原理的推导。后者在理论上更严谨，计算结果也更精确，尤其是在计算长跨度时间或特殊地理位置（如极地）时，优势更为明显。
-2.  **扩展性与通用性**：理解了更底层的天文模型，我们不仅能计算太阳高度角，还能轻松地计算出日出日落时间、太阳方位角、黎明/黄昏时长等更多参数，为应用未来的功能扩展打下坚实基础。
-3.  **学习的乐趣**：将天文学的理论知识转化为屏幕上精确运行的代码，这个过程本身就充满了探索和创造的乐趣。
+1.  **经验公式**：例如一些基于傅里叶级数拟合的简化模型（如 NOAA 的算法）。这类公式易于实现，对于一般性应用（如常规的日照模拟）精度足够，但它们是观测数据的近似，缺乏坚实的物理基础。
+2.  **高精度天文历**：由专业天文机构（如 NASA JPL）发布的星历表，如 DE430、DE440 等。它们提供了最精确的行星位置数据，但通常体积庞大，使用和解析也相对复杂。
+3.  **解析理论（Analytical Theory）**：介于两者之间，基于天体力学模型，但通过一系列数学简化，得到一组可以直接计算的解析公式。**Meeus 算法**正是此类方法的杰出代表，它由比利时天文学家 Jean Meeus 在其著作《天文算法》（*Astronomical Algorithms*）中推广，能在不依赖大型星历表的情况下，达到非常高的精度（通常优于 1 角分），是业余天文学和许多科学应用中的“黄金标准”。
 
-## 第二部分：Meeus 算法核心概念
+本文选择 Meeus 算法，旨在展示如何在 Vala 中处理一个兼具理论深度和实现复杂度的真实科学计算问题。
 
-新的 `generate_sun_angles` 函数实现，其背后的理论基础是天文学家 Jean Meeus 在其著作《天文算法》中推广的一系列简化公式。这些公式在保证了极高精度的同时，又避免了使用完整的、极其复杂的轨道摄动理论。
+## Meeus 算法的 Vala 实现：分步详解
 
-让我们来拆解一下新算法中的关键步骤和概念。
+我们将严格按照 Meeus 算法的流程，将天文学概念逐一转化为 Vala 代码。
 
-### 1. 儒略日 (Julian Date)
+#### 1. 时间基准：儒略日与 J2000.0 历元
 
-天文学计算中，使用年月日时分秒来表示时间非常繁琐，尤其是在计算两个时刻之间的时间差时。**儒略日 (JD)** 提供了一个解决方案，它是一种不记年、月的长期纪日法，简单来说就是一个从公元前 4713 年 1 月 1 日格林尼治标准时间中午 12:00 开始的连续日计数。这使得时间计算简化为简单的加减法。
+天文学计算需要一个连续、无歧义的时间标尺。**儒略日 (Julian Date, JD)** 就是为此而生。我们通过 GLib 的 `GDate` 可以轻松获取：
 
-对于 Vala 程序，GLib 可以为我们提供可以直接使用的工具。我们可以使用 `GLib.Date` 类型的 `get_julian()` 方法来方便地得到儒略日，但是需要注意的是，`GLib.Date.get_julian()` 返回的是从公元 0001 年 1 月 1 日开始的儒略日数，而非标准的儒略日数，有着不同的偏移。
-
-### 2. J2000.0 历元 (J2000.0 Epoch)
+```vala
+var date = new Date ();
+date.set_dmy (day, month, year);
+var julian_date = (double) date.get_julian ();
+```
 
 为了简化公式，天文学家选择了一个标准参考时刻，即 **J2000.0 历元**，对应于 2000 年 1 月 1 日国际原子时 12:00。我们的计算将以从这个历元开始的天数 `d` 为基础。
 
-`double base_days_from_epoch = julian_date - 730120.5;`
-
 这里减去 `730120.5` 即可将当天 00:00 UTC 转换为从 J2000.0 历元起算的天数。
 
-### 3. 黄赤交角 (Obliquity of the Ecliptic, ε)
+```vala
+// 从 J2000.0 历元起算的天数
+double base_days_from_epoch = julian_date - 730120.5;
+```
 
-这是地球赤道平面与黄道平面（地球绕太阳公转的轨道平面）之间的夹角，它导致了四季的产生。这个角度并非固定不变，而是在缓慢变化。Meeus 算法给出了一个高次多项式来精确计算它：
+#### 2. 黄赤交角 (Obliquity of the Ecliptic, ε)
 
-$$
-\epsilon (\text{deg}) = 23.439291111 - 3.560347 \times 10^{-7} d - \dots
-$$
+地球自转轴相对于其公转轨道（黄道）的倾角。它随时间微小变化，Meeus 给出了一个精确的多项式：
 
-其中 `d` 是从 J2000.0 历元起算的天数。
+$$ 
+\epsilon (\text{deg}) = 23.439291111 - 0.0000003560347 d - 1.2285 \times 10^{-16} d^2 + 1.0335 \times 10^{-20} d^3 
+$$ 
 
-### 4. 太阳的轨道参数
+其中 `d` 是从 J2000.0 起算的天数。在 Vala 中实现为：
 
-为了确定太阳在天空中的位置，我们需要计算几个关键的轨道参数，它们同样以 `d` 的多项式形式给出：
+```vala
+double base_days_sq = base_days_from_epoch * base_days_from_epoch;
+double base_days_cb = base_days_sq * base_days_from_epoch;
+double obliquity_deg = 23.439291111 - 3.560347e-7 * base_days_from_epoch - 1.2285e-16 * base_days_sq + 1.0335e-20 * base_days_cb;
+double obliquity_sin = Math.sin (obliquity_deg * DEG2RAD);
+double obliquity_cos = Math.cos (obliquity_deg * DEG2RAD);
+```
 
-*   **平近点角 (Mean Anomaly, M)**：表示地球在其椭圆轨道上相对于近日点的位置。
-*   **平黄经 (Mean Longitude, L)**：表示在一个假想的、以太阳为中心的匀速圆周轨道上，地球的位置。
+#### 3. 太阳轨道参数
 
-### 5. 太阳的真黄经 (True Ecliptic Longitude, λ)
+我们计算太阳的**平黄经 (Mean Longitude, L)** 和 **平近点角 (Mean Anomaly, M)**。这些值描述了在一个理想化的匀速圆周轨道上太阳的位置。
 
-由于地球轨道是椭圆而非正圆，其公转速度是变化的（开普勒第二定律）。我们需要从“平黄经”计算出“真黄经”，这个修正过程被称为**中心差 (Equation of the Center)**。
+$$ 
+L (\text{deg}) = 280.46645 + 0.98564736 d + 2.2727 \times 10^{-13} d^2 
+$$ 
 
-$$
-\lambda (\text{deg}) = L + C_1 \sin(M) + C_2 \sin(2M) + \dots
-$$
+$$ 
+M (\text{deg}) = 357.52910 + 0.985600282 d - 1.1686 \times 10^{-13} d^2 - 9.85 \times 10^{-21} d^3 
+$$ 
 
-其中 $C_1, C_2, \dots$ 是修正系数。真黄经精确地描述了太阳在黄道坐标系中的位置。
+Vala 实现（注意 `fmod` 用于将角度归一化到 0-360 度）：
 
-### 6. 从黄道坐标到赤道坐标
+```vala
+double days_from_epoch_sq = days_from_epoch * days_from_epoch;
+double days_from_epoch_cb = days_from_epoch_sq * days_from_epoch;
 
-有了真黄经 `λ` 和黄赤交角 `ε`，我们就可以通过球面三角公式，将太阳的位置从黄道坐标系转换到我们更熟悉的赤道坐标系，得到两个关键参数：
+double mean_anomaly_deg = 357.52910 + 0.985600282 * days_from_epoch - 1.1686e-13 * days_from_epoch_sq - 9.85e-21 * days_from_epoch_cb;
+mean_anomaly_deg = Math.fmod (mean_anomaly_deg, 360.0);
+if (mean_anomaly_deg < 0) { mean_anomaly_deg += 360.0; }
 
-*   **太阳赤纬 (Declination, δ)**：太阳光线与地球赤道平面之间的夹角。
-*   **赤经 (Right Ascension, RA)**：太阳在天球赤道上的经度。
+double mean_longitude_deg = 280.46645 + 0.98564736 * days_from_epoch + 2.2727e-13 * days_from_epoch_sq;
+mean_longitude_deg = Math.fmod (mean_longitude_deg, 360.0);
+if (mean_longitude_deg < 0) { mean_longitude_deg += 360.0; }
+```
 
-### 7. 方程时 (Equation of Time, EoT)
+#### 4. 中心差与真黄经 (Equation of Center and True Longitude, λ)
 
-日常使用的钟表时间（平太阳时）与根据太阳真实位置决定的时间（真太阳时）之间存在一个差值，这个差值就是**方程时 (EoT)**。它由地球轨道偏心率和黄赤交角共同导致。我们在旧算法中也计算了它，但新算法基于赤经和平黄经计算，精度更高。
+为了从“平”位置得到“真”位置，需要加上由地球轨道椭圆形引起的修正，即**中心差**。Meeus 算法给出了一个包含三项正弦修正的简化形式：
 
-### 8. 时角与太阳高度角
+$$ 
+C (\text{deg}) = (1.914600 - 0.00000013188 d - 1.049 \times 10^{-14} d^2) \sin(M) + (0.019993 - 0.0000000027652 d) \sin(2M) + 0.000290 \sin(3M) 
+$$ 
 
-最后一步与旧算法类似：
-1.  根据本地时间、经度、时区和方程时计算出**真太阳时 (True Solar Time)**。
-2.  将真太阳时转换为**时角 (Hour Angle, HA)**，它表示太阳相对于本地子午线的角距离。
-3.  最终，结合本地纬度 `φ`、太阳赤纬 `δ` 和时角 `HA`，使用球面三角公式计算出太阳高度角 `α`：
+**真黄经 (True Longitude, λ)** 就是平黄经加上中心差：
 
-    $$
-    \sin(\alpha) = \sin(\phi)\sin(\delta) + \cos(\phi)\cos(\delta)\cos(HA)
-    $$
+$$ 
+\lambda = L + C 
+$$ 
 
-这个过程虽然比经验公式复杂得多，但每一步都有坚实的物理意义，最终的结果也经得起考验。
+Vala 实现：
 
-## 第三部分：Vala 代码实现
+```vala
+double ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq;
+double ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch;
+double ecliptic_c3 = 0.000290;
 
-下面是更新后的核心函数。`update_plot_data` 现在传递儒略日，而 `generate_sun_angles` 则完全基于我们上面讨论的 Meeus 算法流程。
+double mean_anomaly_rad = mean_anomaly_deg * DEG2RAD;
+double ecliptic_longitude_deg = mean_longitude_deg + ecliptic_c1 * Math.sin (mean_anomaly_rad) + ecliptic_c2 * Math.sin (2.0 * mean_anomaly_rad) + ecliptic_c3 * Math.sin (3.0 * mean_anomaly_rad);
+```
+
+#### 5. 坐标转换：从黄道到赤道
+
+有了真黄经 `λ` 和黄赤交角 `ε`，我们便可将太阳位置转换到赤道坐标系，得到**赤纬 (Declination, δ)** 和**赤经 (Right Ascension, RA)**。
+
+$$ 
+\sin(\delta) = \sin(\epsilon) \sin(\lambda) 
+$$ 
+
+$$ 
+\tan(RA) = \frac{\cos(\epsilon) \sin(\lambda)}{\cos(\lambda)} \implies RA = \text{atan2}(\cos(\epsilon) \sin(\lambda), \cos(\lambda)) 
+$$ 
+
+Vala 实现：
+
+```vala
+double ecliptic_longitude_rad = ecliptic_longitude_deg * DEG2RAD;
+double ecliptic_longitude_sin = Math.sin (ecliptic_longitude_rad);
+double ecliptic_longitude_cos = Math.cos (ecliptic_longitude_rad);
+
+// 计算赤纬
+double declination_sin = (obliquity_sin * ecliptic_longitude_sin).clamp (-1.0, 1.0);
+double declination_rad = Math.asin (declination_sin);
+
+// 计算赤经
+double right_ascension_rad = Math.atan2 (obliquity_cos * ecliptic_longitude_sin, ecliptic_longitude_cos);
+```
+
+## 应用一：计算太阳高度角
+
+有了基础参数，计算太阳高度角还需最后几步。
+
+1.  **方程时 (Equation of Time, EoT)**：由真太阳时和平太阳时之差决定，可通过赤经和平黄经计算，比经验公式更精确。
+2.  **时角 (Hour Angle, HA)**：结合本地时间、经度、时区和方程时，得到真太阳时，进而算出太阳相对于本地子午线的角距离。
+3.  **太阳高度角 (Altitude, α)**：最终，结合本地纬度 `φ`、太阳赤纬 `δ` 和时角 `HA`，通过球面三角公式得到最终结果。
+
+    $$ 
+    \sin(\alpha) = \sin(\phi)\sin(\delta) + \cos(\phi)\cos(\delta)\cos(HA) 
+    $$ 
+
+## 应用二：计算白昼时长
+
+计算白昼时长是这些天文参数的另一个直接应用。其核心是计算出太阳升起和落下的时刻，即太阳高度角为某个特定值（通常是-0.83°，考虑大气折射）时的时角。
+
+#### 计算方法
+
+1.  **计算高精度太阳赤纬 (δ)**：与应用一完全相同，我们首先需要得到当天精确的太阳赤纬。
+
+2.  **求解日出/日落时角 (ω₀)**：将太阳高度角公式反解，求解时角 `HA`。设 `α` 为地平线修正角（-0.83°），`φ` 为本地纬度，`δ` 为太阳赤纬，则日落时的时角 `ω₀` 满足：
+
+    $$ 
+    \cos(\omega_0) = \frac{\sin(\alpha) - \sin(\phi)\sin(\delta)}{\cos(\phi)\cos(\delta)} 
+    $$ 
+
+3.  **处理边界情况（极昼与极夜）**：
+    *   若 `cos(ω₀) ≥ 1`，意味着太阳永远在地平线以下，发生**极夜**，昼长为 0。
+    *   若 `cos(ω₀) ≤ -1`，意味着太阳永远在地平线以上，发生**极昼**，昼长为 24 小时。
+
+4.  **计算总昼长**：日落时角 `ω₀` 代表了从正午到日落的时间跨度。总昼长则是日出到日落的总时长，即 `2 * ω₀`。将其从弧度转换为小时即可。
+
+    $$ 
+    t_\text{daylight} (\text{hours}) = \frac{2 \cdot \omega_0}{2\pi} \times 24 = \frac{24 \cdot \omega_0}{\pi} 
+    $$ 
+
+## Vala 在数值计算中的优势
+
+通过这个实践，我们可以总结出 Vala 在处理此类问题时的几个优点：
+
+*   **卓越性能**：Vala 直接编译为C代码，几乎没有额外开销。对于包含大量循环和浮点运算的数值计算任务，其性能表现与手写C代码相当，远超各类解释型语言。
+*   **代码可读性与组织性**：相比C，Vala 提供了类、方法、属性等现代面向对象特性，使得我们可以将复杂的计算逻辑封装在独立的、职责清晰的函数或类中，代码结构更优，可维护性更强。
+*   **类型安全**：Vala 强类型系统能在编译期捕获大量潜在错误，这对于处理多步骤、易出错的复杂科学计算流程至关重要。
+*   **底层库的便捷访问**：能够零成本地调用 GLib/GObject 库是 Vala 的一大杀手锏。如本文中直接使用 `GDate.get_julian()`，极大地简化了时间处理的复杂度。
+
+## 总结
+
+本文通过一个完整的天文算法实践，展示了 Vala 作为一门通用语言，在图形界面开发之外，同样是执行高性能数值计算的有力工具。它在提供接近C的性能的同时，赋予了我们更现代化、更安全的编程范式。
+
+希望这次从理论到代码的深度实践，能为你提供一个在 Vala 中进行科学计算的优秀范例，并激发你使用 Vala 探索更多可能性的兴趣。
+
+## 完整计算代码实现
+
+### 太阳高度角计算
+
+该函数可以用于计算一天中每分钟的太阳高度角：
 
 ```vala
     /**
@@ -193,8 +297,8 @@ $$
         double latitude_rad = latitude * DEG2RAD;
         // Convert DateTime to Date and get Julian Day Number
         var date = Date ();
-        date.set_dmy ((DateDay) selected_date.get_day_of_month (), 
-                      selected_date.get_month (), 
+        date.set_dmy ((DateDay) selected_date.get_day_of_month (),
+                      selected_date.get_month (),
                       (DateYear) selected_date.get_year ());
         var julian_date = (double) date.get_julian ();
         generate_sun_angles (latitude_rad, longitude, timezone_offset_hours, julian_date);
@@ -205,49 +309,101 @@ $$
     }
 ```
 
-## 第四部分：番外：白昼时长计算器
+### 白昼时长计算
 
-在掌握了太阳赤纬 `δ` 的计算方法后，我们就可以实现另一个有趣的功能：计算在给定纬度，一年中每一天的白昼时长。
+```vala
+    /**
+     * Calculates day length using high-precision astronomical formula.
+     * Based on http://www.jgiesen.de/elevaz/basics/meeus.htm
+     * 
+     * @param latitude_rad Latitude in radians.
+     * @param julian_date GLib's Julian Date for the day (from 0001-01-01).
+     * @param horizon_angle_deg Horizon angle correction in degrees (default -0.83° for atmospheric refraction).
+     * @return Day length in hours.
+     */
+    private double calculate_day_length (double latitude_rad, double julian_date, double horizon_angle_deg = -0.83) {
+        double sin_lat = Math.sin (latitude_rad);
+        double cos_lat = Math.cos (latitude_rad);
+        // Base days from J2000.0 epoch (GLib's Julian Date is days since 0001-01-01 12:00 UTC)
+        double base_days_from_epoch = julian_date - 730120.5; // julian_date's 00:00 UTC to 2000-01-01 12:00 UTC
+        // Pre-compute obliquity with higher-order terms (changes very slowly)
+        double base_days_sq = base_days_from_epoch * base_days_from_epoch;
+        double base_days_cb = base_days_sq * base_days_from_epoch;
+        double obliquity_deg = 23.439291111 - 3.560347e-7 * base_days_from_epoch - 1.2285e-16 * base_days_sq + 1.0335e-20 * base_days_cb;
+        double obliquity_sin = Math.sin (obliquity_deg * DEG2RAD);
+        // Mean anomaly of the sun (degrees) with higher-order terms
+        double days_from_epoch_sq = base_days_from_epoch * base_days_from_epoch;
+        double days_from_epoch_cb = days_from_epoch_sq * base_days_from_epoch;
+        double mean_anomaly_deg = 357.52910 + 0.985600282 * base_days_from_epoch - 1.1686e-13 * days_from_epoch_sq - 9.85e-21 * days_from_epoch_cb;
+        mean_anomaly_deg = Math.fmod (mean_anomaly_deg, 360.0);
+        if (mean_anomaly_deg < 0) {
+            mean_anomaly_deg += 360.0;
+        }
+        // Mean longitude of the sun (degrees) with higher-order terms
+        double mean_longitude_deg = 280.46645 + 0.98564736 * base_days_from_epoch + 2.2727e-13 * days_from_epoch_sq;
+        mean_longitude_deg = Math.fmod (mean_longitude_deg, 360.0);
+        if (mean_longitude_deg < 0) {
+            mean_longitude_deg += 360.0;
+        }
+        // Ecliptic longitude corrections
+        double ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq;
+        double ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch;
+        double ecliptic_c3 = 0.000290;
+        // Ecliptic longitude of the sun (degrees) with higher-order corrections
+        double mean_anomaly_rad = mean_anomaly_deg * DEG2RAD;
+        double ecliptic_longitude_deg = mean_longitude_deg + ecliptic_c1 * Math.sin (mean_anomaly_rad) + ecliptic_c2 * Math.sin (2.0 * mean_anomaly_rad) + ecliptic_c3 * Math.sin (3.0 * mean_anomaly_rad);
+        ecliptic_longitude_deg = Math.fmod (ecliptic_longitude_deg, 360.0);
+        if (ecliptic_longitude_deg < 0) {
+            ecliptic_longitude_deg += 360.0;
+        }
+        // Solar declination (radians)
+        double ecliptic_longitude_rad = ecliptic_longitude_deg * DEG2RAD;
+        double ecliptic_longitude_sin = Math.sin (ecliptic_longitude_rad);
+        double declination_sin = (obliquity_sin * ecliptic_longitude_sin).clamp (-1.0, 1.0);
+        double declination_rad = Math.asin (declination_sin.clamp (-1.0, 1.0));
+        // Convert horizon angle to radians
+        double horizon_angle_rad = horizon_angle_deg * DEG2RAD; 
+        // Calculate hour angle at sunrise/sunset with horizon correction
+        double cos_hour_angle = (Math.sin (horizon_angle_rad) - sin_lat * declination_sin) 
+            / (cos_lat * Math.cos (declination_rad));
+        if (cos_hour_angle.is_nan ()) {
+            // Invalid value, return 12.0 hours
+            return 12.0;
+        } else if (cos_hour_angle >= 1.0) {
+            // Polar night (sun never rises)
+            return 0.0;
+        } else if (cos_hour_angle <= -1.0) {
+            // Polar day (sun never sets)
+            return 24.0;
+        }
+        // Hour angle in radians
+        double hour_angle_rad = Math.acos (cos_hour_angle);
+        // Day length in hours (hour angle is in radians, convert to hours)
+        return (2.0 * hour_angle_rad * 24.0) / (2.0 * Math.PI);
+    }
 
-用几乎一样的思路，笔者实现了一个计算某一纬度处全年中每天的白昼时长的程序，代码也在 [GitHub](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala) 上，感兴趣的读者可以参考。
+    /**
+     * Updates plot data for all days in the selected year.
+     */
+    private void update_plot_data () {
+        int total_days = days_in_year (selected_year);
+        day_lengths = new double[total_days];
+        
+        double latitude_rad = latitude * DEG2RAD;
 
-### 效果
+        // Get Julian Date for January 1st of the selected year
+        var date = Date ();
+        date.set_dmy (1, 1, (DateYear) selected_year);
+        uint base_julian_date = date.get_julian ();
 
-|[![#~/img/GTK-examples/day-length-pku-light.webp](/img/GTK-examples/day-length-pku-light.webp)](/img/GTK-examples/day-length-pku-light.webp)|[![#~/img/GTK-examples/day-length-chongqing-dark.webp](/img/GTK-examples/day-length-chongqing-dark.webp)](/img/GTK-examples/day-length-chongqing-dark.webp)|
-|:----:|:----:|
-|浅色模式|深色模式|
+        for (int day = 0; day < total_days; day += 1) {
+            day_lengths[day] = calculate_day_length (
+                latitude_rad, (double) (base_julian_date + day), horizon_angle
+            );
+        }
 
-### 计算方法
-
-这里笔者同样采用了基于 Meeus 算法的高精度计算方法，其基本思路如下：
-
-*   **计算高精度太阳赤纬 (δ)**：此步骤与本文第二部分介绍的太阳高度角计算过程完全一致。我们通过儒略日计算出从 J2000.0 历元起算的天数，进而求得太阳的真黄经，最终得到当天精确的太阳赤纬。这保证了我们计算昼长的基础数据是精确的。
-*   **应用日出/日落时角公式**：太阳高度角、观察者纬度、太阳赤纬和时角（Hour Angle）之间存在一个基本关系，正如前文所述。当太阳处于地平线时（即太阳高度角为地平线修正角，通常取-0.83°以考虑大气折射），我们可以通过该关系反解出此时的太阳时角。公式如下：
-  
-    $$
-    \cos(\omega_0) = \frac{\sin(\alpha) - \sin(\phi)\sin(\delta)}{\cos(\phi)\cos(\delta)}
-    $$
-
-    其中：
-    *   $\omega_0$ 是日出或日落时的太阳时角。
-    *   $\alpha$ 是地平线修正角（Horizon Angle）。
-    *   $\phi$ 是观察者所在地的纬度。
-    *   $\delta$ 是太阳赤纬。
-*   **处理边界情况**：防止因为浮点计算误差导致后续的 `acos` 函数返回 `NaN`。
-    *   如果计算出的 $\cos(\omega_0)$ 值大于等于 1，意味着太阳全天都无法升至地平线以上，即出现**极夜**，昼长为 0 小时。
-    *   如果计算出的 $\cos(\omega_0)$ 值小于等于 -1，意味着太阳全天都在地平线以上，即出现**极昼**，昼长为 24 小时。
-    *   对于无效的计算结果 `NaN`，程序会返回一个默认值以保证稳定性。
-*   **计算昼长**：通过反余弦函数 `acos` 得到时角 $\omega_0$（以弧度为单位）。由于时角代表的是从正午到日落（或从日出到正午）的时间，根据“均太阳假设”，相同时角近似对应相同时间，所以总昼长对应 $2\omega_0$ 的弧度。最后，将这个弧度值转换为小时单位，即可得到最终的昼长。
-
-    $$
-    t \text{(hours)} = \frac{2 \cdot \omega_0}{2\pi} \times 24 = \frac{24 \cdot \omega_0}{\pi}
-    $$
-
-这种方法在一般应用中已经足够精确，避免了逐分钟的迭代求解，计算效率显著更高。由于篇幅关系，这里就不贴代码了，读者可以参考项目在 [GitHub 上的源代码](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)，其中包含了详细的注释和完整的逻辑。
-
-## 总结
-
-从一个简单的经验公式出发，我们一步步深入，最终实现了一套基于 Meeus 天文算法的高精度计算模型。这个过程不仅提升了我们应用的专业性，更重要的是，它加深了我们对问题背后物理原理的理解。
-
-希望这篇续集能为你展示如何在软件开发中进行技术深耕，以及如何在“能用”的基础上追求“更好”。编程的乐趣，常常就蕴含在这样不断探索和优化的过程之中。
-
+        // Clear click point when data updates
+        has_click_point = false;
+        click_info_label.label = "Click on chart to view data\n";
+    }
+```
