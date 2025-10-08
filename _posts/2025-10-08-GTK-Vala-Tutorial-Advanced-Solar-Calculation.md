@@ -268,7 +268,19 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
 
 希望这次从理论到代码的深度实践，能为你提供一个在 Vala 中进行科学计算的优秀范例，并激发你使用 Vala 探索更多可能性的兴趣。
 
-## 完整计算代码实现
+## 效果及计算代码
+
+### 效果
+
+| [![#~/img/GTK-examples/pku-light-solar-angle-250814.webp](/img/GTK-examples/pku-light-solar-angle-250814.webp)](/img/GTK-examples/pku-light-solar-angle-250814.webp) | [![#~/img/GTK-examples/pku-dark-solar-angle-250814.webp](/img/GTK-examples/pku-dark-solar-angle-250814.webp)](/img/GTK-examples/pku-dark-solar-angle-250814.webp) |
+| :--: | :--: |
+| 太阳高度角计算器（浅色模式）| 太阳高度角计算器（深色模式）|
+| [![#~/img/GTK-examples/fetching-location-solarangle.webp](/img/GTK-examples/fetching-location-solarangle.webp)](/img/GTK-examples/fetching-location-solarangle.webp) | [![#~/img/GTK-examples/timezone-mismatch-solarangle.webp](/img/GTK-examples/timezone-mismatch-solarangle.webp)](/img/GTK-examples/timezone-mismatch-solarangle.webp) |
+| 获取地理位置时的加载动画 | 提示与选择 |
+
+|[![#~/img/GTK-examples/day-length-pku-light.webp](/img/GTK-examples/day-length-pku-light.webp)](/img/GTK-examples/day-length-pku-light.webp)|[![#~/img/GTK-examples/day-length-chongqing-dark.webp](/img/GTK-examples/day-length-chongqing-dark.webp)](/img/GTK-examples/day-length-chongqing-dark.webp)|
+|:----:|:----:|
+|白昼时长计算器（浅色模式）|白昼时长计算器（深色模式）|
 
 ### 太阳高度角计算
 
