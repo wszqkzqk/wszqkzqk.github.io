@@ -23,7 +23,7 @@ Vala 语言以其将高级语言的便利性与C语言的原始性能相结合�
 
 计算太阳位置存在不同层次的解法，复杂度与精度各不相同：
 
-*  **经验公式**：例如一些基于傅里叶级数拟合的简化模型（如 NOAA 的算法）。这类公式易于实现，对于一般性应用（如常规的日照模拟）精度足够，但它们是观测数据的近似，缺乏坚实的物理基础。
+*  **经验公式**：例如一些基于傅里叶级数拟合的简化模型（如 Spencer 的算法）。这类公式易于实现，对于一般性应用（如常规的日照模拟）精度足够，但它们是观测数据的近似，缺乏坚实的物理基础。
 *  **高精度天文历**：由专业天文机构（如 NASA JPL）发布的星历表，如 DE430、DE440 等。它们提供了最精确的行星位置数据，但通常体积庞大，使用和解析也相对复杂。
 *  **解析理论（Analytical Theory）**：介于两者之间，基于天体力学模型，但通过一系列数学简化，得到一组可以直接计算的解析公式。**Meeus 算法**正是此类方法的杰出代表，它由比利时天文学家 Jean Meeus 在其著作《天文算法》（*Astronomical Algorithms*）中推广，能在不依赖大型星历表的情况下，达到非常高的精度（通常优于 1 角分），是业余天文学和许多科学应用中的“黄金标准”。
 
@@ -271,6 +271,8 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
 ## 效果及计算代码
 
 ### 效果
+
+笔者将上述算法应用于 GUI 程序中，结合 GTK4/Libadwaita/JSON-GLib等技术栈，制作了一个[太阳高度角计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangleadw.vala)和一个[白昼时长计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)，将计算结果可视化展示。两个程序均支持浅色和深色主题，并能自动从 IP 获取地理位置，自动识别时区，还支持导出 PNG、SVG、PDF 等格式的图表，以及 CSV 数据。
 
 | [![#~/img/GTK-examples/pku-light-solar-angle-250814.webp](/img/GTK-examples/pku-light-solar-angle-250814.webp)](/img/GTK-examples/pku-light-solar-angle-250814.webp) | [![#~/img/GTK-examples/pku-dark-solar-angle-250814.webp](/img/GTK-examples/pku-dark-solar-angle-250814.webp)](/img/GTK-examples/pku-dark-solar-angle-250814.webp) |
 | :--: | :--: |
