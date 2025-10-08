@@ -617,7 +617,6 @@ from astropy.time import Time
 import datetime
 import calendar
 
-# --- Constants ---
 DEG2RAD = np.pi / 180.0
 RAD2DEG = 180.0 / np.pi
 
