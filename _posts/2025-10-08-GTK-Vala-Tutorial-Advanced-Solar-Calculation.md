@@ -151,15 +151,77 @@ double right_ascension_rad = Math.atan2 (obliquity_cos * ecliptic_longitude_sin,
 
 ## 应用一：计算太阳高度角
 
-有了基础参数，计算太阳高度角还需最后几步。
+有了太阳的赤纬 `δ`，我们距离计算出它的高度角只有一步之遥。最后一步是计算出在给定的地方、给定的时刻，太阳相对于观测者的方位，这由**时角 (Hour Angle, HA)** 来描述。
 
-1.  **方程时 (Equation of Time, EoT)**：由真太阳时和平太阳时之差决定，可通过赤经和平黄经计算，比经验公式更精确。
-2.  **时角 (Hour Angle, HA)**：结合本地时间、经度、时区和方程时，得到真太阳时，进而算出太阳相对于本地子午线的角距离。
-3.  **太阳高度角 (Altitude, α)**：最终，结合本地纬度 `φ`、太阳赤纬 `δ` 和时角 `HA`，通过球面三角公式得到最终结果。
+#### 1. 真太阳时 (True Solar Time, TST)
 
-    $$ 
-    \sin(\alpha) = \sin(\phi)\sin(\delta) + \cos(\phi)\cos(\delta)\cos(HA) 
-    $$ 
+我们日常使用的钟表时间是**地方标准时 (Local Standard Time)**，它基于一个时区（如 UTC+8）的中央经线，并非我们所在地的真实太阳位置。要计算时角，我们必须首先将钟表时间转换为**真太阳时 (TST)**，即由日晷测得的时间。
+
+转换过程考虑了两个主要修正：
+
+*   **方程时 (Equation of Time, EoT)**：我们之前计算出的、因地球轨道偏心率和黄赤交角引起的修正。
+*   **经度修正**：我们的钟表时间基于时区中央经线，但太阳过中天（正午）的时刻取决于我们真实的经度。经度每向东 1°，正午就提早 4 分钟。
+
+因此，真太阳时的计算公式为：
+
+$$ 
+TST_\text{minutes} = T_\text{local, minutes} + EoT_\text{minutes} + 4 \times \lambda_\text{lon, deg} - 60 \times TZ_\text{offset, hr} 
+$$ 
+
+其中：
+*   $T_\text{local, minutes}$ 是午夜起算的本地钟表时间（分钟）。
+*   $EoT_\text{minutes}$ 是我们计算出的方程时（分钟）。
+*   $\lambda_\text{lon, deg}$ 是观测地的地理经度（东经为正）。
+*   $TZ_\text{offset, hr}$ 是时区偏移量（例如 UTC+8 时区为 8）。
+
+在我们的 Vala 代码中，`tst_offset` 预先计算了经度和时区带来的固定偏移，而 `eqtime_minutes` 则是动态计算的方程时。
+
+```vala
+// 方程时 (分钟)
+double eot_hours = mean_time - right_ascension_hours;
+double eqtime_minutes = eot_hours * 60.0;
+
+// 固定的经度与时区偏移 (分钟)
+double tst_offset = 4.0 * longitude_deg - 60.0 * timezone_offset_hrs;
+
+// i 是午夜起算的本地时间（分钟）
+double tst_minutes = i + eqtime_minutes + tst_offset;
+```
+
+#### 2. 时角 (Hour Angle, HA)
+
+时角定义为天体距离本地子午线（正南或正北的天空弧线）的角度。天文学上通常定义正午时为 0°，下午为正，上午为负。地球每小时自转 15°，每 4 分钟自转 1°。
+
+从以分钟计量的真太阳时到以度计量的时角，转换公式为：
+
+$$ 
+HA_\text{deg} = \frac{TST_\text{minutes}}{4} - 180 
+$$ 
+
+这里除以 4 是因为 1 分钟时间对应 0.25° 的旋转。减去 180° 是为了将计时起点从午夜（0 分钟）校正到正午（720 分钟），使得正午时 `720 / 4 - 180 = 0`。
+
+```vala
+// 将真太阳时转换为时角 (度)
+double hour_angle_deg = tst_minutes / 4.0 - 180.0;
+double hour_angle_rad = hour_angle_deg * DEG2RAD;
+```
+
+#### 3. 太阳高度角 (Altitude, α)
+
+最后，我们将观测地纬度 `φ`、太阳赤纬 `δ` 和刚刚得到的时角 `HA` 代入球面三角学的基本公式，即可求得太阳高度角 `α`。
+
+$$ 
+\sin(\alpha) = \sin(\phi)\sin(\delta) + \cos(\phi)\cos(\delta)\cos(HA) 
+$$ 
+
+```vala
+// 计算太阳高度角的正弦值
+double elevation_sine = sin_lat * declination_sin + cos_lat * declination_cos * Math.cos (hour_angle_rad);
+// 反正弦后转换为度
+sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
+```
+
+至此，我们就完成了从一个日期和时间点，到其精确太阳高度角的完整计算链条。
 
 ## 应用二：计算白昼时长
 
