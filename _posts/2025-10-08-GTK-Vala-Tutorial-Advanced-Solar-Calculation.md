@@ -4,7 +4,7 @@ title:      Vala 数值计算实践：高精度太阳位置算法
 subtitle:   以 Meeus 算法为例的 Vala 数值计算探讨
 date:       2025-10-08
 author:     wszqkzqk
-header-img: img/GTK-logo.webp
+header-img: img/Vala_Logo.webp
 catalog:    true
 tags:       开源软件 GTK Vala 数值计算
 ---
