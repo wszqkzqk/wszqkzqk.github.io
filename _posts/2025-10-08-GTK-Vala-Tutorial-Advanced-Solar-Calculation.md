@@ -266,6 +266,7 @@ $$
 $$
 T_\text{sunrise} = 12 - \frac{\omega_0}{15^\circ/\text{hr}} - \frac{EoT_\text{minutes} + \text{LonCorr}_\text{minutes}}{60}
 $$
+
 $$
 T_\text{sunset} = 12 + \frac{\omega_0}{15^\circ/\text{hr}} - \frac{EoT_\text{minutes} + \text{LonCorr}_\text{minutes}}{60}
 $$
