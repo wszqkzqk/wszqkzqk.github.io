@@ -243,22 +243,43 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
 
 ### 计算方法
 
-*  **计算高精度太阳赤纬 ($\delta$)**：与应用一完全相同，我们首先需要得到当天精确的太阳赤纬。
+一个常见的简化方法是假设太阳赤纬和均时差在一天之内是恒定的，取正午时刻的值，然后直接解算日出/日落时角。然而，太阳的赤纬和均时差在一天中是持续变化的，尤其是在高纬度地区或对精度要求高的场景下，这种简化会引入不可忽略的误差，**与笔者使用的 Meeus 算法精度不匹配**。
 
-*  **求解日出/日落时角 ($\omega_0$)**：将太阳高度角公式反解，求解时角 $\mathrm{HA}$。设 $\alpha$ 为大气折射导致的观测的地平线的修正角（一般取 $-0.83^\circ$，也可以按特殊需要调整），$\phi$ 为本地纬度，$\delta$ 为太阳赤纬，则日落时的时角 $\omega_0$ 满足：
+为了获得更高的精度，我们采用一种**迭代逼近**的方法。其基本思想是：先用一个初始值（如正午的太阳参数）估算出大致的日出日落时间，然后用这个估算出的时间点重新计算更精确的太阳参数，再用新参数反过来修正日出日落时间，如此往复，直到结果收敛。
 
-    $$ 
-    \cos(\omega_0) = \frac{\sin(\alpha) - \sin(\phi)\sin(\delta)}{\cos(\phi)\cos(\delta)} 
-    $$ 
+*   **步骤 1：获取正午时刻的太阳参数作为初始值**
+    *   与应用一类似，我们首先计算出当天正午（12:00）时刻的太阳赤纬 $\delta$ 和均时差 $EoT$。这为我们的迭代提供了一个合理的起点。
 
-*  **处理边界情况（极昼与极夜）**：
-    *   若 $\cos(\omega_0) \geq 1$，意味着太阳永远在地平线以下，发生**极夜**，昼长为 0。
-    *   若 $\cos(\omega_0) \leq -1$，意味着太阳永远在地平线以上，发生**极昼**，昼长为 24 小时。
-*  **计算总昼长**：日落时角 $\omega_0$ 代表了从正午到日落的时间跨度。总昼长则是日出到日落的总时长，即 $2 \cdot \omega_0$。将其从弧度转换为小时即可。
+*   **步骤 2：求解初始的日出/日落时角 ($\omega_0$)**
+    *   将太阳高度角公式反解，求解时角 $\mathrm{HA}$。设 $\alpha$ 为大气折射导致的观测地平线修正角（一般取 $-0.83^\circ$），$\phi$ 为本地纬度，$\delta$ 为太阳赤纬，则日落时的时角 $\omega_0$ 满足：
+        $$ 
+        \cos(\omega_0) = \frac{\sin(\alpha) - \sin(\phi)\sin(\delta)}{\cos(\phi)\cos(\delta)} 
+        $$ 
+    *   此时需要处理边界情况：
+        *   若 $\cos(\omega_0) \geq 1$，意味着太阳永远在地平线以下，发生**极夜**。
+        *   若 $\cos(\omega_0) \leq -1$，意味着太阳永远在地平线以上，发生**极昼**。
 
-    $$ 
-    t_\text{daylight} (\text{hours}) = \frac{2 \cdot \omega_0}{2\pi} \times 24 = \frac{24 \cdot \omega_0}{\pi} 
-    $$ 
+*   **步骤 3：计算初始的日出日落时间**
+    *   太阳时角 $\omega_0$ 代表了从正午到日落的时间跨度（以角度计）。本地钟表的日出/日落时间还需考虑均时差和经度/时区修正。
+        $$
+        T_\text{sunrise} = 12 - \frac{\omega_0}{15^\circ/\text{hr}} - \frac{EoT_\text{minutes} + \text{LonCorr}_\text{minutes}}{60}
+        $$
+        $$
+        T_\text{sunset} = 12 + \frac{\omega_0}{15^\circ/\text{hr}} - \frac{EoT_\text{minutes} + \text{LonCorr}_\text{minutes}}{60}
+        $$
+
+*   **步骤 4：迭代优化**
+    *   **日出时间优化**：将上一步得到的 $T_\text{sunrise}$ 作为新的时间点，重新计算该时刻精确的太阳赤纬 $\delta_\text{sunrise}$ 和均时差 $EoT_\text{sunrise}$。将新参数代入步骤 2 和 3，得到一个更精确的日出时间 $T'_\text{sunrise}$。
+    *   **日落时间优化**：同理，用 $T_\text{sunset}$ 计算出 $\delta_\text{sunset}$ 和 $EoT_\text{sunset}$，得到更精确的日落时间 $T'_\text{sunset}$。
+    *   重复此过程，直到连续两次计算出的日出、日落时间变化足够小，迭代收敛。实际上一般只需要1次迭代即可达到0.1秒以内的精度。
+
+*   **步骤 5：计算总昼长**
+    *   最终的白昼时长即为精确的日落时间减去日出时间：
+        $$
+        t_\text{daylight} = T_\text{sunset, final} - T_\text{sunrise, final}
+        $$
+
+通过这种迭代方法，我们充分考虑了太阳参数在一天内的动态变化，从而获得了更精确的日出日落时间和白昼时长，避免了简化假设带来的误差。
 
 ## Vala 在数值计算中的优势
 
@@ -391,70 +412,185 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
 
 ```vala
     /**
-     * Calculates day length using high-precision astronomical formula.
-     * Based on http://www.jgiesen.de/elevaz/basics/meeus.htm
+     * Compute solar parameters at a given local time.
      * 
-     * @param latitude_rad Latitude in radians.
-     * @param julian_date GLib's Julian Date for the day (from 0001-01-01).
-     * @param horizon_angle_deg Horizon angle correction in degrees (default -0.83° for atmospheric refraction).
-     * @return Day length in hours.
+     * @param base_days_from_epoch Days from J2000.0 epoch at UTC midnight
+     * @param time_local_hours Local time in hours [0,24)
+     * @param obliquity_sin Sine of obliquity
+     * @param obliquity_cos Cosine of obliquity
+     * @param ecliptic_c1 Ecliptic longitude correction coefficient 1
+     * @param ecliptic_c2 Ecliptic longitude correction coefficient 2
      */
-    private double calculate_day_length (double latitude_rad, double julian_date, double horizon_angle_deg = -0.83) {
-        double sin_lat = Math.sin (latitude_rad);
-        double cos_lat = Math.cos (latitude_rad);
-        // Base days from J2000.0 epoch (GLib's Julian Date is days since 0001-01-01 12:00 UTC)
-        double base_days_from_epoch = julian_date - 730120.5; // julian_date's 00:00 UTC to 2000-01-01 12:00 UTC
-        // Pre-compute obliquity with higher-order terms (changes very slowly)
-        double base_days_sq = base_days_from_epoch * base_days_from_epoch;
-        double base_days_cb = base_days_sq * base_days_from_epoch;
-        double obliquity_deg = 23.439291111 - 3.560347e-7 * base_days_from_epoch - 1.2285e-16 * base_days_sq + 1.0335e-20 * base_days_cb;
-        double obliquity_sin = Math.sin (obliquity_deg * DEG2RAD);
-        double ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq;
-        double ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch;
-        const double ecliptic_c3 = 0.000290;
-        double mean_anomaly_deg = 357.52910 + 0.985600282 * base_days_from_epoch - 1.1686e-13 * base_days_sq - 9.85e-21 * base_days_cb;
-        mean_anomaly_deg = Math.fmod (mean_anomaly_deg, 360.0);
-        if (mean_anomaly_deg < 0) {
-            mean_anomaly_deg += 360.0;
-        }
-        double mean_longitude_deg = 280.46645 + 0.98564736 * base_days_from_epoch + 2.2727e-13 * base_days_sq;
-        mean_longitude_deg = Math.fmod (mean_longitude_deg, 360.0);
+    private static inline void compute_solar_parameters (
+        double base_days_from_epoch, double time_local_hours,
+        double obliquity_sin, double obliquity_cos,
+        double ecliptic_c1, double ecliptic_c2,
+        out double out_declination_sin, out double out_declination_cos, out double out_eqtime_minutes
+    ) {
+        double days_from_epoch = base_days_from_epoch + time_local_hours / 24.0;
+        double days_sq = days_from_epoch * days_from_epoch;
+        double days_cb = days_sq * days_from_epoch;
+
+        // Mean anomaly
+        double mean_anomaly_deg = 357.52910 + 0.985600282 * days_from_epoch - 1.1686e-13 * days_sq - 9.85e-21 * days_cb;
+        double mean_anomaly_rad = mean_anomaly_deg * DEG2RAD;
+
+        // Mean longitude (normalized)
+        double mean_longitude_deg = Math.fmod (280.46645 + 0.98564736 * days_from_epoch + 2.2727e-13 * days_sq, 360.0);
         if (mean_longitude_deg < 0) {
             mean_longitude_deg += 360.0;
         }
-        double mean_anomaly_rad = mean_anomaly_deg * DEG2RAD;
+        
+        // Ecliptic longitude
         double ecliptic_longitude_deg = mean_longitude_deg
             + ecliptic_c1 * Math.sin (mean_anomaly_rad)
             + ecliptic_c2 * Math.sin (2.0 * mean_anomaly_rad)
-            + ecliptic_c3 * Math.sin (3.0 * mean_anomaly_rad);
-        ecliptic_longitude_deg = Math.fmod (ecliptic_longitude_deg, 360.0);
-        if (ecliptic_longitude_deg < 0) {
-            ecliptic_longitude_deg += 360.0;
-        }
+            + 0.000290 * Math.sin (3.0 * mean_anomaly_rad);
+      
         double ecliptic_longitude_rad = ecliptic_longitude_deg * DEG2RAD;
         double ecliptic_longitude_sin = Math.sin (ecliptic_longitude_rad);
-        double declination_sin = (obliquity_sin * ecliptic_longitude_sin).clamp (-1.0, 1.0);
-        double declination_cos = Math.sqrt (1.0 - declination_sin * declination_sin); // More efficient than asin/cos
-        double horizon_angle_rad = horizon_angle_deg * DEG2RAD;
-        double cos_hour_angle = (Math.sin (horizon_angle_rad) - sin_lat * declination_sin) / (cos_lat * declination_cos);
-        // Handle polar day/night cases
-        if (cos_hour_angle.is_nan()) {
-            return 12.0; // Fallback
-        } else if (cos_hour_angle >= 1.0) {
-            return 0.0; // Polar night
-        } else if (cos_hour_angle <= -1.0) {
-            return 24.0; // Polar day
+        double ecliptic_longitude_cos = Math.cos (ecliptic_longitude_rad);
+        
+        // Declination
+        out_declination_sin = (obliquity_sin * ecliptic_longitude_sin).clamp (-1.0, 1.0);
+        out_declination_cos = Math.sqrt (1.0 - out_declination_sin * out_declination_sin);
+        
+        // Equation of time
+        double right_ascension_rad = Math.atan2 (obliquity_cos * ecliptic_longitude_sin, ecliptic_longitude_cos);
+        double right_ascension_hours = right_ascension_rad * RAD2DEG / 15.0;
+        double mean_time_hours = mean_longitude_deg / 15.0;
+
+        double time_diff = mean_time_hours - right_ascension_hours;
+        if (time_diff > 12.0) {
+            time_diff -= 24.0;
+        } else if (time_diff < -12.0) {
+            time_diff += 24.0;
         }
-        double hour_angle_rad = Math.acos (cos_hour_angle);
-        return (hour_angle_rad * 24.0) / Math.PI; // Simplified from (2 * rad * 24) / (2 * PI)
+        out_eqtime_minutes = time_diff * 60.0;
+    }
+
+    /**
+     * Calculates day length, sunrise, and sunset times.
+     * Based on http://www.jgiesen.de/elevaz/basics/meeus.htm
+     *
+     * @param latitude_rad Latitude in radians.
+     * @param longitude_deg Longitude in degrees.
+     * @param timezone_offset_hrs Timezone offset in hours from UTC.
+     * @param julian_date GLib's Julian Date for the day (from 0001-01-01).
+     * @param horizon_angle_deg Horizon angle correction in degrees (default -0.83° for atmospheric refraction).
+     * @param day_length Output parameter for day length in hours.
+     * @param sunrise_time Output parameter for sunrise time in local hours [0,24).
+     * @param sunset_time Output parameter for sunset time in local hours [0,24).
+     */
+    private void calculate_day_length (double latitude_rad, double longitude_deg, double timezone_offset_hrs, double julian_date, double horizon_angle_deg, out double day_length, out double sunrise_time, out double sunset_time) {
+        double sin_lat = Math.sin (latitude_rad);
+        double cos_lat = Math.cos (latitude_rad);
+        double sin_horizon = Math.sin (horizon_angle_deg * DEG2RAD);
+        
+        double base_days_from_epoch_utc_midnight = (julian_date - 730120.5) - timezone_offset_hrs / 24.0;
+        
+        // Obliquity
+        double base_days_sq = base_days_from_epoch_utc_midnight * base_days_from_epoch_utc_midnight;
+        double base_days_cb = base_days_sq * base_days_from_epoch_utc_midnight;
+        double obliquity_deg = 23.439291111 - 3.560347e-7 * base_days_from_epoch_utc_midnight - 1.2285e-16 * base_days_sq + 1.0335e-20 * base_days_cb;
+        double obliquity_sin = Math.sin (obliquity_deg * DEG2RAD);
+        double obliquity_cos = Math.cos (obliquity_deg * DEG2RAD);
+        
+        // Ecliptic correction coefficients
+        double ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch_utc_midnight - 1.049e-14 * base_days_sq;
+        double ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch_utc_midnight;
+        
+        double tst_offset = 4.0 * longitude_deg - 60.0 * timezone_offset_hrs;
+        
+        // Initial estimate at noon
+        double declination_sin, declination_cos, eqtime_minutes;
+        compute_solar_parameters (
+            base_days_from_epoch_utc_midnight, 12.0,
+            obliquity_sin, obliquity_cos, ecliptic_c1, ecliptic_c2,
+            out declination_sin, out declination_cos, out eqtime_minutes
+        );
+        
+        double cos_ha = (sin_horizon - sin_lat * declination_sin) / (cos_lat * declination_cos);
+        
+        if (cos_ha >= 1.0) {
+            day_length = 0.0;
+            sunrise_time = double.NAN;
+            sunset_time = double.NAN;
+            return;
+        } else if (cos_ha <= -1.0) {
+            day_length = 24.0;
+            sunrise_time = double.NAN;
+            sunset_time = double.NAN;
+            return;
+        }
+        
+        double ha_deg = Math.acos (cos_ha) * RAD2DEG;
+        
+        sunrise_time = 12.0 - ha_deg / 15.0 - (eqtime_minutes + tst_offset) / 60.0;
+        sunset_time  = 12.0 + ha_deg / 15.0 - (eqtime_minutes + tst_offset) / 60.0;
+        
+        // Iterative refinement
+        const double TOL_HOURS = 0.1 / 3600.0;
+        for (int iter = 0; iter < 5; iter += 1) {
+            double old_sr = sunrise_time;
+            double old_ss = sunset_time;
+            
+            compute_solar_parameters (
+                base_days_from_epoch_utc_midnight, sunrise_time,
+                obliquity_sin, obliquity_cos, ecliptic_c1, ecliptic_c2,
+                out declination_sin, out declination_cos, out eqtime_minutes
+            );
+            
+            cos_ha = (sin_horizon - sin_lat * declination_sin) / (cos_lat * declination_cos);
+            if (cos_ha >= 1.0 || cos_ha <= -1.0) {
+                break;
+            }
+            
+            ha_deg = Math.acos (cos_ha) * RAD2DEG;
+            sunrise_time = 12.0 - ha_deg / 15.0 - (eqtime_minutes + tst_offset) / 60.0;
+            
+            compute_solar_parameters (
+                base_days_from_epoch_utc_midnight, sunset_time,
+                obliquity_sin, obliquity_cos, ecliptic_c1, ecliptic_c2,
+                out declination_sin, out declination_cos, out eqtime_minutes
+            );
+            
+            cos_ha = (sin_horizon - sin_lat * declination_sin) / (cos_lat * declination_cos);
+            if (cos_ha >= 1.0 || cos_ha <= -1.0) {
+                break;
+            }
+            
+            ha_deg = Math.acos (cos_ha) * RAD2DEG;
+            sunset_time = 12.0 + ha_deg / 15.0 - (eqtime_minutes + tst_offset) / 60.0;
+
+            if (Math.fabs (sunrise_time - old_sr) < TOL_HOURS && Math.fabs (sunset_time - old_ss) < TOL_HOURS) {
+                break;
+            }
+        }
+        
+        // Normalize to [0, 24)
+        sunrise_time = Math.fmod (sunrise_time, 24.0);
+        if (sunrise_time < 0) {
+            sunrise_time += 24.0;
+        }
+        sunset_time = Math.fmod (sunset_time, 24.0);
+        if (sunset_time < 0) {
+            sunset_time += 24.0;
+        }
+        day_length = sunset_time - sunrise_time;
+        if (day_length < 0) {
+            day_length += 24.0;
+        }
     }
 
     /**
      * Updates plot data for all days in the selected year.
      */
     private void update_plot_data () {
-        int total_days = days_in_year (selected_year);
+        int total_days = (selected_year % 4 == 0 && (selected_year % 100 != 0 || selected_year % 400 == 0)) ? 366 : 365;
         day_lengths = new double[total_days];
+        sunrise_times = new double[total_days];
+        sunset_times = new double[total_days];
         
         double latitude_rad = latitude * DEG2RAD;
 
@@ -464,14 +600,15 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
         uint base_julian_date = date.get_julian ();
 
         for (int day = 0; day < total_days; day += 1) {
-            day_lengths[day] = calculate_day_length (
-                latitude_rad, (double) (base_julian_date + day), horizon_angle
+            calculate_day_length (
+                latitude_rad, longitude, timezone_offset_hours, (double) (base_julian_date + day), horizon_angle,
+                out day_lengths[day], out sunrise_times[day], out sunset_times[day]
             );
         }
 
         // Clear click point when data updates
         has_click_point = false;
-        click_info_label.label = "Click on chart to view data\n";
+        click_info_label.label = "Click on chart to view data\n\n";
     }
 ```
 
