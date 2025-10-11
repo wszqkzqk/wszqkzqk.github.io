@@ -62,9 +62,9 @@ double base_days_from_epoch = julian_date - 730120.5;
 
 地球自转轴相对于其公转轨道（黄道）的倾角。它随时间微小变化，Meeus 给出了一个拟合的多项式：
 
-$$ 
-\epsilon (\text{deg}) = 23.439291111 - 0.0000003560347 d - 1.2285 \times 10^{-16} d^2 + 1.0335 \times 10^{-20} d^3 
-$$ 
+$$
+\epsilon (\text{deg}) = 23.439291111 - 0.0000003560347 d - 1.2285 \times 10^{-16} d^2 + 1.0335 \times 10^{-20} d^3
+$$
 
 其中 `d` 是从 J2000.0 起算的天数。在 Vala 中实现为：
 
@@ -88,13 +88,13 @@ double obliquity_cos = Math.cos (obliquity_deg * DEG2RAD);
 
 这些值描述了在一个理想化的匀速圆周轨道上太阳的位置。
 
-$$ 
-L (\text{deg}) = 280.46645 + 0.98564736 d + 2.2727 \times 10^{-13} d^2 
-$$ 
+$$
+L (\text{deg}) = 280.46645 + 0.98564736 d + 2.2727 \times 10^{-13} d^2
+$$
 
-$$ 
-M (\text{deg}) = 357.52910 + 0.985600282 d - 1.1686 \times 10^{-13} d^2 - 9.85 \times 10^{-21} d^3 
-$$ 
+$$
+M (\text{deg}) = 357.52910 + 0.985600282 d - 1.1686 \times 10^{-13} d^2 - 9.85 \times 10^{-21} d^3
+$$
 
 Vala 实现（注意 `fmod` 用于将角度归一化到 0-360 度）：
 
@@ -115,15 +115,15 @@ if (mean_longitude_deg < 0) { mean_longitude_deg += 360.0; }
 
 为了从“平”位置得到“真”位置，需要加上由地球轨道椭圆形引起的修正，即**中心差**。Meeus 算法给出了一个包含三项正弦修正的简化形式：
 
-$$ 
-C (\text{deg}) = (1.914600 - 0.00000013188 d - 1.049 \times 10^{-14} d^2) \sin(M) + (0.019993 - 0.0000000027652 d) \sin(2M) + 0.000290 \sin(3M) 
-$$ 
+$$
+C (\text{deg}) = (1.914600 - 0.00000013188 d - 1.049 \times 10^{-14} d^2) \sin(M) + (0.019993 - 0.0000000027652 d) \sin(2M) + 0.000290 \sin(3M)
+$$
 
 **真黄经 (True Longitude, $\lambda$)** 就是平黄经加上中心差：
 
-$$ 
-\lambda = L + C 
-$$ 
+$$
+\lambda = L + C
+$$
 
 Vala 实现：
 
@@ -140,13 +140,13 @@ double ecliptic_longitude_deg = mean_longitude_deg + ecliptic_c1 * Math.sin (mea
 
 有了真黄经 `λ` 和黄赤交角 `ε`，我们便可将太阳位置转换到赤道坐标系，得到**赤纬 (Declination, `δ`)** 和**赤经 (Right Ascension, RA)**。
 
-$$ 
-\sin(\delta) = \sin(\epsilon) \sin(\lambda) 
-$$ 
+$$
+\sin(\delta) = \sin(\epsilon) \sin(\lambda)
+$$
 
-$$ 
-\tan(RA) = \frac{\cos(\epsilon) \sin(\lambda)}{\cos(\lambda)} \implies RA = \text{atan2}(\cos(\epsilon) \sin(\lambda), \cos(\lambda)) 
-$$ 
+$$
+\tan(RA) = \frac{\cos(\epsilon) \sin(\lambda)}{\cos(\lambda)} \implies RA = \text{atan2}(\cos(\epsilon) \sin(\lambda), \cos(\lambda))
+$$
 
 Vala 实现：
 
@@ -178,9 +178,9 @@ double right_ascension_rad = Math.atan2 (obliquity_cos * ecliptic_longitude_sin,
 
 因此，真太阳时的计算公式为：
 
-$$ 
-TST_\text{minutes} = T_\text{local, minutes} + EoT_\text{minutes} + 4 \times \lambda_\text{lon, deg} - 60 \times TZ_\text{offset, hr} 
-$$ 
+$$
+TST_\text{minutes} = T_\text{local, minutes} + EoT_\text{minutes} + 4 \times \lambda_\text{lon, deg} - 60 \times TZ_\text{offset, hr}
+$$
 
 其中：
 *   $T_\text{local, minutes}$ 是午夜起算的本地钟表时间（分钟）。
@@ -208,9 +208,9 @@ double tst_minutes = i + eqtime_minutes + tst_offset;
 
 从以分钟计量的真太阳时到以度计量的时角，转换公式为：
 
-$$ 
-HA_\text{deg} = \frac{TST_\text{minutes}}{4} - 180 
-$$ 
+$$
+HA_\text{deg} = \frac{TST_\text{minutes}}{4} - 180
+$$
 
 这里除以 4 是因为 1 分钟时间对应 0.25° 的旋转。减去 180° 是为了将计时起点从午夜（0 分钟）校正到正午（720 分钟），使得正午时 $720 / 4 - 180 = 0$。
 
@@ -224,9 +224,9 @@ double hour_angle_rad = hour_angle_deg * DEG2RAD;
 
 最后，我们将观测地纬度 $\phi$、太阳赤纬 $\delta$ 和刚刚得到的时角 $\mathrm{HA}$ 代入球面三角学的基本公式，即可求得太阳高度角 $\alpha$。
 
-$$ 
-\sin(\alpha) = \sin(\phi)\sin(\delta) + \cos(\phi)\cos(\delta)\cos(HA) 
-$$ 
+$$
+\sin(\alpha) = \sin(\phi)\sin(\delta) + \cos(\phi)\cos(\delta)\cos(HA)
+$$
 
 ```vala
 // 计算太阳高度角的正弦值
@@ -252,9 +252,9 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
 
 *   **步骤 2：求解初始的日出/日落时角 ($\omega_0$)**
     *   将太阳高度角公式反解，求解时角 $\mathrm{HA}$。设 $\alpha$ 为大气折射导致的观测地平线修正角（一般取 $-0.83^\circ$），$\phi$ 为本地纬度，$\delta$ 为太阳赤纬，则日落时的时角 $\omega_0$ 满足：
-        $$ 
-        \cos(\omega_0) = \frac{\sin(\alpha) - \sin(\phi)\sin(\delta)}{\cos(\phi)\cos(\delta)} 
-        $$ 
+        $$
+        \cos(\omega_0) = \frac{\sin(\alpha) - \sin(\phi)\sin(\delta)}{\cos(\phi)\cos(\delta)}
+        $$
     *   此时需要处理边界情况：
         *   若 $\cos(\omega_0) \geq 1$，意味着太阳永远在地平线以下，发生**极夜**。
         *   若 $\cos(\omega_0) \leq -1$，意味着太阳永远在地平线以上，发生**极昼**。
@@ -413,7 +413,7 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
 ```vala
     /**
      * Compute solar parameters at a given local time.
-     * 
+     *
      * @param base_days_from_epoch Days from J2000.0 epoch at UTC midnight
      * @param time_local_hours Local time in hours [0,24)
      * @param obliquity_sin Sine of obliquity
@@ -440,21 +440,21 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
         if (mean_longitude_deg < 0) {
             mean_longitude_deg += 360.0;
         }
-        
+
         // Ecliptic longitude
         double ecliptic_longitude_deg = mean_longitude_deg
             + ecliptic_c1 * Math.sin (mean_anomaly_rad)
             + ecliptic_c2 * Math.sin (2.0 * mean_anomaly_rad)
             + 0.000290 * Math.sin (3.0 * mean_anomaly_rad);
-      
+
         double ecliptic_longitude_rad = ecliptic_longitude_deg * DEG2RAD;
         double ecliptic_longitude_sin = Math.sin (ecliptic_longitude_rad);
         double ecliptic_longitude_cos = Math.cos (ecliptic_longitude_rad);
-        
+
         // Declination
         out_declination_sin = (obliquity_sin * ecliptic_longitude_sin).clamp (-1.0, 1.0);
         out_declination_cos = Math.sqrt (1.0 - out_declination_sin * out_declination_sin);
-        
+
         // Equation of time
         double right_ascension_rad = Math.atan2 (obliquity_cos * ecliptic_longitude_sin, ecliptic_longitude_cos);
         double right_ascension_hours = right_ascension_rad * RAD2DEG / 15.0;
@@ -486,22 +486,22 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
         double sin_lat = Math.sin (latitude_rad);
         double cos_lat = Math.cos (latitude_rad);
         double sin_horizon = Math.sin (horizon_angle_deg * DEG2RAD);
-        
+
         double base_days_from_epoch_utc_midnight = (julian_date - 730120.5) - timezone_offset_hrs / 24.0;
-        
+
         // Obliquity
         double base_days_sq = base_days_from_epoch_utc_midnight * base_days_from_epoch_utc_midnight;
         double base_days_cb = base_days_sq * base_days_from_epoch_utc_midnight;
         double obliquity_deg = 23.439291111 - 3.560347e-7 * base_days_from_epoch_utc_midnight - 1.2285e-16 * base_days_sq + 1.0335e-20 * base_days_cb;
         double obliquity_sin = Math.sin (obliquity_deg * DEG2RAD);
         double obliquity_cos = Math.cos (obliquity_deg * DEG2RAD);
-        
+
         // Ecliptic correction coefficients
         double ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch_utc_midnight - 1.049e-14 * base_days_sq;
         double ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch_utc_midnight;
-        
+
         double tst_offset = 4.0 * longitude_deg - 60.0 * timezone_offset_hrs;
-        
+
         // Initial estimate at noon
         double declination_sin, declination_cos, eqtime_minutes;
         compute_solar_parameters (
@@ -509,9 +509,9 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
             obliquity_sin, obliquity_cos, ecliptic_c1, ecliptic_c2,
             out declination_sin, out declination_cos, out eqtime_minutes
         );
-        
+
         double cos_ha = (sin_horizon - sin_lat * declination_sin) / (cos_lat * declination_cos);
-        
+
         if (cos_ha >= 1.0) {
             day_length = 0.0;
             sunrise_time = double.NAN;
@@ -523,43 +523,43 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
             sunset_time = double.NAN;
             return;
         }
-        
+
         double ha_deg = Math.acos (cos_ha) * RAD2DEG;
-        
+
         sunrise_time = 12.0 - ha_deg / 15.0 - (eqtime_minutes + tst_offset) / 60.0;
         sunset_time  = 12.0 + ha_deg / 15.0 - (eqtime_minutes + tst_offset) / 60.0;
-        
+
         // Iterative refinement
         const double TOL_HOURS = 0.1 / 3600.0;
         for (int iter = 0; iter < 5; iter += 1) {
             double old_sr = sunrise_time;
             double old_ss = sunset_time;
-            
+
             compute_solar_parameters (
                 base_days_from_epoch_utc_midnight, sunrise_time,
                 obliquity_sin, obliquity_cos, ecliptic_c1, ecliptic_c2,
                 out declination_sin, out declination_cos, out eqtime_minutes
             );
-            
+
             cos_ha = (sin_horizon - sin_lat * declination_sin) / (cos_lat * declination_cos);
             if (cos_ha >= 1.0 || cos_ha <= -1.0) {
                 break;
             }
-            
+
             ha_deg = Math.acos (cos_ha) * RAD2DEG;
             sunrise_time = 12.0 - ha_deg / 15.0 - (eqtime_minutes + tst_offset) / 60.0;
-            
+
             compute_solar_parameters (
                 base_days_from_epoch_utc_midnight, sunset_time,
                 obliquity_sin, obliquity_cos, ecliptic_c1, ecliptic_c2,
                 out declination_sin, out declination_cos, out eqtime_minutes
             );
-            
+
             cos_ha = (sin_horizon - sin_lat * declination_sin) / (cos_lat * declination_cos);
             if (cos_ha >= 1.0 || cos_ha <= -1.0) {
                 break;
             }
-            
+
             ha_deg = Math.acos (cos_ha) * RAD2DEG;
             sunset_time = 12.0 + ha_deg / 15.0 - (eqtime_minutes + tst_offset) / 60.0;
 
@@ -567,7 +567,7 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
                 break;
             }
         }
-        
+
         // Normalize to [0, 24)
         sunrise_time = Math.fmod (sunrise_time, 24.0);
         if (sunrise_time < 0) {
@@ -591,7 +591,7 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
         day_lengths = new double[total_days];
         sunrise_times = new double[total_days];
         sunset_times = new double[total_days];
-        
+
         double latitude_rad = latitude * DEG2RAD;
 
         // Get Julian Date for January 1st of the selected year
@@ -784,25 +784,25 @@ def generate_sun_angles_meeus(latitude_deg, longitude_deg, timezone_offset_hrs, 
     Method 1: The high-precision algorithm from your new Vala program (based on Jean Meeus' method).
     """
     julian_date = float(datetime.date(year, month, day).toordinal())
-    
+
     latitude_rad = latitude_deg * DEG2RAD
     sin_lat = np.sin(latitude_rad)
     cos_lat = np.cos(latitude_rad)
-    
+
     base_days_from_epoch = julian_date - 730120.5
-    
+
     base_days_sq = base_days_from_epoch ** 2
     base_days_cb = base_days_sq * base_days_from_epoch
     obliquity_deg = 23.439291111 - 3.560347e-7 * base_days_from_epoch - 1.2285e-16 * base_days_sq + 1.0335e-20 * base_days_cb
     obliquity_sin = np.sin(obliquity_deg * DEG2RAD)
     obliquity_cos = np.cos(obliquity_deg * DEG2RAD)
-    
+
     ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq
     ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch
     ecliptic_c3 = 0.000290
-    
+
     tst_offset = 4.0 * longitude_deg - 60.0 * timezone_offset_hrs
-    
+
     angles = []
     for local_hour in range(24):
         i = local_hour * 60
@@ -810,40 +810,40 @@ def generate_sun_angles_meeus(latitude_deg, longitude_deg, timezone_offset_hrs, 
         days_from_epoch = base_days_from_epoch + time_offset_days
         days_from_epoch_sq = days_from_epoch ** 2
         days_from_epoch_cb = days_from_epoch_sq * days_from_epoch
-        
+
         mean_anomaly_deg = 357.52910 + 0.985600282 * days_from_epoch - 1.1686e-13 * days_from_epoch_sq - 9.85e-21 * days_from_epoch_cb
         mean_anomaly_deg = np.fmod(mean_anomaly_deg, 360.0)
-        
+
         mean_longitude_deg = 280.46645 + 0.98564736 * days_from_epoch + 2.2727e-13 * days_from_epoch_sq
         mean_longitude_deg = np.fmod(mean_longitude_deg, 360.0)
-        
+
         mean_anomaly_rad = mean_anomaly_deg * DEG2RAD
         ecliptic_longitude_deg = (mean_longitude_deg +
                                   ecliptic_c1 * np.sin(mean_anomaly_rad) +
                                   ecliptic_c2 * np.sin(2 * mean_anomaly_rad) +
                                   ecliptic_c3 * np.sin(3 * mean_anomaly_rad))
-        
+
         ecliptic_longitude_rad = ecliptic_longitude_deg * DEG2RAD
         declination_sin = np.clip(obliquity_sin * np.sin(ecliptic_longitude_rad), -1.0, 1.0)
         declination_cos = np.sqrt(1.0 - declination_sin ** 2)
-        
+
         right_ascension_rad = np.arctan2(obliquity_cos * np.sin(ecliptic_longitude_rad), np.cos(ecliptic_longitude_rad))
         right_ascension_hours = (right_ascension_rad * RAD2DEG) / 15.0
-        
+
         mean_time = np.fmod(mean_longitude_deg / 15.0, 24.0)
         delta_ra = right_ascension_hours - mean_time
         if delta_ra > 12.0: right_ascension_hours -= 24.0
         elif delta_ra < -12.0: right_ascension_hours += 24.0
-        
+
         eqtime_minutes = (mean_time - right_ascension_hours) * 60.0
-        
+
         tst_minutes = i + eqtime_minutes + tst_offset
         hour_angle_rad = (tst_minutes / 4.0 - 180.0) * DEG2RAD
-        
+
         elevation_sine = sin_lat * declination_sin + cos_lat * declination_cos * np.cos(hour_angle_rad)
         elevation = np.arcsin(np.clip(elevation_sine, -1.0, 1.0)) * RAD2DEG
         angles.append(elevation)
-    
+
     return np.array(angles)
 
 def generate_sun_angles_fourier(latitude_deg, longitude_deg, timezone_offset_hrs, year, month, day):
@@ -857,11 +857,11 @@ def generate_sun_angles_fourier(latitude_deg, longitude_deg, timezone_offset_hrs
     dt = datetime.date(year, month, day)
     day_of_year = dt.timetuple().tm_yday
     days_in_year = 366.0 if calendar.isleap(year) else 365.0
-    
+
     angles = []
     for local_hour in range(24):
         i = local_hour * 60
-        
+
         fractional_day_component = day_of_year - 1 + (i / 1440.0)
         gamma_rad = (2.0 * np.pi / days_in_year) * fractional_day_component
 
@@ -885,7 +885,7 @@ def generate_sun_angles_fourier(latitude_deg, longitude_deg, timezone_offset_hrs
         elevation_sine = sin_lat * np.sin(decl_rad) + cos_lat * np.cos(decl_rad) * np.cos(ha_rad)
         elevation = np.arcsin(np.clip(elevation_sine, -1.0, 1.0)) * RAD2DEG
         angles.append(elevation)
-        
+
     return np.array(angles)
 
 def generate_sun_angles_wikipedia(latitude_deg, longitude_deg, timezone_offset_hrs, year, month, day):
@@ -898,7 +898,7 @@ def generate_sun_angles_wikipedia(latitude_deg, longitude_deg, timezone_offset_h
 
     dt = datetime.date(year, month, day)
     day_of_year = dt.timetuple().tm_yday
-    
+
     angles = []
     for local_hour in range(24):
         utc_hour = local_hour - timezone_offset_hrs
@@ -912,15 +912,15 @@ def generate_sun_angles_wikipedia(latitude_deg, longitude_deg, timezone_offset_h
         d_eot = day_of_year - 1
         D_rad = 6.24004077 + 0.01720197 * (365.25 * (year - 2000) + d_eot)
         eqtime_minutes = -7.659 * np.sin(D_rad) + 9.863 * np.sin(2 * D_rad + 3.5932)
-        
+
         i = local_hour * 60
         tst_minutes = i + eqtime_minutes + 4.0 * longitude_deg - 60.0 * timezone_offset_hrs
         ha_rad = (tst_minutes / 4.0 - 180.0) * DEG2RAD
-        
+
         elevation_sine = sin_lat * np.sin(decl_rad) + cos_lat * np.cos(decl_rad) * np.cos(ha_rad)
         elevation = np.arcsin(np.clip(elevation_sine, -1.0, 1.0)) * RAD2DEG
         angles.append(elevation)
-        
+
     return np.array(angles)
 
 def main():
@@ -929,47 +929,47 @@ def main():
     and prints a detailed monthly and average RMSD report.
     """
     years = [1949, 1976, 1989, 2003, 2008, 2020, 2025, 2035, 2050]
-    
+
     for location_name, params in LOCATIONS.items():
         lat, lon, tz = params["lat"], params["lon"], params["tz"]
-        
+
         print(f"\n={'='*70}")
         print(f"Validation Results for: {location_name}")
         print(f"(Lat: {lat}, Lon: {lon}, TZ: UTC{tz:+.1f})")
         print(f"={'='*70}")
-        
+
         for year in years:
             print(f"\n--- Year: {year} ---")
             print(f"| {'Month':<7} | {'Meeus RMSD':<15} | {'Fourier RMSD':<15} | {'Wikipedia RMSD':<15} |")
             print(f"|{'-'*9}|{'-'*17}|{'-'*17}|{'-'*17}|")
-            
+
             monthly_rmsd_meeus = []
             monthly_rmsd_fourier = []
             monthly_rmsd_wikipedia = []
-            
+
             for month in range(1, 13):
                 day = 15
-                
+
                 astro_angles = astropy_sun_elevations(year, month, day, lat, lon, tz)
                 meeus_angles = generate_sun_angles_meeus(lat, lon, tz, year, month, day)
                 fourier_angles = generate_sun_angles_fourier(lat, lon, tz, year, month, day)
                 wikipedia_angles = generate_sun_angles_wikipedia(lat, lon, tz, year, month, day)
-                
+
                 rmsd_meeus = np.sqrt(np.mean((meeus_angles - astro_angles) ** 2))
                 rmsd_fourier = np.sqrt(np.mean((fourier_angles - astro_angles) ** 2))
                 rmsd_wikipedia = np.sqrt(np.mean((wikipedia_angles - astro_angles) ** 2))
-                
+
                 monthly_rmsd_meeus.append(rmsd_meeus)
                 monthly_rmsd_fourier.append(rmsd_fourier)
                 monthly_rmsd_wikipedia.append(rmsd_wikipedia)
-                
+
                 month_name = datetime.date(year, month, 1).strftime('%b')
                 print(f"| {month_name:<7} | {rmsd_meeus:<15.4f} | {rmsd_fourier:<15.4f} | {rmsd_wikipedia:<15.4f} |")
-            
+
             annual_avg_rmsd_meeus = np.mean(monthly_rmsd_meeus)
             annual_avg_rmsd_fourier = np.mean(monthly_rmsd_fourier)
             annual_avg_rmsd_wikipedia = np.mean(monthly_rmsd_wikipedia)
-            
+
             print(f"|{'-'*9}|{'-'*17}|{'-'*17}|{'-'*17}|")
             print(f"| {'Average':<7} | {annual_avg_rmsd_meeus:<15.4f} | {annual_avg_rmsd_fourier:<15.4f} | {annual_avg_rmsd_wikipedia:<15.4f} |")
 
