@@ -237,7 +237,7 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
 
 至此，我们就完成了从一个日期和时间点，到其精确太阳高度角的完整计算链条。
 
-## 应用二：计算白昼时长
+## 应用二：计算日出日落时间及白昼时长
 
 计算白昼时长是这些天文参数的另一个直接应用。其核心是计算出太阳升起和落下的时刻，即太阳高度角为某个特定值（通常是-0.83°而不是0，考虑大气折射）时的时角。一个常见的简化方法是假设太阳赤纬和均时差在一天之内是恒定的，取正午时刻的值，然后直接解算日出/日落时角。然而，太阳的赤纬和均时差在一天中是持续变化的，尤其是在高纬度地区或对精度要求高的场景下，这种简化会引入不可忽略的误差，**与笔者使用的 Meeus 算法精度不匹配**。
 
@@ -411,9 +411,9 @@ $$
     }
 ```
 
-### 白昼时长计算
+### 日出日落时间及白昼时长计算
 
-该函数用于计算某一天的白昼时长，完整程序见 [GitHub](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)：
+该函数用于计算某地某一天的日出日落时间及白昼时长，完整程序见 [GitHub](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)：
 
 ```vala
     /**
