@@ -126,6 +126,76 @@ Vala 输出函数预计算年参数，循环内仅基本三角函数，高效。
 
 这些系数直接对应物理量：轴倾衰减由潮汐摩擦引起，近日点前进由引力摄动。2000 年值与 NASA 星历吻合（e.g., $\epsilon=23.4393^\circ$，误差 <0.001°）。
 
+### 线性参数的完整公式表达
+
+为便于后续实现和复现，以下给出在日历年份 $y$、年积日 $N$（自 1 月 1 日起，含闰日）以及从本地午夜起算的分钟数 $t$ 下的完整解析式。角度制转换采用 $\deg2rad(x) = x \pi / 180$。
+
+**赤纬**
+
+线性化的轨道参数为：
+
+$$
+\begin{aligned}
+\epsilon(y) &= (23.68961512 - 0.00012720\, y)^\circ,\\
+S(y) &= -4.95365451 + 0.00758474\, y,\\
+P(y) &= 16.90763877 - 0.00993146\, y,\\
+e(y) &= 0.01749432 - 4.3\times 10^{-7} y,\\
+\Omega &= \frac{360^\circ}{365.2422}.
+\end{aligned}
+$$
+
+则经过拟合优化后的赤纬表达式为：
+
+$$
+\delta(y,N,t) = \arcsin\Bigg[ \sin\big(-\deg2rad(\epsilon(y))\big) \cos\Big(\deg2rad\Big(\Omega (N-1+\tfrac{t}{1440} + S(y)) + \frac{360^\circ}{\pi} e(y) \sin\big(\deg2rad(\Omega (N-1+\tfrac{t}{1440} + P(y))\big)\Big)\Big)\Bigg].
+$$
+
+**均时差**
+
+同样地，时间方程相关参数为：
+
+$$
+\begin{aligned}
+A_e(y) &= -7.52810424 + 0.00009320\, y,\\
+A_o(y) &= 10.17530545 - 0.00013295\, y,\\
+\phi(y) &= 2.34399278 + 0.00064267\, y,\\
+D_0(y) &= \deg2rad\big(6.26628811 - 0.00002763\, y\big),\\
+\omega &= 0.01720197,\\
+T(y) &= 365.25\, (y-2000).
+\end{aligned}
+$$
+
+设 $f = N-1 + t/1440$，则 EoT 为：
+
+$$
+\Delta t(y,N,t) = A_e(y) \sin D(y,f) + A_o(y) \sin\big(2 D(y,f) + \phi(y)\big),
+$$
+
+其中
+
+$$
+D(y,f) = D_0(y) + \omega \big(T(y) + f\big).
+$$
+
+**最终太阳高度角**
+
+给定地理纬度 $\varphi$、经度 $\lambda$（向东为正）以及时区偏移 $\Delta_{\mathrm{tz}}$（东八区取 $+8$），本地真太阳时对应的小时角 $H$ 为：
+
+$$
+\begin{aligned}
+\mathrm{TST}(y,N,t) &= t + \Delta t(y,N,t) + 4\lambda - 60\Delta_{\mathrm{tz}},\\
+H(y,N,t) &= \deg2rad\Big(\frac{\mathrm{TST}(y,N,t)}{4} - 180\Big).
+\end{aligned}
+$$
+
+最终可得到太阳高度角：
+
+$$
+\alpha(y,N,t) = \arcsin\big(\sin\varphi \sin\delta(y,N,t) + \cos\varphi \cos\delta(y,N,t) \cos H(y,N,t)\big).
+$$
+
+该套表达式与上节给出的 Vala 实现一一对应，方便在其他语言中复现或进行进一步分析。
+
 ## 验证与对比
 
 ### 与公认数值对比
