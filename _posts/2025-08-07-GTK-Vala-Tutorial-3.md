@@ -237,48 +237,86 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 > **【2025年10月更新】**
 >
-> 本程序的完整代码已更新为一套更精确、更复杂的天文算法。下面的章节将介绍最初版本中使用的、更简洁直观的 NOAA 近似公式，它依然是理解基本原理的绝佳起点。
->
-> 如果你对高精度算法的实现细节（如儒略日、黄赤交角、方程时等）感兴趣，请移步阅读我的续篇教程：**[《GTK4/Vala 教程续：提升太阳高度角计算精度》](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation)**。
+> 本程序的完整代码已更新为基于 [**Meeus 算法**](http://www.jgiesen.de/elevaz/basics/meeus.htm)的高精度实现。Meeus 算法是国际上广受认可的天文算法，能在不依赖大型星历表的情况下，达到非常高的精度（误差在 0.01 度内，平均约0.003度）。
+> 如果你对算法的理论背景、实现细节及其在 Vala 语言中的最佳实践感兴趣，请移步阅读笔者的续篇教程：**[《GTK4/Vala 教程续：提升太阳高度角计算精度》](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation)**。
 
-`generate_sun_angles` 函数是应用计算的核心函数。它基于 [NOAA 赤纬公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF)来计算太阳高度角。这个公式保留了较多傅里叶级数项（三阶正余弦），计算精度较高。
+`generate_sun_angles` 函数是应用计算的核心。它实现了 Meeus 算法，通过精确的天体力学模型计算太阳位置。算法的主要参考来源是 [Paul Schlyter 和 J. Giesen 总结的高精度算法页面](http://www.jgiesen.de/elevaz/basics/meeus.htm)。
 
-- **日行轨迹组分与年角计算**：
-  - `fractional_day_component = day_of_year - 1 + ((double) i) / RESOLUTION_PER_MIN`：计算一年中的具体时刻（以天为单位，包含小数部分）。这里减去1是为了保证跨年时的连续性，同时也是为了避免重复计入当前日的分数部分，保证符合公式的形式。
-  - `gamma_rad = (2.0 * Math.PI / days_in_year) * fractional_day_component`：计算年角（弧度），表示地球在轨道上的精确位置。
-- **太阳赤纬 `δ` 计算**（使用 NOAA 傅里叶级数近似公式）：
-  将上述 `gamma_rad` 代入经验公式：
+#### 时间基准：从 J2000.0 历元起算的天数
 
-  $$
-  \begin{aligned}
-  \delta &= 0.006918 \\
-      &\quad {}- 0.399912 \cos(\gamma) \\
-      &\quad {}+ 0.070257 \sin(\gamma) \\
-      &\quad {}- 0.006758 \cos(2\gamma) \\
-      &\quad {}+ 0.000907 \sin(2\gamma) \\
-      &\quad {}- 0.002697 \cos(3\gamma) \\
-      &\quad {}+ 0.001480 \sin(3\gamma)
-  \end{aligned}
-  $$
+天文计算需要统一的时间标尺。我们使用 **J2000.0 历元**（2000 年 1 月 1 日 12:00 UTC）作为参考点，由于 GLib 的 `DateTime.get_julian ()` 方法返回的儒略日是从公元1年1月1日开始计算的（注意不是常见的公元前4713年），我们需要将其转换为相对于 J2000.0 的天数：
 
-- **均时差 (Equation of Time, EoT) 计算**：
-  `eqtime_minutes = 229.18 * (0.000075 + 0.001868 * cos(gamma_rad) ...)`：计算均时差（分钟），真太阳时（True Solar Time，基于太阳真实位置）与均太阳时（Mean Solar Time，假设太阳匀速运行）之差，主要由地球轨道偏心率和黄赤交角引起，反映钟表时间和日晷时间的偏差。将本地平时（分钟 `i`）修正为真太阳时（分钟），以保证后续时角、太阳高度角计算的天文精度。
-    - 真太阳时：基于太阳在天空中的实际位置计算。
-    - 平太阳时：虚构一个匀速运动的“平太阳”作为参考，将一天固定为24小时（86,400秒），消除季节性波动。这是日常钟表时间的基准。
-    - 真太阳日的长度（太阳连续两次过中天的时间间隔）会因地球轨道离心率和黄赤交角的影响而变化，可达±30秒。
-    - 这些微小日变化会逐日累积，导致真太阳时与平太阳时的偏差可达 **-14分15秒至+16分25秒** （公元2000年），因此有必要均时差修正。
-- **真太阳时 (True Solar Time, TST) 计算**：  
-  `tst_minutes = i + eqtime_minutes + 4.0 * longitude_deg - 60.0 * timezone_offset_hrs`  
-  将本地钟表时间（分钟 `i`）先加上均时差修正（`eqtime_minutes`），再加上因经度（每向东 1 度 +4 分钟）带来的分钟偏移，最后减去因时区带来的分钟差，得到真太阳时（分钟）。  
-  - `longitude_deg`：经度（度），正值为东经、负值为西经；  
-  - `timezone_offset_hrs`：时区偏移（小时），正值为东区、负值为西区；  
-  - `4.0 * longitude_deg`：将经度转换为分钟偏移；  
-  - `60.0 * timezone_offset_hrs`：将时区小时数转换为分钟偏移；
-  - **时角 (Hour Angle, HA) 计算**：
-  `ha_deg = (tst_minutes / 4.0) - 180.0`：根据真太阳时计算时角（度），表示太阳相对于本地子午线的角距离。
-- **太阳高度角计算**：
-  使用球面三角公式，结合纬度 `latitude_rad`、太阳赤纬 `decl_rad` 和时角 `ha_rad` 计算太阳天顶角 `phi_rad`，进而得到太阳高度角 `(90° - phi_rad)`。
-  - 结果填充到 `sun_angles` 数组（单位：°），每分钟一个采样点。
+```vala
+var date = new GLib.Date ();
+date.set_dmy (day, month, year);
+var julian_date = (double) date.get_julian ();
+double base_days_from_epoch = julian_date - 730120.5; // 当天 00:00 UTC 到 J2000.0 的天数
+```
+
+#### 黄赤交角 (Obliquity of the Ecliptic, $\epsilon$)
+
+地球自转轴相对黄道的倾角，随时间微小变化：
+
+$$
+\epsilon = 23.439291111 - 0.0000003560347 d - 1.2285 \times 10^{-16} d^2 + 1.0335 \times 10^{-20} d^3
+$$
+
+#### 轨道参数：平黄经 ($L$) 和平近点角 ($M$)
+
+*   **平黄经** 描述理想化"平均太阳"在黄道上的位置
+
+$$
+L = 280.46645 + 0.98564736 d + 2.2727 \times 10^{-13} d^2
+$$
+
+*   **平近点角** 描述其在轨道上从近地点出发的角度
+
+$$
+M = 357.52910 + 0.985600282 d - 1.1686 \times 10^{-13} d^2 - 9.85 \times 10^{-21} d^3
+$$
+
+#### 中心差修正与真黄经 ($\lambda$)
+
+考虑地球椭圆轨道的影响，通过中心差 $C$ 将平黄经修正为真黄经 $\lambda$：
+
+$$
+C = (1.914600 - 0.00000013188 d - 1.049 \times 10^{-14} d^2) \sin(M) + (0.019993 - 0.0000000027652 d) \sin(2M) + 0.000290 \sin(3M)
+$$
+
+$$
+\lambda = L + C
+$$
+
+#### 坐标转换：赤纬 ($\delta$) 和赤经 (RA)
+
+从黄道坐标系转换到赤道坐标系：
+
+$$
+\sin(\delta) = \sin(\epsilon) \sin(\lambda)
+$$
+
+$$
+RA = \text{atan2}(\cos(\epsilon) \sin(\lambda), \cos(\lambda))
+$$
+
+#### 真太阳时 (True Solar Time, $TST$)
+
+考虑均时差和经度修正，将本地钟表时间转换为真太阳时：
+
+$$
+TST_\text{分钟} = T_\text{本地,分钟} + EoT_\text{分钟} + 4 \times \lambda_\text{经度,度} - 60 \times TZ_\text{时区偏移,小时}
+$$
+
+#### 时角 (Hour Angle, $HA$) 与太阳高度角 ($\alpha$)
+
+*   时角描述太阳相对本地子午线的角距离：$HA = TST_\text{分钟} / 4 - 180$
+*   结合观测地纬度 $\phi$、太阳赤纬 $\delta$ 和时角 $HA$，使用球面三角公式计算高度角：
+
+$$
+\sin(\alpha) = \sin(\phi)\sin(\delta) + \cos(\phi)\cos(\delta)\cos(HA)
+$$
+
+算法对一天中每一分钟都进行采样计算，将结果存储在 `sun_angles` 数组中，为后续的可视化和交互提供数据支持。
 
 ### 自定义绘图与 Cairo
 
@@ -1310,6 +1348,7 @@ public class SolarAngleApp : Adw.Application {
             data_stream.put_string ("# Longitude: %.2f degrees\n".printf (longitude));
             data_stream.put_string ("# Timezone: UTC%+.2f\n".printf (timezone_offset_hours));
             data_stream.put_string ("#\n");
+
 
             // Write CSV header
             data_stream.put_string ("Time,Solar Elevation (degrees)\n");
