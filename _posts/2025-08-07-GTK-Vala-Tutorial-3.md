@@ -237,8 +237,8 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 > **【2025年10月更新】**
 >
-> 本程序的完整代码已更新为基于 [**Meeus 算法**](http://www.jgiesen.de/elevaz/basics/meeus.htm)的高精度实现。Meeus 算法是国际上广受认可的天文算法，能在不依赖大型星历表的情况下，达到非常高的精度（误差在 0.01 度内，平均约0.003度）。
-> 如果你对算法的理论背景、实现细节及其在 Vala 语言中的最佳实践感兴趣，请移步阅读笔者的续篇教程：**[《GTK4/Vala 教程续：提升太阳高度角计算精度》](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation)**。
+> 本程序的完整代码已更新为基于 [**Meeus 算法**](http://www.jgiesen.de/elevaz/basics/meeus.htm)的高精度实现。Meeus 算法是国际上广受认可的天文算法，能在不依赖大型星历表的情况下，达到非常高的精度（误差在 0.01 度内，RMSD 0.003 度）。
+> 如果你对算法的理论背景、实现细节及其在 Vala 语言中的最佳实践感兴趣，请移步阅读笔者的续篇教程：**[Vala 数值计算实践：高精度太阳位置算法](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation/)**。
 
 `generate_sun_angles` 函数是应用计算的核心。它实现了 Meeus 算法，通过精确的天体力学模型计算太阳位置。算法的主要参考来源是 [Paul Schlyter 和 J. Giesen 总结的高精度算法页面](http://www.jgiesen.de/elevaz/basics/meeus.htm)。
 
