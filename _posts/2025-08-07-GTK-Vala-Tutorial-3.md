@@ -237,10 +237,10 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 > **【2025年10月更新】**
 >
-> 本程序的完整代码已更新为基于 [**Meeus 算法**](http://www.jgiesen.de/elevaz/basics/meeus.htm)的高精度实现。Meeus 算法是国际上广受认可的天文算法，能在不依赖大型星历表的情况下，达到非常高的精度（误差在 0.01 度内，RMSD 0.003 度）。
+> 本程序的完整代码已更新为基于 [**Meeus 算法**](http://www.jgiesen.de/elevaz/basics/meeus.htm)的高精度实现。Meeus 算法是国际上广受认可的天文算法，能在不依赖大型星历表的情况下，达到非常高的精度（误差在 0.01 度内，RMSD 大概为 0.003 度）。
 > 如果你对算法的理论背景、实现细节及其在 Vala 语言中的最佳实践感兴趣，请移步阅读笔者的续篇教程：**[Vala 数值计算实践：高精度太阳位置算法](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation/)**。
 
-`generate_sun_angles` 函数是应用计算的核心。它实现了 Meeus 算法，通过精确的天体力学模型计算太阳位置。算法的主要参考来源是 [Paul Schlyter 和 J. Giesen 总结的高精度算法页面](http://www.jgiesen.de/elevaz/basics/meeus.htm)。
+`generate_sun_angles` 函数是应用计算的核心。笔者在此实现了 Meeus 算法的等价变体，通过精确的天体力学模型计算太阳位置。算法的主要参考来源是 [Paul Schlyter 和 J. Giesen 总结的高精度算法页面](http://www.jgiesen.de/elevaz/basics/meeus.htm)。
 
 #### 时间基准：从 J2000.0 历元起算的天数
 
@@ -258,21 +258,21 @@ double base_days_from_epoch = julian_date - 730120.5; // 当天 00:00 UTC 到 J2
 地球自转轴相对黄道的倾角，随时间微小变化：
 
 $$
-\epsilon = 23.439291111 - 0.0000003560347 d - 1.2285 \times 10^{-16} d^2 + 1.0335 \times 10^{-20} d^3
+\epsilon_\text{degrees} = 23.439291111 - 0.0000003560347 d - 1.2285 \times 10^{-16} d^2 + 1.0335 \times 10^{-20} d^3
 $$
 
 #### 轨道参数：平黄经 ($L$) 和平近点角 ($M$)
 
-*   **平黄经** 描述理想化"平均太阳"在黄道上的位置
+*   **平黄经**：描述理想化"平均太阳"在黄道上的位置，从**春分点**开始计算
 
 $$
-L = 280.46645 + 0.98564736 d + 2.2727 \times 10^{-13} d^2
+L_\text{degrees} = 280.46645 + 0.98564736 d + 2.2727 \times 10^{-13} d^2
 $$
 
-*   **平近点角** 描述其在轨道上从近地点出发的角度
+*   **平近点角**：描述其在轨道上从**近地点**出发的角度
 
 $$
-M = 357.52910 + 0.985600282 d - 1.1686 \times 10^{-13} d^2 - 9.85 \times 10^{-21} d^3
+M_\text{degrees} = 357.52910 + 0.985600282 d - 1.1686 \times 10^{-13} d^2 - 9.85 \times 10^{-21} d^3
 $$
 
 #### 中心差修正与真黄经 ($\lambda$)
@@ -280,7 +280,7 @@ $$
 考虑地球椭圆轨道的影响，通过中心差 $C$ 将平黄经修正为真黄经 $\lambda$：
 
 $$
-C = (1.914600 - 0.00000013188 d - 1.049 \times 10^{-14} d^2) \sin(M) + (0.019993 - 0.0000000027652 d) \sin(2M) + 0.000290 \sin(3M)
+C_\text{degrees} = (1.914600 - 0.00000013188 d - 1.049 \times 10^{-14} d^2) \sin(M) + (0.019993 - 0.0000000027652 d) \sin(2M) + 0.000290 \sin(3M)
 $$
 
 $$
@@ -304,12 +304,12 @@ $$
 考虑均时差和经度修正，将本地钟表时间转换为真太阳时：
 
 $$
-TST_\text{分钟} = T_\text{本地,分钟} + EoT_\text{分钟} + 4 \times \lambda_\text{经度,度} - 60 \times TZ_\text{时区偏移,小时}
+TST_\text{minutes} = T_\text{local,minutes} + EoT_\text{minutes} + 4 \times \lambda_\text{longitude,degrees} - 60 \times TZ_\text{hours}
 $$
 
 #### 时角 (Hour Angle, $HA$) 与太阳高度角 ($\alpha$)
 
-*   时角描述太阳相对本地子午线的角距离：$HA = TST_\text{分钟} / 4 - 180$
+*   时角描述太阳相对本地子午线的角距离：$HA_\text{degrees} = TST_\text{minutes} / 4 - 180$
 *   结合观测地纬度 $\phi$、太阳赤纬 $\delta$ 和时角 $HA$，使用球面三角公式计算高度角：
 
 $$
