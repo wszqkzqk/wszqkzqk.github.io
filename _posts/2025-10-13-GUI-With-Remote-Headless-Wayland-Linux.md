@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      将远程 Wayland 应用窗口转发到本地
+title:      将远程Wayland应用窗口转发到本地
 subtitle:   实现远程无桌面环境的单个Wayland GUI应用的本地显示
 date:       2025-10-13
 author:     wszqkzqk
@@ -25,7 +25,7 @@ tags:       开源软件 Wayland Linux
 
 ## 依赖安装
 
-确保本地在使用Wayland，可在本地安装：
+确保**本地在使用Wayland**，并在本地安装`waypipe`：
 
 ```bash
 sudo pacman -S waypipe
@@ -73,7 +73,7 @@ waypipe ssh user@remote_host weston
 
 ## 指定压缩算法
 
-Waypipe支持LZ4和Zstd两种压缩算法，默认使用LZ4，可以手动使用`-c`参数指定压缩算法：
+Waypipe支持lz4和zstd两种压缩算法，默认使用lz4，可以手动使用`-c`参数指定压缩算法：
 
 ```bash
 waypipe -c zstd ssh user@remote_host your_program
