@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      在本地运行远程Linux的无头Wayland环境中的GUI应用
+title:      将远程 Wayland 应用窗口转发到本地
 subtitle:   实现远程无桌面环境的单个Wayland GUI应用的本地显示
 date:       2025-10-13
 author:     wszqkzqk
