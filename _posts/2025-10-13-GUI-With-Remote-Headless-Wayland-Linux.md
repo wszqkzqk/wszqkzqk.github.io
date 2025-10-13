@@ -178,7 +178,7 @@ chromium --ozone-platform=auto
 XDG_SESSION_TYPE=wayland chromium --ozone-platform=auto
 ```
 
-如果需要在一条命令中完成，可以使用`env`来设置环境变量：
+如果需要在一条Waypipe命令中完成远程Chromium的启动，可以使用`env`来设置环境变量：
 
 ```bash
 waypipe ssh user@remote_host env XDG_SESSION_TYPE=wayland chromium --ozone-platform=auto
