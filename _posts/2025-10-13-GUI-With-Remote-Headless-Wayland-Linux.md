@@ -1,0 +1,141 @@
+---
+layout:     post
+title:      在本地运行远程Linux的无头Wayland环境中的GUI应用
+subtitle:   使用waypipe实现远程单个Wayland GUI应用的本地显示
+date:       2025-10-13
+author:     wszqkzqk
+header-img: img/wayland/wayland-bg.webp
+catalog:    true
+tags:       开源软件 Wayland Linux
+---
+
+## 前言
+
+笔者是Arch Linux for Loong64的维护者，但是事实上笔者手边并没有属于自己的龙芯物理机。笔者一直通过SSH远程连接龙芯武汉提供的编译机和同学手里的龙芯机器进行工作。对于非GUI的测试，笔者一般也用SSH来进行，而对于GUI程序的测试则比较麻烦，一般要么自己启动QEMU虚拟机，要么@同学让同学帮忙测试，或者招募社区用户来测试。
+
+而QEMU虚拟机的性能并不理想，会让笔者的笔记本温度飙升🥵🥵🥵，在离电的时候更是续航杀手；让同学或者招募的用户测试则可能需要等待较长的时间，而且向他们传递测试包有时候也不方便。
+
+对此，最方便的情况就是直接在打包出来以后原位测试，这就需要在远程的机器上运行GUI程序，并且将图形界面传输到本地显示出来。对于X11来说，这并不难，只需要在SSH连接时加上`-X`或者`-Y`参数即可（前提是远程机器上有X11服务器），然而对于Wayland来说，这就比较麻烦了。
+
+远程的机器事实上不会运行DE，因此是不能够用KRDP等远程桌面软件的，而且笔者更想要的是将某个单独的GUI程序在本地像正常的程序窗口一样显示出来，而不是转发整个桌面。
+
+因此，笔者在此引入了一种Wayland的远程转发方案——`waypipe`。`waypipe`与X11 Forwarding类似，可以将远程的Wayland应用程序的图形界面通过SSH隧道传输到本地显示出来，并且支持单个应用程序的转发，而不是整个桌面。（当然也有办法转发整个桌面合成器）
+
+## 依赖安装
+
+确保本地在使用Wayland，可在本地安装：
+
+```bash
+sudo pacman -S waypipe
+```
+
+在远程机器上也需要安装`waypipe`和`wayland`，如果想要转发完整合成器，还可以安装`weston`：
+
+```bash
+sudo pacman -S waypipe wayland weston
+```
+
+## 基本使用
+
+`waypipe`的使用方法非常简单，只需要在SSH连接时使用`waypipe`命令即可。假设远程机器的地址为`remote_host`，要运行的程序为`your_program`，则可以使用以下命令：
+
+```bash
+waypipe ssh user@remote_host your_program
+```
+
+## 添加SSH参数
+
+需要注意的是，**ssh的参数**必须要放在**机器地址之前**，例如：
+
+```bash
+waypipe ssh -p 2222 user@remote_host your_program
+```
+
+## 获得具有Wayland程序启动能力的远程终端
+
+如果暂时不需要运行某个特定的程序，也可以不加上程序名，直接连接到远程机器的Wayland会话：
+
+```bash
+waypipe ssh user@remote_host
+```
+
+这样会正常连接到远程机器的终端，但暂时不会启动任何GUI程序。当你在**终端中运行某个Wayland GUI程序**时，它的图形界面就会被**转发到本地**显示出来。
+
+## 转发Wayland合成器
+
+如果想要转发整个Wayland合成器，可以在远程机器上运行`weston`，然后在本地连接：
+
+```bash
+waypipe ssh user@remote_host weston
+```
+
+## 指定压缩算法
+
+`waypipe`支持LZ4和Zstd两种压缩算法，默认使用LZ4，可以手动使用`-c`参数指定压缩算法：
+
+```bash
+waypipe -c zstd ssh user@remote_host your_program
+```
+
+在对应的算法后面加上`=N`可以指定压缩级别，例如：
+
+```bash
+waypipe -c zstd=10 ssh user@remote_host your_program
+```
+
+## 指定视频流编码
+
+`waypipe`支持H264、VP9和AV1视频流编码（也可以无编码传输），可以通过`--video`参数指定编码方式。例如，使用AV1编码：
+
+```bash
+waypipe --video av1 ssh user@remote_host your_program
+```
+
+还可以对硬件/软件编解码进行指定：
+
+* `hw` - 编码和解码都使用硬件加速
+* `sw` - 编码和解码都使用软件
+* `hwenc` - 仅编码使用硬件
+* `swenc` - 仅编码使用软件
+* `hwdec` - 仅解码使用硬件
+* `swdec` - 仅解码使用软件
+
+例如，使用硬件编解码的AV1：
+
+```bash
+waypipe --video av1,hw ssh user@remote_host your_program
+```
+
+## 常见问题
+
+在没有GPU的机器上直接通过`waypipe`运行GUI程序时，可能会遇到问题，首先是`waypipe`的错误：
+
+```log
+[58.090527 ERR waypipe-server(437190) mainloop.rs:5773] Sending error: src/dmabuf.rs:967: Failed to create Vulkan instance: Unable to find a Vulkan driver
+```
+
+随后，GUI程序则会报错，例如GTK程序一般会显示这样的错误：
+
+```log
+(solarangleadw:437185): Gtk-WARNING **: 07:59:18.091: Failed to open display
+```
+
+这是因为`waypipe`默认启用了GPU，如果远程机器没有GPU或者没有正确配置GPU驱动，就会导致无法创建Vulkan实例，从而无法运行GUI程序。此时，可以加入`--no-gpu`参数来禁用GPU：
+
+```bash
+waypipe --no-gpu ssh user@remote_host your_program
+```
+
+不过需要注意的是，禁用GPU的同时也会禁用视频流编码，即前面的`--video`参数将不再生效。这样的模式对于网络带宽要求较高，建议启用较高的压缩级别，例如：
+
+```bash
+waypipe -c zstd=10 --no-gpu ssh user@remote_host your_program
+```
+
+## 效果
+
+|[![#~/img/wayland/waypipe-demo.webp](/img/wayland/waypipe-demo.webp)](/img/wayland/waypipe-demo.webp)|
+|:----:|
+|运行远程服务器上的GTK4程序并转发到本地显示|
+
+如图，显示的IP属地是武汉的龙芯服务器，运行的程序是远程服务器上编译好的太阳高度角查看器，可以看到程序在本地显示正常。
