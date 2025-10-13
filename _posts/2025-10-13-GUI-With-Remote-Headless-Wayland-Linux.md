@@ -106,7 +106,21 @@ waypipe --video av1 ssh user@remote_host your_program
 waypipe --video av1,hw ssh user@remote_host your_program
 ```
 
+## 效果
+
+|[![#~/img/wayland/waypipe-demo.webp](/img/wayland/waypipe-demo.webp)](/img/wayland/waypipe-demo.webp)|
+|:----:|
+|运行远程服务器上的GTK4程序并转发到本地显示|
+
+如图，显示的IP属地是武汉的龙芯服务器，运行的程序是远程服务器上编译好的太阳高度角查看器，可以看到程序在本地显示正常。
+
+|[![#~/img/wayland/waypipe-demo-chromium.webp](/img/wayland/waypipe-demo-chromium.webp)](/img/wayland/waypipe-demo-chromium.webp)|
+|:----:|
+|在远程服务器上运行Chromium并在本地显示|
+
 ## 常见问题
+
+### 在没有GPU的远程机器上运行GUI程序时报错
 
 在没有GPU的机器上直接通过`waypipe`运行GUI程序时，可能会遇到问题，首先是`waypipe`的错误：
 
@@ -132,10 +146,38 @@ waypipe --no-gpu ssh user@remote_host your_program
 waypipe -c zstd=10 --no-gpu ssh user@remote_host your_program
 ```
 
-## 效果
+### 无法运行Chromium
 
-|[![#~/img/wayland/waypipe-demo.webp](/img/wayland/waypipe-demo.webp)](/img/wayland/waypipe-demo.webp)|
-|:----:|
-|运行远程服务器上的GTK4程序并转发到本地显示|
+Chromium在不设置相关环境变量时无法依靠`waypipe`运行，即使指定了Wayland模式与GTK4模式也无效，报错如下：
 
-如图，显示的IP属地是武汉的龙芯服务器，运行的程序是远程服务器上编译好的太阳高度角查看器，可以看到程序在本地显示正常。
+```log
+[442257:442257:1013/103637.352992:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+[442257:442257:1013/103637.353091:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+```
+
+运行以下命令后我们不难知道原因：
+
+```bash
+echo $XDG_SESSION_TYPE
+```
+
+这时候我们发现在`waypipe`中输出的值是`tty`，而不是`wayland`，这就导致Chromium无法正确识别当前的显示服务器类型，从而无法启动。
+
+我们只需要在运行Chromium前设置`XDG_SESSION_TYPE`环境变量即可，如果在`waypipe`的终端中运行Chromium，可以这样：
+
+```bash
+export XDG_SESSION_TYPE=wayland
+chromium --ozone-platform=auto
+```
+
+也可以不导出变量，直接在命令前加上：
+
+```bash
+XDG_SESSION_TYPE=wayland chromium --ozone-platform=auto
+```
+
+如果需要在一条命令中完成，可以这样：
+
+```bash
+waypipe ssh user@remote_host 'env XDG_SESSION_TYPE=wayland chromium --ozone-platform=auto'
+```
