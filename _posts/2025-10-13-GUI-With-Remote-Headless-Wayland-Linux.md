@@ -19,7 +19,7 @@ tags:       开源软件 Wayland Linux
 
 对此，最方便的情况就是直接在打包出来以后原位测试，这就需要在远程的机器上运行GUI程序，并且将图形界面传输到本地显示出来。对于X11来说，这并不难，只需要在SSH连接时加上`-X`或者`-Y`参数即可（前提是远程机器上有X11服务器），然而对于Wayland来说，这就比较麻烦了。
 
-远程的机器事实上不会运行DE，因此是不能够用KRDP等远程桌面软件的，而且笔者更想要的是将某个单独的GUI程序在本地像正常的程序窗口一样显示出来，而不是转发整个桌面。
+远程的机器事实上不会运行DE，因此是**不能**够用KRDP等**远程桌面软件**的，而且笔者更想要的是将某个单独的GUI程序在本地像**正常的程序窗口**一样显示出来，而不是转发整个桌面。
 
 因此，笔者在此引入了一种Wayland的远程转发方案——[Waypipe](https://gitlab.freedesktop.org/mstoeckl/waypipe)。Waypipe与X11 Forwarding类似，可以将远程的Wayland应用程序的图形界面通过SSH隧道传输到本地显示出来，并且支持单个应用程序的转发，而不是整个桌面。（当然也有办法转发整个桌面合成器）
 
@@ -120,6 +120,8 @@ waypipe --video av1,hw ssh user@remote_host your_program
 |:----:|
 |在远程服务器上运行Chromium并在本地显示|
 
+如图，远程在Arch Linux for Loong64上运行的Chromium浏览器，成功转发到本地显示，功能一切正常。
+
 ## 常见问题
 
 ### 在没有GPU的远程机器上运行GUI程序时报错
@@ -165,7 +167,7 @@ echo $XDG_SESSION_TYPE # 输出值为 tty
 
 这时候我们发现在Waypipe中输出的值是`tty`，而不是`wayland`，这就导致Chromium无法正确识别当前的显示服务器类型，从而无法启动。
 
-我们只需要在运行Chromium前设置`XDG_SESSION_TYPE`环境变量即可，如果在Waypipe的终端中运行Chromium，可以这样：
+我们只需要在运行Chromium前**设置`XDG_SESSION_TYPE`环境变量为`wayland`**即可，如果在Waypipe的终端中运行Chromium，可以这样：
 
 ```bash
 export XDG_SESSION_TYPE=wayland
