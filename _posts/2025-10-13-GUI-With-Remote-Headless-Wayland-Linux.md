@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      在本地运行远程Linux的无头Wayland环境中的GUI应用
-subtitle:   使用waypipe实现远程单个Wayland GUI应用的本地显示
+subtitle:   实现远程无桌面环境的单个Wayland GUI应用的本地显示
 date:       2025-10-13
 author:     wszqkzqk
 header-img: img/wayland/wayland-bg.webp
@@ -11,7 +11,7 @@ tags:       开源软件 Wayland Linux
 
 ## 前言
 
-> 本文介绍了在远程的Linux机器上只有Wayland相关依赖但没有运行桌面环境的情况下，如何将远程的Wayland GUI应用程序窗口转发到本地Wayland显示出来。
+> 本文介绍了在远程的Linux机器上**只有Wayland相关依赖**但没**有运行桌面环境**的情况下，如何将远程的Wayland GUI应用程序**窗口转发**到**本地Wayland**显示出来。
 
 笔者是Arch Linux for Loong64的维护者，但是事实上笔者手边并没有属于自己的龙芯物理机。笔者一直通过SSH远程连接龙芯武汉提供的编译机和同学手里的龙芯机器进行工作。对于非GUI的测试，笔者一般也用SSH来进行，而对于GUI程序的测试则比较麻烦，一般要么自己启动QEMU虚拟机，要么@同学让同学帮忙测试，或者招募社区用户来测试。
 
@@ -21,7 +21,7 @@ tags:       开源软件 Wayland Linux
 
 远程的机器事实上不会运行DE，因此是不能够用KRDP等远程桌面软件的，而且笔者更想要的是将某个单独的GUI程序在本地像正常的程序窗口一样显示出来，而不是转发整个桌面。
 
-因此，笔者在此引入了一种Wayland的远程转发方案——`waypipe`。`waypipe`与X11 Forwarding类似，可以将远程的Wayland应用程序的图形界面通过SSH隧道传输到本地显示出来，并且支持单个应用程序的转发，而不是整个桌面。（当然也有办法转发整个桌面合成器）
+因此，笔者在此引入了一种Wayland的远程转发方案——[waypipe]()。`waypipe`与X11 Forwarding类似，可以将远程的Wayland应用程序的图形界面通过SSH隧道传输到本地显示出来，并且支持单个应用程序的转发，而不是整个桌面。（当然也有办法转发整个桌面合成器）
 
 ## 依赖安装
 
@@ -178,10 +178,10 @@ chromium --ozone-platform=auto
 XDG_SESSION_TYPE=wayland chromium --ozone-platform=auto
 ```
 
-如果需要在一条命令中完成，可以这样：
+如果需要在一条命令中完成，可以使用`env`来设置环境变量：
 
 ```bash
-waypipe ssh user@remote_host 'env XDG_SESSION_TYPE=wayland chromium --ozone-platform=auto'
+waypipe ssh user@remote_host env XDG_SESSION_TYPE=wayland chromium --ozone-platform=auto
 ```
 
 自Chromium 140开始，Chromium默认自动在Wayland平台下启用Wayland支持，因此不需要再加上`--ozone-platform=auto`参数：
