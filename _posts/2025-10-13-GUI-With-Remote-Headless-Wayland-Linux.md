@@ -146,7 +146,7 @@ waypipe --no-gpu ssh user@remote_host your_program
 waypipe -c zstd=10 --no-gpu ssh user@remote_host your_program
 ```
 
-### 无法运行Chromium
+### 默认环境下无法运行Chromium
 
 Chromium在不设置相关环境变量时无法依靠`waypipe`运行，即使指定了Wayland模式与GTK4模式也无效，报错如下：
 
@@ -158,7 +158,7 @@ Chromium在不设置相关环境变量时无法依靠`waypipe`运行，即使指
 运行以下命令后我们不难知道原因：
 
 ```bash
-echo $XDG_SESSION_TYPE
+echo $XDG_SESSION_TYPE # 输出值为 tty
 ```
 
 这时候我们发现在`waypipe`中输出的值是`tty`，而不是`wayland`，这就导致Chromium无法正确识别当前的显示服务器类型，从而无法启动。
@@ -181,3 +181,11 @@ XDG_SESSION_TYPE=wayland chromium --ozone-platform=auto
 ```bash
 waypipe ssh user@remote_host 'env XDG_SESSION_TYPE=wayland chromium --ozone-platform=auto'
 ```
+
+自Chromium 140开始，Chromium默认自动在Wayland平台下启用Wayland支持，因此不需要再加上`--ozone-platform=auto`参数：
+
+```bash
+waypipe ssh user@remote_host 'env XDG_SESSION_TYPE=wayland chromium'
+```
+
+除Chromium外，其他的程序如果遇到相关问题，也可以尝试设置`XDG_SESSION_TYPE=wayland`来解决。
