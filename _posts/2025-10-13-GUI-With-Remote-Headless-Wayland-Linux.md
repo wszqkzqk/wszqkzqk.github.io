@@ -21,7 +21,7 @@ tags:       开源软件 Wayland Linux
 
 远程的机器事实上不会运行DE，因此是不能够用KRDP等远程桌面软件的，而且笔者更想要的是将某个单独的GUI程序在本地像正常的程序窗口一样显示出来，而不是转发整个桌面。
 
-因此，笔者在此引入了一种Wayland的远程转发方案——[waypipe]()。`waypipe`与X11 Forwarding类似，可以将远程的Wayland应用程序的图形界面通过SSH隧道传输到本地显示出来，并且支持单个应用程序的转发，而不是整个桌面。（当然也有办法转发整个桌面合成器）
+因此，笔者在此引入了一种Wayland的远程转发方案——[Waypipe](https://gitlab.freedesktop.org/mstoeckl/waypipe)。Waypipe与X11 Forwarding类似，可以将远程的Wayland应用程序的图形界面通过SSH隧道传输到本地显示出来，并且支持单个应用程序的转发，而不是整个桌面。（当然也有办法转发整个桌面合成器）
 
 ## 依赖安装
 
@@ -39,7 +39,7 @@ sudo pacman -S waypipe wayland weston
 
 ## 基本使用
 
-`waypipe`的使用方法非常简单，只需要在SSH连接时使用`waypipe`命令即可。假设远程机器的地址为`remote_host`，要运行的程序为`your_program`，则可以使用以下命令：
+Waypipe的使用方法非常简单，只需要在SSH连接时使用`waypipe`命令即可。假设远程机器的地址为`remote_host`，要运行的程序为`your_program`，则可以使用以下命令：
 
 ```bash
 waypipe ssh user@remote_host your_program
@@ -73,7 +73,7 @@ waypipe ssh user@remote_host weston
 
 ## 指定压缩算法
 
-`waypipe`支持LZ4和Zstd两种压缩算法，默认使用LZ4，可以手动使用`-c`参数指定压缩算法：
+Waypipe支持LZ4和Zstd两种压缩算法，默认使用LZ4，可以手动使用`-c`参数指定压缩算法：
 
 ```bash
 waypipe -c zstd ssh user@remote_host your_program
@@ -87,7 +87,7 @@ waypipe -c zstd=10 ssh user@remote_host your_program
 
 ## 指定视频流编码
 
-`waypipe`支持H264、VP9和AV1视频流编码（也可以无编码传输），可以通过`--video`参数指定编码方式。例如，使用AV1编码：
+Waypipe支持H264、VP9和AV1视频流编码（也可以无编码传输），可以通过`--video`参数指定编码方式。例如，使用AV1编码：
 
 ```bash
 waypipe --video av1 ssh user@remote_host your_program
@@ -124,7 +124,7 @@ waypipe --video av1,hw ssh user@remote_host your_program
 
 ### 在没有GPU的远程机器上运行GUI程序时报错
 
-在没有GPU的机器上直接通过`waypipe`运行GUI程序时，可能会遇到问题，首先是`waypipe`的错误：
+在没有GPU的机器上直接通过Waypipe运行GUI程序时，可能会遇到问题，首先是Waypipe的错误：
 
 ```log
 [58.090527 ERR waypipe-server(437190) mainloop.rs:5773] Sending error: src/dmabuf.rs:967: Failed to create Vulkan instance: Unable to find a Vulkan driver
@@ -136,7 +136,7 @@ waypipe --video av1,hw ssh user@remote_host your_program
 (solarangleadw:437185): Gtk-WARNING **: 07:59:18.091: Failed to open display
 ```
 
-这是因为`waypipe`默认启用了GPU，如果远程机器没有GPU或者没有正确配置GPU驱动，就会导致无法创建Vulkan实例，从而无法运行GUI程序。此时，可以加入`--no-gpu`参数来禁用GPU：
+这是因为Waypipe默认启用了GPU，如果远程机器没有GPU或者没有正确配置GPU驱动，就会导致无法创建Vulkan实例，从而无法运行GUI程序。此时，可以加入`--no-gpu`参数来禁用GPU：
 
 ```bash
 waypipe --no-gpu ssh user@remote_host your_program
@@ -150,7 +150,7 @@ waypipe -c zstd=10 --no-gpu ssh user@remote_host your_program
 
 ### 默认环境下无法运行Chromium
 
-Chromium在不设置相关环境变量时无法依靠`waypipe`运行，即使指定了Wayland模式与GTK4模式也无效，报错如下：
+Chromium在不设置相关环境变量时无法依靠Waypipe运行，即使指定了Wayland模式与GTK4模式也无效，报错如下：
 
 ```log
 [442257:442257:1013/103637.352992:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
@@ -163,9 +163,9 @@ Chromium在不设置相关环境变量时无法依靠`waypipe`运行，即使指
 echo $XDG_SESSION_TYPE # 输出值为 tty
 ```
 
-这时候我们发现在`waypipe`中输出的值是`tty`，而不是`wayland`，这就导致Chromium无法正确识别当前的显示服务器类型，从而无法启动。
+这时候我们发现在Waypipe中输出的值是`tty`，而不是`wayland`，这就导致Chromium无法正确识别当前的显示服务器类型，从而无法启动。
 
-我们只需要在运行Chromium前设置`XDG_SESSION_TYPE`环境变量即可，如果在`waypipe`的终端中运行Chromium，可以这样：
+我们只需要在运行Chromium前设置`XDG_SESSION_TYPE`环境变量即可，如果在Waypipe的终端中运行Chromium，可以这样：
 
 ```bash
 export XDG_SESSION_TYPE=wayland
