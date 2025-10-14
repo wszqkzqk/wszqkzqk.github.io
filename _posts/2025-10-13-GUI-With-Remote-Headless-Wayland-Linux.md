@@ -154,7 +154,7 @@ waypipe -c zstd=10 --no-gpu ssh user@remote_host your_program
 
 |[![#~/img/wayland/waypipe-gtk-demo-performance-1.webp](/img/wayland/waypipe-gtk-demo-performance-1.webp)](/img/wayland/waypipe-gtk-demo-performance-1.webp)|[![#~/img/wayland/waypipe-gtk-demo-performance-2.webp](/img/wayland/waypipe-gtk-demo-performance-2.webp)](/img/wayland/waypipe-gtk-demo-performance-2.webp)|
 |:----:|:----:|
-|GTK4 Demo Benchmark Scrolling|GTK4 Demo Benchmark Fishbowl|
+|GTK4 Demo Benchmark Scrolling，不到10 FPS|GTK4 Demo Benchmark Fishbowl，在仅1个图标时也才不到30 FPS|
 
 ### 默认环境下无法运行Chromium
 
