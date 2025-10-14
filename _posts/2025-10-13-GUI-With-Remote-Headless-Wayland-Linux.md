@@ -150,6 +150,12 @@ waypipe --no-gpu ssh user@remote_host your_program
 waypipe -c zstd=10 --no-gpu ssh user@remote_host your_program
 ```
 
+这样的选项可能会导致性能较低（当然这个示例中远程的网络条件确实也很差）：
+
+|[![#~/img/wayland/waypipe-gtk-demo-performance-1.webp](/img/wayland/waypipe-gtk-demo-performance-1.webp)](/img/wayland/waypipe-gtk-demo-performance-1.webp)|[![#~/img/wayland/waypipe-gtk-demo-performance-2.webp](/img/wayland/waypipe-gtk-demo-performance-2.webp)](/img/wayland/waypipe-gtk-demo-performance-2.webp)|
+|:----:|:----:|
+|GTK4 Demo Benchmark Scrolling|GTK4 Demo Benchmark Fishbowl|
+
 ### 默认环境下无法运行Chromium
 
 Chromium在不设置相关环境变量时无法依靠Waypipe运行，即使指定了Wayland模式与GTK4模式也无效，报错如下：
