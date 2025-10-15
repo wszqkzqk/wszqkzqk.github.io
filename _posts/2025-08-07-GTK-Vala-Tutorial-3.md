@@ -112,7 +112,13 @@ Vala 代码需要被编译成 C 代码，然后再编译成可执行文件。Val
 
 ### 编译与运行
 
-读者可以将[教程最后的完整代码](#完整源代码)保存为 `solarangleadw.vala`。你可以直接运行这个脚本文件（如果它有执行权限 `chmod +x solarangleadw.vala`），或者使用以下命令手动编译，避免每次运行前都自动编译带来的启动延迟：
+读者可以将[教程最后的完整代码](#完整源代码)保存为 `solarangleadw.vala`，或者使用`wget`命令直接下载：
+
+```bash
+wget https://raw.githubusercontent.com/wszqkzqk/FunValaGtkExamples/master/solarangleadw.vala
+```
+
+你可以直接运行这个脚本文件（如果它有执行权限 `chmod +x solarangleadw.vala`），或者使用以下命令手动编译，避免每次运行前都自动编译带来的启动延迟：
 
 ```bash
 valac --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -pipe solarangleadw.vala
