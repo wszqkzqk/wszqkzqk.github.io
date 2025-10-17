@@ -1391,7 +1391,16 @@ public class SolarAngleApp : Adw.Application {
 
 ## 番外
 
-除了[太阳高度角计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangleadw.vala)外，笔者还使用几乎相同的设计写了一个[白昼时长及日出日落时间计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)。该程序的架构设计与前文接好的基本相同，具体算法实现同样参见笔者的另一篇博客：[Vala 数值计算实践：高精度太阳位置算法](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation/)。以下是效果展示：
+除了[太阳高度角计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangleadw.vala)外，笔者还使用几乎相同的设计写了一个[白昼时长及日出日落时间计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)。该程序的架构设计与前文接好的基本相同，具体算法实现同样参见笔者的另一篇博客：[Vala 数值计算实践：高精度太阳位置算法](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation/)。
+
+可以通过类似的方式下载并编译该程序：
+
+```bash
+wget https://raw.githubusercontent.com/wszqkzqk/FunValaGtkExamples/master/daylengthadw.vala
+valac --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -pipe daylengthadw.vala
+```
+
+以下是效果展示：
 
 |[![#~/img/GTK-examples/day-length-pku-light.webp](/img/GTK-examples/day-length-pku-light.webp)](/img/GTK-examples/day-length-pku-light.webp)|[![#~/img/GTK-examples/day-length-pku-dark.webp](/img/GTK-examples/day-length-pku-dark.webp)](/img/GTK-examples/day-length-pku-dark.webp)|
 |:----:|:----:|
