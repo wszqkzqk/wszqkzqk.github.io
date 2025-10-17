@@ -124,7 +124,7 @@ wget https://raw.githubusercontent.com/wszqkzqk/FunValaGtkExamples/master/solara
 valac --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -pipe solarangleadw.vala
 ```
 
-需要注意的是，与“执行”用的 `vala` 不同，编译需要使用 `valac` 命令。
+需要注意的是，与“执行”用的 `vala` 不同，编译需要使用 `valac` 命令。对于 Windows 用户，如果不希望程序运行的时候总是额外带着一个命令行窗口，可以额外添加 `-X -mwindows` 参数。
 
 ## 第三部分：构建用户界面
 
