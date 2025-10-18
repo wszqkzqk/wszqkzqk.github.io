@@ -397,7 +397,9 @@ ghc: panic! (the 'impossible' happened)
     panic, called at compiler/GHC/Driver/Pipeline.hs:390:22 in ghc:GHC.Driver.Pipeline
 ```
 
-笔者再次注意到，Debian事实上已经构建了不少的Haskell包，可能有值得参考的经验。再次浏览Debian的[GHC 9.9.6](https://sources.debian.org/src/ghc/9.6.6-4/debian/patches)的补丁集，笔者注意到Debian应用了[hadrian-enable-interpreter](https://sources.debian.org/src/ghc/9.6.6-4/debian/patches/hadrian-enable-interpreter)这一简单补丁，禁用了Hadrian中的对启用平台的检测，从而强制在所有平台上启用了GHCi的支持。笔者便应用了这一补丁，重新构建GHC，终于得到了功能完整的GHC 9.6.6软件包。
+笔者再次注意到，Debian事实上已经构建了不少的Haskell包，可能有值得参考的经验。再次浏览Debian的[GHC 9.9.6](https://sources.debian.org/src/ghc/9.6.6-4/debian/patches)的补丁集，笔者注意到Debian应用了[hadrian-enable-interpreter](https://sources.debian.org/src/ghc/9.6.6-4/debian/patches/hadrian-enable-interpreter)这一简单补丁，禁用了Hadrian中的对启用平台的检测，从而强制在所有平台上启用了GHCi的支持。
+
+根据Debian的说法，现在有很多平台的GHCi支持都是被错误地禁用了的。笔者便应用了这一补丁，重新构建GHC，终于得到了功能完整的GHC 9.6.6软件包。
 
 ## 利用有“功能替代”作用的其他软件包构建
 
