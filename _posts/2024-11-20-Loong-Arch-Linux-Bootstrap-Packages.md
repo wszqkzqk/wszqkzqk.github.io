@@ -401,6 +401,10 @@ export PATH="$PATH:${srcdir}/bin"
 
 这样在Arch Linux环境下完成一次GHC的构建后，我们得到的新的GHC软件包将使用正确的工具链名称，在后续补丁中也就**无需集成**这个Hack。
 
+#### 常规适配
+
+在PKGBUILD的`package_ghc`打包函数中，Arch Linux上游通过`$CARCH`来引用文件名中的架构名称，这对于`x86_64`没有问题，`$CARCH`与`$(uname -m)`相同，但是对于Arch Linux for Loong64来说，`$CARCH`的值是`loong64`，而`$(uname -m)`的值是`loongarch64`，而GHC实际使用的是`loongarch64`，因此还需要将这里的`$CARCH`替换为`$(uname -m)`。
+
 #### 构建后的问题：功能缺失
 
 经过上述步骤，我们终于成功构建出了GHC 9.6.6软件包。然而，在构建第一个Haskell包时，笔者即发现，GHC的功能并不完整，缺乏GHCi的支持，导致报错：
