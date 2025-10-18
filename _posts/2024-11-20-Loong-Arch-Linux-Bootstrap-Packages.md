@@ -125,9 +125,7 @@ package() {
 
 ### `ghc`：利用其他发行版的二进制包自举
 
-* 2025年10月更新
-
-GHC是Haskell语言的主要编译器，它的自举是出了名的复杂。此前，Arch Linux官方出于种种原因，此前GHC的版本一直被锁定在了9.4.4，而GHC直到9.6才开始支持LoongArch，因此我们一直没有构建。直到最近，Arch Linux官方才将GHC升级到了9.6.6版本，Arch Linux for Loong64也终于可以构建GHC了。
+GHC是Haskell语言的主要编译器，它的自举是出了名的复杂。此前，Arch Linux官方出于种种原因，此前GHC的版本一直被锁定在了9.4.4，而GHC直到9.6才开始支持LoongArch，因此我们一直没有构建。直到最近（2025年10月），Arch Linux官方才将GHC升级到了9.6.6版本，Arch Linux for Loong64也终于可以构建GHC了。
 
 好在，也正是因为Arch Linux的GHC升级较慢，在我们移植之时，Debian就早已构建好了GHC 9.6.6的二进制包，因此我们可以将Debian的GHC二进制包作为基础，构建一个`ghc-bootstrap`软件包，然后再使用这个软件包构建干净的`ghc`软件包。
 
