@@ -57,6 +57,8 @@ CURRENT_DIR=$(pwd)
 DB_FILE="$1"
 DB_DIR=$(dirname "$1")
 
+val=1
+
 shift
 for pkg in "$@"; do
   pkg_basename=$(basename "$pkg")
@@ -69,7 +71,10 @@ for pkg in "$@"; do
   cd "$DB_DIR"
   repo-add $DB_FILE "$pkg_basename"
   cd "$CURRENT_DIR"
+  val=0
 done
+
+exit $val
 ```
 
 将以上内容保存为`add-to-local`，并赋予执行权限：
