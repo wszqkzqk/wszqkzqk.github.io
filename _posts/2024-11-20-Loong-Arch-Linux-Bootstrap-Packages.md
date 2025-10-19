@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Arch Linux for Loong64维护中可能用到Bootstrap构建方法
-subtitle:   面向新人的Bootstrap构建基础指引
+subtitle:   Arch Linux for Loong64软件自举构建基础指引
 date:       2024-11-20
 author:     wszqkzqk
 header-img: img/bg-sunrise.webp
