@@ -103,17 +103,14 @@ friends: [
         title: "Wikipedia",
         href: "https://www.wikipedia.org"
     },{
-        title: "Linux.org",
-        href: "https://linux.org"
+        title: "Arch Linux",
+        href: "https://archlinux.org/"
     },{
         title: "KDE",
         href: "https://kde.org/"
     },{
-        title: "GitHub",
-        href: "https://github.com"
-    },{
-        title: "Arch Linux",
-        href: "https://archlinux.org/"
+        title: "GNOME",
+        href: "https://www.gnome.org"
     },{
         title: "MSYS2",
         href: "https://www.msys2.org/"
@@ -121,10 +118,10 @@ friends: [
         title: "Vala Programming Language",
         href: "https://vala.dev/"
     },{
-        title: "北京大学 Linux 俱乐部",
+        title: "北京大学学生 Linux 俱乐部",
         href: "https://lcpu.club/wiki/"
     },{
         title: "竹林里有冰的博客",
-        href: "https://blog.zhullyb.top/"
+        href: "https://zhul.in/"
     }
 ]
