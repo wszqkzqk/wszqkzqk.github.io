@@ -305,6 +305,16 @@ $$
 RA = \text{atan2}(\cos(\epsilon) \sin(\lambda), \cos(\lambda))
 $$
 
+#### 均时差 (Equation of Time, $EoT$)
+
+均时差描述真太阳时与平太阳时之间的差异，主要由地球椭圆轨道和黄赤交角共同引起。通过平均时角（平黄经对应的时角）与太阳赤经的差值计算：
+
+$$
+EoT_\text{minutes} = (T_\text{mean,hours} - RA_\text{hours}) \times 60
+$$
+
+其中，平均时角 $T_\text{mean,hours} = L / 15°$，赤经 $RA_\text{hours}$ 则由前述坐标转换得出。
+
 #### 真太阳时 (True Solar Time, $TST$)
 
 考虑均时差和经度修正，将本地钟表时间转换为真太阳时：
