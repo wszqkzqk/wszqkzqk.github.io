@@ -36,7 +36,10 @@ Debuginfod 是由 `elfutils` 项目提供的**调试符号分发服务**，它�
    echo $DEBUGINFOD_URLS
    # 应输出我们的 Debuginfod 服务地址 (https://loongarchlinux.lcpu.dev/debuginfod)
    ```
-
+   如果没有设置（可能见于直接用root用户登录等情况），可以手动设置为我们的地址：
+   ```bash
+   export DEBUGINFOD_URLS=https://loongarchlinux.lcpu.dev/debuginfod
+   ```
 2. **实际调试测试**：  
    使用 `gdb` 调试任意程序，观察是否自动下载符号，例如：  
    ```bash
