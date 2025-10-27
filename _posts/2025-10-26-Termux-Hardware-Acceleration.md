@@ -59,8 +59,8 @@ ffmpeg -hwaccel mediacodec \
 
 然而，目前NDK的MediaCodec支持存在**严重Bug**，导致**输出分辨率存在错误**，只会给出相当小的视频分辨率，并且似乎仅截取了视频的部分。[^1] [^2]
 
-[^1]: [termux/termux-packages#22899 [Bug]: FFMPEG transcoding with mediacodec first keyframe missing or damaged after ffmpeg update](https://github.com/termux/termux-packages/issues/22899)
-[^2]: [termux/termux-packages#23014 [Bug]: ffmpeg mediacodec decoder outputs wrong dimensions](https://github.com/termux/termux-packages/issues/23014)
+[^1]: [termux/termux-packages#22899 — FFMPEG transcoding with mediacodec first keyframe missing or damaged after ffmpeg update](https://github.com/termux/termux-packages/issues/22899)
+[^2]: [termux/termux-packages#23014 — ffmpeg mediacodec decoder outputs wrong dimensions](https://github.com/termux/termux-packages/issues/23014)
 
 对此，可以暂时使用软件解码或者`-hwaccel auto`来避免这个问题：
 
