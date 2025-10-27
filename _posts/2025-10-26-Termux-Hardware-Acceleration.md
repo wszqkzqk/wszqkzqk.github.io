@@ -106,7 +106,15 @@ ffmpeg -hwaccel mediacodec \
 
 例如，从这里可以看出，笔者的搭载天玑7200 Ultra的Redmi Note 13 Pro+支持H.264、HEVC、VP8和VP9的等多种格式的硬件解码，但是只支持H.264和HEVC的硬件编码；此外，该设备既没有AV1的硬件解码器，也没有AV1的硬件编码器。
 
-对于设定了`-hwaccel mediacodec`但解码器不支持的格式，FFmpeg会自动回退到软件解码，因此不会报错。但是对于编码，如果指定了不支持的硬件编码器，则会报错。
+点击详情页，还可以查看该编解码器支持的最大分辨率、帧率等：
+
+|[![#~/img/android/device-info-hw/device-info-hw-vp9-decoder.webp](/img/android/device-info-hw/device-info-hw-vp9-decoder.webp)](/img/android/device-info-hw/device-info-hw-vp9-decoder.webp)|[![#~/img/android/device-info-hw/device-info-hw-hevc-decoder.webp](/img/android/device-info-hw/device-info-hw-hevc-decoder.webp)](/img/android/device-info-hw/device-info-hw-hevc-decoder.webp)|[![#~/img/android/device-info-hw/device-info-hw-hevc-encoder.webp](/img/android/device-info-hw/device-info-hw-hevc-encoder.webp)](/img/android/device-info-hw/device-info-hw-hevc-encoder.webp)|
+|:----:|:----:|:----:|
+|VP9硬解解码支持详情|HEVC硬件解码支持详情|HEVC硬件编码支持详情|
+
+例如，从这里可以看出，笔者的设备VP9和HEVC硬件解码器均是最高支持4096x2176分辨率，HEVC硬件编码器则最高支持3840x2176分辨率。~~MTK几乎是比着4K的最低标准在做硬件编解码支持，十分抠门~~。
+
+对于设定了`-hwaccel mediacodec`但解码器不支持的格式，FFmpeg会**自动回退**到软件解码，因此不会报错。（目前应该只有指定为Vulkan硬解时在这种情况下会报错）但是对于编码，如果指定了不支持的硬件编码器，则会报错。
 
 ## 质量控制
 
@@ -131,7 +139,15 @@ ffmpeg -hwaccel mediacodec \
 
 设置`-global_quality:v`可以间接控制质量因子（QP）的大小，从而影响输出视频的质量和文件大小。较高的质量值通常会导致更好的视觉质量，但也会增加文件大小。
 
-不过笔者发现，其他质量设置模式，例如码率限制，在MediaCodec中的控制力并不太有效，输出视频的实际码率可能会比设定值大不少，这可能是因为针对移动端高度优化的编码器为了在该场景下更重要的极高的能效比和不错的速率，牺牲了编码的灵活性和可控性。
+不过笔者发现，其他质量设置模式，例如码率限制，在当前设备HEVC的MediaCodec中控制力并不太有效，输出视频的实际码率可能会比设定值大不少。此外，对于某些设备的某些编码器，可能不支持某些质量控制模式：
+
+|[![#~/img/android/device-info-hw/device-info-hw-hevc-encoder.webp](/img/android/device-info-hw/device-info-hw-hevc-encoder.webp)](/img/android/device-info-hw/device-info-hw-hevc-encoder.webp)|[![#~/img/android/device-info-hw/device-info-hw-avc-encoder.webp](/img/android/device-info-hw/device-info-hw-avc-encoder.webp)](/img/android/device-info-hw/device-info-hw-avc-encoder.webp)|
+|:----:|:----:|
+|HEVC硬件编码支持详情|AVC硬件编码支持详情|
+
+由图，笔者的设备HEVC的硬件编码器完整支持了CBR、VBR和CQ三种质量控制模式，而AVC的硬件编码器则只支持VBR这一种质量控制模式，且不能通过`-global_quality:v`参数进行质量控制。
+
+这可能是因为针对移动端高度优化的编码器在设计的时候为了在该场景下更重要的因素——极高的能效比和不错的速率，牺牲了编码的灵活性和可控性。
 
 ## 结语
 
