@@ -47,7 +47,7 @@ termux-setup-storage
 
 运行并完成授权后，即可自由访问`/sdcard`（即手机文件管理器顶级目录）下的文件。
 
-## 使用MediaCodec进行硬件加速编解码
+## 基础使用
 
 使用`-hwaccel mediacodec`参数可以启用MediaCodec硬件加速解码，而使用`<encoder>_mediacodec`（例如`h264_mediacodec`、`hevc_mediacodec`等）可以启用MediaCodec硬件加速编码。
 
@@ -56,12 +56,21 @@ termux-setup-storage
 ```bash
 ffmpeg -hwaccel mediacodec \
     -i <input_file> \
-    -vf "crop=trunc(iw/2)*2:trunc(ih/2)*2" \
     -pix_fmt yuv420p \
     -c:v <encoder>_mediacodec <output_file>
 ```
 
 部分编码器可能不支持`yuv420p`像素格式，可以改为使用`nv12`等格式，下同。
+
+此外，对于较罕见的奇数分辨率视频，还需要额外处理：
+
+```bash
+ffmpeg -hwaccel mediacodec \
+    -i <input_file> \
+    -vf "crop=trunc(iw/2)*2:trunc(ih/2)*2" \
+    -pix_fmt yuv420p \
+    -c:v <encoder>_mediacodec <output_file>
+```
 
 这里值得注意的是`-vf "crop=trunc(iw/2)*2:trunc(ih/2)*2"`参数，因为MediaCodec编码器**通常要求输入视频的宽高必须是偶数**，如果没有这个参数，在宽高为奇数时可能会导致编码失败。
 
@@ -84,6 +93,20 @@ ffmpeg -hwaccel mediacodec \
 > ```
 >
 > FFmpeg 7.1.2及更高版本已经修复了该问题，可以正常使用`-hwaccel mediacodec`进行硬件加速解码。
+
+## 硬件编解码支持情况查看
+
+有时候，我们可能希望了解硬件编解码器的功能支持情况，我们当然可以通过尝试来确定，但其实也有更加方便的方法。
+
+在Google Play或者其他应用商店中安装Device Info HW应用，打开后选择“编解码器”选项卡，可以查看设备的编解码器支持情况。其中，以`c2.<vendor>`或者`OMX.<vendor>`开头的条目**一般**为对应的硬件编解码器（`<vendor>`代表芯片制造商，例如`c2.mtk.hevc.decoder`为联发科的HEVC硬件解码器），而形如`OMX.google`或者`c2.android`的条目则为软件编解码器。具体是否为硬件编解码器，可以点击查看详情页中的`Hardware acceleration`字段，若显示为`yes`则为硬件编解码器。
+
+|[![#~/img/android/device-info-hw/device-info-hw-decoder.webp](/img/android/device-info-hw/device-info-hw-decoder.webp)](/img/android/device-info-hw/device-info-hw-decoder.webp)|[![#~/img/android/device-info-hw/device-info-hw-encoder.webp](/img/android/device-info-hw/device-info-hw-encoder.webp)](/img/android/device-info-hw/device-info-hw-encoder.webp)|
+|:----:|:----:|
+|视频解码器支持|视频编码器支持|
+
+例如，从这里可以看出，笔者的搭载天玑7200 Ultra的Redmi Note 13 Pro+支持H.264、HEVC、VP8和VP9的等多种格式的硬件解码，但是只支持H.264和HEVC的硬件编码；此外，该设备既没有AV1的硬件解码器，也没有AV1的硬件编码器。
+
+对于设定了`-hwaccel mediacodec`但解码器不支持的格式，FFmpeg会自动回退到软件解码，因此不会报错。但是对于编码，如果指定了不支持的硬件编码器，则会报错。
 
 ## 质量控制
 
