@@ -13,13 +13,13 @@ tags:       Termux Android FFmpeg 开源软件 媒体编解码
 
 > 本文介绍了如何在Termux中启用MediaCodec硬件加速，以充分利用Android手机的硬件资源进行媒体编解码。
 
-随着移动设备性能的提升，手机已经能够胜任越来越多的计算密集型任务。在短视频行业的驱动下，手机的视频编解码能力得到了显著提升，手机的硬件编解码越来越强大，能够越来越省电、高效地处理高清视频内容。
+随着移动设备性能的提升，手机已经能够胜任越来越多的计算密集型任务。在短视频行业的驱动下，手机的视频解码能力得到了显著提升；同时，用户对高清摄影的要求也促使硬件厂商不断优化其视频编解码性能。如今，手机的硬件编解码越来越强大，能够越来越省电、高效地处理高清视频内容。
 
-Termux作为Android平台上的一个强大终端模拟器和Linux环境，允许用户在手机上运行各种开源软件。然而，默认情况下，Termux中的软件通常只能使用CPU进行计算，无法充分利用手机的专用视频编解码硬件加速单元，使得某些任务的性能大打折扣。本文将介绍如何在Termux中启用硬件加速，以提升媒体处理和AI推理的效率。
+Termux作为Android平台上的一个强大终端模拟器和Linux环境，允许用户在手机上运行各种开源软件。然而，默认情况下，Termux中的软件通常只能使用CPU进行计算，无法充分利用手机的专用视频编解码硬件加速单元，使得某些任务的性能大打折扣。本文将介绍如何在Termux中启用硬件加速，以提升媒体处理的效率。
 
 ## 背景
 
-FFmpeg是一个广泛使用的开源多媒体处理工具，支持多种音视频格式的编解码，其基础的使用方法可以参见[笔者之前的博客](https://wszqkzqk.github.io/2023/01/01/FFmpeg%E7%9A%84%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/)。FFmpeg支持多种硬件加速技术，包括跨平台的Vulkan和Android平台上的MediaCodec。
+FFmpeg是一个广泛使用的开源多媒体处理工具，支持多种音视频格式的编解码，其基础的使用方法可以参见[笔者之前的博客](https://wszqkzqk.github.io/2023/01/01/FFmpeg%E7%9A%84%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/)。FFmpeg支持多种硬件加速技术，包括跨平台的Vulkan和Android平台上的MediaCodec等。
 
 笔者首先计划尝试在Termux中使用Vulkan进行硬件加速编解码，然而，**各Android硬件厂商的Vulkan实现并不支持视频编解码**功能，因此这里FFmpeg无法使用Vulkan进行硬件加速。在使用Vulkan解码时也有如下报错：
 
@@ -31,13 +31,21 @@ Device creation failed: -12.
 
 后来，笔者尝试在Termux中使用MediaCodec进行硬件加速编解码。MediaCodec是Android平台提供的一个用于视频编解码的硬件加速API，能够充分利用手机的硬件资源。通过在FFmpeg中启用MediaCodec支持，笔者成功实现了在Termux中使用硬件加速进行视频编解码。
 
-## 安装
+## 安装与配置
 
 自FFmpeg 6开始，FFmpeg即引入了不依赖于JVM的MediaCodec支持。在Termux中，FFmpeg 7以来的MediaCodec支持是**开箱即用**的：
 
 ```bash
 pkg install ffmpeg
 ```
+
+不过，Termux中如果需要访问手机存储目录下的文件，需要先授予存储权限：
+
+```bash
+termux-setup-storage
+```
+
+运行并完成授权后，即可自由访问`/sdcard`（即手机文件管理器顶级目录）下的文件。
 
 ## 使用MediaCodec进行硬件加速编解码
 
@@ -53,7 +61,7 @@ ffmpeg -hwaccel mediacodec \
     -c:v <encoder>_mediacodec <output_file>
 ```
 
-部分编码器可能不支持`yuv420p`像素格式，可以改为使用`nv12`等格式。
+部分编码器可能不支持`yuv420p`像素格式，可以改为使用`nv12`等格式，下同。
 
 这里值得注意的是`-vf "crop=trunc(iw/2)*2:trunc(ih/2)*2"`参数，因为MediaCodec编码器**通常要求输入视频的宽高必须是偶数**，如果没有这个参数，在宽高为奇数时可能会导致编码失败。
 
@@ -101,3 +109,19 @@ ffmpeg -hwaccel mediacodec \
 设置`-global_quality:v`可以间接控制质量因子（QP）的大小，从而影响输出视频的质量和文件大小。较高的质量值通常会导致更好的视觉质量，但也会增加文件大小。
 
 不过笔者发现，其他质量设置模式，例如码率限制，在MediaCodec中的控制力并不太有效，输出视频的实际码率可能会比设定值大不少，这可能是因为针对移动端高度优化的编码器为了在该场景下更重要的极高的能效比和不错的速率，牺牲了编码的灵活性和可控性。
+
+## 结语
+
+笔者发现，使用MediaCodec进行硬件加速编解码在Termux中效果显著，能够大幅提升视频处理的能效。通过合理配置质量控制参数，可以在保证视频质量的同时，充分利用手机的硬件资源。
+
+笔者使用MediaCodec硬件解码与编码，将VP9编码的4K（3840x2160）视频转编码成了HEVC。下图展示了MediaCodec硬件编解码的速率与功耗表现：
+
+|[![#~/img/android/termux/ffmpeg-hardware-mediacodec-power.webp](/img/android/termux/ffmpeg-hardware-mediacodec-power.webp)](/img/android/termux/ffmpeg-hardware-mediacodec-power.webp)|
+|:----:|
+|使用MediaCodec硬件编解码将4K VP9视频编码成HEVC的速率与功耗展示|
+
+笔者使用了搭载天玑7200 Ultra的Redmi Note 13 Pro+进行测试。如图，此时电流为531 mA，整体电流大概在500-700 mA间，按照手机电池在4 V左右来计算，**整机功耗仅为2-3 W**。考虑到笔者的手机还有200-300 mA的空载基础功耗，**实际**用于视频编解码的功耗大约在**1-2 W**，而处理4K视频的速率则达到了**约45 FPS**，表现相当出色。
+
+如果使用笔者笔记本电脑搭载的AMD Ryzen 5800H的**硬件编码**，在相同的任务下即使使用新的Vulkan API，封装功耗达到5 W（已经很不错了，远低于VAAPI；空载3 W左右）,整机更是接近15 W（空载9-10 W）。当然，手机跟电脑比功耗是“不讲武德”的，但就算不管功耗，**5800H在输出速度（38 FPS）、质量上还没有优势**。可见，手机在视频编解码能效和性能上的优化是十分显著的。~~(也可以看出AMD对编解码是多么不上心)~~
+
+可见，在对视频没有精细的码率控制的需求下，使用Android手机，在Termux下利用FFmpeg的MediaCodec API硬件加速编解码，是一个十分高效的解决方案。~~（5800H还是只用来SVT-AV1软件编码吧）~~
