@@ -72,6 +72,8 @@ ffmpeg -hwaccel auto \
     -c:v <encoder>_mediacodec <output_file>
 ```
 
+不难发现，设定为`-hwaccel auto`后，FFmpeg实际上选择的仍然是MediaCodec进行解码，不知为何不会出现分辨率错误的问题。
+
 ## 质量控制
 
 MediaCodec编码器支持的质量控制方法与常规编码器有所不同。MediaCodec支持以下几种质量控制模式，通过`-bitrate_mode`参数进行指定：
