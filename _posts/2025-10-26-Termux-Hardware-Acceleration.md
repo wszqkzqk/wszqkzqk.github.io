@@ -57,7 +57,10 @@ ffmpeg -hwaccel mediacodec \
 
 这里值得注意的是`-vf "scale=trunc(iw/2)*2:trunc(ih/2)*2"`参数，因为MediaCodec编码器**通常要求输入视频的宽高必须是偶数**，如果没有这个参数，在宽高为奇数时可能会导致编码失败。
 
-然而，目前NDK的MediaCodec支持存在**严重Bug**，导致**输出分辨率存在错误**，只会给出相当小的视频分辨率，并且似乎仅截取了视频的部分。
+然而，目前NDK的MediaCodec支持存在**严重Bug**，导致**输出分辨率存在错误**，只会给出相当小的视频分辨率，并且似乎仅截取了视频的部分。[^1] [^2]
+
+[^1]: [termux/termux-packages#22899 [Bug]: FFMPEG transcoding with mediacodec first keyframe missing or damaged after ffmpeg update](https://github.com/termux/termux-packages/issues/22899)
+[^2]: [termux/termux-packages#23014 [Bug]: ffmpeg mediacodec decoder outputs wrong dimensions](https://github.com/termux/termux-packages/issues/23014)
 
 对此，可以暂时使用软件解码或者`-hwaccel auto`来避免这个问题：
 
@@ -69,4 +72,27 @@ ffmpeg -hwaccel auto \
     -c:v <encoder>_mediacodec <output_file>
 ```
 
-不过手机的MediaCodec编码器可能只有很弱的画质控制能力，针对移动端高度优化的编码器以牺牲灵活性为代价，换来了极高的能效比和不错的速率。
+## 质量控制
+
+MediaCodec编码器支持的质量控制方法与常规编码器有所不同。MediaCodec支持以下几种质量控制模式，通过`-bitrate_mode`参数进行指定：
+
+- `0`：恒定质量（CQ，Constant Quality）
+- `1`：可变码率（VBR，Variable Bitrate）
+- `2`：恒定码率（CBR，Constant Bitrate）
+- `3`：允许丢帧的恒定码率（CBR with frame dropping）
+
+对于不需要即时传输的本地转码任务，建议使用恒定质量（CQ）模式，以获得稳定、一致的输出质量。MediaCodec的CQ模式通过`-global_quality:v`参数进行质量控制，范围为`1`（最低质量）到`100`（最高质量）。例如，如果想获得较高质量的视频，可以设置为`80`：
+
+```bash
+ffmpeg -hwaccel auto \
+    -i <input_file> \
+    -pix_fmt yuv420p \
+    -c:v <encoder>_mediacodec \
+    -bitrate_mode 0 \
+    -global_quality:v 80 \
+    <output_file>
+```
+
+设置`-global_quality:v`可以间接控制质量因子（QP）的大小，从而影响输出视频的质量和文件大小。较高的质量值通常会导致更好的视觉质量，但也会增加文件大小。
+
+不过笔者发现，其他质量设置模式，例如码率限制，在MediaCodec中的控制力并不太有效，输出视频的实际码率可能会比设定值大不少，这可能是因为针对移动端高度优化的编码器为了在该场景下更重要的极高的能效比和不错的速率，牺牲了编码的灵活性和可控性。
