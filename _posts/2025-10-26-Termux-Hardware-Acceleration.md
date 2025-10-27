@@ -57,22 +57,25 @@ ffmpeg -hwaccel mediacodec \
 
 这里值得注意的是`-vf "crop=trunc(iw/2)*2:trunc(ih/2)*2"`参数，因为MediaCodec编码器**通常要求输入视频的宽高必须是偶数**，如果没有这个参数，在宽高为奇数时可能会导致编码失败。
 
-然而，目前NDK的MediaCodec支持存在**严重Bug**，导致**输出分辨率存在错误**，只会给出相当小的视频分辨率，并且似乎仅截取了视频的部分。[^1] [^2]
-
-[^1]: [termux/termux-packages#22899 — FFMPEG transcoding with mediacodec first keyframe missing or damaged after ffmpeg update](https://github.com/termux/termux-packages/issues/22899)
-[^2]: [termux/termux-packages#23014 — ffmpeg mediacodec decoder outputs wrong dimensions](https://github.com/termux/termux-packages/issues/23014)
-
-对此，可以暂时使用软件解码或者`-hwaccel auto`来避免这个问题：
-
-```bash
-ffmpeg -hwaccel auto \
-    -i <input_file> \
-    -vf "crop=trunc(iw/2)*2:trunc(ih/2)*2" \
-    -pix_fmt yuv420p \
-    -c:v <encoder>_mediacodec <output_file>
-```
-
-不难发现，设定为`-hwaccel auto`后，FFmpeg实际上选择的仍然是MediaCodec进行解码，不知为何不会出现分辨率错误的问题。
+> ### FFmpeg 7.1.1中MediaCodec的严重Bug（已修复）
+>
+> **截至2024年10月27日，该问题已经在FFmpeg 7.1.2中修复。**
+>
+> 然而，FFmpeg 7.1.1的NDK dMediaCodec支持存在**严重Bug**，导致**输出分辨率存在错误**，只会给出相当小的视频分辨率，并且似乎仅截取了视频的部分。[^1] [^2]
+>
+> [^1]: [termux/termux-packages#22899 — FFMPEG transcoding with mediacodec first keyframe missing or damaged after ffmpeg update](https://github.com/termux/termux-packages/issues/22899)
+> [^2]: [termux/termux-packages#23014 — ffmpeg mediacodec decoder outputs wrong dimensions](https://github.com/termux/termux-packages/issues/23014)
+>
+> 对此，可以暂时使用软件解码来避免这个问题：
+>
+> ```bash
+> ffmpeg -i <input_file> \
+>     -vf "crop=trunc(iw/2)*2:trunc(ih/2)*2" \
+>     -pix_fmt yuv420p \
+>     -c:v <encoder>_mediacodec <output_file>
+> ```
+>
+> FFmpeg 7.1.2及更高版本已经修复了该问题，可以正常使用`-hwaccel mediacodec`进行硬件加速解码。
 
 ## 质量控制
 
@@ -86,7 +89,7 @@ MediaCodec编码器支持的质量控制方法与常规编码器有所不同。M
 对于不需要即时传输的本地转码任务，建议使用恒定质量（CQ）模式，以获得稳定、一致的输出质量。MediaCodec的CQ模式通过`-global_quality:v`参数进行质量控制，范围为`1`（最低质量）到`100`（最高质量）。例如，如果想获得较高质量的视频，可以设置为`80`：
 
 ```bash
-ffmpeg -hwaccel auto \
+ffmpeg -hwaccel mediacodec \
     -i <input_file> \
     -pix_fmt yuv420p \
     -c:v <encoder>_mediacodec \
