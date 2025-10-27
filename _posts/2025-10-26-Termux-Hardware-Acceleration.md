@@ -48,14 +48,14 @@ pkg install ffmpeg
 ```bash
 ffmpeg -hwaccel mediacodec \
     -i <input_file> \
-    -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \
+    -vf "crop=trunc(iw/2)*2:trunc(ih/2)*2" \
     -pix_fmt yuv420p \
     -c:v <encoder>_mediacodec <output_file>
 ```
 
 部分编码器可能不支持`yuv420p`像素格式，可以改为使用`nv12`等格式。
 
-这里值得注意的是`-vf "scale=trunc(iw/2)*2:trunc(ih/2)*2"`参数，因为MediaCodec编码器**通常要求输入视频的宽高必须是偶数**，如果没有这个参数，在宽高为奇数时可能会导致编码失败。
+这里值得注意的是`-vf "crop=trunc(iw/2)*2:trunc(ih/2)*2"`参数，因为MediaCodec编码器**通常要求输入视频的宽高必须是偶数**，如果没有这个参数，在宽高为奇数时可能会导致编码失败。
 
 然而，目前NDK的MediaCodec支持存在**严重Bug**，导致**输出分辨率存在错误**，只会给出相当小的视频分辨率，并且似乎仅截取了视频的部分。[^1] [^2]
 
@@ -67,7 +67,7 @@ ffmpeg -hwaccel mediacodec \
 ```bash
 ffmpeg -hwaccel auto \
     -i <input_file> \
-    -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \
+    -vf "crop=trunc(iw/2)*2:trunc(ih/2)*2" \
     -pix_fmt yuv420p \
     -c:v <encoder>_mediacodec <output_file>
 ```
