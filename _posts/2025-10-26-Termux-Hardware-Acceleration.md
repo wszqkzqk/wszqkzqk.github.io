@@ -104,7 +104,7 @@ ffmpeg -hwaccel mediacodec \
 |:----:|:----:|
 |视频解码器支持|视频编码器支持|
 
-例如，从这里可以看出，笔者的搭载天玑7200 Ultra的Redmi Note 13 Pro+支持H.264、HEVC、VP8和VP9的等多种格式的硬件解码，但是只支持H.264和HEVC的硬件编码；此外，该设备既没有AV1的硬件解码器，也没有AV1的硬件编码器。
+例如，从这里可以看出，笔者搭载天玑7200 Ultra的Redmi Note 13 Pro+支持H.264、HEVC、VP8和VP9的等多种格式的硬件解码，但是只支持H.264和HEVC的硬件编码；此外，该设备不支持AV1硬件解码，也不支持AV1硬件编码。
 
 点击详情页，还可以查看该编解码器支持的最大分辨率、帧率等：
 
@@ -157,7 +157,7 @@ ffmpeg -hwaccel mediacodec \
 
 |[![#~/img/android/termux/ffmpeg-hardware-mediacodec-power.webp](/img/android/termux/ffmpeg-hardware-mediacodec-power.webp)](/img/android/termux/ffmpeg-hardware-mediacodec-power.webp)|
 |:----:|
-|使用MediaCodec硬件编解码将4K VP9视频编码成HEVC的速率与功耗展示|
+|速率与功耗展示|
 
 笔者使用了搭载天玑7200 Ultra的Redmi Note 13 Pro+进行测试。如图，此时电流为531 mA，整体电流大概在500-700 mA间，按照手机电池在4 V左右来计算，**整机功耗仅为2-3 W**。考虑到笔者的手机还有200-300 mA的空载基础功耗，**实际**用于视频编解码的功耗大约在**1-2 W**，而处理4K视频的速率则达到了**约45 FPS**，表现相当出色。
 
