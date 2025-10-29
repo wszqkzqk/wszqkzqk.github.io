@@ -125,7 +125,7 @@ MediaCodec编码器支持的质量控制方法与常规编码器有所不同。M
 - `2`：恒定码率（CBR，Constant Bitrate）
 - `3`：允许丢帧的恒定码率（CBR with frame dropping）
 
-对于不需要即时传输的本地转码任务，建议使用恒定质量（CQ）模式，以获得稳定、一致的输出质量。MediaCodec的CQ模式通过`-global_quality:v`参数进行质量控制，范围为`1`（最低质量）到`100`（最高质量）。例如，如果想获得较高质量的视频，可以设置为`80`（想要极小的体积则可以尝试`40`左右，当然，具体问题具体分析）：
+对于不需要即时传输的本地转码任务，建议使用恒定质量（CQ）模式，以获得稳定、一致的输出质量。MediaCodec的CQ模式通过`-global_quality:v`参数进行质量控制，范围为`1`（最低质量）到`100`（最高质量）。例如，如果想获得较高质量的视频，可以设置为`80`（想要极小的体积则可以尝试`40`左右，当然，具体需要依设备和场景而定）：
 
 ```bash
 ffmpeg -hwaccel mediacodec \
@@ -139,7 +139,7 @@ ffmpeg -hwaccel mediacodec \
 
 设置`-global_quality:v`可以间接控制质量因子（QP）的大小，从而影响输出视频的质量和文件大小。较高的质量值通常会导致更好的视觉质量，但也会增加文件大小。
 
-不过笔者发现，码率限制设定在当前设备HEVC的MediaCodec中控制力并不太有效，输出视频的实际码率可能会比设定值大不少。（即有些视频存在码率“压不下来的情况”）此外，对于某些设备的某些编码器，可能不支持某些质量控制模式：
+不过笔者发现，码率限制设定在当前设备HEVC的MediaCodec中控制力并不太有效，输出视频的实际码率可能会比设定值大不少。（即有些视频存在**码率“压不下来”**的情况）此外，对于某些设备的某些编码器，可能不支持某些质量控制模式：
 
 |[![#~/img/android/device-info-hw/device-info-hw-hevc-encoder.webp](/img/android/device-info-hw/device-info-hw-hevc-encoder.webp)](/img/android/device-info-hw/device-info-hw-hevc-encoder.webp)|[![#~/img/android/device-info-hw/device-info-hw-avc-encoder.webp](/img/android/device-info-hw/device-info-hw-avc-encoder.webp)](/img/android/device-info-hw/device-info-hw-avc-encoder.webp)|
 |:----:|:----:|
@@ -147,7 +147,7 @@ ffmpeg -hwaccel mediacodec \
 
 由图，笔者的设备HEVC的硬件编码器完整支持了CBR、VBR和CQ三种质量控制模式，而AVC的硬件编码器则只支持VBR这一种质量控制模式，且不能通过`-global_quality:v`参数进行质量控制。
 
-这可能是因为针对移动端高度优化的编码器在设计的时候为了在该场景下更重要的因素——极高的能效比和不错的速率，牺牲了编码的灵活性和可控性。
+这可能是因为针对移动端高度优化的编码器在设计的时候为了在该场景下更重要的因素——极高的能效比和不错的速率，牺牲了编码的灵活性和可控性，~~降本增效了~~。
 
 ## 实际表现
 
