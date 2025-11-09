@@ -206,7 +206,7 @@ location_stack.visible_child = location_button;
 
 * **输入控件 `Adw.SpinRow`**：对于经纬度和时区这类数值输入，`Adw.SpinRow` 是一个非常合适的控件。它将一个标签、一个描述和一个数值调节器组合在一起，美观且便于使用。
     ```vala
-    latitude_row = new Adw.SpinRow.with_range (-90, 90, 0.1) {
+    latitude_row = new Adw.SpinRow.with_range (-90.0, 90.0, 0.1) {
         title = "Latitude",
         subtitle = "Degrees",
         value = latitude,
@@ -683,7 +683,7 @@ public class SolarAngleApp : Adw.Application {
         location_detect_row.add_suffix (location_box);
         location_detect_row.activated.connect (on_auto_detect_location);
 
-        latitude_row = new Adw.SpinRow.with_range (-90, 90, 0.1) {
+        latitude_row = new Adw.SpinRow.with_range (-90.0, 90.0, 0.1) {
             title = "Latitude",
             subtitle = "Degrees",
             value = latitude,
