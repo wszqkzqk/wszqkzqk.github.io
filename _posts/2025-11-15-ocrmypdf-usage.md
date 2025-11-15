@@ -13,7 +13,7 @@ tags:       OCR PDF 开源软件 媒体文件
 
 [ocrmypdf](https://github.com/ocrmypdf/OCRmyPDF) 是一个开源的命令行工具，用于将扫描或其他方式制作的纯图 PDF 文件转换为可搜索和可选中文本的 PDF 文件。它通过集成 Tesseract OCR 引擎，自动识别扫描件中的文字，并将其嵌入到 PDF 中，从而实现全文搜索和复制功能。ocrmypdf 支持多种语言和字符集，适用于各种类型的文档处理需求。
 
-在某些 LLM 的 API 不支持直接处理图片 PDF 的情况下，ocrmypdf 可以作为前置步骤，将扫描件转换为嵌入了文本的 PDF，使得后续处理可以将其当作普通文本来处理，极大提升了工作流的便利性。
+在某些 LLM 的 API 不支持直接处理图片 PDF 的情况下，ocrmypdf 可以作为前置步骤，将扫描件转换为嵌入了文本的 PDF，使得后续处理可以将其当作普通文本来处理，极大提升了工作流的便利性。此外，嵌入文本后，手动关键词检索也会变得更加高效，直接复制其中的文字内容也不再是问题。
 
 之前笔者写过 Ghostscript、ImageMagick 等 PDF/图片处理工具，ocrmypdf 则负责把一堆扫描件或者纯图塞进 Tesseract 再吐出可检索的 PDF/A。它的优势主要是：
 
@@ -27,6 +27,12 @@ Arch Linux 用户可以从 AUR 安装：
 
 ```bash
 paru -S ocrmypdf
+```
+
+Debian/Ubuntu 用户可以通过 apt 安装：
+
+```bash
+sudo apt install ocrmypdf
 ```
 
 如果系统里已经装好了 ocrmypdf，先跑一遍版本确认：
