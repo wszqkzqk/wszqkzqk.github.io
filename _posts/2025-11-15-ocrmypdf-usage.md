@@ -57,10 +57,10 @@ ocrmypdf --output-type pdf book.pdf book-searchable.pdf
 
 ## 语言与多语言 OCR
 
-正确选择语言对提升识别率至关重要。Tesseract 的语言包装在 `-l` / `--language` 选项里，用 `+` 连接多语言：
+ocrmypdf 调用 Tesseract 进行 OCR，**正确选择语言**对提升识别率至关重要，在不指定语言时，默认仅能识别英语。Tesseract 的语言包装在 `-l` / `--language` 选项里，用 `+` 连接多语言，例如当前文档包含中英文时：
 
 ```bash
-ocrmypdf -l chi_sim+eng thesis.pdf thesis-ocr.pdf
+ocrmypdf -l chi_sim+eng docs.pdf docs-ocr.pdf
 ```
 
 建议提前用 `tesseract --list-langs` 确认哪些语言已装好，缺失就 `sudo pacman -S tesseract-data-xxx` 或 `pip install tesseract-ocr` 补齐。
