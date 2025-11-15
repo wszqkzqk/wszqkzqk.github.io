@@ -6,7 +6,7 @@ date:       2025-11-15
 author:     wszqkzqk
 header-img: img/bg-mountain-darken.webp
 catalog:    true
-tags:       OCR PDF 开源软件 工作流
+tags:       OCR PDF 开源软件 媒体文件
 ---
 
 ## 前言
