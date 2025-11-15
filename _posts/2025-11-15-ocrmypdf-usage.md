@@ -4,7 +4,7 @@ title:      ocrmypdf：从扫描件到可检索文字的PDF/A的方法
 subtitle:   对纯图片PDF嵌入文字的软件推荐
 date:       2025-11-15
 author:     wszqkzqk
-header-img: img/bg-mountain-darken.webp
+header-img: img/bg-leaf-on-the-lake-darken.webp
 catalog:    true
 tags:       OCR PDF 开源软件 媒体文件
 ---
