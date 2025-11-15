@@ -6,7 +6,7 @@ date:       2025-11-15
 author:     wszqkzqk
 header-img: img/bg-leaf-on-the-lake-darken.webp
 catalog:    true
-tags:       OCR PDF 开源软件 媒体文件
+tags:       PDF 开源软件 OCR 媒体文件
 ---
 
 ## 前言
@@ -51,7 +51,7 @@ ocrmypdf input.pdf output.pdf
 
 常见扫描件往往是纯图片 PDF，这条命令会默认：
 
-1. 逐页 rasterize
+1. 逐页光栅化
 2. 交给 Tesseract OCR
 3. 输出 PDF/A-2b（`--output-type pdfa`）
 
