@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      在Termux中启用硬件加速
-subtitle:   充分利用Android手机硬件进行编解码
+title:      利用Android手机硬件进行高效灵活的编解码
+subtitle:   在Termux中启用硬件加速视频编解码
 date:       2025-10-26
 author:     wszqkzqk
 header-img: img/media/bg-hardware-acceleration-darken.webp
