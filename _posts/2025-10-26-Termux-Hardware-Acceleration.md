@@ -149,6 +149,21 @@ ffmpeg -hwaccel mediacodec \
 
 这可能是因为针对移动端高度优化的编码器在设计的时候为了在该场景下更重要的因素——极高的能效比和不错的速率，牺牲了编码的灵活性和可控性，~~降本增效了~~。
 
+### 精细控制：FFmpeg 8.0及更高版本
+
+自FFmpeg 8.0开始，FFmpeg引入了对I帧、P帧和B帧的单独质量控制支持，可以分别设置其质量因子上限和下限，从而实现更加精细的质量控制，这使得利用MediaCodec进行编码时可以更好地控制视频质量，功能更加强大。可以使用以下参数进行设置：
+
+```
+  -qp_i_min          <int>        E..V....... minimum quantization parameter for I frame (from -1 to INT_MAX) (default -1)
+  -qp_p_min          <int>        E..V....... minimum quantization parameter for P frame (from -1 to INT_MAX) (default -1)
+  -qp_b_min          <int>        E..V....... minimum quantization parameter for B frame (from -1 to INT_MAX) (default -1)
+  -qp_i_max          <int>        E..V....... maximum quantization parameter for I frame (from -1 to INT_MAX) (default -1)
+  -qp_p_max          <int>        E..V....... maximum quantization parameter for P frame (from -1 to INT_MAX) (default -1)
+  -qp_b_max          <int>        E..V....... maximum quantization parameter for B frame (from -1 to INT_MAX) (default -1)
+```
+
+不过事实上大多数Android设备在默认情况下并不支持B帧编码，因此`-qp_b_min`和`-qp_b_max`通常不会起作用。此外，必须要保证`-bitrate_mode`设置为`0`（CQ模式），否则这些参数也不会起作用。
+
 ## 实际表现
 
 笔者发现，使用MediaCodec进行硬件加速编解码在Termux中效果显著，能够大幅提升视频处理的能效。通过合理配置质量控制参数，可以在保证视频质量的同时，充分利用手机的硬件资源。
@@ -169,6 +184,6 @@ ffmpeg -hwaccel mediacodec \
 
 ## 结语
 
-利用MediaCodec和FFmpeg在Termux中进行全面硬件加速的视频编解码实测表现出色，实现了极高的视频处理的效率和能效。在手机消费者对短视频和高清摄影日益增长的需求推动下，现代手机的硬件编解码无论在能效、质量还是速度上，都有着非常优秀的表现，只是在编码的可控性和灵活性上有所欠缺。在能够接受这些限制的场景下，使用手机进行硬件加速编解码是一个非常值得推荐的方案。
+利用MediaCodec和FFmpeg在Termux中进行全面硬件加速的视频编解码实测表现出色，实现了极高的视频处理的效率和能效。在手机消费者对短视频和高清摄影日益增长的需求推动下，现代手机的硬件编解码无论在能效、质量还是速度上，都有着非常优秀的表现，只是在编码的可控性和灵活性上有所欠缺（FFmpeg 8.0的更新部分弥补了这一点）。在能够接受这些限制的场景下，使用手机进行硬件加速编解码是一个非常值得推荐的方案。
 
 此外，利用手机的闲置时段进行视频转码任务可谓是非常环保。笔者成功使用手机将若干保存的AVC编码的高清电影转码为HEVC编码，通过控制质量因子，**节省了大量存储空间**；同时，仅利用了手机闲置待机时间完成了转码任务，电量开销也不大，全硬件编解码场景中手机**完全没有可感知发热**，**质量**观感也比5800H的硬件编码**更优**。这可以作为高效利用闲置资源的一个范例。
