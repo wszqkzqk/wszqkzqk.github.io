@@ -130,10 +130,13 @@ Vala 实现：
 ```vala
 double ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq;
 double ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch;
-double ecliptic_c3 = 0.000290;
+const double ecliptic_c3 = 0.000290;
 
 double mean_anomaly_rad = mean_anomaly_deg * DEG2RAD;
-double ecliptic_longitude_deg = mean_longitude_deg + ecliptic_c1 * Math.sin (mean_anomaly_rad) + ecliptic_c2 * Math.sin (2.0 * mean_anomaly_rad) + ecliptic_c3 * Math.sin (3.0 * mean_anomaly_rad);
+double equation_of_center_deg = ecliptic_c1 * Math.sin (mean_anomaly_rad)
+    + ecliptic_c2 * Math.sin (2.0 * mean_anomaly_rad)
+    + ecliptic_c3 * Math.sin (3.0 * mean_anomaly_rad);
+double ecliptic_longitude_deg = mean_longitude_deg + equation_of_center_deg;
 ```
 
 ### 坐标转换：从黄道到赤道
@@ -239,6 +242,36 @@ sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
 ```
 
 至此，我们就完成了从一个日期和时间点，到其精确太阳高度角的完整计算链条。
+
+### 地日距离 (Earth-Sun Distance)
+
+除了太阳的方位，我们还可以计算地球到太阳的距离。这首先需要地球轨道的**离心率 (Eccentricity, $e$)**，它也随时间微小变化：
+
+$$
+e = 0.016708634 - 1.15091 \times 10^{-9} d - 9.497 \times 10^{-17} d^2
+$$
+
+接下来，我们需要**真近点角 (True Anomaly, $\nu$)**，即行星在其轨道上相对于近心点（离中心天体最近的点）的角度。它等于平近点角 $M$ 加上中心差 $C$：
+
+$$
+\nu = M + C
+$$
+
+有了离心率和真近点角，就可以根据活力公式的变体，计算出以天文单位（AU）为单位的日地距离 $R$：
+
+$$
+R_\text{AU} = \frac{a(1 - e^2)}{1 + e \cos(\nu)}
+$$
+
+其中 $a$ 是半长轴，对于日地距离，我们近似为 1 AU。最后，我们将它转换为公里（km）。
+
+Vala 实现：
+```vala
+double eccentricity = 0.016708634 - 1.15091e-09 * base_days_from_epoch - 9.497e-17 * base_days_sq;
+double true_anomaly_rad = mean_anomaly_rad + equation_of_center_deg * DEG2RAD;
+double distance_au = (1.0 - eccentricity * eccentricity) / (1.0 + eccentricity * Math.cos (true_anomaly_rad));
+// sun_distances[i] = distance_au * 149597870.7; // 转换为 km
+```
 
 ## 应用二：计算日出日落时间及白昼时长
 
@@ -348,8 +381,9 @@ $$
         double obliquity_cos = Math.cos (obliquity_deg * DEG2RAD);
         double ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq;
         double ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch;
-        const double ecliptic_c3 = 0.000290;
         double tst_offset = 4.0 * longitude_deg - 60.0 * timezone_offset_hrs;
+        double eccentricity = 0.016708634 - 1.15091e-09 * base_days_from_epoch - 9.497e-17 * base_days_sq;
+
         for (int i = 0; i < RESOLUTION_PER_MIN; i += 1) {
             double days_from_epoch = base_days_from_epoch + (i / 60.0 - timezone_offset_hrs) / 24.0;
             double days_from_epoch_sq = days_from_epoch * days_from_epoch;
@@ -365,10 +399,10 @@ $$
                 mean_longitude_deg += 360.0;
             }
             double mean_anomaly_rad = mean_anomaly_deg * DEG2RAD;
-            double ecliptic_longitude_deg = mean_longitude_deg
-                + ecliptic_c1 * Math.sin (mean_anomaly_rad)
+            double equation_of_center_deg = ecliptic_c1 * Math.sin (mean_anomaly_rad)
                 + ecliptic_c2 * Math.sin (2.0 * mean_anomaly_rad)
-                + ecliptic_c3 * Math.sin (3.0 * mean_anomaly_rad);
+                + 0.000290 * Math.sin (3.0 * mean_anomaly_rad);
+            double ecliptic_longitude_deg = mean_longitude_deg + equation_of_center_deg;
             ecliptic_longitude_deg = Math.fmod (ecliptic_longitude_deg, 360.0);
             if (ecliptic_longitude_deg < 0) {
                 ecliptic_longitude_deg += 360.0;
@@ -393,6 +427,10 @@ $$
             double hour_angle_rad = ((i + eqtime_minutes + tst_offset) / 4.0 - 180.0) * DEG2RAD;
             double elevation_sine = sin_lat * declination_sin + cos_lat * declination_cos * Math.cos (hour_angle_rad);
             sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
+
+            double true_anomaly_rad = mean_anomaly_rad + equation_of_center_deg * DEG2RAD;
+            double distance_au = (1.0 - eccentricity * eccentricity) / (1.0 + eccentricity * Math.cos (true_anomaly_rad));
+            sun_distances[i] = distance_au * 149597870.7; // Convert AU to km
         }
     }
 
