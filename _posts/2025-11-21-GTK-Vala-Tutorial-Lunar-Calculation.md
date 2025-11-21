@@ -134,8 +134,12 @@ $$
 $$
 
 最终的地心黄道坐标为：
-$$ \lambda = L' + \Sigma_l $$
-$$ \beta = \Sigma_b $$
+$$
+\lambda = L' + \Sigma_l
+$$
+$$
+\beta = \Sigma_b
+$$
 
 ```vala
 double geocentric_ecliptic_longitude_deg = moon_mean_longitude_deg
