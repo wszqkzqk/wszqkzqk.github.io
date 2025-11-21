@@ -191,7 +191,9 @@ $$
 
 我们需要计算观测者的**地方恒星时 (LST)**，然后得到**时角 (H)**。
 
-$$ H = \text{LST} - \alpha $$
+$$
+H = \text{LST} - \alpha
+$$
 
 接着，利用视差 $\pi$ 和观测者的地理纬度 $\phi$，我们将地心坐标 $(\alpha, \delta)$ 转换为站心坐标 $(\alpha', \delta')$。这里我们使用严密的矢量公式（或其分量形式）：
 
@@ -209,6 +211,8 @@ $$
 
 $$
 \tan H' = \frac{A}{B}
+$$
+$$
 \tan \delta' = \frac{C}{\sqrt{A^2 + B^2}}
 $$
 
@@ -229,7 +233,9 @@ moon_angles[i] = Math.asin (elevation_sin.clamp (-1.0, 1.0)) * RAD2DEG;
 除了位置，我们还计算了月相。月球的被照亮比例 $k$ 取决于**日月距角 (Elongation, $\psi$)**：
 
 $$
-\cos \psi = \cos \beta \cos (\lambda_{moon} - \lambda_{sun}) $$
+\cos \psi = \cos \beta \cos (\lambda_{moon} - \lambda_{sun})
+$$
+$$
 k = \frac{1 + \cos \psi}{2}
 $$
 
