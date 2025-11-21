@@ -207,8 +207,10 @@ $$
 
 于是，站心时角 $H'$ 和站心赤纬 $\delta'$ 可由下式求得：
 
-$$ \tan H' = \frac{A}{B} $$
-$$ \tan \delta' = \frac{C}{\sqrt{A^2 + B^2}} $$
+$$
+\tan H' = \frac{A}{B}
+\tan \delta' = \frac{C}{\sqrt{A^2 + B^2}}
+$$
 
 最后，利用站心赤纬 $\delta'$ 和站心时角 $H'$，通过标准的球面三角公式计算出月球的**地平高度角 (Elevation)**：
 
@@ -224,8 +226,10 @@ moon_angles[i] = Math.asin (elevation_sin.clamp (-1.0, 1.0)) * RAD2DEG;
 
 除了位置，我们还计算了月相。月球的被照亮比例 $k$ 取决于**日月距角 (Elongation, $\psi$)**：
 
-$$ \cos \psi = \cos \beta \cos (\lambda_{moon} - \lambda_{sun}) $$
-$$ k = \frac{1 + \cos \psi}{2} $$
+$$
+\cos \psi = \cos \beta \cos (\lambda_{moon} - \lambda_{sun}) $$
+k = \frac{1 + \cos \psi}{2}
+$$
 
 这里 $\lambda_{sun}$ 是太阳的视黄经。
 
