@@ -45,7 +45,7 @@ tags:       开源软件 GTK Vala 数值计算
 
 本文采用的算法基于 Jean Meeus 的《天文算法》中的简化模型，它本质上是 ELP-2000/82 理论的一个截断版本，保留了对精度影响最大的项。
 
-## Vala 实现详解
+## 实现详解
 
 ### 时间基准与基本参数
 
@@ -214,7 +214,9 @@ $$
 
 最后，利用站心赤纬 $\delta'$ 和站心时角 $H'$，通过标准的球面三角公式计算出月球的**地平高度角 (Elevation)**：
 
-$$ \sin(\text{El}) = \sin \phi \sin \delta' + \cos \phi \cos \delta' \cos H' $$
+$$
+\sin(\text{El}) = \sin \phi \sin \delta' + \cos \phi \cos \delta' \cos H'
+$$
 
 ```vala
 double elevation_sin = sin_lat * Math.sin (topocentric_declination_rad)
@@ -249,7 +251,6 @@ $$
 
 你可以将[完整代码](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/lunarangleadw.vala)保存为 `lunarangleadw.vala`，可以手动保存，也可以使用以下命令下载：
 
-```bash
 ```bash
 wget https://raw.githubusercontent.com/wszqkzqk/FunValaGtkExamples/master/lunarangleadw.vala
 ```
