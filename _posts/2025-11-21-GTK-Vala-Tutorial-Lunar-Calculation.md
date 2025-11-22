@@ -252,7 +252,7 @@ $$
 $$
 
 $$
-k = \frac{1 + \cos \psi}{2}
+k = \frac{1 - \cos \psi}{2}
 $$
 
 这里 $\lambda_{sun}$ 是太阳的视黄经。
