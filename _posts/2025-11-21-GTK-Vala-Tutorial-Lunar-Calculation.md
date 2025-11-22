@@ -120,15 +120,15 @@ double mean_elongation_deg = 297.8501921 + 445267.1114034 * centuries_since_j200
 
 $$
 \begin{aligned}
-\Sigma_l = &+ 6.2888 \sin(M') \quad (\text{椭圆离心率修正主项}) \\
-&+ 1.2740 \sin(2D - M') \quad (\text{Evection, 出差}) \\
-&+ 0.6583 \sin(2D) \quad (\text{Variation, 二均差}) \\
-&- 0.1856 \sin(M) \quad (\text{Annual Equation, 周年差}) \\
-&- 0.1143 \sin(2F) \\
-&+ 0.2136 \sin(2D - M) \\
-&- 0.0588 \sin(2D - 2M') \\
-&- 0.0572 \sin(2D - M - M') \\
-&+ 0.0533 \sin(2D + M')
+\Sigma_l = &+ 6.2888 \sin(M') \quad (\text{中心方程：椭圆轨道修正}) \\
+&+ 1.2740 \sin(2D - M') \quad (\text{出差：偏心率摄动}) \\
+&+ 0.6583 \sin(2D) \quad (\text{二均差：切向力摄动}) \\
+&- 0.1856 \sin(M) \quad (\text{周年差：日地距离变化}) \\
+&- 0.1143 \sin(2F) \quad (\text{黄道差：轨道倾角投影}) \\
+&+ 0.2136 \sin(2D - M) \quad (\text{混合摄动项}) \\
+&- 0.0588 \sin(2D - 2M') \quad (\text{出差二阶项}) \\
+&- 0.0572 \sin(2D - M - M') \quad (\text{混合摄动项}) \\
+&+ 0.0533 \sin(2D + M') \quad (\text{出差变体})
 \end{aligned}
 $$
 
