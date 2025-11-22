@@ -17,7 +17,7 @@ tags:       开源软件 GTK Vala 数值计算
 
 本文将继续我们的 Vala 数值计算之旅，以**月球位置计算**为例，展示如何处理比太阳算法更复杂的数学模型，并实现一个包含视差修正和月相计算的完整月球计算器。
 
-本文的代码实现可在 [GitHub 对应仓库](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/lunarangleadw.vala)中获取也可以在[文末](#完整代码实现)查看。
+本文的代码实现可在 [GitHub 对应仓库](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/lunarcalc.vala)中获取也可以在[文末](#完整代码实现)查看。
 
 ## 界面设计与效果展示
 
@@ -263,23 +263,23 @@ $$
   pacman -S --needed mingw-w64-ucrt-x86_64-vala mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-gtk4 mingw-w64-ucrt-x86_64-libadwaita mingw-w64-ucrt-x86_64-json-glib
   ```
 
-你可以将[完整代码](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/lunarangleadw.vala)保存为 `lunarangleadw.vala`，可以手动保存，也可以使用以下命令下载：
+你可以将[完整代码](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/lunarcalc.vala)保存为 `lunarcalc.vala`，可以手动保存，也可以使用以下命令下载：
 
 ```bash
-wget https://raw.githubusercontent.com/wszqkzqk/FunValaGtkExamples/master/lunarangleadw.vala
+wget https://raw.githubusercontent.com/wszqkzqk/FunValaGtkExamples/master/lunarcalc.vala
 ```
 
 然后使用以下命令进行编译：
 
 ```bash
-valac --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -pipe lunarangleadw.vala
+valac --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -pipe lunarcalc.vala
 ```
 
 或者，如果你在 Linux 环境下，可以直接赋予脚本执行权限并运行（脚本头部已包含 Shebang）：
 
 ```bash
-chmod +x lunarangleadw.vala
-./lunarangleadw.vala
+chmod +x lunarcalc.vala
+./lunarcalc.vala
 ```
 
 ## 总结
