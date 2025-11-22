@@ -148,7 +148,10 @@ $$
 最终的地心黄道坐标为：
 
 $$
-\lambda = L' + \Sigma_l \\
+\lambda = L' + \Sigma_l
+$$
+
+$$
 \beta = \Sigma_b
 $$
 
@@ -183,7 +186,7 @@ $$
 由此可得地月地心距离（单位：千米）：
 
 $$
-r_{geo} = \frac{R_\oplus}{\sin \pi} \approx \frac{6378.14}{\sin \pi}
+r_{geo} = \frac{R_\oplus}{\sin \pi} \approx \frac{6378.137}{\sin \pi}
 $$
 
 代码中进一步考虑了观测者在地球表面的位置，计算了更精确的**站心距离 (Topocentric Distance)**，即观测者与月球之间的直线距离。这一距离会比地心距离略小（当月球在地平线以上时）。最终，程序界面上显示的便是这个经过修正的站心距离。
@@ -193,7 +196,10 @@ $$
 利用黄赤交角 $\epsilon$，我们将地心黄道坐标 $(\lambda, \beta)$ 转换为地心赤道坐标——赤经 ($\alpha$) 和赤纬 ($\delta$)。
 
 $$
-\tan \alpha = \frac{\sin \lambda \cos \epsilon - \tan \beta \sin \epsilon}{\cos \lambda} \\
+\tan \alpha = \frac{\sin \lambda \cos \epsilon - \tan \beta \sin \epsilon}{\cos \lambda}
+$$
+
+$$
 \sin \delta = \sin \beta \cos \epsilon + \cos \beta \sin \epsilon \sin \lambda
 $$
 
@@ -222,7 +228,10 @@ $$
 于是，站心时角 $H'$ 和站心赤纬 $\delta'$ 可由下式求得：
 
 $$
-\tan H' = \frac{A}{B} \\
+\tan H' = \frac{A}{B}
+$$
+
+$$
 \tan \delta' = \frac{C}{\sqrt{A^2 + B^2}}
 $$
 
@@ -243,7 +252,10 @@ moon_angles[i] = Math.asin (elevation_sin.clamp (-1.0, 1.0)) * RAD2DEG;
 除了位置，我们还计算了月相。月球的被照亮比例 $k$ 取决于**日月距角 (Elongation, $\psi$)**：
 
 $$
-\cos \psi = \cos \beta \cos (\lambda_{moon} - \lambda_{sun}) \\
+\cos \psi = \cos \beta \cos (\lambda_{moon} - \lambda_{sun})
+$$
+
+$$
 k = \frac{1 + \cos \psi}{2}
 $$
 
