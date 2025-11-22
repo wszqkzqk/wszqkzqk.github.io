@@ -21,9 +21,9 @@ tags:       开源软件 GTK Vala 数值计算
 
 ## 界面设计与效果展示
 
-本应用的界面设计延续了[上一篇教程](https://wszqkzqk.github.io/2025/08/07/GTK-Vala-Tutorial-3/)中“太阳高度角计算器”的风格，采用了现代化的 LibAdwaita 库构建。
+本应用的界面设计延续了[之前的教程（GTK4/Vala 教程：构建现代桌面应用）](https://wszqkzqk.github.io/2025/08/07/GTK-Vala-Tutorial-3/)中“太阳计算器”的风格，采用了现代化的 LibAdwaita 库构建。
 
-界面依然保持了清晰的双栏布局：左侧为参数设置与控制面板，右侧为自定义绘制的图表区域。我们同样支持了深色模式的自动适配与手动切换，以及平滑的加载动画。关于界面构建的具体细节（如 `Adw.ToolbarView`、`Adw.PreferencesGroup` 的使用，以及 Cairo 绘图的实现），请读者参考上一篇教程，本文不再赘述，仅在此简单展示效果截图：
+界面依然保持了清晰的双栏布局：左侧为参数设置与控制面板，右侧为自定义绘制的图表区域。我们同样支持了深色模式的自动适配与手动切换，以及平滑的加载动画。关于界面构建的具体细节（如 `Adw.ToolbarView`、`Adw.PreferencesGroup` 的使用，以及 Cairo 绘图的实现），请读者参考笔者[之前的博客](https://wszqkzqk.github.io/2025/08/07/GTK-Vala-Tutorial-3/)，本文不再赘述，仅在此简单展示效果截图：
 
 |[![#~/img/GTK-examples/lunar-pku-light.webp](/img/GTK-examples/lunar-pku-light.webp)](/img/GTK-examples/lunar-pku-light.webp)|[![#~/img/GTK-examples/lunar-pku-dark.webp](/img/GTK-examples/lunar-pku-dark.webp)](/img/GTK-examples/lunar-pku-dark.webp)|
 |:----:|:----:|
