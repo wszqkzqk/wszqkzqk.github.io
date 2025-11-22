@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      Vala 数值计算实践：高精度月球位置算法
+title:      Vala 数值计算实践：月球位置算法
 subtitle:   探索月球运动的复杂性——计算月球位置与相位的 Vala 实现
 date:       2025-11-21
 author:     wszqkzqk
