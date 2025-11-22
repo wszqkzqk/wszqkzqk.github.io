@@ -105,12 +105,6 @@ $$
 F = 93.2720950 + 483202.0175233 T - 0.0036539 T^2 - T^3 / 3526000.0 + T^4 / 863310000.0
 $$
 
-```vala
-double moon_mean_longitude_deg = 218.3164477 + 481267.88123421 * centuries_since_j2000 - 0.0015786 * centuries_since_j2000_sq + centuries_since_j2000_cu / 538841.0 - centuries_since_j2000_q / 65194000.0;
-double mean_elongation_deg = 297.8501921 + 445267.1114034 * centuries_since_j2000 - 0.0018819 * centuries_since_j2000_sq + centuries_since_j2000_cu / 545868.0 - centuries_since_j2000_q / 113065000.0;
-// ... (其他参数类似)
-```
-
 ### 黄道坐标的周期项修正
 
 这是月球算法中最繁琐的部分。月球的**地心黄经 ($\lambda$)** 和 **地心黄纬 ($\beta$)** 是通过在平均位置上叠加一系列周期性摄动项得到的。这些项反映了太阳引力对月球轨道的各种拉扯效应（如出差、二均差等）。
@@ -155,13 +149,6 @@ $$
 $$
 \beta = \Sigma_b
 $$
-
-```vala
-double geocentric_ecliptic_longitude_deg = moon_mean_longitude_deg
-    + 6.2888 * Math.sin (moon_mean_anomaly_rad)
-    + 1.2740 * Math.sin (2 * mean_elongation_rad - moon_mean_anomaly_rad)
-    // ... 更多项
-```
 
 ### 地心视差与距离
 
