@@ -295,13 +295,13 @@ chmod +x lunarangleadw.vala
 /* SPDX-License-Identifier: LGPL-2.1-or-later */
 
 /**
- * Lunar Angle Calculator Application.
+ * Lunar Calculator.
  * Copyright (C) 2025 wszqkzqk <wszqkzqk@qq.com>
- * A libadwaita application that calculates and visualizes lunar elevation angles
- * throughout the day for a given location and date, including parallax correction
- * and phase information.
+ * A libadwaita application that calculates and visualizes lunar data including
+ * elevation angles, distance, phase information, and other lunar parameters
+ * throughout the day for a given location and date, with parallax correction.
  */
-public class LunarAngleApp : Adw.Application {
+public class LunarCalc : Adw.Application {
     // Constants for math
     private const double DEG2RAD = Math.PI / 180.0;
     private const double RAD2DEG = 180.0 / Math.PI;
@@ -376,13 +376,13 @@ public class LunarAngleApp : Adw.Application {
     };
 
     /**
-     * Creates a new LunarAngleApp instance.
+     * Creates a new LunarCalc instance.
      *
      * Initializes the application with a unique application ID and sets
      * the selected date to the current local date.
      */
-    public LunarAngleApp () {
-        Object (application_id: "com.github.wszqkzqk.LunarAngleAdw");
+    public LunarCalc () {
+        Object (application_id: "com.github.wszqkzqk.LunarCalc");
         selected_date = new DateTime.now_local ();
     }
 
@@ -394,12 +394,12 @@ public class LunarAngleApp : Adw.Application {
      */
     protected override void activate () {
         window = new Adw.ApplicationWindow (this) {
-            title = "Lunar Angle Calculator",
+            title = "Lunar Calculator",
         };
 
         // Create header bar
         var header_bar = new Adw.HeaderBar () {
-            title_widget = new Adw.WindowTitle ("Lunar Angle Calculator", ""),
+            title_widget = new Adw.WindowTitle ("Lunar Calculator", ""),
         };
 
         // Add dark mode toggle button
@@ -1177,7 +1177,7 @@ public class LunarAngleApp : Adw.Application {
     }
 
     /**
-     * Exports the lunar elevation data to a CSV file.
+     * Exports the lunar data to a CSV file.
      *
      * @param file The file to export the data to.
      */
@@ -1186,7 +1186,7 @@ public class LunarAngleApp : Adw.Application {
             var stream = file.replace (null, false, FileCreateFlags.REPLACE_DESTINATION);
             var data_stream = new DataOutputStream (stream);
 
-            data_stream.put_string ("# Lunar Elevation Data\n");
+            data_stream.put_string ("# Lunar Data\n");
             data_stream.put_string ("# Date: %s\n".printf (selected_date.format ("%Y-%m-%d")));
             data_stream.put_string ("# Latitude: %.2f, Longitude: %.2f\n".printf (latitude, longitude));
             data_stream.put_string ("# Timezone: UTC%+.2f\n".printf (timezone_offset_hours));
@@ -1209,13 +1209,13 @@ public class LunarAngleApp : Adw.Application {
     /**
      * Application entry point.
      *
-     * Creates and runs the LunarAngleApp instance.
+     * Creates and runs the LunarCalc instance.
      *
      * @param args Command line arguments.
      * @return Exit code.
      */
     public static int main (string[] args) {
-        var app = new LunarAngleApp ();
+        var app = new LunarCalc ();
         return app.run (args);
     }
 }
