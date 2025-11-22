@@ -19,7 +19,7 @@ tags:       开源软件 GTK Vala
 
 本教程适合有一定编程基础，希望深入学习 Vala 语言和最新的 GTK4、LibAdwaita 等开发框架，并渴望开发高质量应用的开发者。如果你还不熟悉 Vala 语言，可以阅读 [Vala 官方文档](https://docs.vala.dev/)，如果想查阅基础库的使用方法，可以参考 [Valadoc.org 提供的 API 参考](https://valadoc.org/)，也欢迎阅读笔者先前写的 [GTK/Vala 开发基础教程](https://wszqkzqk.github.io/2023/01/19/GTK-Vala-Tutorial/)与 [GTK/Vala 开发基础教程 2](https://wszqkzqk.github.io/2025/02/05/GTK-Vala-Tutorial-2/)。
 
-本教程将以笔者实现的[“太阳高度角计算器”](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangleadw.vala)的完整应用为例，深入剖析其从概念设计到功能实现的每一个环节。这个应用不仅能进行科学计算，还拥有一个使用 LibAdwaita 构建的、支持深色模式的现代化用户界面，并具备异步网络请求、JSON 解析、自定义绘图和文件导出等高级功能。
+本教程将以笔者实现的[“太阳计算器”](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarcalc.vala)的完整应用为例，深入剖析其从概念设计到功能实现的每一个环节。这个应用不仅能进行科学计算，还拥有一个使用 LibAdwaita 构建的、支持深色模式的现代化用户界面，并具备异步网络请求、JSON 解析、自定义绘图和文件导出等高级功能。
 
 | [![#~/img/GTK-examples/pku-light-solar-angle-250814.webp](/img/GTK-examples/pku-light-solar-angle-250814.webp)](/img/GTK-examples/pku-light-solar-angle-250814.webp) | [![#~/img/GTK-examples/pku-dark-solar-angle-250814.webp](/img/GTK-examples/pku-dark-solar-angle-250814.webp)](/img/GTK-examples/pku-dark-solar-angle-250814.webp) |
 | :--: | :--: |
@@ -112,16 +112,16 @@ Vala 代码需要被编译成 C 代码，然后再编译成可执行文件。Val
 
 ### 编译与运行
 
-读者可以将[教程最后的完整代码](#完整源代码)保存为 `solarangleadw.vala`，或者使用`wget`命令直接下载：
+读者可以将[教程最后的完整代码](#完整源代码)保存为 `solarcalc.vala`，或者使用`wget`命令直接下载：
 
 ```bash
-wget https://raw.githubusercontent.com/wszqkzqk/FunValaGtkExamples/master/solarangleadw.vala
+wget https://raw.githubusercontent.com/wszqkzqk/FunValaGtkExamples/master/solarcalc.vala
 ```
 
-你可以直接运行这个脚本文件（如果它有执行权限 `chmod +x solarangleadw.vala`），或者使用以下命令手动编译，避免每次运行前都自动编译带来的启动延迟：
+你可以直接运行这个脚本文件（如果它有执行权限 `chmod +x solarcalc.vala`），或者使用以下命令手动编译，避免每次运行前都自动编译带来的启动延迟：
 
 ```bash
-valac --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -pipe solarangleadw.vala
+valac --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -pipe solarcalc.vala
 ```
 
 需要注意的是，与“执行”用的 `vala` 不同，编译需要使用 `valac` 命令。对于 Windows 用户，如果不希望程序运行的时候总是额外带着一个命令行窗口，可以额外添加 `-X -mwindows` 参数。
@@ -135,14 +135,14 @@ valac --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 -X -lm -X -O2 -X -pipe s
 基于 LibAdwaita/GTK4 的应用的入口点是一个继承自 `Adw.Application` 的类。在 `activate` 方法中，我们创建了主窗口 `Adw.ApplicationWindow`。
 
 ```vala
-public class SolarAngleApp : Adw.Application {
+public class SolarCalc : Adw.Application {
     private Adw.ApplicationWindow window;
 
     // ...
 
     protected override void activate () {
         window = new Adw.ApplicationWindow (this) {
-            title = "Solar Angle Calculator",
+            title = "Solar Calculator",
         };
         // ...
         window.present ();
@@ -534,14 +534,15 @@ private async void handle_timezone_mismatch (double network_tz_offset, double lo
 /* SPDX-License-Identifier: LGPL-2.1-or-later */
 
 /**
- * Solar Angle Calculator Application.
+ * Solar Calculator.
  * Copyright (C) 2025 wszqkzqk <wszqkzqk@qq.com>
- * A libadwaita application that calculates and visualizes solar elevation angles
- * throughout the day for a given location and date. The application provides
- * an interactive interface for setting latitude, longitude, timezone, and date,
- * and displays a real-time chart of solar elevation angles with export capabilities.
+ * A libadwaita application that calculates and visualizes solar data including
+ * elevation angles, distance, and other solar parameters throughout the day
+ * for a given location and date. The application provides an interactive interface
+ * for setting latitude, longitude, timezone, and date, and displays a real-time
+ * chart with export capabilities.
  */
-public class SolarAngleApp : Adw.Application {
+public class SolarCalc : Adw.Application {
     // Constants for solar angle calculations
     private const double DEG2RAD = Math.PI / 180.0;
     private const double RAD2DEG = 180.0 / Math.PI;
@@ -554,8 +555,8 @@ public class SolarAngleApp : Adw.Application {
 
     // Model / persistent state
     private DateTime selected_date;
-    private double sun_angles[RESOLUTION_PER_MIN];
-    private double sun_distances[RESOLUTION_PER_MIN];
+    private double sun_angles[RESOLUTION_PER_MIN]; // Solar elevation angles in degrees (-90 to +90)
+    private double sun_distances[RESOLUTION_PER_MIN]; // Solar distances in km
     private double latitude = 0.0;
     private double longitude = 0.0;
     private double timezone_offset_hours = 0.0;
@@ -612,13 +613,13 @@ public class SolarAngleApp : Adw.Application {
     };
 
     /**
-     * Creates a new SolarAngleApp instance.
+     * Creates a new SolarCalc instance.
      *
      * Initializes the application with a unique application ID and sets
      * the selected date to the current local date.
      */
-    public SolarAngleApp () {
-        Object (application_id: "com.github.wszqkzqk.SolarAngleAdw");
+    public SolarCalc () {
+        Object (application_id: "com.github.wszqkzqk.SolarCalc");
         selected_date = new DateTime.now_local ();
     }
 
@@ -630,12 +631,12 @@ public class SolarAngleApp : Adw.Application {
      */
     protected override void activate () {
         window = new Adw.ApplicationWindow (this) {
-            title = "Solar Angle Calculator",
+            title = "Solar Calculator",
         };
 
         // Create header bar
         var header_bar = new Adw.HeaderBar () {
-            title_widget = new Adw.WindowTitle ("Solar Angle Calculator", ""),
+            title_widget = new Adw.WindowTitle ("Solar Calculator", ""),
         };
 
         // Add dark mode toggle button
@@ -1378,7 +1379,7 @@ public class SolarAngleApp : Adw.Application {
     }
 
     /**
-     * Exports the solar elevation data to a CSV file.
+     * Exports the solar data to a CSV file.
      *
      * @param file The file to export the data to.
      */
@@ -1388,7 +1389,7 @@ public class SolarAngleApp : Adw.Application {
             var data_stream = new DataOutputStream (stream);
 
             // Write CSV metadata as comments
-            data_stream.put_string ("# Solar Elevation Data\n");
+            data_stream.put_string ("# Solar Data\n");
             data_stream.put_string ("# Date: %s\n".printf (selected_date.format ("%Y-%m-%d")));
             data_stream.put_string ("# Latitude: %.2f degrees\n".printf (latitude));
             data_stream.put_string ("# Longitude: %.2f degrees\n".printf (longitude));
@@ -1416,13 +1417,13 @@ public class SolarAngleApp : Adw.Application {
     /**
      * Application entry point.
      *
-     * Creates and runs the SolarAngleApp instance.
+     * Creates and runs the SolarCalc instance.
      *
      * @param args Command line arguments.
      * @return Exit code.
      */
     public static int main (string[] args) {
-        var app = new SolarAngleApp ();
+        var app = new SolarCalc ();
         return app.run (args);
     }
 }
@@ -1430,7 +1431,7 @@ public class SolarAngleApp : Adw.Application {
 
 ## 番外
 
-除了[太阳高度角计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangleadw.vala)外，笔者还使用几乎相同的设计写了一个[白昼时长及日出日落时间计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)。该程序的架构设计与前文接好的基本相同，具体算法实现同样参见笔者的另一篇博客：[Vala 数值计算实践：高精度太阳位置算法](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation/)。
+除了[太阳高度角计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarcalc.vala)外，笔者还使用几乎相同的设计写了一个[白昼时长及日出日落时间计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)。该程序的架构设计与前文接好的基本相同，具体算法实现同样参见笔者的另一篇博客：[Vala 数值计算实践：高精度太阳位置算法](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation/)。
 
 可以通过类似的方式下载并编译该程序：
 
