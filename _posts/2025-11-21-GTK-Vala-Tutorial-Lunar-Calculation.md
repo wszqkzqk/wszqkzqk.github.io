@@ -328,12 +328,13 @@ public class LunarCalc : Adw.Application {
     private const double DEG2RAD = Math.PI / 180.0;
     private const double RAD2DEG = 180.0 / Math.PI;
     private const int RESOLUTION_PER_MIN = 1440; // 1 sample per minute
-
     // Constants for drawing area
     private const int MARGIN_LEFT = 70;
     private const int MARGIN_RIGHT = 20;
     private const int MARGIN_TOP = 50;
     private const int MARGIN_BOTTOM = 70;
+    // Default info label
+    private const string DEFAULT_INFO_LABEL = "Click on the chart to see details\nElevation: --\nDistance: --\nPhase: --";
 
     // Model / persistent state
     private DateTime selected_date;
@@ -585,7 +586,7 @@ public class LunarCalc : Adw.Application {
         var click_info_group = new Adw.PreferencesGroup () {
             title = "Lunar Info",
         };
-        click_info_label = new Gtk.Label ("Click on chart for details.\n\n\n") {
+        click_info_label = new Gtk.Label (DEFAULT_INFO_LABEL) {
             halign = Gtk.Align.START,
             margin_start = 12,
             margin_end = 12,
@@ -750,16 +751,6 @@ public class LunarCalc : Adw.Application {
         else desc = "Waning Crescent";
 
         return "%s (%.1f%%)".printf(desc, phase_fraction * 100.0);
-    }
-
-    /**
-     * Updates the info label with default lunar phase at 00:00.
-     */
-    private void update_info_label_default() {
-        click_info_label.label = "Click on chart for details.\nReference Data (00:00):\nDistance: %.0f km\n%s".printf (
-            moon_distances[0],
-            get_phase_description (moon_phases[0], moon_elongations[0])
-        );
     }
 
     /**
@@ -928,7 +919,7 @@ public class LunarCalc : Adw.Application {
         var julian_date = (double) date.get_julian ();
         generate_moon_angles (latitude_rad, longitude, timezone_offset_hours, julian_date);
         has_click_point = false;
-        update_info_label_default ();
+        click_info_label.label = DEFAULT_INFO_LABEL;
     }
 
     /**
@@ -954,14 +945,14 @@ public class LunarCalc : Adw.Application {
             int hours = (int) clicked_time_hours;
             int minutes = (int) ((clicked_time_hours - hours) * 60);
 
-            string info_text = "Time: %02d:%02d\nElevation: %.1f°\nDistance: %.0f km\n%s".printf (
-                hours, minutes, corresponding_angle, moon_distances[time_minutes], get_phase_description(phase, elongation)
+            string info_text = "Time: %02d:%02d\nElevation: %.1f°\nDistance: %.0f km\nPhase: %s".printf (
+                hours, minutes, corresponding_angle, moon_distances[time_minutes], get_phase_description (phase, elongation)
             );
             click_info_label.label = info_text;
             drawing_area.queue_draw ();
         } else {
             has_click_point = false;
-            update_info_label_default();
+            click_info_label.label = DEFAULT_INFO_LABEL;
             drawing_area.queue_draw ();
         }
     }
