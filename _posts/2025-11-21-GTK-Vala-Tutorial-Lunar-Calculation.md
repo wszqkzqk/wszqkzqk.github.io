@@ -11,6 +11,10 @@ tags:       开源软件 GTK Vala 数值计算
 
 ## 前言
 
+欢迎回到 Vala 教程系列！[^1]
+
+[^1]: 本文采用[**CC-BY-SA-4.0**](https://creativecommons.org/licenses/by-sa/4.0/)协议发布，但本文代码采用[**LGPL v2.1+**](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)协议公开。本文各示意图如无特殊说明均由作者自行绘制，亦采用[**CC-BY-SA-4.0**](https://creativecommons.org/licenses/by-sa/4.0/)协议。
+
 在[之前的文章](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation/)中，我们探讨了如何使用 Vala 语言结合 Meeus 算法来计算太阳的位置。太阳的视运动相对规律，将其视为遵循开普勒定律的二体问题（地球绕太阳公转）并辅以少量长期摄动修正项，即可获得相当高的精度。
 
 然而，当我们把目光转向夜空中的月亮时，情况就变得复杂得多。月球的运动是著名的“三体问题”的一个实例。月球不仅受到地球引力的主导，还受到太阳引力的强烈摄动。这导致月球的轨道不是一个简单的椭圆，而是一个不断变形、进动、摆动的复杂轨迹。
