@@ -38,13 +38,13 @@ tags:       开源软件 GTK Vala 数值计算
 *   **短周期摄动**：这些摄动项与日、地、月三者的瞬时相对位置紧密相关，周期通常在一个月或一年左右。主要包括：
     *   **出差 (Evection)**：太阳引力通过摄动月球轨道近地点位置，引起偏心率与近点角周期性变化。朔望时，太阳与地月共线，引力耦合最强，向轨道注入能量使偏心率增大；上下弦时，太阳引力垂直于地月连线，耦合效应反转并从轨道提取能量，使偏心率减小。这种双向拉锯导致近地点在椭圆轨道内进动，周期约31.8天（近点月与朔望月的拍频周期，即两者相位滑移一周所需时间），振幅可达1.274°，是太阳摄动中最大的短周期项。
 
-    | ![出差示意图](/img/astronomy/lunar_evection.svg) |
+    | [![出差示意图](/img/astronomy/lunar_evection.svg)](/img/astronomy/lunar_evection.svg) |
     | :---: |
     | 出差：太阳引力导致月球轨道形状（偏心率）随日-地-月相对位置发生周期性拉伸与压缩。 |
 
     *   **二均差 (Variation)**：由太阳对月球的直接引力梯度效应引起。在朔（新月）时，太阳与月球同向，拉月球远离地球，使其角速度增加；在望（满月）时，太阳拉月球向地球，使减速；在上下弦月时，太阳垂直于地月连线，效应最小。周期约为朔望月的二分之一（约14.8天）。
 
-    | ![二均差示意图](/img/astronomy/lunar_variation.svg) |
+    | [![二均差示意图](/img/astronomy/lunar_variation.svg)](/img/astronomy/lunar_variation.svg) |
     | :---: |
     | 二均差：太阳引力的切向分量在朔望时加速/减速月球，导致其角速度发生周期性变化。 |
 
@@ -137,7 +137,7 @@ $$
 \end{aligned}
 $$
 
-| ![主要摄动项随时间的变化](/img/astronomy/lunar_perturbations.svg) |
+| [![主要摄动项随时间的变化](/img/astronomy/lunar_perturbations.svg)](/img/astronomy/lunar_perturbations.svg) |
 | :---: |
 | 主要摄动项（出差、二均差、周年差）在 60 天内的变化曲线：可以看到它们具有不同的周期和振幅，共同影响着月球的黄经。 |
 
@@ -166,7 +166,7 @@ $$
 
 ### 地心视差与距离
 
-| ![地心视差示意图](/img/astronomy/geocentric_parallax.svg) |
+| [![地心视差示意图](/img/astronomy/geocentric_parallax.svg)](/img/astronomy/geocentric_parallax.svg) |
 | :---: |
 | 地心视差示意图：由于观测者位于地球表面 $P$ 而非地心 $O$，观测到的月球位置会发生偏移。视差角 $\pi$ 导致月球的视高度角 $z'$ 低于地心高度角 $z$。 |
 
@@ -273,9 +273,9 @@ $$
 k = \frac{1 - \cos \psi}{2}
 $$
 
-| ![月相与距角示意图](/img/astronomy/moon_phases.svg) |
+| [![月相与距角示意图](/img/astronomy/moon_phases.svg)](/img/astronomy/moon_phases.svg) |
 | :---: |
-| **图：月相与距角示意图**<br>月球绕地球公转，随着日、地、月三者相对位置的变化（距角变化），地球上看到的月球亮面比例（月相）也随之改变。 |
+| 月相与距角：月球绕地球公转，随着日、地、月三者相对位置的变化（距角变化），地球上看到的月球亮面比例（月相）也随之改变。 |
 
 这里 $\lambda_{sun}$ 是太阳的视黄经。
 
