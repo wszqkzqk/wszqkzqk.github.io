@@ -1096,7 +1096,7 @@ public class SolarCalc : Adw.Application {
             int minutes = (int) ((clicked_time_hours - hours) * 60);
 
             // Update info label
-            string info_text = "Time: %02d:%02d\nSolar Elevation: %.1f°\nDistance: %.5E km".printf (
+            string info_text = "Time: %02d:%02d\nElevation: %.1f°\nDistance: %.5E km".printf (
                 hours, minutes, corresponding_angle, sun_distances[time_minutes]
             );
 
