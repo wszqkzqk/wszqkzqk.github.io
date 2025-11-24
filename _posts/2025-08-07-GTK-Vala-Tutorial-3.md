@@ -250,7 +250,7 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 |[![#~/img/astronomy/solar-meeus_error_histogram.svg](/img/astronomy/solar-meeus_error_histogram.svg)](/img/astronomy/solar-meeus_error_histogram.svg)|
 |:----:|
-| 本程序实现的 Meeus 算法相对 Astropy 的误差分布直方图 |
+| 本程序实现的 Meeus 算法相对专业天文库 Astropy 的误差分布直方图 |
 
 #### 时间基准：从 J2000.0 历元起算的天数
 
