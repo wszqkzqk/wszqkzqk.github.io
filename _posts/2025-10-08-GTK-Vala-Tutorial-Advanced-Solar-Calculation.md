@@ -1265,6 +1265,14 @@ Meeus 算法具有完美的地理普适性，从赤道到极点都保持极高�
 
 Meeus 算法包含了对地球轨道参数长期变化的修正项，因此其精度在很长的时间跨度内都是可靠的。而傅里叶和维基百科算法是基于特定历元的经验公式，其参数是固定的，因此离它们被拟合的年代越远，误差就越大。它们不具备长期预测能力。
 
+|[![#~/img/astronomy/solar-meeus_error_histogram.svg](/img/astronomy/solar-meeus_error_histogram.svg)](/img/astronomy/solar-meeus_error_histogram.svg)|
+|:----:|
+| Meeus 算法误差分布直方图 |
+|[![#~/img/astronomy/solar-fourier_error_histogram.svg](/img/astronomy/solar-fourier_error_histogram.svg)](/img/astronomy/solar-fourier_error_histogram.svg)|
+| 傅里叶级数算法误差分布直方图 |
+|[![#~/img/astronomy/solar-wikipedia_error_histogram.svg](/img/astronomy/solar-wikipedia_error_histogram.svg)](/img/astronomy/solar-wikipedia_error_histogram.svg)|
+| 维基百科算法误差分布直方图 |
+
 #### 月份/季节维度分析
 
 观察任意一年内12个月的数据波动：
