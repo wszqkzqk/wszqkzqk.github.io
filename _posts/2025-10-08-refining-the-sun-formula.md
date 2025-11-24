@@ -220,6 +220,16 @@ $$
 | 原 Wikipedia | 0.1533 | 0.417 | 0.4844 |
 | 优化 Wikipedia | 0.0919 | 0.27 | 0.2812 |
 
+|[![#~/img/astronomy/solar-meeus_error_histogram.svg](/img/astronomy/solar-meeus_error_histogram.svg)](/img/astronomy/solar-meeus_error_histogram.svg)|
+|:----:|
+| Meeus 算法误差分布直方图 |
+|[![#~/img/astronomy/solar-fourier_error_histogram.svg](/img/astronomy/solar-fourier_error_histogram.svg)](/img/astronomy/solar-fourier_error_histogram.svg)|
+| 傅里叶级数算法误差分布直方图 |
+|[![#~/img/astronomy/solar-wikipedia_error_histogram.svg](/img/astronomy/solar-wikipedia_error_histogram.svg)](/img/astronomy/solar-wikipedia_error_histogram.svg)|
+| 维基百科算法误差分布直方图 |
+|[![#~/img/astronomy/solar-wikiimp_error_histogram.svg](/img/astronomy/solar-wikiimp_error_histogram.svg)](/img/astronomy/solar-wikiimp_error_histogram.svg)|
+| 优化 Wikipedia 算法误差分布直方图 |
+
 - **年份稳定性**：优化版在 1949 年 RMSD 0.097°，2050 年 0.061°（稳定）；原版 1949 年 0.109°，2050 年 0.209°。
 - **地理普适性**：高纬（Stockholm）优化版 0.082°，原版 0.136°（改善 40%）；新加坡优化版 0.063°，原版 0.101°（改善 38%）。
 - **季节稳定性**：优化版月波动小（0.019-0.112°），原版剧烈（0.034-0.197°）。
