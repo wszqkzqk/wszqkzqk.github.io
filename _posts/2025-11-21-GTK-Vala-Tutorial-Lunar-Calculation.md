@@ -337,7 +337,7 @@ chmod +x lunarcalc.vala
 | 地月距离 | 1,196 km | 2,962 km | 相对误差约为 0.3%，对于几十万公里的距离而言，精度非常可靠。 |
 | 月相 (照明度) | 0.36% | 1.20% | 误差在视觉上几乎不可察觉，能精准反映阴晴圆缺。 |
 
-| [![#~/img/astronomy/lunar-error-histograms.svg](/img/astronomy/lunar-error-histograms.svg)](/img/astronomy/lunar-error-histograms.svg) |
+| [![#~/img/astronomy/lunar-error-abs-histograms.svg](/img/astronomy/lunar-error-abs-histograms.svg)](/img/astronomy/lunar-error-abs-histograms.svg) |
 | :---: |
 | 误差绝对值分布直方图 |
 
