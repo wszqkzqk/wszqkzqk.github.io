@@ -789,7 +789,7 @@ $$
 
 以下是用于生成对比数据的完整 Python 脚本。它依赖 `numpy` 和 `astropy` 库。除了这里列出的几种算法外，笔者还基于 Wikipedia 的算法重新拟合了一组参数，命名为 `WikiImp`（改进版维基百科算法），详细的优化过程和原理请参见[《优化 Wikipedia 太阳位置简化公式》](https://wszqkzqk.github.io/2025/10/08/refining-the-sun-formula/)。
 
-> **代码说明**：在测试脚本中，`generate_sun_angles_meeus` 对应早期从网页抄录的参数版本（MeeusWeb），`generate_sun_angles_meeus_fixed` 对应 Meeus 原书的正确参数（本文正文介绍的版本）。测试结果表明两者精度几乎相同，差异可以忽略不计。
+> **代码说明**：在测试脚本中，`generate_sun_angles_meeus` 对应早期从网页抄录的参数版本（MeeusWeb，来自[J. Giesen 总结的天文算法页面](http://www.jgiesen.de/elevaz/basics/meeus.htm)），`generate_sun_angles_meeus_fixed` 对应 Meeus 原书的正确参数（本文正文介绍的版本）。测试结果表明两者精度几乎相同，差异可以忽略不计。
 
 ```python
 #!/usr/bin/env python3
@@ -1373,7 +1373,7 @@ if __name__ == "__main__":
 |:----:|
 | Meeus 算法（原书版本）误差分布直方图 |
 |[![#~/img/astronomy/solar-meeus-web_error_histogram.svg](/img/astronomy/solar-meeus-web_error_histogram.svg)](/img/astronomy/solar-meeus-web_error_histogram.svg)|
-| Meeus 算法（参数取自网页）误差分布直方图 |
+| Meeus 算法（参数取自[网页](http://www.jgiesen.de/elevaz/basics/meeus.htm)）误差分布直方图 |
 |[![#~/img/astronomy/solar-fourier_error_histogram.svg](/img/astronomy/solar-fourier_error_histogram.svg)](/img/astronomy/solar-fourier_error_histogram.svg)|
 | 傅里叶级数算法误差分布直方图 |
 |[![#~/img/astronomy/solar-wikipedia_error_histogram.svg](/img/astronomy/solar-wikipedia_error_histogram.svg)](/img/astronomy/solar-wikipedia_error_histogram.svg)|
