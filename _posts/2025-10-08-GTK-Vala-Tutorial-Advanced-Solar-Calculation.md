@@ -17,7 +17,7 @@ Vala 语言以其将高级语言的便利性与C语言的原始性能相结合�
 
 我们将看到，Vala 不仅能胜任复杂的数学运算，其现代化的语言特性、清晰的面向对象结构以及与 GLib 等底层库的无缝集成，都能让我们的科学计算代码变得既高效又易于维护。
 
-这篇文章的算法实现，被用于笔者在[上一篇教程](https://wszqkzqk.github.io/2025/08/07/GTK-Vala-Tutorial-3)中介绍的 [GTK4 太阳高度角计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangleadw.vala) 中，但本文的重点并非 GUI 应用本身，而是**算法的理论、实现细节及其在 Vala 语言中的最佳实践**。
+这篇文章的算法实现，被用于笔者在[上一篇教程](https://wszqkzqk.github.io/2025/08/07/GTK-Vala-Tutorial-3)中介绍的 [GTK4 太阳高度角计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarcalc.vala) 中，但本文的重点并非 GUI 应用本身，而是**算法的理论、实现细节及其在 Vala 语言中的最佳实践**。
 
 ## 算法背景：为何选择 Meeus 算法？
 
