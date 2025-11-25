@@ -340,7 +340,7 @@ $$
 
 ### 效果
 
-笔者将上述算法应用于 GUI 程序中，结合 GTK4/Libadwaita/JSON-GLib等技术栈，制作了一个[太阳高度角计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangleadw.vala)和一个[白昼时长计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)，将计算结果可视化展示。两个程序均支持浅色和深色主题，并能自动从 IP 获取地理位置，自动识别时区，还支持导出 PNG、SVG、PDF 等格式的图表，以及 CSV 数据。
+笔者将上述算法应用于 GUI 程序中，结合 GTK4/Libadwaita/JSON-GLib等技术栈，制作了一个[太阳高度角计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarcalc.vala)和一个[白昼时长计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)，将计算结果可视化展示。两个程序均支持浅色和深色主题，并能自动从 IP 获取地理位置，自动识别时区，还支持导出 PNG、SVG、PDF 等格式的图表，以及 CSV 数据。
 
 | [![#~/img/GTK-examples/pku-light-solar-angle-250814.webp](/img/GTK-examples/pku-light-solar-angle-250814.webp)](/img/GTK-examples/pku-light-solar-angle-250814.webp) | [![#~/img/GTK-examples/pku-dark-solar-angle-250814.webp](/img/GTK-examples/pku-dark-solar-angle-250814.webp)](/img/GTK-examples/pku-dark-solar-angle-250814.webp) |
 | :--: | :--: |
@@ -354,7 +354,7 @@ $$
 
 ### 太阳高度角计算
 
-该函数可以用于计算一天中每分钟的太阳高度角，完整程序见 [GitHub](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarangleadw.vala)：
+该函数可以用于计算一天中每分钟的太阳高度角，完整程序见 [GitHub](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarcalc.vala)：
 
 ```vala
     /**
