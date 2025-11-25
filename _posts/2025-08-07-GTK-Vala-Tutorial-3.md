@@ -243,7 +243,7 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 > **【2025年10月更新】**
 >
-> 本程序的完整代码已更新为基于 [**Meeus 算法**](http://www.jgiesen.de/elevaz/basics/meeus.htm)的高精度实现。Meeus 算法是国际上广受认可的天文算法，能在不依赖大型星历表的情况下，达到非常高的精度（笔者进行了实测：分散选取南北半球低中高纬度不同位置，在 1975-2075 的 100 年间，测试其中每个整时刻的高度角计算值与公认高精度的专业天文库 [Astropy](https://github.com/astropy/astropy) 的结果的误差，测试发现整体 **RMSD 仅 0.0036°**，95%的误差绝对值不超过 0.0070°，如此多的数据中最大误差绝对值也仅为 0.0136°）。
+> 本程序的完整代码已更新为基于 **Meeus** 在 **《Astronomical Algorithms》** 一书中提出的高精度实现。Meeus 算法是国际上广受认可的天文算法，能在不依赖大型星历表的情况下，达到非常高的精度（笔者进行了实测：分散选取南北半球低中高纬度不同位置，在 1975-2075 的 100 年间，测试其中每个整时刻的高度角计算值与公认高精度的专业天文库 [Astropy](https://github.com/astropy/astropy) 的结果的误差，测试发现整体 **RMSD 仅 0.0036°**，95%的误差绝对值不超过 0.0070°，如此多的数据中最大误差绝对值也仅为 0.0136°）。
 > 如果你对算法的理论背景、实现细节及其在 Vala 语言中的最佳实践感兴趣，请移步阅读笔者的续篇教程：**[Vala 数值计算实践：高精度太阳位置算法](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation/)**。
 
 `generate_sun_angles` 函数是应用计算的核心。笔者在此实现了 Meeus 算法的等价变体，通过精确的天体力学模型计算太阳位置。算法的主要参考来源是 [Paul Schlyter 和 J. Giesen 总结的天文算法页面](http://www.jgiesen.de/elevaz/basics/meeus.htm)。这个算法较简单，但具有很高的精度，适合我们这个应用的需求。
@@ -282,7 +282,7 @@ $$
 *   **平近点角**：描述理想化匀速圆周运动下的“平均太阳”在轨道上从**近地点**出发的角度
 
 $$
-M_\text{degrees} = 357.52910 + 0.985600282 d - 1.1686 \times 10^{-13} d^2 - 9.85 \times 10^{-21} d^3
+M_\text{degrees} = 357.52772 + 0.985600282 d - 1.2016 \times 10^{-13} d^2 - 6.835 \times 10^{-20} d^3
 $$
 
 #### 中心差修正与真黄经 ($\lambda$)
@@ -290,7 +290,7 @@ $$
 考虑地球椭圆轨道的影响，通过中心差 $C$ 将平黄经修正为真黄经 $\lambda$：
 
 $$
-C_\text{degrees} = (1.914600 - 0.00000013188 d - 1.049 \times 10^{-14} d^2) \sin(M) + (0.019993 - 0.0000000027652 d) \sin(2M) + 0.000290 \sin(3M)
+C_\text{degrees} = (1.914602 - 0.00000013188 d - 1.049 \times 10^{-14} d^2) \sin(M) + (0.019993 - 0.0000000027652 d) \sin(2M) + 0.000289 \sin(3M)
 $$
 
 $$
@@ -983,7 +983,7 @@ public class SolarCalc : Adw.Application {
 
     /**
      * Calculates solar elevation angles for each minute of the day.
-     * Based on http://www.jgiesen.de/elevaz/basics/meeus.htm
+     * Based on Meeus's book "Astronomical Algorithms" (1998)
      *
      * @param latitude_rad Latitude in radians.
      * @param longitude_deg Longitude in degrees.
@@ -1001,7 +1001,7 @@ public class SolarCalc : Adw.Application {
         double obliquity_deg = 23.439291111 - 3.560347e-7 * base_days_from_epoch - 1.2285e-16 * base_days_sq + 1.0335e-20 * base_days_cb;
         double obliquity_sin = Math.sin (obliquity_deg * DEG2RAD);
         double obliquity_cos = Math.cos (obliquity_deg * DEG2RAD);
-        double ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq;
+        double ecliptic_c1 = 1.914602 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq;
         double ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch;
         double tst_offset = 4.0 * longitude_deg - 60.0 * timezone_offset_hrs;
         double eccentricity = 0.016708634 - 1.15091e-09 * base_days_from_epoch - 9.497e-17 * base_days_sq;
@@ -1010,7 +1010,7 @@ public class SolarCalc : Adw.Application {
             double days_from_epoch = base_days_from_epoch + (i / 60.0 - timezone_offset_hrs) / 24.0;
             double days_from_epoch_sq = days_from_epoch * days_from_epoch;
             double days_from_epoch_cb = days_from_epoch_sq * days_from_epoch;
-            double mean_anomaly_deg = 357.52910 + 0.985600282 * days_from_epoch - 1.1686e-13 * days_from_epoch_sq - 9.85e-21 * days_from_epoch_cb;
+            double mean_anomaly_deg = 357.52772 + 0.985600282 * days_from_epoch - 1.2016e-13 * days_from_epoch_sq - 6.835e-20 * days_from_epoch_cb;
             mean_anomaly_deg = Math.fmod (mean_anomaly_deg, 360.0);
             if (mean_anomaly_deg < 0) {
                 mean_anomaly_deg += 360.0;
@@ -1023,7 +1023,7 @@ public class SolarCalc : Adw.Application {
             double mean_anomaly_rad = mean_anomaly_deg * DEG2RAD;
             double equation_of_center_deg = ecliptic_c1 * Math.sin (mean_anomaly_rad)
                 + ecliptic_c2 * Math.sin (2.0 * mean_anomaly_rad)
-                + 0.000290 * Math.sin (3.0 * mean_anomaly_rad);
+                + 0.000289 * Math.sin (3.0 * mean_anomaly_rad);
             double ecliptic_longitude_deg = mean_longitude_deg + equation_of_center_deg;
             ecliptic_longitude_deg = Math.fmod (ecliptic_longitude_deg, 360.0);
             if (ecliptic_longitude_deg < 0) {
