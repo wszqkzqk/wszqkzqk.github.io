@@ -31,9 +31,7 @@ Vala 语言以其将高级语言的便利性与C语言的原始性能相结合�
 
 ## Meeus 算法的 Vala 实现：分步详解
 
-本文后续展示的算法实现，主要参考了 Paul Schlyter 先生和 J. Giesen 先生总结的[高精度算法页面](http://www.jgiesen.de/elevaz/basics/meeus.htm)。值得一提的是，为了便于在代码中直接使用以“天”为单位的儒略日，笔者对原始公式进行了一定的恒等变形。
-
-原始公式通常基于**儒略世纪数**（Julian Centuries, $T$）作为时间变量，其形式为 $C_0 + C_1 T + C_2 T^2 + \dots$。而本文的实现则统一使用**儒略天数**（Julian Days, $d$）作为变量。由于 1 儒略世纪 = 36525 天，笔者通过将原始公式中的 n 阶项系数 $C_n$ 除以 $36525^n$，将其转化为了适用于天数 $d$ 的等价形式。后续的时角等计算也做了类似的等价转换。
+为了便于在代码中直接使用以“天”为单位的儒略日，笔者对原始公式进行了一定的恒等变形。原始公式通常基于**儒略世纪数**（Julian Centuries, $T$）作为时间变量，其形式为 $C_0 + C_1 T + C_2 T^2 + \dots$。而本文的实现则统一使用**儒略天数**（Julian Days, $d$）作为变量。由于 1 儒略世纪 = 36525 天，笔者通过将原始公式中的 n 阶项系数 $C_n$ 除以 $36525^n$，将其转化为了适用于天数 $d$ 的等价形式。后续的时角等计算也做了类似的等价转换。
 
 这种转换不影响计算的精度，但使得代码逻辑与以“天”为单位的 `GLib.Date` 时间体系更为统一。
 
@@ -93,7 +91,7 @@ L (\text{deg}) = 280.46645 + 0.98564736 d + 2.2727 \times 10^{-13} d^2
 $$
 
 $$
-M (\text{deg}) = 357.52910 + 0.985600282 d - 1.1686 \times 10^{-13} d^2 - 9.85 \times 10^{-21} d^3
+M (\text{deg}) = 357.52772 + 0.985600282 d - 1.2016 \times 10^{-13} d^2 - 6.835 \times 10^{-20} d^3
 $$
 
 Vala 实现（注意 `fmod` 用于将角度归一化到 0-360 度）：
@@ -102,7 +100,7 @@ Vala 实现（注意 `fmod` 用于将角度归一化到 0-360 度）：
 double days_from_epoch_sq = days_from_epoch * days_from_epoch;
 double days_from_epoch_cb = days_from_epoch_sq * days_from_epoch;
 
-double mean_anomaly_deg = 357.52910 + 0.985600282 * days_from_epoch - 1.1686e-13 * days_from_epoch_sq - 9.85e-21 * days_from_epoch_cb;
+double mean_anomaly_deg = 357.52772 + 0.985600282 * days_from_epoch - 1.2016e-13 * days_from_epoch_sq - 6.835e-20 * days_from_epoch_cb;
 mean_anomaly_deg = Math.fmod (mean_anomaly_deg, 360.0);
 if (mean_anomaly_deg < 0) { mean_anomaly_deg += 360.0; }
 
@@ -116,7 +114,7 @@ if (mean_longitude_deg < 0) { mean_longitude_deg += 360.0; }
 为了从“平”位置得到“真”位置，需要加上由地球轨道椭圆形引起的修正，即**中心差**。Meeus 算法给出了一个包含三项正弦修正的简化形式：
 
 $$
-C (\text{deg}) = (1.914600 - 0.00000013188 d - 1.049 \times 10^{-14} d^2) \sin(M) + (0.019993 - 0.0000000027652 d) \sin(2M) + 0.000290 \sin(3M)
+C (\text{deg}) = (1.914602 - 0.00000013188 d - 1.049 \times 10^{-14} d^2) \sin(M) + (0.019993 - 0.0000000027652 d) \sin(2M) + 0.000289 \sin(3M)
 $$
 
 **真黄经 (True Longitude, $\lambda$)** 就是平黄经加上中心差：
@@ -128,9 +126,9 @@ $$
 Vala 实现：
 
 ```vala
-double ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq;
+double ecliptic_c1 = 1.914602 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq;
 double ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch;
-const double ecliptic_c3 = 0.000290;
+const double ecliptic_c3 = 0.000289;
 
 double mean_anomaly_rad = mean_anomaly_deg * DEG2RAD;
 double equation_of_center_deg = ecliptic_c1 * Math.sin (mean_anomaly_rad)
@@ -661,11 +659,12 @@ $$
 
 ## 附录：算法精度对比验证
 
-为了全面评估本文所采用的 Meeus 算法的精度，并将其与其他常见算法进行横向对比，笔者编写了一个 Python 验证脚本。该脚本将以下三种算法的计算结果与业界公认的高精度方法——`astropy` 库的计算结果进行逐小时比较：
+为了全面评估本文所采用的 Meeus 算法的精度，并将其与其他常见算法进行横向对比，笔者编写了一个 Python 验证脚本。该脚本将以下几种算法的计算结果与业界公认的高精度方法——`astropy` 库的计算结果进行逐小时比较：
 
-1.  **Meeus 算法 (本文实现)**：即 `generate_sun_angles_meeus`，是本文 Vala 代码的 Python 复现版。
-2.  **傅里叶级数近似算法 (旧版实现)**：即 `generate_sun_angles_fourier`，这是笔者早期使用的一种基于傅里叶级数拟合的简化算法。
-3.  **维基百科简化公式**：即 `generate_sun_angles_wikipedia`，实现了维基百科上提供的简化版太阳赤纬和均时差公式。
+1.  **Meeus 算法 (原书)**：即 `generate_sun_angles_meeus_fixed`，是本文 Vala 代码的 Python 复现版，使用的是 Meeus 原书中的参数。
+2.  **MeeusWeb 算法**：即 `generate_sun_angles_meeus`，笔者早期从网页上抄录的 Meeus 算法实现，部分系数与原书略有差异（如中心差首项系数 1.914600 vs 1.914602，平近点角常数项 357.52910 vs 357.52772 等），但两者精度差异极小。
+3.  **傅里叶级数近似算法 (旧版实现)**：即 `generate_sun_angles_fourier`，这是笔者早期使用的一种基于傅里叶级数拟合的简化算法。
+4.  **维基百科简化公式**：即 `generate_sun_angles_wikipedia`，实现了维基百科上提供的简化版太阳赤纬和均时差公式。
 
 通过计算每种算法结果与 `astropy` 基准值之间的均方根误差 (Root Mean Square Deviation, RMSD)，我们可以量化它们的精度差异。
 
@@ -788,7 +787,9 @@ $$
 
 ### Python 验证脚本
 
-以下是用于生成对比数据的完整 Python 脚本。它依赖 `numpy` 和 `astropy` 库。除了这里列出的三种算法外，笔者还增加了 Meeus 原书中的参数实现的 Meeus 算法，命名为`MeeusFixed`，和之前从网页中获取的 Meeus 算法的参数稍有不同。笔者还基于 Wikipedia 的算法重新拟合了一组参数，命名为 `WikiImp`。
+以下是用于生成对比数据的完整 Python 脚本。它依赖 `numpy` 和 `astropy` 库。除了这里列出的几种算法外，笔者还基于 Wikipedia 的算法重新拟合了一组参数，命名为 `WikiImp`。
+
+> **代码说明**：在测试脚本中，`generate_sun_angles_meeus` 对应早期从网页抄录的参数版本（MeeusWeb），`generate_sun_angles_meeus_fixed` 对应 Meeus 原书的正确参数（本文正文介绍的版本）。测试结果表明两者精度几乎相同，差异可以忽略不计。
 
 ```python
 #!/usr/bin/env python3
@@ -1360,33 +1361,35 @@ if __name__ == "__main__":
 
 首先从海量数据中提炼出核心指标。
 
-| 性能指标 (单位: 度) | Meeus | MeeusFixed | WikiImp | Fourier | Wikipedia |
+| 性能指标 (单位: 度) | Meeus | MeeusWeb | WikiImp | Fourier | Wikipedia |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | 月度平均 RMSD | **0.0032** | **0.0032** | 0.0709 | 0.1016 | 0.1507 |
-| 月度最差 RMSD | **0.0098** | **0.0097** | 0.2734 | 0.4820 | 0.5666 |
+| 月度最差 RMSD | **0.0097** | **0.0098** | 0.2734 | 0.4820 | 0.5666 |
 | 全局 RMSD | **0.0036** | **0.0036** | 0.0868 | 0.1269 | 0.1826 |
 | 95% 绝对误差 | **0.0070** | **0.0070** | 0.1746 | 0.2681 | 0.3717 |
-| 全局最大误差 | **0.0136** | **0.0135** | 0.2864 | 0.4825 | 0.6407 |
+| 全局最大误差 | **0.0135** | **0.0136** | 0.2864 | 0.4825 | 0.6407 |
 
 |[![#~/img/astronomy/solar-meeus_error_histogram.svg](/img/astronomy/solar-meeus_error_histogram.svg)](/img/astronomy/solar-meeus_error_histogram.svg)|
 |:----:|
-| Meeus 算法误差分布直方图 |
+| Meeus 算法（原书版本）误差分布直方图 |
+|[![#~/img/astronomy/solar-meeus-web_error_histogram.svg](/img/astronomy/solar-meeus-web_error_histogram.svg)](/img/astronomy/solar-meeus-web_error_histogram.svg)|
+| Meeus 算法（参数取自网页）误差分布直方图 |
 |[![#~/img/astronomy/solar-fourier_error_histogram.svg](/img/astronomy/solar-fourier_error_histogram.svg)](/img/astronomy/solar-fourier_error_histogram.svg)|
 | 傅里叶级数算法误差分布直方图 |
 |[![#~/img/astronomy/solar-wikipedia_error_histogram.svg](/img/astronomy/solar-wikipedia_error_histogram.svg)](/img/astronomy/solar-wikipedia_error_histogram.svg)|
 | 维基百科算法误差分布直方图 |
 
-*   **Meeus** 的精度与其他算法存在**数量级**的优势。其全局 RMSD (0.0036°) 仅为傅里叶算法的 1/30，维基百科算法的 1/47。
+*   **Meeus 算法**（包括原书参数版本和网页版本）的精度与其他算法存在**数量级**的优势。其全局 RMSD (0.0036°) 仅为傅里叶算法的 1/30，维基百科算法的 1/47。原书参数版本与网页版本的精度差异极小，两者均可放心使用。
 *   **WikiImp (改进版维基百科算法)** 通过引入线性变化的参数，显著提升了精度，平均 RMSD 降至 0.0709°，优于傅里叶算法，但仍远逊于 Meeus 算法。
-*   Meeus 算法的最差表现 (0.0098°) 依然比其他算法的**平均表现**好得多。
+*   Meeus 算法的最差表现 (0.0097°) 依然比其他算法的**平均表现**好得多。
 
 #### 地理位置对比
 
-| 地点 | Meeus (Avg/Max) | MeeusFixed (Avg/Max) | WikiImp (Avg/Max) | Fourier (Avg/Max) | Wikipedia (Avg/Max) |
+| 地点 | Meeus (Avg/Max) | MeeusWeb (Avg/Max) | WikiImp (Avg/Max) | Fourier (Avg/Max) | Wikipedia (Avg/Max) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | Beijing | 0.0033 / 0.0087 | 0.0033 / 0.0087 | 0.0672 / 0.1461 | 0.0871 / 0.2865 | 0.1549 / 0.4710 |
 | Chongqing | 0.0033 / 0.0089 | 0.0033 / 0.0089 | 0.0663 / 0.1373 | 0.0847 / 0.2606 | 0.1434 / 0.4364 |
-| Singapore | 0.0034 / 0.0098 | 0.0034 / 0.0097 | 0.0596 / 0.1437 | 0.0738 / 0.1947 | 0.1130 / 0.3181 |
+| Singapore | 0.0034 / 0.0097 | 0.0034 / 0.0098 | 0.0596 / 0.1437 | 0.0738 / 0.1947 | 0.1130 / 0.3181 |
 | Sydney | 0.0034 / 0.0083 | 0.0034 / 0.0083 | 0.0691 / 0.1671 | 0.0796 / 0.2487 | 0.1477 / 0.4695 |
 | Stockholm | 0.0031 / 0.0091 | 0.0031 / 0.0091 | 0.0796 / 0.2391 | 0.1357 / 0.4364 | 0.1692 / 0.5374 |
 | South Pole | 0.0030 / 0.0095 | 0.0030 / 0.0095 | 0.0840 / 0.2734 | 0.1486 / 0.4820 | 0.1758 / 0.5666 |
@@ -1400,7 +1403,7 @@ Meeus 算法具有完美的地理普适性，从赤道到极点都保持极高�
 | 方法 | 1975年平均RMSD (°) | 2075年平均RMSD (°) | 趋势分析 |
 | :--- | :--- | :--- | :--- |
 | Meeus | 0.0032 | 0.0032 | 精度在百年尺度上保持极高稳定性。 |
-| MeeusFixed | 0.0032 | 0.0032 | 稳定性同上。 |
+| MeeusWeb | 0.0032 | 0.0032 | 稳定性同上，与原书版本几乎无差异。 |
 | WikiImp | 0.0512 | 0.0511 | 改进版算法引入了年份修正，保持了长期稳定。 |
 | Fourier | 0.0678 | 0.1195 | 误差随时间显著增加（增长约 76%）。 |
 | Wikipedia | 0.0622 | 0.1993 | 误差随时间剧烈增加（增长约 220%）。 |
@@ -1409,7 +1412,7 @@ Meeus 算法包含了对地球轨道参数长期变化的修正项，因此其�
 
 #### 月份/季节维度分析
 
-*   **Meeus / MeeusFixed**: 月度 RMSD 波动极小（0.0030 - 0.0037），表现出极佳的稳定性。
+*   **Meeus / MeeusWeb**: 月度 RMSD 波动极小（0.0030 - 0.0037），表现出极佳的稳定性，两者差异可忽略。
 *   **Fourier**: 波动巨大，6月和12月表现较好（~0.04-0.05），但 3月和 9-10月 误差飙升至 0.15 左右。
 *   **Wikipedia**: 同样波动巨大，6月和12月较好（~0.04），但 3月和 9月 误差高达 0.23-0.24。
 *   **WikiImp**: 相比原始版有很大改进，但仍有季节性波动，6月最佳（0.0188），3月最差（0.1073）。
@@ -1418,7 +1421,7 @@ Meeus 算法包含了对地球轨道参数长期变化的修正项，因此其�
 
 #### 结论
 
-**Meeus 算法**（及其微调版 MeeusFixed）是一个基于天体力学的物理模型，在所有测试维度（时间、地点、季节）上都展现了压倒性的精度优势和稳定性。
+**Meeus 算法**（原书参数版本及网页版本 MeeusWeb）是一个基于天体力学的物理模型，在所有测试维度（时间、地点、季节）上都展现了压倒性的精度优势和稳定性。两个版本的系数略有差异，但精度表现几乎相同，均可放心使用。
 
 **WikiImp** 是对维基百科算法的有效改进，通过引入线性年份修正项，解决了长期漂移问题，并提升了整体精度，但仍受限于简化的物理模型，无法达到 Meeus 的高度。
 
