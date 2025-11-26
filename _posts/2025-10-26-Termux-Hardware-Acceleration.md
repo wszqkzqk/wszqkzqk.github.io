@@ -76,9 +76,9 @@ ffmpeg -hwaccel mediacodec \
 
 > ### FFmpeg 7.1.1中MediaCodec的严重Bug（已修复）
 >
-> **截至2024年10月27日，该问题已经在FFmpeg 7.1.2中修复。**
+> **截至2025年10月27日，该问题已经在FFmpeg 7.1.2中修复。**
 >
-> 然而，FFmpeg 7.1.1的NDK dMediaCodec支持存在**严重Bug**，导致**输出分辨率存在错误**，只会给出相当小的视频分辨率，并且似乎仅截取了视频的部分。[^1] [^2]
+> FFmpeg 7.1.1的NDK dMediaCodec支持存在**严重Bug**，导致**输出分辨率存在错误**，只会给出相当小的视频分辨率，并且似乎仅截取了视频的部分。[^1] [^2]
 >
 > [^1]: [termux/termux-packages#22899 — FFMPEG transcoding with mediacodec first keyframe missing or damaged after ffmpeg update](https://github.com/termux/termux-packages/issues/22899)
 > [^2]: [termux/termux-packages#23014 — ffmpeg mediacodec decoder outputs wrong dimensions](https://github.com/termux/termux-packages/issues/23014)
@@ -139,7 +139,7 @@ ffmpeg -hwaccel mediacodec \
 
 设置`-global_quality:v`可以间接控制质量因子（QP）的大小，从而影响输出视频的质量和文件大小。较高的质量值通常会导致更好的视觉质量，但也会增加文件大小。
 
-不过笔者发现，码率限制设定在当前设备HEVC的MediaCodec中控制力并不太有效，输出视频的实际码率可能会比设定值大不少。（即有些视频存在**码率“压不下来”**的情况）此外，对于某些设备的某些编码器，可能不支持某些质量控制模式：
+不过笔者发现，码率限制设定在当前设备HEVC的MediaCodec中控制力并不太有效，输出视频的实际码率可能会比设定值大不少。（即有些视频存在**码率压不下来**的情况）此外，对于某些设备的某些编码器，可能不支持某些质量控制模式：
 
 |[![#~/img/android/device-info-hw/device-info-hw-hevc-encoder.webp](/img/android/device-info-hw/device-info-hw-hevc-encoder.webp)](/img/android/device-info-hw/device-info-hw-hevc-encoder.webp)|[![#~/img/android/device-info-hw/device-info-hw-avc-encoder.webp](/img/android/device-info-hw/device-info-hw-avc-encoder.webp)](/img/android/device-info-hw/device-info-hw-avc-encoder.webp)|
 |:----:|:----:|
