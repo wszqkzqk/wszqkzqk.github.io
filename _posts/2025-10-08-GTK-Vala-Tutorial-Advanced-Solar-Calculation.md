@@ -240,6 +240,14 @@ $$
 
 虽然这个修正量很小（最大约 8.8 角秒，即 0.00244°），但在高精度计算中却可能成为系统误差的主要来源。
 
+|[![#~/img/astronomy/solar-meeus_error_histogram.svg](/img/astronomy/solar-meeus_error_histogram.svg)](/img/astronomy/solar-meeus_error_histogram.svg)|
+|:----:|
+| 视差修正前的 Meeus 算法误差分布直方图 |
+|[![#~/img/astronomy/solar-meeus-old_error_histogram.svg](/img/astronomy/solar-meeus-old_error_histogram.svg)](/img/astronomy/solar-meeus-old_error_histogram.svg)|
+| 视差修正后的 Meeus 算法误差分布直方图 |
+
+在加入地心视差修正前，可以在图上明显看到分布峰值在 0.0020° 而不是 0°；加入修正后，误差分布则基本关于 0° 对称，显著提升了计算的准确性。
+
 ```vala
 // 计算太阳高度角的正弦值
 double elevation_sin = (sin_lat * declination_sin + cos_lat * declination_cos * Math.cos (hour_angle_rad)).clamp (-1.0, 1.0);
@@ -816,7 +824,7 @@ $$
 
 * 全时空覆盖：默认测试范围横跨 1975 年至 2075 年，取其中每个整点的数据，涵盖高中低纬度，从赤道（新加坡）到极点（南极），从东八区（北京）到零时区的所有典型地理位置，总共包含了 **5,312,160** 个数据点。
 * 数据驱动：计算均方根误差 (RMSD)、95% 分位数误差及最大绝对误差，并自动生成误差分布直方图 (SVG)。
-* 误差分布验证：正是通过这个脚本的直方图分析，笔者成功捕捉到了早期算法中存在的 0.002° 地心视差系统性偏差，并验证了修正后的 MeeusFixed 算法已达到近乎完美的零偏差分布。
+* 误差分布验证：脚本绘制了误差的频率直方分布。正是通过这个脚本的直方图分析，笔者成功捕捉到了早期算法中存在的 0.002° 地心视差系统性偏差，并验证了修正后的 MeeusFixed 算法已达到近乎完美的零系统偏差分布。
 
 > **代码说明**：在测试脚本中，`generate_sun_angles_meeus` 对应未加视差修正的 Meeus 算法，`generate_sun_angles_meeus_fixed` 对应加入了地心视差修正的完整版本。两者均使用 Meeus 原书参数。
 
