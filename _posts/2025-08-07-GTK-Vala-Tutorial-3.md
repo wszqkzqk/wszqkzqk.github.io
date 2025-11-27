@@ -358,8 +358,6 @@ $$
 \sin(\alpha) = \sin(\phi)\sin(\delta) + \cos(\phi)\cos(\delta)\cos(HA)
 $$
 
-算法对一天中每一分钟都进行采样计算，将结果存储在 `sun_angles` 数组中，为后续的可视化和交互提供数据支持。
-
 
 #### 地心视差修正 (Geocentric Parallax Correction)
 
@@ -382,7 +380,9 @@ double geocentric_parallax_deg = 0.00244 * elevation_cos;
 sun_angles[i] = Math.asin (elevation_sin) * RAD2DEG - geocentric_parallax_deg;
 ```
 
-如果不加这一修正，在上文的误差分布直方图中，RMSD 会从 0.0030° 增加到约 0.0036°，且误差平均值与分布中心将会偏离至 0.0020° 左右，在本程序的高精度下十分明显。
+如果不加这一修正，在上文的误差分布直方图中，RMSD 会从 0.0030° 增加到约 0.0036°，且误差平均值与分布中心将会偏离至 0.0020° 左右，在本程序的精度下十分明显。
+
+算法对一天中每一分钟都进行采样计算，将结果存储在 `sun_angles` 数组中，为后续的可视化和交互提供数据支持。
 
 ### 自定义绘图与 Cairo
 
