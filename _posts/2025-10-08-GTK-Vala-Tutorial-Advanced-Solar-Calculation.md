@@ -241,9 +241,9 @@ $$
 虽然这个修正量很小（最大约 8.8 角秒，即 0.00244°），但在高精度计算中却可能成为系统误差的主要来源。
 
 |[![#~/img/astronomy/solar-meeus-old_error_histogram.svg](/img/astronomy/solar-meeus-old_error_histogram.svg)](/img/astronomy/solar-meeus-old_error_histogram.svg)|
+|:----:|
 | 视差修正前的 Meeus 算法误差分布直方图 |
 |[![#~/img/astronomy/solar-meeus_error_histogram.svg](/img/astronomy/solar-meeus_error_histogram.svg)](/img/astronomy/solar-meeus_error_histogram.svg)|
-|:----:|
 | 视差修正后的 Meeus 算法误差分布直方图 |
 
 在加入地心视差修正前，可以在图上明显看到分布峰值在 0.0020° 而不是 0°；加入修正后，误差分布则基本关于 0° 对称，显著提升了计算的准确性。
