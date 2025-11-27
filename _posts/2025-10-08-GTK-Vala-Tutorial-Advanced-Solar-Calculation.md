@@ -232,11 +232,22 @@ $$
 \sin(\alpha) = \sin(\phi)\sin(\delta) + \cos(\phi)\cos(\delta)\cos(HA)
 $$
 
+此外，在高精度下，我们还需要考虑**地心视差 (Geocentric Parallax)**。上述公式计算的是地心坐标系下的太阳高度角，而观测者位于地球表面。由于地球半径相对于日地距离不可忽略，观测者看到的太阳位置会比地心看到的略低。修正公式为：
+
+$$
+\Delta \alpha = - \arcsin \left( \frac{R_\oplus}{R} \cos \alpha \right) \approx -0.00244^\circ \times \cos \alpha
+$$
+
+虽然这个修正量很小（最大约 8.8 角秒，即 0.00244°），但在高精度计算中却可能成为系统误差的主要来源。
+
 ```vala
 // 计算太阳高度角的正弦值
-double elevation_sine = sin_lat * declination_sin + cos_lat * declination_cos * Math.cos (hour_angle_rad);
-// 反正弦后转换为度
-sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
+double elevation_sin = (sin_lat * declination_sin + cos_lat * declination_cos * Math.cos (hour_angle_rad)).clamp (-1.0, 1.0);
+double elevation_cos = Math.sqrt (1.0 - elevation_sin * elevation_sin);
+// 地心视差修正 (度)
+double geocentric_parallax_deg = 0.00244 * elevation_cos;
+// 反正弦后转换为度，并减去视差
+sun_angles[i] = Math.asin (elevation_sin) * RAD2DEG - geocentric_parallax_deg;
 ```
 
 至此，我们就完成了从一个日期和时间点，到其精确太阳高度角的完整计算链条。
@@ -273,7 +284,11 @@ double distance_au = (1.0 - eccentricity * eccentricity) / (1.0 + eccentricity *
 
 ## 应用二：计算日出日落时间及白昼时长
 
-计算日出日落时间与白昼时长是这些天文参数的另一个直接应用。其核心是计算出太阳升起和落下的时刻，即太阳高度角为某个特定值（通常是-0.83°而不是0，考虑大气折射）时的时角。一个常见的近似是假设太阳赤纬和均时差在一天之内是恒定的，取正午时刻的值，然后直接解算日出/日落时角。然而，太阳的赤纬和均时差在一天中是持续变化的，尤其是在高纬度地区或对精度要求高的场景下，这种简化会引入不可忽略的误差，**与笔者使用的 Meeus 算法精度不匹配**，因此笔者并没有这样使用。
+计算日出日落时间与白昼时长是这些天文参数的另一个直接应用。其核心是计算出太阳升起和落下的时刻，即太阳高度角为某个特定值（通常是-0.83°而不是0，考虑大气折射）时的时角。
+
+一个常见的近似是假设太阳赤纬和均时差在一天之内是恒定的，取正午时刻的值，然后直接解算日出/日落时角。然而，太阳的赤纬和均时差在一天中是持续变化的，尤其是在高纬度地区或对精度要求高的场景下，这种简化会引入不可忽略的误差，**与笔者使用的 Meeus 算法精度不匹配**，因此笔者并没有这样使用。
+
+需要注意的是，在计算日出日落时，我们通常**不单独计算地心视差**。这是因为日出日落的标准定义通常已经包含了一个综合的修正角（如 -0.833°），它涵盖了太阳半径（约 0.266°）、大气折射（约 0.566°）以及微小的视差修正。此外，大气折射受温度、气压影响极大，其不确定性远大于视差修正，因此在允许用户调节地平线修正角（Horizon Angle）的算法中，将视差视为常数合并处理是合理的做法。
 
 为了获得更高的精度，笔者采用了一种**迭代逼近**的方法。其基本思想是：先用一个初始值（如正午的太阳参数）估算出大致的日出日落时间，然后用这个估算出的时间点重新计算更精确的太阳参数，再用新参数反过来修正日出日落时间，如此往复，直到结果收敛。
 
@@ -359,7 +374,7 @@ $$
 ```vala
     /**
      * Calculates solar elevation angles for each minute of the day.
-     * Based on http://www.jgiesen.de/elevaz/basics/meeus.htm
+     * Based on Meeus's book "Astronomical Algorithms" (1998)
      *
      * @param latitude_rad Latitude in radians.
      * @param longitude_deg Longitude in degrees.
@@ -377,7 +392,7 @@ $$
         double obliquity_deg = 23.439291111 - 3.560347e-7 * base_days_from_epoch - 1.2285e-16 * base_days_sq + 1.0335e-20 * base_days_cb;
         double obliquity_sin = Math.sin (obliquity_deg * DEG2RAD);
         double obliquity_cos = Math.cos (obliquity_deg * DEG2RAD);
-        double ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq;
+        double ecliptic_c1 = 1.914602 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq;
         double ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch;
         double tst_offset = 4.0 * longitude_deg - 60.0 * timezone_offset_hrs;
         double eccentricity = 0.016708634 - 1.15091e-09 * base_days_from_epoch - 9.497e-17 * base_days_sq;
@@ -386,7 +401,7 @@ $$
             double days_from_epoch = base_days_from_epoch + (i / 60.0 - timezone_offset_hrs) / 24.0;
             double days_from_epoch_sq = days_from_epoch * days_from_epoch;
             double days_from_epoch_cb = days_from_epoch_sq * days_from_epoch;
-            double mean_anomaly_deg = 357.52910 + 0.985600282 * days_from_epoch - 1.1686e-13 * days_from_epoch_sq - 9.85e-21 * days_from_epoch_cb;
+            double mean_anomaly_deg = 357.52772 + 0.985600282 * days_from_epoch - 1.2016e-13 * days_from_epoch_sq - 6.835e-20 * days_from_epoch_cb;
             mean_anomaly_deg = Math.fmod (mean_anomaly_deg, 360.0);
             if (mean_anomaly_deg < 0) {
                 mean_anomaly_deg += 360.0;
@@ -399,7 +414,7 @@ $$
             double mean_anomaly_rad = mean_anomaly_deg * DEG2RAD;
             double equation_of_center_deg = ecliptic_c1 * Math.sin (mean_anomaly_rad)
                 + ecliptic_c2 * Math.sin (2.0 * mean_anomaly_rad)
-                + 0.000290 * Math.sin (3.0 * mean_anomaly_rad);
+                + 0.000289 * Math.sin (3.0 * mean_anomaly_rad);
             double ecliptic_longitude_deg = mean_longitude_deg + equation_of_center_deg;
             ecliptic_longitude_deg = Math.fmod (ecliptic_longitude_deg, 360.0);
             if (ecliptic_longitude_deg < 0) {
@@ -423,8 +438,10 @@ $$
             }
             double eqtime_minutes = (mean_time_hours - right_ascension_hours) * 60.0;
             double hour_angle_rad = ((i + eqtime_minutes + tst_offset) / 4.0 - 180.0) * DEG2RAD;
-            double elevation_sine = sin_lat * declination_sin + cos_lat * declination_cos * Math.cos (hour_angle_rad);
-            sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
+            double elevation_sin = (sin_lat * declination_sin + cos_lat * declination_cos * Math.cos (hour_angle_rad)).clamp (-1.0, 1.0);
+            double elevation_cos = Math.sqrt (1.0 - elevation_sin * elevation_sin); // non-negative in [-90 deg, +90 deg]
+            double geocentric_parallax_deg = 0.00244 * elevation_cos;
+            sun_angles[i] = Math.asin (elevation_sin) * RAD2DEG - geocentric_parallax_deg;
 
             double true_anomaly_rad = mean_anomaly_rad + equation_of_center_deg * DEG2RAD;
             double distance_au = (1.0 - eccentricity * eccentricity) / (1.0 + eccentricity * Math.cos (true_anomaly_rad));
@@ -447,7 +464,7 @@ $$
 
         // Clear click point when data updates
         has_click_point = false;
-        click_info_label.label = "Click on chart to view data\n";
+        click_info_label.label = DEFAULT_INFO_LABEL;
     }
 ```
 
@@ -477,7 +494,7 @@ $$
         double days_cb = days_sq * days_from_epoch;
 
         // Mean anomaly
-        double mean_anomaly_deg = 357.52910 + 0.985600282 * days_from_epoch - 1.1686e-13 * days_sq - 9.85e-21 * days_cb;
+        double mean_anomaly_deg = 357.52772 + 0.985600282 * days_from_epoch - 1.2016e-13 * days_sq - 6.835e-20 * days_cb;
         double mean_anomaly_rad = mean_anomaly_deg * DEG2RAD;
 
         // Mean longitude (normalized)
@@ -490,7 +507,7 @@ $$
         double ecliptic_longitude_deg = mean_longitude_deg
             + ecliptic_c1 * Math.sin (mean_anomaly_rad)
             + ecliptic_c2 * Math.sin (2.0 * mean_anomaly_rad)
-            + 0.000290 * Math.sin (3.0 * mean_anomaly_rad);
+            + 0.000289 * Math.sin (3.0 * mean_anomaly_rad);
 
         double ecliptic_longitude_rad = ecliptic_longitude_deg * DEG2RAD;
         double ecliptic_longitude_sin = Math.sin (ecliptic_longitude_rad);
@@ -516,7 +533,7 @@ $$
 
     /**
      * Calculates day length, sunrise, and sunset times.
-     * Based on http://www.jgiesen.de/elevaz/basics/meeus.htm
+     * Based on Meeus's book "Astronomical Algorithms" (1998)
      *
      * @param latitude_rad Latitude in radians.
      * @param longitude_deg Longitude in degrees.
@@ -527,7 +544,10 @@ $$
      * @param sunrise_time Output parameter for sunrise time in local hours [0,24).
      * @param sunset_time Output parameter for sunset time in local hours [0,24).
      */
-    private void calculate_day_length (double latitude_rad, double longitude_deg, double timezone_offset_hrs, double julian_date, double horizon_angle_deg, out double day_length, out double sunrise_time, out double sunset_time) {
+    private void calculate_day_length (
+        double latitude_rad, double longitude_deg, double timezone_offset_hrs, double julian_date, double horizon_angle_deg,
+        out double day_length, out double sunrise_time, out double sunset_time
+    ) {
         double sin_lat = Math.sin (latitude_rad);
         double cos_lat = Math.cos (latitude_rad);
         double sin_horizon = Math.sin (horizon_angle_deg * DEG2RAD);
@@ -542,7 +562,7 @@ $$
         double obliquity_cos = Math.cos (obliquity_deg * DEG2RAD);
 
         // Ecliptic correction coefficients
-        double ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch_utc_midnight - 1.049e-14 * base_days_sq;
+        double ecliptic_c1 = 1.914602 - 1.3188e-7 * base_days_from_epoch_utc_midnight - 1.049e-14 * base_days_sq;
         double ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch_utc_midnight;
 
         double tst_offset = 4.0 * longitude_deg - 60.0 * timezone_offset_hrs;
@@ -661,12 +681,13 @@ $$
 
 为了全面评估本文所采用的 Meeus 算法的精度，并将其与其他常见算法进行横向对比，笔者编写了一个 Python 验证脚本。该脚本将以下几种算法的计算结果与业界公认的高精度方法——`astropy` 库的计算结果进行逐小时比较：
 
-1.  **Meeus 算法 (原书)**：即 `generate_sun_angles_meeus_fixed`，是本文 Vala 代码的 Python 复现版，使用的是 Meeus 原书中的参数。
-2.  **MeeusWeb 算法**：即 `generate_sun_angles_meeus`，笔者早期从网页上抄录的 Meeus 算法实现，部分系数与原书略有差异（如中心差首项系数 1.914600 vs 1.914602，平近点角常数项 357.52910 vs 357.52772 等），但两者精度差异极小。
-3.  **傅里叶级数近似算法 (旧版实现)**：即 `generate_sun_angles_fourier`，这是笔者早期使用的一种基于傅里叶级数拟合的简化算法。
-4.  **维基百科简化公式**：即 `generate_sun_angles_wikipedia`，实现了维基百科上提供的简化版太阳赤纬和均时差公式。
+1.  **Meeus 算法 (无视差修正)**：即 `generate_sun_angles_meeus`，这是 Meeus 算法的标准实现，但**未包含地心视差修正**。我们将看到，这会引入一个微小的系统误差。
+2.  **MeeusFixed 算法 (含视差修正)**：即 `generate_sun_angles_meeus_fixed`，在标准 Meeus 算法的基础上加入了地心视差修正项。这是本文 Vala 代码最终采用的完整高精度方案。
+3.  **WikiImp (改进版维基百科算法)**：即 `generate_sun_angles_wiki_improved`，笔者基于 Wikipedia 的算法重新拟合了一组参数，引入了线性年份修正项。
+4.  **傅里叶级数近似算法 (旧版实现)**：即 `generate_sun_angles_fourier`，这是笔者早期使用的一种基于傅里叶级数拟合的简化算法。
+5.  **维基百科简化公式**：即 `generate_sun_angles_wikipedia`，实现了维基百科上提供的简化版太阳赤纬和均时差公式。
 
-通过计算每种算法结果与 `astropy` 基准值之间的均方根误差 (Root Mean Square Deviation, RMSD)，我们可以量化它们的精度差异。
+通过计算每种算法结果与 `astropy` 基准值之间的均方根误差 (Root Mean Square Deviation, RMSD) 以及平均误差，我们可以量化它们的精度差异及系统偏差。
 
 ### Spencer 傅里叶级数近似算法
 
@@ -789,7 +810,7 @@ $$
 
 以下是用于生成对比数据的完整 Python 脚本。它依赖 `numpy` 和 `astropy` 库。除了这里列出的几种算法外，笔者还基于 Wikipedia 的算法重新拟合了一组参数，命名为 `WikiImp`（改进版维基百科算法），详细的优化过程和原理请参见[《优化 Wikipedia 太阳位置简化公式》](https://wszqkzqk.github.io/2025/10/08/refining-the-sun-formula/)。
 
-> **代码说明**：在测试脚本中，`generate_sun_angles_meeus` 对应早期从网页抄录的参数版本（MeeusWeb，来自[J. Giesen 总结的天文算法页面](http://www.jgiesen.de/elevaz/basics/meeus.htm)），`generate_sun_angles_meeus_fixed` 对应 Meeus 原书的正确参数（本文正文介绍的版本）。测试结果表明两者精度几乎相同，差异可以忽略不计。
+> **代码说明**：在测试脚本中，`generate_sun_angles_meeus` 对应未加视差修正的 Meeus 算法，`generate_sun_angles_meeus_fixed` 对应加入了地心视差修正的完整版本。两者均使用 Meeus 原书参数。
 
 ```python
 #!/usr/bin/env python3
@@ -851,9 +872,9 @@ def generate_sun_angles_meeus(latitude_deg, longitude_deg, timezone_offset_hrs, 
     obliquity_sin = np.sin(obliquity_deg * DEG2RAD)
     obliquity_cos = np.cos(obliquity_deg * DEG2RAD)
     
-    ecliptic_c1 = 1.914600 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq
+    ecliptic_c1 = 1.914602 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq
     ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch
-    ecliptic_c3 = 0.000290
+    ecliptic_c3 = 0.000289
     
     tst_offset = 4.0 * longitude_deg - 60.0 * timezone_offset_hrs
     
@@ -865,7 +886,7 @@ def generate_sun_angles_meeus(latitude_deg, longitude_deg, timezone_offset_hrs, 
         days_from_epoch_sq = days_from_epoch ** 2
         days_from_epoch_cb = days_from_epoch_sq * days_from_epoch
         
-        mean_anomaly_deg = 357.52910 + 0.985600282 * days_from_epoch - 1.1686e-13 * days_from_epoch_sq - 9.85e-21 * days_from_epoch_cb
+        mean_anomaly_deg = 357.52772 + 0.985600282 * days_from_epoch - 1.2016e-13 * days_from_epoch_sq - 6.835e-20 * days_from_epoch_cb
         mean_anomaly_deg = np.fmod(mean_anomaly_deg, 360.0)
         
         mean_longitude_deg = 280.46645 + 0.98564736 * days_from_epoch + 2.2727e-13 * days_from_epoch_sq
@@ -1318,15 +1339,16 @@ def main():
     print(f"\n{'='*80}")
     print("GLOBAL STATISTICS ACROSS ALL DATA POINTS")
     print(f"{'='*80}")
-    print("| Method     | Global RMSD | 95% Abs Error | Global Max Error |")
-    print("|------------|-------------|---------------|------------------|")
+    print("| Method     | Global RMSD | 95% Abs Error | Global Max Error | Mean Error |")
+    print("|------------|-------------|---------------|------------------|------------|")
     for m in methods:
         diffs_array = np.array(all_diffs[m])
         abs_diffs_array = np.array(all_abs_diffs[m])
         global_rmsd = np.sqrt(np.mean(diffs_array ** 2))
         global_p95 = np.percentile(abs_diffs_array, 95)
         global_max_error = np.max(abs_diffs_array)
-        print(f"| {m:<10} | {global_rmsd:<11.4f} | {global_p95:<13.4f} | {global_max_error:<16.4f} |")
+        global_mean_error = np.mean(diffs_array)
+        print(f"| {m:<10} | {global_rmsd:<11.4f} | {global_p95:<13.4f} | {global_max_error:<16.4f} | {global_mean_error:<10.4f} |")
     
     # Statistics by Location
     print(f"\n{'='*80}")
@@ -1422,40 +1444,42 @@ if __name__ == "__main__":
 
 首先从海量数据中提炼出核心指标。
 
-| 性能指标 (单位: 度) | Meeus | MeeusWeb | WikiImp | Fourier | Wikipedia |
+| 性能指标 (单位: 度) | MeeusFixed (含视差) | Meeus (无视差) | WikiImp | Fourier | Wikipedia |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| 月度平均 RMSD | **0.0032** | **0.0032** | 0.0709 | 0.1016 | 0.1507 |
-| 月度最差 RMSD | **0.0097** | **0.0098** | 0.2734 | 0.4820 | 0.5666 |
-| 全局 RMSD | **0.0036** | **0.0036** | 0.0868 | 0.1269 | 0.1826 |
-| 95% 绝对误差 | **0.0070** | **0.0070** | 0.1746 | 0.2681 | 0.3717 |
-| 全局最大误差 | **0.0135** | **0.0136** | 0.2864 | 0.4825 | 0.6407 |
+| 月度平均 RMSD | **0.0026** | 0.0032 | 0.0710 | 0.1009 | 0.1502 |
+| 月度最差 RMSD | **0.0103** | 0.0105 | 0.2734 | 0.4852 | 0.5669 |
+| 全局 RMSD | **0.0030** | 0.0036 | 0.0865 | 0.1265 | 0.1819 |
+| 95% 绝对误差 | **0.0058** | 0.0070 | 0.1738 | 0.2687 | 0.3703 |
+| 全局最大误差 | **0.0121** | 0.0145 | 0.2864 | 0.4853 | 0.6415 |
+| 平均误差 (Bias) | **-0.0000** | 0.0020 | 0.0018 | 0.0041 | 0.0024 |
 
 |[![#~/img/astronomy/solar-meeus_error_histogram.svg](/img/astronomy/solar-meeus_error_histogram.svg)](/img/astronomy/solar-meeus_error_histogram.svg)|
 |:----:|
-| Meeus 算法（原书版本）误差分布直方图 |
-|[![#~/img/astronomy/solar-meeus-web_error_histogram.svg](/img/astronomy/solar-meeus-web_error_histogram.svg)](/img/astronomy/solar-meeus-web_error_histogram.svg)|
-| Meeus 算法（参数取自[网页](http://www.jgiesen.de/elevaz/basics/meeus.htm)）误差分布直方图 |
+| Meeus 算法（无视差修正）误差分布直方图 |
+|[![#~/img/astronomy/solar-meeus-old_error_histogram.svg](/img/astronomy/solar-meeus-old_error_histogram.svg)](/img/astronomy/solar-meeus-old_error_histogram.svg)|
+| MeeusFixed 算法（含视差修正）误差分布直方图 |
 |[![#~/img/astronomy/solar-fourier_error_histogram.svg](/img/astronomy/solar-fourier_error_histogram.svg)](/img/astronomy/solar-fourier_error_histogram.svg)|
 | 傅里叶级数算法误差分布直方图 |
 |[![#~/img/astronomy/solar-wikipedia_error_histogram.svg](/img/astronomy/solar-wikipedia_error_histogram.svg)](/img/astronomy/solar-wikipedia_error_histogram.svg)|
 | 维基百科算法误差分布直方图 |
 
-*   **Meeus 算法**（包括原书参数版本和网页版本）的精度与其他算法存在**数量级**的优势。其全局 RMSD (0.0036°) 仅为傅里叶算法的 1/30，维基百科算法的 1/47。原书参数版本与网页版本的精度差异极小，两者均可放心使用。
-*   **WikiImp (改进版维基百科算法)** 是笔者对维基百科算法的优化版本（详见[《优化 Wikipedia 太阳位置简化公式》](https://wszqkzqk.github.io/2025/10/08/refining-the-sun-formula/)），平均 RMSD 降至 0.0709°，优于傅里叶算法，但仍远逊于 Meeus 算法。
-*   Meeus 算法的最差表现 (0.0097°) 依然比其他算法的**平均表现**好得多。
+*   **MeeusFixed (含视差修正)** 展现了惊人的精度，其全局 RMSD 仅为 0.0030°。最关键的是，其平均误差为 $-1.8 \times 10^{-7}$，几乎为 0，远小于该情形下的最小可检出系统偏差 $4.28 \times 10^{-6}$，说明加入了视差修正后，消除了系统性偏差。
+*   **Meeus (无视差修正)** 的精度也非常高 (RMSD 0.0036°)，但存在一个约 **0.0020° 的正向平均误差**。这正是地心视差的影响（计算出的地心高度角总是略高于地表观测到的高度角）。这一对比有力地证明了在高精度计算中引入视差修正的必要性。
+*   **WikiImp (改进版维基百科算法)** 平均 RMSD 为 0.0710°，优于傅里叶算法，但仍远逊于 Meeus 算法。
+*   Meeus 算法的最差表现 (0.0121°) 依然比其他算法的**平均表现**好得多。
 
 #### 地理位置对比
 
-| 地点 | Meeus (Avg/Max) | MeeusWeb (Avg/Max) | WikiImp (Avg/Max) | Fourier (Avg/Max) | Wikipedia (Avg/Max) |
+| 地点 | MeeusFixed (Avg/Max) | Meeus (Avg/Max) | WikiImp (Avg/Max) | Fourier (Avg/Max) | Wikipedia (Avg/Max) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| Beijing | 0.0033 / 0.0087 | 0.0033 / 0.0087 | 0.0672 / 0.1461 | 0.0871 / 0.2865 | 0.1549 / 0.4710 |
-| Chongqing | 0.0033 / 0.0089 | 0.0033 / 0.0089 | 0.0663 / 0.1373 | 0.0847 / 0.2606 | 0.1434 / 0.4364 |
-| Singapore | 0.0034 / 0.0097 | 0.0034 / 0.0098 | 0.0596 / 0.1437 | 0.0738 / 0.1947 | 0.1130 / 0.3181 |
-| Sydney | 0.0034 / 0.0083 | 0.0034 / 0.0083 | 0.0691 / 0.1671 | 0.0796 / 0.2487 | 0.1477 / 0.4695 |
-| Stockholm | 0.0031 / 0.0091 | 0.0031 / 0.0091 | 0.0796 / 0.2391 | 0.1357 / 0.4364 | 0.1692 / 0.5374 |
-| South Pole | 0.0030 / 0.0095 | 0.0030 / 0.0095 | 0.0840 / 0.2734 | 0.1486 / 0.4820 | 0.1758 / 0.5666 |
+| Beijing | 0.0027 / 0.0078 | 0.0033 / 0.0088 | 0.0672 / 0.1569 | 0.0863 / 0.2886 | 0.1549 / 0.4717 |
+| Chongqing | 0.0027 / 0.0093 | 0.0033 / 0.0095 | 0.0664 / 0.1499 | 0.0837 / 0.2608 | 0.1430 / 0.4371 |
+| Singapore | 0.0027 / 0.0103 | 0.0034 / 0.0105 | 0.0602 / 0.1449 | 0.0724 / 0.2023 | 0.1112 / 0.3221 |
+| Sydney | 0.0027 / 0.0086 | 0.0033 / 0.0088 | 0.0692 / 0.1788 | 0.0783 / 0.2490 | 0.1466 / 0.4708 |
+| Stockholm | 0.0026 / 0.0072 | 0.0031 / 0.0092 | 0.0796 / 0.2391 | 0.1357 / 0.4391 | 0.1696 / 0.5378 |
+| South Pole | 0.0023 / 0.0072 | 0.0030 / 0.0097 | 0.0836 / 0.2734 | 0.1492 / 0.4852 | 0.1759 / 0.5669 |
 
-Meeus 算法具有完美的地理普适性，从赤道到极点都保持极高精度。而傅里叶和维基百科算法在极地（South Pole）和高纬度地区（Stockholm）的误差明显增大。
+Meeus 算法具有完美的地理普适性，从赤道到极点都保持极高精度。加入视差修正后的 MeeusFixed 在所有地点均有一致的性能提升。
 
 #### 年份对比
 
@@ -1463,27 +1487,27 @@ Meeus 算法具有完美的地理普适性，从赤道到极点都保持极高�
 
 | 方法 | 1975年平均RMSD (°) | 2075年平均RMSD (°) | 趋势分析 |
 | :--- | :--- | :--- | :--- |
-| Meeus | 0.0032 | 0.0032 | 精度在百年尺度上保持极高稳定性。 |
-| MeeusWeb | 0.0032 | 0.0032 | 稳定性同上，与原书版本几乎无差异。 |
-| WikiImp | 0.0512 | 0.0511 | 改进版算法引入了年份修正，保持了长期稳定。 |
-| Fourier | 0.0678 | 0.1195 | 误差随时间显著增加（增长约 76%）。 |
-| Wikipedia | 0.0622 | 0.1993 | 误差随时间剧烈增加（增长约 220%）。 |
+| MeeusFixed | 0.0023 | 0.0031 | 精度在百年尺度上保持极高稳定性。 |
+| Meeus | 0.0031 | 0.0035 | 稳定性同上，系统误差恒定存在。 |
+| WikiImp | 0.0504 | 0.0505 | 改进版算法引入了年份修正，保持了长期稳定。 |
+| Fourier | 0.0669 | 0.1180 | 误差随时间显著增加（增长约 76%）。 |
+| Wikipedia | 0.0605 | 0.1996 | 误差随时间剧烈增加（增长约 230%）。 |
 
 Meeus 算法包含了对地球轨道参数长期变化的修正项，因此其精度在很长的时间跨度内都是可靠的。WikiImp 通过引入年份修正也保持了长期稳定。而傅里叶和原始维基百科算法是基于特定历元的经验公式，离拟合年代越远，误差越大。
 
 #### 月份/季节维度分析
 
-*   **Meeus / MeeusWeb**: 月度 RMSD 波动极小（0.0030 - 0.0037），表现出极佳的稳定性，两者差异可忽略。
-*   **Fourier**: 波动巨大，6月和12月表现较好（~0.04-0.05），但 3月和 9-10月 误差飙升至 0.15 左右。
-*   **Wikipedia**: 同样波动巨大，6月和12月较好（~0.04），但 3月和 9月 误差高达 0.23-0.24。
-*   **WikiImp**: 相比原始版有很大改进，但仍有季节性波动，6月最佳（0.0188），3月最差（0.1073）。
+*   **Meeus / MeeusFixed**: 月度 RMSD 波动极小（0.0023 - 0.0030），表现出极佳的稳定性。
+*   **Fourier**: 波动巨大，6月和12月表现较好（~0.05），但 3月和 9-10月 误差飙升至 0.15 左右。
+*   **Wikipedia**: 同样波动巨大，6月和12月较好（~0.05），但 3月和 9月 误差高达 0.23-0.24。
+*   **WikiImp**: 相比原始版有很大改进，但仍有季节性波动，6月最佳（0.0215），3月最差（0.1024）。
 
 这表明 Meeus 算法精确地模拟了地球公转的真实物理过程，而简化模型未能精确模拟地球在椭圆轨道上运动速度的变化，导致均时差和太阳赤纬的季节性变化计算不准。
 
 #### 结论
 
-**Meeus 算法**（原书参数版本及网页版本 MeeusWeb）是一个基于天体力学的物理模型，在所有测试维度（时间、地点、季节）上都展现了压倒性的精度优势和稳定性。两个版本的系数略有差异，但精度表现几乎相同，均可放心使用。
+**Meeus 算法**是一个基于天体力学的物理模型，在所有测试维度（时间、地点、季节）上都展现了压倒性的精度优势和稳定性。特别是 **MeeusFixed (含视差修正)** 版本，通过引入地心视差修正，消除了约 0.0020° 的系统误差，实现了 RMSD 0.0030° 的极致精度。这证明了在追求高精度数值计算时，物理模型的完整性至关重要。
 
-**WikiImp** 是笔者对维基百科算法的优化版本，详细介绍请参见[《优化 Wikipedia 太阳位置简化公式》](/2025/10/08/refining-the-sun-formula/)。它通过引入线性年份修正项，解决了长期漂移问题并提升了整体精度，但仍受限于年月日的处理无法表达儒略日的便宜，以及物理模型的简化，无法达到 Meeus 的高度。
+**WikiImp** 是笔者对维基百科算法的优化版本，详细介绍请参见[《优化 Wikipedia 太阳位置简化公式》](/2025/10/08/refining-the-sun-formula/)。它通过引入线性年份修正项，解决了长期漂移问题并提升了整体精度，但仍受限于物理模型的简化，无法达到 Meeus 的高度。
 
 **傅里叶级数算法**和**原始维基百科算法**则存在明显的局限性，仅适用于对精度要求不高且时间跨度较短的场景。
