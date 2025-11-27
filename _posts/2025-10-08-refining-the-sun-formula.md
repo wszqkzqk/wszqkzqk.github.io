@@ -11,9 +11,9 @@ tags:       开源软件 GTK Vala 数值计算
 
 ## 前言
 
-在上篇博客[《Vala 数值计算实践：高精度太阳位置算法》](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation/)中，我们深入探讨了 Jean Meeus 算法在 Vala 中的实现。这是一个基于天体力学解析模型的“黄金标准”，精度极高（平均误差仅 0.0036°）且计算也很高效，但其输入依赖儒略日（Julian Date），还需要理解平近点角、真黄经等专业概念，这对不熟悉天文学历元的读者来说，可能门槛较高。
+在上篇博客[《Vala 数值计算实践：高精度太阳位置算法》](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation/)中，我们深入探讨了 Jean Meeus 算法在 Vala 中的实现。这是一个基于天体力学解析模型的“黄金标准”，精度极高（RMSD 仅 0.0030°）且计算也很高效，但其输入依赖儒略日（Julian Date），还需要理解平近点角、真黄经等专业概念，这对不熟悉天文学历元的读者来说，可能门槛较高。
 
-今天，我们转向另一个方向：**优化 Wikipedia 上提供的太阳位置简化公式**。这个公式简单、直观，只需年份和年积日（Day of Year）即可计算太阳高度角，非常适合日常应用和教学目的。然而，原公式精度较低（平均误差 0.18°），且忽略了轨道参数随年份的缓慢变化（如近日点偏移、轴倾角衰减）。本文将完整介绍我对其的优化过程：从模型改进，到数据拟合，再到结果验证。我们将看到，如何在保持易用性的前提下，将其精度显著提升（平均误差降至 0.07° 左右），并探讨这种优化的物理意义与计算效率。
+今天，我们转向另一个方向：**优化 Wikipedia 上提供的太阳位置简化公式**。这个公式简单、直观，只需年份和年积日（Day of Year）即可计算太阳高度角，非常适合日常应用和教学目的。然而，原公式精度较低（平均误差 0.18°），且忽略了轨道参数随年份的缓慢变化（如近日点偏移、轴倾角衰减）。本文将完整介绍我对其的优化过程：从模型改进，到数据拟合，再到结果验证。我们将看到，如何在保持易用性的前提下，将其精度显著提升（平均误差降至 0.08° 左右），并探讨这种优化的物理意义与计算效率。
 
 这篇博客的优化代码，已集成到我的 [GTK4 太阳高度角计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarcalc.vala) 中，作为 Meeus 算法的"轻量备选"。如果你对高精度计算感兴趣，这是一个平衡易懂与精度的实用方案。
 
@@ -57,7 +57,7 @@ $$
 
 ## 优化动机：易用性与精度的平衡
 
-为什么不直接用 Meeus 算法？Meeus 虽优越（RMSD 0.0036°），但：
+为什么不直接用 Meeus 算法？Meeus 虽优越（含视差修正 RMSD 0.0030°），但：
 - 输入需儒略日，用户需额外转换（虽 Vala 的 `GLib.Date.get_julian()` 简化了，但对初学者仍不直观）。
 - 概念门槛高（平黄经、中心差高阶项），不易初学者理解。
 
@@ -215,14 +215,18 @@ $$
 
 | 方法 | 整体 RMSD | 整月最差 RMSD | 最大绝对误差 |
 |------|-----------|-----------|-------------|
-| Meeus | 0.0036 | 0.0097 | 0.0135 |
-| Fourier | 0.1269 | 0.4820 | 0.4825 |
-| 原 Wikipedia | 0.1826 | 0.5666 | 0.6407 |
-| 优化 Wikipedia | 0.0868 | 0.2734 | 0.2864 |
+| MeeusFixed (含视差修正) | 0.0030 | 0.0103 | 0.0121 |
+| Meeus (无修正) | 0.0036 | 0.0105 | 0.0145 |
+| Fourier | 0.1265 | 0.4852 | 0.4853 |
+| 原 Wikipedia | 0.1819 | 0.5669 | 0.6415 |
+| 优化 Wikipedia | 0.0865 | 0.2734 | 0.2864 |
 
 |[![#~/img/astronomy/solar-meeus_error_histogram.svg](/img/astronomy/solar-meeus_error_histogram.svg)](/img/astronomy/solar-meeus_error_histogram.svg)|
 |:----:|
-| Meeus 算法误差分布直方图 |
+| Meeus 算法（含视差修正）误差分布直方图 |
+|[![#~/img/astronomy/solar-meeus-old_error_histogram.svg](/img/astronomy/solar-meeus-old_error_histogram.svg)](/img/astronomy/solar-meeus-old_error_histogram.svg)|
+|:----:|
+| Meeus 算法（无修正）误差分布直方图 |
 |[![#~/img/astronomy/solar-fourier_error_histogram.svg](/img/astronomy/solar-fourier_error_histogram.svg)](/img/astronomy/solar-fourier_error_histogram.svg)|
 | 傅里叶级数算法误差分布直方图 |
 |[![#~/img/astronomy/solar-wikipedia_error_histogram.svg](/img/astronomy/solar-wikipedia_error_histogram.svg)](/img/astronomy/solar-wikipedia_error_histogram.svg)|
@@ -230,9 +234,9 @@ $$
 |[![#~/img/astronomy/solar-wikiimp_error_histogram.svg](/img/astronomy/solar-wikiimp_error_histogram.svg)](/img/astronomy/solar-wikiimp_error_histogram.svg)|
 | 优化 Wikipedia 算法误差分布直方图 |
 
-- **年份稳定性**：优化版在 1975 年 RMSD 0.051°，2075 年 0.051°（稳定）；原版 1975 年 0.062°，2075 年 0.199°（误差增长 220%）。
-- **地理普适性**：高纬（Stockholm）优化版 0.080°，原版 0.169°（改善 53%）；新加坡优化版 0.060°，原版 0.113°（改善 47%）。
-- **季节稳定性**：优化版月波动小（0.019-0.107°），原版剧烈（0.04-0.24°）。
+- **年份稳定性**：优化版在 1975 年 RMSD 0.050°，2075 年 0.051°（稳定）；原版 1975 年 0.061°，2075 年 0.200°（误差增长 230%）。
+- **地理普适性**：高纬（Stockholm）优化版 0.080°，原版 0.170°（改善 53%）；新加坡优化版 0.060°，原版 0.111°（改善 46%）。
+- **季节稳定性**：优化版月波动小（0.022-0.102°），原版剧烈（0.05-0.24°）。
 
 精度虽显著不及 Meeus，但也明显超原版，百年内可靠。
 
