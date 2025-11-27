@@ -961,8 +961,10 @@ def generate_sun_angles_meeus_fixed(latitude_deg, longitude_deg, timezone_offset
         tst_minutes = i + eqtime_minutes + tst_offset
         hour_angle_rad = (tst_minutes / 4.0 - 180.0) * DEG2RAD
         
-        elevation_sine = sin_lat * declination_sin + cos_lat * declination_cos * np.cos(hour_angle_rad)
-        elevation = np.arcsin(np.clip(elevation_sine, -1.0, 1.0)) * RAD2DEG
+        elevation_sin = np.clip(sin_lat * declination_sin + cos_lat * declination_cos * np.cos(hour_angle_rad), -1.0, 1.0)
+        elevation_cos = np.sqrt(1.0 - elevation_sin * elevation_sin)
+        geocentric_parallax_deg = 0.00244 * elevation_cos # In degrees, the parallax correction
+        elevation = np.arcsin(elevation_sin) * RAD2DEG - geocentric_parallax_deg
         angles.append(elevation)
     
     return np.array(angles)

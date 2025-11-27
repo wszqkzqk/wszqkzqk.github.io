@@ -241,7 +241,7 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 ### 太阳高度角计算
 
-> 本程序使用基于 **Meeus** 在 **《天文算法》** (*Astronomical Algorithms*) 一书中提出的实现，能在不依赖大型星历表的情况下，达到很不错的精度。笔者进行了实测：分散选取南北半球低中高纬度不同位置，在 1975-2075 的 100 年间，测试其中每个整时刻的高度角计算值与公认高精度的专业天文库 [Astropy](https://github.com/astropy/astropy) 的结果的误差，测试发现整体 **RMSD 仅 0.0036°**，95%的误差绝对值不超过 0.0070°，如此多的数据中最大误差绝对值也仅为 0.0136°。
+> 本程序使用基于 **Meeus** 在 **《天文算法》** (*Astronomical Algorithms*) 一书中提出的实现，能在不依赖大型星历表的情况下，达到很不错的精度。笔者进行了实测：分散选取南北半球低中高纬度共6个不同的代表性位置，在 1975-2075 的 100 年间，测试其中每个整时刻的高度角计算值与公认高精度的专业天文库 [Astropy](https://github.com/astropy/astropy) 的结果的误差，测试数据点高达 5,312,160 个。测试发现整体上基本不存在系统性的偏差，**RMSD 仅 0.0030°**，95% 的误差绝对值不超过 0.0058°，如广泛此的数据中最大误差绝对值也仅为 0.0121°。
 > 如果你对算法的理论背景、实现细节及其在 Vala 语言中的最佳实践感兴趣，请移步阅读笔者的续篇教程：**[Vala 数值计算实践：高精度太阳位置算法](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation/)**。
 
 `generate_sun_angles` 函数是应用计算的核心。笔者在此实现了 Meeus 算法的等价变体，通过精确的天体力学模型计算太阳位置。这个算法较简单，但具有很高的精度，适合我们这个应用的需求。
@@ -359,6 +359,30 @@ $$
 $$
 
 算法对一天中每一分钟都进行采样计算，将结果存储在 `sun_angles` 数组中，为后续的可视化和交互提供数据支持。
+
+
+#### 地心视差修正 (Geocentric Parallax Correction)
+
+上述公式计算出的高度角是基于**地心坐标系**的，假设观测者位于地球中心。然而，实际观测者位于地球**表面**。由于地球半径的存在，对于地表观测者来说，天体的位置会显得比地心视角略低，这种差异称为**周日视差**。
+
+虽然太阳距离地球很远（约 1 AU），视差很小，但其最大值（太阳在地平线时）仍可达 $8.794$ 角秒（约 $0.00244^\circ$）。对于追求高精度的计算，这是一个不可忽略的系统误差。
+
+本程序进行了如下修正，将**地心高度角**转换为**站心高度角**：
+
+$$
+\alpha_\text{topo} = \alpha_\text{geo} - 0.00244^\circ \times \cos(\alpha_\text{geo})
+$$
+
+在代码中，我们直接利用计算出的 $\cos(\alpha)$ 进行修正：
+
+```vala
+double elevation_cos = Math.sqrt (1.0 - elevation_sin * elevation_sin);
+double geocentric_parallax_deg = 0.00244 * elevation_cos;
+// 最终高度角 = 地心高度角 - 视差
+sun_angles[i] = Math.asin (elevation_sin) * RAD2DEG - geocentric_parallax_deg;
+```
+
+如果不加这一修正，在上文的误差分布直方图中，RMSD 会从 0.0030° 增加到约 0.0036°，且误差平均值与分布中心将会偏离至 0.0020° 左右，在本程序的高精度下十分明显。
 
 ### 自定义绘图与 Cairo
 
@@ -1045,8 +1069,10 @@ public class SolarCalc : Adw.Application {
             }
             double eqtime_minutes = (mean_time_hours - right_ascension_hours) * 60.0;
             double hour_angle_rad = ((i + eqtime_minutes + tst_offset) / 4.0 - 180.0) * DEG2RAD;
-            double elevation_sine = sin_lat * declination_sin + cos_lat * declination_cos * Math.cos (hour_angle_rad);
-            sun_angles[i] = Math.asin (elevation_sine.clamp (-1.0, 1.0)) * RAD2DEG;
+            double elevation_sin = (sin_lat * declination_sin + cos_lat * declination_cos * Math.cos (hour_angle_rad)).clamp (-1.0, 1.0);
+            double elevation_cos = Math.sqrt (1.0 - elevation_sin * elevation_sin); // non-negative in [-90 deg, +90 deg]
+            double geocentric_parallax_deg = 0.00244 * elevation_cos;
+            sun_angles[i] = Math.asin (elevation_sin) * RAD2DEG - geocentric_parallax_deg;
 
             double true_anomaly_rad = mean_anomaly_rad + equation_of_center_deg * DEG2RAD;
             double distance_au = (1.0 - eccentricity * eccentricity) / (1.0 + eccentricity * Math.cos (true_anomaly_rad));
