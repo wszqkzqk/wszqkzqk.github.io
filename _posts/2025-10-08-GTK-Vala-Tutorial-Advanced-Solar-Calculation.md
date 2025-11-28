@@ -1258,17 +1258,19 @@ def main():
 
         ax1.hist(diffs_array, bins='auto', alpha=0.7, color='skyblue')
         spine_lw = ax1.spines['left'].get_linewidth()
-        ax1.axvline(0, color='black', linestyle='-', linewidth=spine_lw, label='Zero')
-        ax1.axvline(np.mean(diffs_array), color='orange', linestyle='--', linewidth=2, label='Mean')
+        ax1.axvline(0, color='black', linestyle='-', linewidth=spine_lw, label='Zero Deviation')
+        ax1.axvline(np.mean(diffs_array), color='orange', linestyle='--', linewidth=2, label=f'Mean: {np.mean(diffs_array):.4f}')
         ax1.set_title(f'Error Distribution')
         ax1.set_xlabel('Error (degrees)')
+        ax1.set_ylabel('Frequency')
         ax1.legend()
 
         ax2.hist(abs_diffs_array, bins='auto', alpha=0.7, color='lightgreen')
         ax2.axvline(rmsd, color='orange', linestyle='--', linewidth=2, label=f'RMSD: {rmsd:.4f}')
-        ax2.axvline(p95, color='blue', linestyle='--', linewidth=2, label=f'95%: {p95:.4f}')
+        ax2.axvline(p95, color='blue', linestyle='--', linewidth=2, label=f'95% abs: {p95:.4f}')
         ax2.set_title(f'Absolute Error Distribution')
         ax2.set_xlabel('Abs Error (degrees)')
+        ax2.set_ylabel('Frequency')
         ax2.legend()
 
         plt.suptitle(f'{m} Solar Elevation Error')
