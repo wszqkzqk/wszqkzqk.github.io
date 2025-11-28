@@ -232,7 +232,7 @@ $$
 \sin(\alpha) = \sin(\phi)\sin(\delta) + \cos(\phi)\cos(\delta)\cos(HA)
 $$
 
-此外，在高精度下，我们还需要考虑**地心视差 (Geocentric Parallax)**。上述公式计算的是地心坐标系下的太阳高度角，而观测者位于地球表面。由于地球半径相对于日地距离不可忽略，观测者看到的太阳位置会比地心看到的略低。修正公式为：
+在高精度下，我们还需要考虑**地心视差 (Geocentric Parallax)**。上述公式计算的是地心坐标系下的太阳高度角，而观测者位于地球表面。由于地球半径相对于日地距离不可忽略，观测者看到的太阳位置会比地心看到的略低。修正公式为：
 
 $$
 \Delta \alpha = - \arcsin \left( \frac{R_\oplus}{R} \cos \alpha \right) \approx -0.00244^\circ \times \cos \alpha
@@ -1479,7 +1479,7 @@ if __name__ == "__main__":
 |[![#~/img/astronomy/solar-wikipedia_error_histogram.svg](/img/astronomy/solar-wikipedia_error_histogram.svg)](/img/astronomy/solar-wikipedia_error_histogram.svg)|
 | 维基百科算法误差分布直方图 |
 
-*   **MeeusFixed (含视差修正)** 展现了惊人的精度，其全局 RMSD 仅为 0.0030°。最关键的是，其平均误差为 $-1.8 \times 10^{-7}$，几乎为 0，远小于该情形下的最小可检出系统偏差 $4.28 \times 10^{-6}$，说明加入了视差修正后，消除了系统性偏差。
+*   **MeeusFixed (含视差修正)** 展现了惊人的精度，其全局 RMSD 仅为 0.0030°。最关键的是，其平均误差为 $-1.8 \times 10^{-7}$，几乎为 0，其绝对值远小于该数据量与分布下的最小可检出系统偏差 $4.28 \times 10^{-6}$，说明加入了视差修正后，消除了系统性偏差。
 *   **Meeus (无视差修正)** 的精度也非常高 (RMSD 0.0036°)，但存在一个约 **0.0020° 的正向平均误差**。这正是地心视差的影响（计算出的地心高度角总是略高于地表观测到的高度角）。这一对比有力地证明了在高精度计算中引入视差修正的必要性。
 *   **WikiImp (改进版维基百科算法)** 平均 RMSD 为 0.0710°，优于傅里叶算法，但仍远逊于 Meeus 算法。
 *   Meeus 算法的最差表现 (0.0121°) 依然比其他算法的**平均表现**好得多。
