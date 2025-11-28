@@ -1257,7 +1257,8 @@ def main():
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
 
         ax1.hist(diffs_array, bins='auto', alpha=0.7, color='skyblue')
-        ax1.axvline(0, color='black', linestyle='-', linewidth=1, label='Zero')
+        spine_lw = ax1.spines['left'].get_linewidth()
+        ax1.axvline(0, color='black', linestyle='-', linewidth=spine_lw, label='Zero')
         ax1.axvline(np.mean(diffs_array), color='orange', linestyle='--', linewidth=2, label='Mean')
         ax1.set_title(f'Error Distribution')
         ax1.set_xlabel('Error (degrees)')
