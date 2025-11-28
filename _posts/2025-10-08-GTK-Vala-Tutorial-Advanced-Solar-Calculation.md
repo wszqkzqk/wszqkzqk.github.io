@@ -855,10 +855,9 @@ LOCATIONS = {
     "South Pole":   {"lat": -90.0,   "lon": 0.0,      "tz": 0.0}
 }
 
+# --- Calculation Functions (Unchanged) ---
+
 def astropy_sun_elevations(year, month, day, latitude_deg, longitude_deg, timezone_offset_hrs):
-    """
-    Calculates the ground truth solar elevation angles using Astropy (the gold standard).
-    """
     location = EarthLocation(lat=latitude_deg, lon=longitude_deg)
     angles = []
     for local_hour in range(24):
@@ -871,29 +870,20 @@ def astropy_sun_elevations(year, month, day, latitude_deg, longitude_deg, timezo
     return np.array(angles)
 
 def generate_sun_angles_meeus(latitude_deg, longitude_deg, timezone_offset_hrs, year, month, day):
-    """
-    Method 1: The high-precision algorithm from your new Vala program (based on Jean Meeus' method).
-    """
     julian_date = float(datetime.date(year, month, day).toordinal())
-    
     latitude_rad = latitude_deg * DEG2RAD
     sin_lat = np.sin(latitude_rad)
     cos_lat = np.cos(latitude_rad)
-    
     base_days_from_epoch = julian_date - 730120.5
-    
     base_days_sq = base_days_from_epoch ** 2
     base_days_cb = base_days_sq * base_days_from_epoch
     obliquity_deg = 23.439291111 - 3.560347e-7 * base_days_from_epoch - 1.2285e-16 * base_days_sq + 1.0335e-20 * base_days_cb
     obliquity_sin = np.sin(obliquity_deg * DEG2RAD)
     obliquity_cos = np.cos(obliquity_deg * DEG2RAD)
-    
     ecliptic_c1 = 1.914602 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq
     ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch
     ecliptic_c3 = 0.000289
-    
     tst_offset = 4.0 * longitude_deg - 60.0 * timezone_offset_hrs
-    
     angles = []
     for local_hour in range(24):
         i = local_hour * 60
@@ -901,66 +891,44 @@ def generate_sun_angles_meeus(latitude_deg, longitude_deg, timezone_offset_hrs, 
         days_from_epoch = base_days_from_epoch + time_offset_days
         days_from_epoch_sq = days_from_epoch ** 2
         days_from_epoch_cb = days_from_epoch_sq * days_from_epoch
-        
         mean_anomaly_deg = 357.52772 + 0.985600282 * days_from_epoch - 1.2016e-13 * days_from_epoch_sq - 6.835e-20 * days_from_epoch_cb
         mean_anomaly_deg = np.fmod(mean_anomaly_deg, 360.0)
-        
         mean_longitude_deg = 280.46645 + 0.98564736 * days_from_epoch + 2.2727e-13 * days_from_epoch_sq
         mean_longitude_deg = np.fmod(mean_longitude_deg, 360.0)
-        
         mean_anomaly_rad = mean_anomaly_deg * DEG2RAD
-        ecliptic_longitude_deg = (mean_longitude_deg +
-                                  ecliptic_c1 * np.sin(mean_anomaly_rad) +
-                                  ecliptic_c2 * np.sin(2 * mean_anomaly_rad) +
-                                  ecliptic_c3 * np.sin(3 * mean_anomaly_rad))
-        
+        ecliptic_longitude_deg = (mean_longitude_deg + ecliptic_c1 * np.sin(mean_anomaly_rad) + ecliptic_c2 * np.sin(2 * mean_anomaly_rad) + ecliptic_c3 * np.sin(3 * mean_anomaly_rad))
         ecliptic_longitude_rad = ecliptic_longitude_deg * DEG2RAD
         declination_sin = np.clip(obliquity_sin * np.sin(ecliptic_longitude_rad), -1.0, 1.0)
         declination_cos = np.sqrt(1.0 - declination_sin ** 2)
-        
         right_ascension_rad = np.arctan2(obliquity_cos * np.sin(ecliptic_longitude_rad), np.cos(ecliptic_longitude_rad))
         right_ascension_hours = (right_ascension_rad * RAD2DEG) / 15.0
-        
         mean_time = np.fmod(mean_longitude_deg / 15.0, 24.0)
         delta_ra = right_ascension_hours - mean_time
         if delta_ra > 12.0: right_ascension_hours -= 24.0
         elif delta_ra < -12.0: right_ascension_hours += 24.0
-        
         eqtime_minutes = (mean_time - right_ascension_hours) * 60.0
-        
         tst_minutes = i + eqtime_minutes + tst_offset
         hour_angle_rad = (tst_minutes / 4.0 - 180.0) * DEG2RAD
-        
         elevation_sine = sin_lat * declination_sin + cos_lat * declination_cos * np.cos(hour_angle_rad)
         elevation = np.arcsin(np.clip(elevation_sine, -1.0, 1.0)) * RAD2DEG
         angles.append(elevation)
-    
     return np.array(angles)
 
 def generate_sun_angles_meeus_fixed(latitude_deg, longitude_deg, timezone_offset_hrs, year, month, day):
-    """
-    Method 1.1: The high-precision algorithm from your new Vala program (based on Jean Meeus' method).
-    """
     julian_date = float(datetime.date(year, month, day).toordinal())
-    
     latitude_rad = latitude_deg * DEG2RAD
     sin_lat = np.sin(latitude_rad)
     cos_lat = np.cos(latitude_rad)
-    
     base_days_from_epoch = julian_date - 730120.5
-    
     base_days_sq = base_days_from_epoch ** 2
     base_days_cb = base_days_sq * base_days_from_epoch
     obliquity_deg = 23.439291111 - 3.560347e-7 * base_days_from_epoch - 1.2285e-16 * base_days_sq + 1.0335e-20 * base_days_cb
     obliquity_sin = np.sin(obliquity_deg * DEG2RAD)
     obliquity_cos = np.cos(obliquity_deg * DEG2RAD)
-    
     ecliptic_c1 = 1.914602 - 1.3188e-7 * base_days_from_epoch - 1.049e-14 * base_days_sq
     ecliptic_c2 = 0.019993 - 2.7652e-9 * base_days_from_epoch
     ecliptic_c3 = 0.000289
-    
     tst_offset = 4.0 * longitude_deg - 60.0 * timezone_offset_hrs
-    
     angles = []
     for local_hour in range(24):
         i = local_hour * 60
@@ -968,134 +936,83 @@ def generate_sun_angles_meeus_fixed(latitude_deg, longitude_deg, timezone_offset
         days_from_epoch = base_days_from_epoch + time_offset_days
         days_from_epoch_sq = days_from_epoch ** 2
         days_from_epoch_cb = days_from_epoch_sq * days_from_epoch
-        
         mean_anomaly_deg = 357.52772 + 0.985600282 * days_from_epoch - 1.2016e-13 * days_from_epoch_sq - 6.835e-20 * days_from_epoch_cb
         mean_anomaly_deg = np.fmod(mean_anomaly_deg, 360.0)
-        
         mean_longitude_deg = 280.46645 + 0.98564736 * days_from_epoch + 2.2727e-13 * days_from_epoch_sq
         mean_longitude_deg = np.fmod(mean_longitude_deg, 360.0)
-        
         mean_anomaly_rad = mean_anomaly_deg * DEG2RAD
-        ecliptic_longitude_deg = (mean_longitude_deg +
-                                  ecliptic_c1 * np.sin(mean_anomaly_rad) +
-                                  ecliptic_c2 * np.sin(2 * mean_anomaly_rad) +
-                                  ecliptic_c3 * np.sin(3 * mean_anomaly_rad))
-        
+        ecliptic_longitude_deg = (mean_longitude_deg + ecliptic_c1 * np.sin(mean_anomaly_rad) + ecliptic_c2 * np.sin(2 * mean_anomaly_rad) + ecliptic_c3 * np.sin(3 * mean_anomaly_rad))
         ecliptic_longitude_rad = ecliptic_longitude_deg * DEG2RAD
         declination_sin = np.clip(obliquity_sin * np.sin(ecliptic_longitude_rad), -1.0, 1.0)
         declination_cos = np.sqrt(1.0 - declination_sin ** 2)
-        
         right_ascension_rad = np.arctan2(obliquity_cos * np.sin(ecliptic_longitude_rad), np.cos(ecliptic_longitude_rad))
         right_ascension_hours = (right_ascension_rad * RAD2DEG) / 15.0
-        
         mean_time = np.fmod(mean_longitude_deg / 15.0, 24.0)
         delta_ra = right_ascension_hours - mean_time
         if delta_ra > 12.0: right_ascension_hours -= 24.0
         elif delta_ra < -12.0: right_ascension_hours += 24.0
-        
         eqtime_minutes = (mean_time - right_ascension_hours) * 60.0
-        
         tst_minutes = i + eqtime_minutes + tst_offset
         hour_angle_rad = (tst_minutes / 4.0 - 180.0) * DEG2RAD
-        
         elevation_sin = np.clip(sin_lat * declination_sin + cos_lat * declination_cos * np.cos(hour_angle_rad), -1.0, 1.0)
         elevation_cos = np.sqrt(1.0 - elevation_sin * elevation_sin)
-        geocentric_parallax_deg = 0.00244 * elevation_cos # In degrees, the parallax correction
+        geocentric_parallax_deg = 0.00244 * elevation_cos
         elevation = np.arcsin(elevation_sin) * RAD2DEG - geocentric_parallax_deg
         angles.append(elevation)
-    
     return np.array(angles)
 
 def generate_sun_angles_fourier(latitude_deg, longitude_deg, timezone_offset_hrs, year, month, day):
-    """
-    Method 2: The algorithm from your old Vala program (based on a Fourier series approximation).
-    """
     latitude_rad = latitude_deg * DEG2RAD
     sin_lat = np.sin(latitude_rad)
     cos_lat = np.cos(latitude_rad)
-
     dt = datetime.date(year, month, day)
     day_of_year = dt.timetuple().tm_yday
     days_in_year = 366.0 if calendar.isleap(year) else 365.0
-    
     angles = []
     for local_hour in range(24):
         i = local_hour * 60
-        
         fractional_day_component = day_of_year - 1 + (i / 1440.0)
         gamma_rad = (2.0 * np.pi / days_in_year) * fractional_day_component
-
-        decl_rad = 0.006918 \
-            - 0.399912 * np.cos(gamma_rad) \
-            + 0.070257 * np.sin(gamma_rad) \
-            - 0.006758 * np.cos(2.0 * gamma_rad) \
-            + 0.000907 * np.sin(2.0 * gamma_rad) \
-            - 0.002697 * np.cos(3.0 * gamma_rad) \
-            + 0.001480 * np.sin(3.0 * gamma_rad)
-
-        eqtime_minutes = 229.18 * (0.000075 \
-            + 0.001868 * np.cos(gamma_rad) \
-            - 0.032077 * np.sin(gamma_rad) \
-            - 0.014615 * np.cos(2.0 * gamma_rad) \
-            - 0.040849 * np.sin(2.0 * gamma_rad))
-
+        decl_rad = 0.006918 - 0.399912 * np.cos(gamma_rad) + 0.070257 * np.sin(gamma_rad) - 0.006758 * np.cos(2.0 * gamma_rad) + 0.000907 * np.sin(2.0 * gamma_rad) - 0.002697 * np.cos(3.0 * gamma_rad) + 0.001480 * np.sin(3.0 * gamma_rad)
+        eqtime_minutes = 229.18 * (0.000075 + 0.001868 * np.cos(gamma_rad) - 0.032077 * np.sin(gamma_rad) - 0.014615 * np.cos(2.0 * gamma_rad) - 0.040849 * np.sin(2.0 * gamma_rad))
         tst_minutes = i + eqtime_minutes + 4.0 * longitude_deg - 60.0 * timezone_offset_hrs
         ha_rad = (tst_minutes / 4.0 - 180.0) * DEG2RAD
-
         elevation_sine = sin_lat * np.sin(decl_rad) + cos_lat * np.cos(decl_rad) * np.cos(ha_rad)
         elevation = np.arcsin(np.clip(elevation_sine, -1.0, 1.0)) * RAD2DEG
         angles.append(elevation)
-        
     return np.array(angles)
 
 def generate_sun_angles_wikipedia(latitude_deg, longitude_deg, timezone_offset_hrs, year, month, day):
-    """
-    Method 3: The simplified formula provided by Wikipedia.
-    """
     latitude_rad = latitude_deg * DEG2RAD
     sin_lat = np.sin(latitude_rad)
     cos_lat = np.cos(latitude_rad)
-
     dt = datetime.date(year, month, day)
     day_of_year = dt.timetuple().tm_yday
-    
     angles = []
     for local_hour in range(24):
         utc_hour = local_hour - timezone_offset_hrs
         N = day_of_year - 1 + utc_hour / 24.0
-
         arg1_deg = 0.98565 * (N + 10)
         arg2_deg = 0.98565 * (N - 2)
         cos_arg_deg = arg1_deg + 1.914 * np.sin(arg2_deg * DEG2RAD)
         decl_rad = -np.arcsin(0.39779 * np.cos(cos_arg_deg * DEG2RAD))
-
         d_eot = day_of_year - 1
         D_rad = 6.24004077 + 0.01720197 * (365.25 * (year - 2000) + d_eot)
         eqtime_minutes = -7.659 * np.sin(D_rad) + 9.863 * np.sin(2 * D_rad + 3.5932)
-        
         i = local_hour * 60
         tst_minutes = i + eqtime_minutes + 4.0 * longitude_deg - 60.0 * timezone_offset_hrs
         ha_rad = (tst_minutes / 4.0 - 180.0) * DEG2RAD
-        
         elevation_sine = sin_lat * np.sin(decl_rad) + cos_lat * np.cos(decl_rad) * np.cos(ha_rad)
         elevation = np.arcsin(np.clip(elevation_sine, -1.0, 1.0)) * RAD2DEG
         angles.append(elevation)
-        
     return np.array(angles)
 
 def generate_sun_angles_wiki_improved(latitude_deg, longitude_deg, timezone_offset_hrs, year, month, day):
-    """
-    Method 4: Improved Wikipedia model with year-linear parameters (fitted from astropy data).
-    Uses uncentered coefficients from the fit.
-    """
     latitude_rad = latitude_deg * DEG2RAD
     sin_lat = np.sin(latitude_rad)
     cos_lat = np.cos(latitude_rad)
-
     dt = datetime.date(year, month, day)
     day_of_year = dt.timetuple().tm_yday
-    
-    # Updated uncentered fitted coefficients from the new fit
     obli_const = 23.689615119428524
     obli_year = -0.0001272039401833378
     sol_const = -4.953654511287448
@@ -1112,12 +1029,9 @@ def generate_sun_angles_wiki_improved(latitude_deg, longitude_deg, timezone_offs
     eot_obli_phase_year = 0.0006426678778734212
     eot_dconst_const = 6.266288107936987
     eot_dconst_year = -2.7626758599300164e-05
-    
     OMEGA_DEG_PER_DAY = 360.0 / 365.2422
     OMEGA_D_RAD_PER_DAY = 0.01720197
     TROPICAL_YEAR_DAYS = 365.25
-    
-    # Precompute year-dependent params
     ecc_factor = 360.0 / np.pi * (ecc_const + ecc_year * year)
     solstice_offset = sol_const + sol_year * year
     perihelion_offset = peri_const + peri_year * year
@@ -1128,60 +1042,49 @@ def generate_sun_angles_wiki_improved(latitude_deg, longitude_deg, timezone_offs
     eot_obli_amp = eot_obli_amp_const + eot_obli_amp_year * year
     eot_obli_phase = eot_obli_phase_const + eot_obli_phase_year * year
     tst_offset = 4.0 * longitude_deg - 60.0 * timezone_offset_hrs
-    
     angles = []
     for local_hour in range(24):
         i = local_hour * 60
         fractional_day_component = day_of_year - 1 + (i / 1440.0)
-        
-        # Declination (inline)
-        sin_decl = sin_obliquity_neg * np.cos(
-            (OMEGA_DEG_PER_DAY * (fractional_day_component + solstice_offset)
-             + ecc_factor * np.sin(OMEGA_DEG_PER_DAY * (fractional_day_component + perihelion_offset) * DEG2RAD))
-            * DEG2RAD
-        )
+        sin_decl = sin_obliquity_neg * np.cos((OMEGA_DEG_PER_DAY * (fractional_day_component + solstice_offset) + ecc_factor * np.sin(OMEGA_DEG_PER_DAY * (fractional_day_component + perihelion_offset) * DEG2RAD)) * DEG2RAD)
         sin_decl = np.clip(sin_decl, -1.0, 1.0)
         cos_decl = np.sqrt(1.0 - sin_decl ** 2)
-        
-        # Equation of Time (inline)
         d_rad = eot_dconst + OMEGA_D_RAD_PER_DAY * (tropical_offset + fractional_day_component)
         eqtime_minutes = eot_ecc_amp * np.sin(d_rad) + eot_obli_amp * np.sin(2.0 * d_rad + eot_obli_phase)
-        
         tst_minutes = i + eqtime_minutes + tst_offset
         ha_rad = (tst_minutes / 4.0 - 180.0) * DEG2RAD
-        
         elevation_sine = sin_lat * sin_decl + cos_lat * cos_decl * np.cos(ha_rad)
         elevation = np.arcsin(np.clip(elevation_sine, -1.0, 1.0)) * RAD2DEG
         angles.append(elevation)
-        
     return np.array(angles)
 
+# --- Statistical Helpers ---
+
+def calculate_rmsd(errors):
+    """Calculates scientifically correct RMSD from a list of errors."""
+    if len(errors) == 0:
+        return 0.0
+    return np.sqrt(np.mean(np.array(errors) ** 2))
+
 def main():
-    """
-    Runs the validation test for all configured locations and years,
-    and prints a detailed monthly and average RMSD report.
-    """
-    parser = argparse.ArgumentParser(description="Test solar angle accuracy with adjustable year range and interval")
+    parser = argparse.ArgumentParser(description="Test solar angle accuracy with scientifically correct RMSD aggregation")
     parser.add_argument('--start-year', type=int, default=1975, help='Start year for the test range')
     parser.add_argument('--end-year', type=int, default=2075, help='End year for the test range')
     parser.add_argument('--interval', type=int, default=1, help='Year interval for the test range')
-    parser.add_argument('--day-interval', type=int, default=1, help='Day interval within each month (default: every day)')
-    parser.add_argument('--mode', choices=['generate', 'validate'], default='validate', help='generate: create astropy reference data; validate: run tests using cached data')
+    parser.add_argument('--day-interval', type=int, default=1, help='Day interval within each month')
+    parser.add_argument('--mode', choices=['generate', 'validate'], default='validate', help='generate or validate')
     parser.add_argument('--data-file', type=str, default='astropy_cache.npz', help='NPZ file for astropy reference data')
     args = parser.parse_args()
     
     years = list(range(args.start_year, args.end_year + 1, args.interval))
     methods = ['Meeus', 'Fourier', 'Wikipedia', 'WikiImp', 'MeeusFixed']
     
-    # Initialize collections for statistics
-    all_rmsd = {m: [] for m in methods}
-    location_rmsd = {m: {loc: [] for loc in LOCATIONS} for m in methods}
-    month_rmsd = {m: [[] for _ in range(12)] for m in methods}
-    year_rmsd = {m: {y: [] for y in years} for m in methods}
-    
-    # New collections for global RMSD and max error
-    all_diffs = {m: [] for m in methods}
-    all_abs_diffs = {m: [] for m in methods}
+    # Initialize collections. 
+    # Instead of storing averaged RMSDs, we store raw errors (diffs) to compute global RMSD correctly later.
+    location_diffs = {m: {loc: [] for loc in LOCATIONS} for m in methods}
+    month_diffs = {m: [[] for _ in range(12)] for m in methods}
+    year_diffs = {m: {y: [] for y in years} for m in methods}
+    all_diffs = {m: [] for m in methods} # Global collection
     
     month_names = [datetime.date(2000, i+1, 1).strftime('%b') for i in range(12)]
     
@@ -1207,7 +1110,6 @@ def main():
     # Validate mode
     if not os.path.exists(args.data_file):
         print(f"Error: Astropy data file '{args.data_file}' not found.")
-        print("Please run with --mode=generate first (using same --start-year, --end-year, --interval, --day-interval).")
         return
     
     astro_data = dict(np.load(args.data_file, allow_pickle=True).items())
@@ -1226,19 +1128,14 @@ def main():
             print(f"| {'Mon(d)':<7} | {'Meeus RMSD':<12} | {'Fourier RMSD':<13} | {'Wiki RMSD':<11} | {'Wiki Imp RMSD':<14} | {'MeeusFixed RMSD':<15} |")
             print(f"|{'-'*9}|{'-'*14}|{'-'*15}|{'-'*13}|{'-'*16}|{'-'*17}|")
             
-            monthly_rmsd_meeus = []
-            monthly_rmsd_fourier = []
-            monthly_rmsd_wikipedia = []
-            monthly_rmsd_wiki_imp = []
-            monthly_rmsd_meeus_fixed = []
+            # Temporary accumulators for the Year table summary
+            current_year_diffs = {m: [] for m in methods}
             
             for month in range(1, 13):
                 _, days_in_month = calendar.monthrange(year, month)
-                daily_rmsd_meeus = []
-                daily_rmsd_fourier = []
-                daily_rmsd_wikipedia = []
-                daily_rmsd_wiki_imp = []
-                daily_rmsd_meeus_fixed = []
+                
+                # Temporary accumulators for the Month row
+                current_month_diffs = {m: [] for m in methods}
                 num_days_computed = 0
                 
                 for day in range(1, days_in_month + 1, args.day_interval):
@@ -1247,208 +1144,136 @@ def main():
                         continue
                     astro_angles = astro_data[key]
                     
-                    meeus_angles = generate_sun_angles_meeus(lat, lon, tz, year, month, day)
-                    fourier_angles = generate_sun_angles_fourier(lat, lon, tz, year, month, day)
-                    wikipedia_angles = generate_sun_angles_wikipedia(lat, lon, tz, year, month, day)
-                    wiki_imp_angles = generate_sun_angles_wiki_improved(lat, lon, tz, year, month, day)
-                    meeus_fixed_angles = generate_sun_angles_meeus_fixed(lat, lon, tz, year, month, day)
+                    # Generate angles
+                    calc_funcs = {
+                        'Meeus': generate_sun_angles_meeus,
+                        'Fourier': generate_sun_angles_fourier,
+                        'Wikipedia': generate_sun_angles_wikipedia,
+                        'WikiImp': generate_sun_angles_wiki_improved,
+                        'MeeusFixed': generate_sun_angles_meeus_fixed
+                    }
                     
-                    rmsd_meeus = np.sqrt(np.mean((meeus_angles - astro_angles) ** 2))
-                    rmsd_fourier = np.sqrt(np.mean((fourier_angles - astro_angles) ** 2))
-                    rmsd_wikipedia = np.sqrt(np.mean((wikipedia_angles - astro_angles) ** 2))
-                    rmsd_wiki_imp = np.sqrt(np.mean((wiki_imp_angles - astro_angles) ** 2))
-                    rmsd_meeus_fixed = np.sqrt(np.mean((meeus_fixed_angles - astro_angles) ** 2))
-                    
-                    daily_rmsd_meeus.append(rmsd_meeus)
-                    daily_rmsd_fourier.append(rmsd_fourier)
-                    daily_rmsd_wikipedia.append(rmsd_wikipedia)
-                    daily_rmsd_wiki_imp.append(rmsd_wiki_imp)
-                    daily_rmsd_meeus_fixed.append(rmsd_meeus_fixed)
-                    
-                    # Collect for statistics (daily RMSD)
-                    all_rmsd['Meeus'].append(rmsd_meeus)
-                    location_rmsd['Meeus'][location_name].append(rmsd_meeus)
-                    month_rmsd['Meeus'][month-1].append(rmsd_meeus)
-                    year_rmsd['Meeus'][year].append(rmsd_meeus)
-                    
-                    all_rmsd['Fourier'].append(rmsd_fourier)
-                    location_rmsd['Fourier'][location_name].append(rmsd_fourier)
-                    month_rmsd['Fourier'][month-1].append(rmsd_fourier)
-                    year_rmsd['Fourier'][year].append(rmsd_fourier)
-                    
-                    all_rmsd['Wikipedia'].append(rmsd_wikipedia)
-                    location_rmsd['Wikipedia'][location_name].append(rmsd_wikipedia)
-                    month_rmsd['Wikipedia'][month-1].append(rmsd_wikipedia)
-                    year_rmsd['Wikipedia'][year].append(rmsd_wikipedia)
-                    
-                    all_rmsd['WikiImp'].append(rmsd_wiki_imp)
-                    location_rmsd['WikiImp'][location_name].append(rmsd_wiki_imp)
-                    month_rmsd['WikiImp'][month-1].append(rmsd_wiki_imp)
-                    year_rmsd['WikiImp'][year].append(rmsd_wiki_imp)
-                    
-                    all_rmsd['MeeusFixed'].append(rmsd_meeus_fixed)
-                    location_rmsd['MeeusFixed'][location_name].append(rmsd_meeus_fixed)
-                    month_rmsd['MeeusFixed'][month-1].append(rmsd_meeus_fixed)
-                    year_rmsd['MeeusFixed'][year].append(rmsd_meeus_fixed)
-                    
-                    # Collect all differences for global stats
-                    diffs_meeus = meeus_angles - astro_angles
-                    all_diffs['Meeus'].extend(diffs_meeus)
-                    all_abs_diffs['Meeus'].extend(np.abs(diffs_meeus))
-                    
-                    diffs_fourier = fourier_angles - astro_angles
-                    all_diffs['Fourier'].extend(diffs_fourier)
-                    all_abs_diffs['Fourier'].extend(np.abs(diffs_fourier))
-                    
-                    diffs_wikipedia = wikipedia_angles - astro_angles
-                    all_diffs['Wikipedia'].extend(diffs_wikipedia)
-                    all_abs_diffs['Wikipedia'].extend(np.abs(diffs_wikipedia))
-                    
-                    diffs_wiki_imp = wiki_imp_angles - astro_angles
-                    all_diffs['WikiImp'].extend(diffs_wiki_imp)
-                    all_abs_diffs['WikiImp'].extend(np.abs(diffs_wiki_imp))
-                    
-                    diffs_meeus_fixed = meeus_fixed_angles - astro_angles
-                    all_diffs['MeeusFixed'].extend(diffs_meeus_fixed)
-                    all_abs_diffs['MeeusFixed'].extend(np.abs(diffs_meeus_fixed))
-                    
+                    results = {}
+                    for m, func in calc_funcs.items():
+                        calc_angles = func(lat, lon, tz, year, month, day)
+                        diffs = calc_angles - astro_angles
+                        results[m] = diffs
+                        
+                        # Store raw errors for statistical aggregation
+                        # 1. For current month printout
+                        current_month_diffs[m].extend(diffs)
+                        # 2. For current year printout
+                        current_year_diffs[m].extend(diffs)
+                        # 3. For Global stats
+                        all_diffs[m].extend(diffs)
+                        # 4. For Location stats
+                        location_diffs[m][location_name].extend(diffs)
+                        # 5. For Month stats (aggregated across years/locs)
+                        month_diffs[m][month-1].extend(diffs)
+                        # 6. For Year stats (aggregated across locs)
+                        year_diffs[m][year].extend(diffs)
+
                     num_days_computed += 1
                 
                 if num_days_computed > 0:
-                    rmsd_meeus = np.mean(daily_rmsd_meeus)
-                    rmsd_fourier = np.mean(daily_rmsd_fourier)
-                    rmsd_wikipedia = np.mean(daily_rmsd_wikipedia)
-                    rmsd_wiki_imp = np.mean(daily_rmsd_wiki_imp)
-                    rmsd_meeus_fixed = np.mean(daily_rmsd_meeus_fixed)
-                    
-                    monthly_rmsd_meeus.append(rmsd_meeus)
-                    monthly_rmsd_fourier.append(rmsd_fourier)
-                    monthly_rmsd_wikipedia.append(rmsd_wikipedia)
-                    monthly_rmsd_wiki_imp.append(rmsd_wiki_imp)
-                    monthly_rmsd_meeus_fixed.append(rmsd_meeus_fixed)
-                    
+                    # Calculate scientifically correct RMSD for the month row
+                    # sqrt(sum(errors^2) / count)
+                    row_vals = [calculate_rmsd(current_month_diffs[m]) for m in methods]
                     month_name = datetime.date(year, month, 1).strftime('%b')
-                    print(f"| {month_name}({num_days_computed:<2}) | {rmsd_meeus:<12.4f} | {rmsd_fourier:<13.4f} | {rmsd_wikipedia:<11.4f} | {rmsd_wiki_imp:<14.4f} | {rmsd_meeus_fixed:<15.4f} |")
+                    print(f"| {month_name}({num_days_computed:<2}) | {row_vals[0]:<12.4f} | {row_vals[1]:<13.4f} | {row_vals[2]:<11.4f} | {row_vals[3]:<14.4f} | {row_vals[4]:<15.4f} |")
             
-            annual_avg_rmsd_meeus = np.mean(monthly_rmsd_meeus)
-            annual_avg_rmsd_fourier = np.mean(monthly_rmsd_fourier)
-            annual_avg_rmsd_wikipedia = np.mean(monthly_rmsd_wikipedia)
-            annual_avg_rmsd_wiki_imp = np.mean(monthly_rmsd_wiki_imp)
-            annual_avg_rmsd_meeus_fixed = np.mean(monthly_rmsd_meeus_fixed)
-            
+            # Calculate scientifically correct RMSD for the year average row
+            year_vals = [calculate_rmsd(current_year_diffs[m]) for m in methods]
             print(f"|{'-'*9}|{'-'*14}|{'-'*15}|{'-'*13}|{'-'*16}|{'-'*17}|")
-            print(f"| {'Average':<7} | {annual_avg_rmsd_meeus:<12.4f} | {annual_avg_rmsd_fourier:<13.4f} | {annual_avg_rmsd_wikipedia:<11.4f} | {annual_avg_rmsd_wiki_imp:<14.4f} | {annual_avg_rmsd_meeus_fixed:<15.4f} |")
+            print(f"| {'RMSD':<7} | {year_vals[0]:<12.4f} | {year_vals[1]:<13.4f} | {year_vals[2]:<11.4f} | {year_vals[3]:<14.4f} | {year_vals[4]:<15.4f} |")
     
-    # Overall Statistics (average of per-month RMSDs)
-    print(f"\n{'='*80}")
-    print("OVERALL STATISTICS ACROSS ALL LOCATIONS, YEARS, AND MONTHS")
-    print(f"{'='*80}")
-    print("| Method     | Average RMSD | Worst RMSD |")
-    print("|------------|--------------|------------|")
-    for m in methods:
-        rmsds = all_rmsd[m]
-        avg = np.mean(rmsds)
-        worst = np.max(rmsds)
-        print(f"| {m:<10} | {avg:<12.4f} | {worst:<10.4f} |")
+    # --- Scientific Statistics Aggregation ---
     
-    # New: Global Statistics across all data points
+    # Global Statistics
     print(f"\n{'='*80}")
     print("GLOBAL STATISTICS ACROSS ALL DATA POINTS")
     print(f"{'='*80}")
-    print("| Method     | Global RMSD | 95% Abs Error | Global Max Error | Mean Error |")
-    print("|------------|-------------|---------------|------------------|------------|")
+    print("| Method     | Global RMSD | 95% Abs Error | Global Max Error | Mean Error  |")
+    print("|------------|-------------|---------------|------------------|-------------|")
     for m in methods:
         diffs_array = np.array(all_diffs[m])
-        abs_diffs_array = np.array(all_abs_diffs[m])
         global_rmsd = np.sqrt(np.mean(diffs_array ** 2))
-        global_p95 = np.percentile(abs_diffs_array, 95)
-        global_max_error = np.max(abs_diffs_array)
+        global_p95 = np.percentile(np.abs(diffs_array), 95)
+        global_max_error = np.max(np.abs(diffs_array))
         global_mean_error = np.mean(diffs_array)
-        print(f"| {m:<10} | {global_rmsd:<11.4f} | {global_p95:<13.4f} | {global_max_error:<16.4f} | {global_mean_error:<10.4f} |")
+        print(f"| {m:<10} | {global_rmsd:<11.4e} | {global_p95:<13.4e} | {global_max_error:<16.4e} | {global_mean_error:<11.4e} |")
     
-    # Statistics by Location
+    # Statistics by Location (Corrected Calculation)
     print(f"\n{'='*80}")
-    print("STATISTICS BY LOCATION")
+    print("STATISTICS BY LOCATION (Scientific RMSD)")
     print(f"{'='*80}")
     for location_name in LOCATIONS:
         print(f"\n{location_name}:")
-        print("| Method     | Average RMSD | Worst RMSD |")
+        print("| Method     | Total RMSD   | Max Error  |")
         print("|------------|--------------|------------|")
         for m in methods:
-            rmsds = location_rmsd[m][location_name]
-            avg = np.mean(rmsds)
-            worst = np.max(rmsds)
-            print(f"| {m:<10} | {avg:<12.4f} | {worst:<10.4f} |")
+            diffs = location_diffs[m][location_name]
+            rmsd = calculate_rmsd(diffs)
+            worst = np.max(np.abs(diffs)) if len(diffs) > 0 else 0
+            print(f"| {m:<10} | {rmsd:<12.4f} | {worst:<10.4f} |")
     
-    # Statistics by Month
+    # Statistics by Month (Corrected Calculation)
     print(f"\n{'='*80}")
-    print("STATISTICS BY MONTH")
+    print("STATISTICS BY MONTH (Scientific RMSD across all years/locs)")
     print(f"{'='*80}")
-    for m in methods:
-        print(f"\n{m}:")
-        print("| Month | Average RMSD | Worst RMSD |")
-        print("|-------|--------------|------------|")
-        for mon in range(12):
-            rmsds = month_rmsd[m][mon]
-            avg = np.mean(rmsds)
-            worst = np.max(rmsds)
-            print(f"| {month_names[mon]:<5} | {avg:<12.4f} | {worst:<10.4f} |")
+    print(f"| {'Month':<5} | {'Meeus':<10} | {'Fourier':<10} | {'Wiki':<10} | {'WikiImp':<10} | {'MeeusFix':<10} |")
+    print(f"|{'-'*7}|{'-'*12}|{'-'*12}|{'-'*12}|{'-'*12}|{'-'*12}|")
+    for mon in range(12):
+        row_str = f"| {month_names[mon]:<5} |"
+        for m in methods:
+            diffs = month_diffs[m][mon]
+            rmsd = calculate_rmsd(diffs)
+            row_str += f" {rmsd:<10.4f} |"
+        print(row_str)
     
-    # Statistics by Year
+    # Statistics by Year (Corrected Calculation)
     print(f"\n{'='*80}")
-    print("STATISTICS BY YEAR")
+    print("STATISTICS BY YEAR (Scientific RMSD across all locs)")
     print(f"{'='*80}")
-    for m in methods:
-        print(f"\n{m}:")
-        print("| Year | Average RMSD | Worst RMSD |")
-        print("|------|--------------|------------|")
-        for y in years:
-            rmsds = year_rmsd[m][y]
-            avg = np.mean(rmsds)
-            worst = np.max(rmsds)
-            print(f"| {y:<4} | {avg:<12.4f} | {worst:<10.4f} |")
+    print(f"| {'Year':<4} | {'Meeus':<10} | {'Fourier':<10} | {'Wiki':<10} | {'WikiImp':<10} | {'MeeusFix':<10} |")
+    print(f"|{'-'*6}|{'-'*12}|{'-'*12}|{'-'*12}|{'-'*12}|{'-'*12}|")
+    for y in years:
+        row_str = f"| {y:<4} |"
+        for m in methods:
+            diffs = year_diffs[m][y]
+            rmsd = calculate_rmsd(diffs)
+            row_str += f" {rmsd:<10.4f} |"
+        print(row_str)
 
+    # Histogram Generation (Unchanged logic, just utilizing clean data)
     print(f"\n{'='*80}")
-    print("Generating histograms for error and absolute error distributions for each method (using auto binning)")
-    print(f"{'='*80}")
-
-    methods = ['Meeus', 'Fourier', 'Wikipedia', 'WikiImp', 'MeeusFixed']
-
+    print("Generating histograms...")
     for m in methods:
         diffs_array = np.array(all_diffs[m])
-        abs_diffs_array = np.array(all_abs_diffs[m])
+        abs_diffs_array = np.abs(diffs_array)
         rmsd = np.sqrt(np.mean(diffs_array ** 2))
         p95 = np.percentile(abs_diffs_array, 95)
-        max_abs = np.max(abs_diffs_array)
 
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
 
-        # Error distribution
         ax1.hist(diffs_array, bins='auto', alpha=0.7, color='skyblue')
-        ax1.axvline(0, color='red', linestyle='--', linewidth=2, label='Zero Error Line')
-        ax1.axvline(np.mean(diffs_array), color='orange', linestyle='--', linewidth=2, label=f'Mean: {np.mean(diffs_array):.4f}°')
+        ax1.axvline(0, color='black', linestyle='-', linewidth=1, label='Zero')
+        ax1.axvline(np.mean(diffs_array), color='orange', linestyle='--', linewidth=2, label='Mean')
         ax1.set_title(f'Error Distribution')
         ax1.set_xlabel('Error (degrees)')
-        ax1.set_ylabel('Frequency')
         ax1.legend()
-        ax1.grid(True, alpha=0.3)
 
-        # Absolute error distribution
         ax2.hist(abs_diffs_array, bins='auto', alpha=0.7, color='lightgreen')
-        ax2.axvline(rmsd, color='orange', linestyle='--', linewidth=2, label=f'RMSD: {rmsd:.4f}°')
-        ax2.axvline(p95, color='blue', linestyle='--', linewidth=2, label=f'95% Abs: {p95:.4f}°')
+        ax2.axvline(rmsd, color='orange', linestyle='--', linewidth=2, label=f'RMSD: {rmsd:.4f}')
+        ax2.axvline(p95, color='blue', linestyle='--', linewidth=2, label=f'95%: {p95:.4f}')
         ax2.set_title(f'Absolute Error Distribution')
-        ax2.set_xlabel('Absolute Error (degrees)')
-        ax2.set_ylabel('Frequency')
+        ax2.set_xlabel('Abs Error (degrees)')
         ax2.legend()
-        ax2.grid(True, alpha=0.3)
 
-        plt.suptitle(f'Solar Elevation Error Histogram')
+        plt.suptitle(f'{m} Solar Elevation Error')
         plt.tight_layout()
         plt.savefig(f'{m}_error_histogram.svg', dpi=300, bbox_inches='tight')
         plt.close()
-
-    print("All histograms saved as SVG files.")
 
 if __name__ == "__main__":
     main()
@@ -1462,8 +1287,6 @@ if __name__ == "__main__":
 
 | 性能指标 (单位: 度) | MeeusFixed (含视差) | Meeus (无视差) | WikiImp | Fourier | Wikipedia |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| 月度平均 RMSD | **0.0026** | 0.0032 | 0.0710 | 0.1009 | 0.1502 |
-| 月度最差 RMSD | **0.0103** | 0.0105 | 0.2734 | 0.4852 | 0.5669 |
 | 全局 RMSD | **0.0030** | 0.0036 | 0.0865 | 0.1265 | 0.1819 |
 | 95% 绝对误差 | **0.0058** | 0.0070 | 0.1738 | 0.2687 | 0.3703 |
 | 全局最大误差 | **0.0121** | 0.0145 | 0.2864 | 0.4853 | 0.6415 |
@@ -1486,14 +1309,14 @@ if __name__ == "__main__":
 
 #### 地理位置对比
 
-| 地点 | MeeusFixed (Avg/Max) | Meeus (Avg/Max) | WikiImp (Avg/Max) | Fourier (Avg/Max) | Wikipedia (Avg/Max) |
+| 地点 | MeeusFixed (RMSD/Max) | Meeus (RMSD/Max) | WikiImp (RMSD/Max) | Fourier (RMSD/Max) | Wikipedia (RMSD/Max) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| Beijing | 0.0027 / 0.0078 | 0.0033 / 0.0088 | 0.0672 / 0.1569 | 0.0863 / 0.2886 | 0.1549 / 0.4717 |
-| Chongqing | 0.0027 / 0.0093 | 0.0033 / 0.0095 | 0.0664 / 0.1499 | 0.0837 / 0.2608 | 0.1430 / 0.4371 |
-| Singapore | 0.0027 / 0.0103 | 0.0034 / 0.0105 | 0.0602 / 0.1449 | 0.0724 / 0.2023 | 0.1112 / 0.3221 |
-| Sydney | 0.0027 / 0.0086 | 0.0033 / 0.0088 | 0.0692 / 0.1788 | 0.0783 / 0.2490 | 0.1466 / 0.4708 |
-| Stockholm | 0.0026 / 0.0072 | 0.0031 / 0.0092 | 0.0796 / 0.2391 | 0.1357 / 0.4391 | 0.1696 / 0.5378 |
-| South Pole | 0.0023 / 0.0072 | 0.0030 / 0.0097 | 0.0836 / 0.2734 | 0.1492 / 0.4852 | 0.1759 / 0.5669 |
+| Beijing | 0.0030 / 0.0115 | 0.0036 / 0.0138 | 0.0764 / 0.2127 | 0.1014 / 0.3704 | 0.1844 / 0.6270 |
+| Chongqing | 0.0031 / 0.0120 | 0.0037 / 0.0143 | 0.0747 / 0.2121 | 0.0956 / 0.3701 | 0.1676 / 0.6303 |
+| Singapore | 0.0031 / 0.0121 | 0.0036 / 0.0145 | 0.0681 / 0.2140 | 0.0795 / 0.3694 | 0.1244 / 0.6195 |
+| Sydney | 0.0031 / 0.0117 | 0.0036 / 0.0131 | 0.0798 / 0.2459 | 0.0899 / 0.3421 | 0.1734 / 0.6415 |
+| Stockholm | 0.0029 / 0.0100 | 0.0036 / 0.0124 | 0.0998 / 0.2864 | 0.1658 / 0.4818 | 0.2068 / 0.6344 |
+| South Pole | 0.0028 / 0.0073 | 0.0036 / 0.0098 | 0.1118 / 0.2735 | 0.1861 / 0.4853 | 0.2192 / 0.5670 |
 
 Meeus 算法具有完美的地理普适性，从赤道到极点都保持极高精度。加入视差修正后的 MeeusFixed 在所有地点均有一致的性能提升。
 
@@ -1501,22 +1324,22 @@ Meeus 算法具有完美的地理普适性，从赤道到极点都保持极高�
 
 通过对比 1975 年和 2075 年的数据，评估算法的长期稳定性。
 
-| 方法 | 1975年平均RMSD (°) | 2075年平均RMSD (°) | 趋势分析 |
+| 方法 | 1975年 RMSD (°) | 2075年 RMSD (°) | 趋势分析 |
 | :--- | :--- | :--- | :--- |
-| MeeusFixed | 0.0023 | 0.0031 | 精度在百年尺度上保持极高稳定性。 |
-| Meeus | 0.0031 | 0.0035 | 稳定性同上，系统误差恒定存在。 |
-| WikiImp | 0.0504 | 0.0505 | 改进版算法引入了年份修正，保持了长期稳定。 |
-| Fourier | 0.0669 | 0.1180 | 误差随时间显著增加（增长约 76%）。 |
-| Wikipedia | 0.0605 | 0.1996 | 误差随时间剧烈增加（增长约 230%）。 |
+| MeeusFixed | 0.0029 | 0.0031 | 精度在百年尺度上保持极高稳定性。 |
+| Meeus | 0.0036 | 0.0039 | 稳定性同上，系统误差恒定存在。 |
+| WikiImp | 0.0565 | 0.0564 | 改进版算法引入了年份修正，保持了长期稳定。 |
+| Fourier | 0.0805 | 0.1350 | 误差随时间显著增加（增长约 68%）。 |
+| Wikipedia | 0.0727 | 0.2205 | 误差随时间剧烈增加（增长约 203%）。 |
 
 Meeus 算法包含了对地球轨道参数长期变化的修正项，因此其精度在很长的时间跨度内都是可靠的。WikiImp 通过引入年份修正也保持了长期稳定。而傅里叶和原始维基百科算法是基于特定历元的经验公式，离拟合年代越远，误差越大。
 
 #### 月份/季节维度分析
 
 *   **Meeus / MeeusFixed**: 月度 RMSD 波动极小，表现出极佳的稳定性。
-*   **Fourier**: 波动巨大，6月和12月表现较好（~0.05），但 3月和 9-10月 误差飙升至 0.15 左右。
-*   **Wikipedia**: 同样波动巨大，6月和12月较好（~0.05），但 3月和 9月 误差高达 0.23-0.24。
-*   **WikiImp**: 相比原始版有很大改进，但仍有季节性波动，6月最佳（0.0215），3月最差（0.1024）。
+*   **Fourier**: 波动巨大，6月和12月表现较好（~0.05~0.06），但 3月和 9月 误差飙升至 0.16~0.18 左右。
+*   **Wikipedia**: 同样波动巨大，6月和12月较好（~0.06~0.07），但 3月和 9月 误差高达 0.25~0.26。
+*   **WikiImp**: 相比原始版有很大改进，但仍有季节性波动，6月最佳（0.0249），3月最差（0.1167）。
 
 这表明 Meeus 算法精确地模拟了地球公转的真实物理过程，而简化模型未能精确模拟地球在椭圆轨道上运动速度的变化，导致均时差和太阳赤纬的季节性变化计算不准。
 
