@@ -1297,9 +1297,9 @@ if __name__ == "__main__":
 
 |[![#~/img/astronomy/solar-meeus_error_histogram.svg](/img/astronomy/solar-meeus_error_histogram.svg)](/img/astronomy/solar-meeus_error_histogram.svg)|
 |:----:|
-| Meeus 算法（无视差修正）误差分布直方图 |
+| Meeus 算法（含视差修正）误差分布直方图 |
 |[![#~/img/astronomy/solar-meeus-old_error_histogram.svg](/img/astronomy/solar-meeus-old_error_histogram.svg)](/img/astronomy/solar-meeus-old_error_histogram.svg)|
-| MeeusFixed 算法（含视差修正）误差分布直方图 |
+| Meeus 算法（无视差修正）误差分布直方图 |
 |[![#~/img/astronomy/solar-fourier_error_histogram.svg](/img/astronomy/solar-fourier_error_histogram.svg)](/img/astronomy/solar-fourier_error_histogram.svg)|
 | 傅里叶级数算法误差分布直方图 |
 |[![#~/img/astronomy/solar-wikipedia_error_histogram.svg](/img/astronomy/solar-wikipedia_error_histogram.svg)](/img/astronomy/solar-wikipedia_error_histogram.svg)|
