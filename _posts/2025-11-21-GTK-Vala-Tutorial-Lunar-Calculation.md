@@ -177,36 +177,43 @@ $$
 \beta = \Sigma_b
 $$
 
-### 地心视差与距离
+### 地心距离与视差
 
 | [![地心视差示意图](/img/astronomy/geocentric_parallax.svg)](/img/astronomy/geocentric_parallax.svg) |
 | :---: |
 | 地心视差示意图：由于观测者位于地球表面 $P$ 而非地心 $O$，观测到的月球位置会发生偏移。视差角 $\pi$ 导致月球的视高度角 $z'$ 低于地心高度角 $z$。 |
 
-为了将地心坐标转换为观测者所在的**站心坐标（Topocentric Coordinates）**，我们需要知道月球的距离。通常我们计算**赤道地平视差 ($\pi$)**，即地球赤道半径在月球中心的张角。视差 $\pi$ 与地月距离 $r$ 成反比关系（$\sin \pi = R_\oplus / r$）。
+为了将地心坐标转换为观测者所在的**站心坐标（Topocentric Coordinates）**，我们需要知道月球的距离。在本实现中，我们采用了更高精度的方法：**先直接计算地心距离，再由距离推算视差**，而非传统的先算视差再算距离的做法。这种方法的优势在于距离计算公式可以包含更多摄动修正项，从而获得更高的精度。
+
+**地心距离 ($r_{geo}$)** 的计算公式（单位：千米）：
 
 $$
-\pi (\text{deg}) = 0.95072 + 0.05182 \cos(M') + 0.00953 \cos(2D - M') + 0.00784 \cos(2D) + 0.00282 \cos(2M)
+\begin{aligned}
+r_{geo} = &\, 385000.6 \quad (\text{平均距离}) \\
+&- 20905.0 \cos(M') \quad (\text{椭圆轨道主项}) \\
+&- 3699.0 \cos(2D - M') \quad (\text{出差项}) \\
+&- 2956.0 \cos(2D) \quad (\text{二均差项}) \\
+&- 570.0 \cos(2M') \quad (\text{椭圆轨道二阶项}) \\
+&+ 246.0 \cos(2D - 2M') \quad (\text{出差二阶项}) \\
+&- 205.0 \cos(M) \quad (\text{周年差项}) \\
+&- 171.0 \cos(2D + M') \quad (\text{混合摄动项})
+\end{aligned}
 $$
 
 这个公式清晰地展示了地月距离的变化规律：
-*   **常数项 $0.95072^\circ$**：对应月球的平均距离（约 384,400 km）。
-*   **$\cos(M')$ 项**：反映了月球在自身椭圆轨道上运动引起的距离变化（在近地点时距离近、视差大；在远地点时距离远、视差小），而近地点本身的位置因**近地点进动**而不断变化。
-*   **其他项**：反映了太阳引力摄动对月球距离的周期性影响。
+*   **常数项 $385000.6$ km**：对应月球的平均距离。
+*   **$\cos(M')$ 项（系数 $-20905.0$ km）**：这是最大的变化项，反映了月球在自身椭圆轨道上运动引起的距离变化。在近地点时 $M' \approx 0$，$\cos(M') \approx 1$，距离减小约 20905 km；在远地点时 $M' \approx 180°$，$\cos(M') \approx -1$，距离增大约 20905 km。这一项完美体现了月球轨道的离心率效应。
+*   **$\cos(2D - M')$ 项（系数 $-3699.0$ km）**：出差效应对距离的贡献，反映了太阳引力对月球轨道离心率的周期性调制。
+*   **$\cos(2D)$ 项（系数 $-2956.0$ km）**：二均差效应的距离分量，与月球相对于太阳的位置（朔望/上下弦）直接相关。
+*   **其他项**：更精细的摄动修正，包括椭圆轨道的二阶修正、周年差等。
 
-这个值大约在 $0.9^\circ$ 到 $1^\circ$ 之间变化。
-
-有了地平视差 $\pi$ 后，我们就可以计算**地心距离 (Geocentric Distance)** $r_{geo}$。根据定义，视差是地球赤道半径 $R_\oplus$ 在月球处的张角，因此：
-
-$$
-\sin \pi = \frac{R_\oplus}{r_{geo}}
-$$
-
-由此可得地月**地心距离**（单位：千米）：
+有了地心距离后，我们可以计算用于视差修正的**赤道地平视差 ($\pi$)**，即地球赤道半径 $R_\oplus$ 在月球中心的张角：
 
 $$
-r_{geo} = \frac{R_\oplus}{\sin \pi} \approx \frac{6378.137}{\sin \pi}
+\sin \pi = \frac{R_\oplus}{r_{geo}} = \frac{6378.137}{r_{geo}}
 $$
+
+这个视差值大约在 $0.9°$ 到 $1°$ 之间变化，用于后续的站心坐标转换。
 
 值得注意的是，本程序在侧栏显示及在 CSV 中导出的距离并不是地心距离，而是站心距离（即观测者与月球之间的直线距离），这两者可能存在显著差异，这一点将在后续的视差修正部分详细说明。
 
@@ -329,13 +336,26 @@ chmod +x lunarcalc.vala
 
 为了客观评估本程序算法（基于 Jean Meeus 截断级数）的准确性，笔者将本程序的计算结果与天文学权威库 **Astropy** 进行了对比测试。
 
-测试范围设定为 1975 年至 2075 年（涵盖 100 年以包含所有主要月球周期），在固定坐标（40.0°N, 116.3°E）每隔 5 天取样一次，在取样日每 2 小时取样一个数据点，覆盖 24 小时，共计采集了 **88,776** 个样本点进行比对。
+测试范围设定为 1975 年至 2075 年（涵盖 100 年以包含所有主要月球周期），选取了全球 6 个具有代表性的地点进行验证：北京（39.9°N, 116.4°E）、重庆（29.6°N, 106.6°E）、新加坡（1.3°N, 103.8°E）、悉尼（33.9°S, 151.2°E）、斯德哥尔摩（59.3°N, 18.1°E）以及南极点（90°S, 0°E）。这些地点覆盖了从赤道到极地的各种纬度，能够全面检验算法在不同地理位置下的表现。笔者采集了该时间段内所有整时刻的数据，每个地点采集了约 88.5 万个数据点，总计共采集 **5,312,160** 个样本点进行比对。
 
-| 评估指标 | 均方根偏差 (RMSD) | 95% 分位数误差绝对值 (95% Abs) | 最大误差绝对值 (Max Abs) |
-| :--- | :--- | :--- | :--- |
-| 高度角 | 0.154° | 0.320° | 0.595° |
-| 地月距离 | 1,196 km | 2,214 km | 2,962 km |
-| 月相 (照明度) | 0.36% | 0.74% | 1.20% |
+**各地点精度统计**：
+
+| 地点 | 样本数 | 高度角 RMSD (°) | 距离 RMSD (km) | 月相 RMSD |
+| :--- | ---: | ---: | ---: | ---: |
+| 北京 | 885,360 | 0.154 | 302 | 0.0036 |
+| 重庆 | 885,360 | 0.175 | 302 | 0.0039 |
+| 新加坡 | 885,360 | 0.201 | 302 | 0.0043 |
+| 悉尼 | 885,360 | 0.166 | 302 | 0.0038 |
+| 斯德哥尔摩 | 885,360 | 0.118 | 302 | 0.0029 |
+| 南极点 | 885,360 | 0.087 | 302 | 0.0023 |
+
+**整体统计汇总**（5,312,160 个样本点）：
+
+| 评估指标 | 均方根偏差 (RMSD) | 95% 分位数误差绝对值 (95% Abs) | 最大误差绝对值 (Max Abs) | 误差平均值 (Mean Error) |
+| :--- | :--- | :--- | :--- | :--- |
+| 高度角 (°) | 0.155 | 0.330 | 0.612 | $-1.13 \times 10^{-4}$ |
+| 地月距离 (km) | 302 | 558 | 899 | $1.40 \times 10^{-2}$ |
+| 月相 (照明度) | 0.0035 | 0.0074 | 0.0132 | $1.5 \times 10^{-4}$ |
 
 | [![#~/img/astronomy/lunar-error-histograms.svg](/img/astronomy/lunar-error-histograms.svg)](/img/astronomy/lunar-error-histograms.svg) |
 | :---: |
@@ -343,7 +363,13 @@ chmod +x lunarcalc.vala
 | [![#~/img/astronomy/lunar-error-abs-histograms.svg](/img/astronomy/lunar-error-abs-histograms.svg)](/img/astronomy/lunar-error-abs-histograms.svg) |
 | 误差绝对值分布直方图 |
 
-数据表明，本算法在极低的计算负载下实现了优异的精度平衡。0.15° 的指向误差仅相当于满月视直径的三分之一，这意味着在绝大多数时间里，程序计算出的月球位置依然落在实际月球的轮廓范围内，在肉眼观测或广角摄影中几乎无法察觉差异。同时，0.3% 的距离误差完全不影响对“超级月亮”等视直径变化的判断，而 0.36% 的月相误差更是远超人眼辨识极限。这证明本程序虽然简化了部分微小摄动项，但依然能在摄影构图、赏月规划及科普演示等场景中，提供与专业天文年历无异的使用体验。
+数据表明，本算法在极低的计算负载下实现了优异的精度平衡。从各地点的结果可以看出，高度角误差与地理纬度有一定相关性：高纬度地区（如斯德哥尔摩、南极点）的误差较小，而低纬度赤道附近地区（如新加坡）的误差相对较大。这是因为高纬度地区月球的仰角变化范围较小，而赤道地区月球可能达到更高的天顶位置，视差修正的累积误差更为显著，但程序整体表现良好：
+
+* 0.15° 的高度角误差仅相当于满月视直径的三分之一，这意味着在绝大多数时间里，程序计算出的月球位置依然落在实际月球的轮廓范围内，在肉眼观测或广角摄影中几乎无法察觉差异
+* 300 km 的距离误差（相对误差约 0.08%）完全不影响对"超级月亮"等视直径变化的判断
+* 0.35% 的月相误差更是远超人眼辨识极限
+
+这证明本程序虽然简化了部分微小摄动项，但依然能在摄影构图、赏月规划及科普演示等场景中，提供与专业天文年历无异的使用体验。
 
 ## 总结
 
@@ -860,13 +886,16 @@ public class LunarCalc : Adw.Application {
                 + 0.2777 * Math.sin (moon_mean_anomaly_rad - moon_argument_of_latitude_rad)
                 + 0.1732 * Math.sin (2 * mean_elongation_rad - moon_argument_of_latitude_rad);
 
-            double horizontal_parallax_deg = 0.95072
-                + 0.05182 * Math.cos (moon_mean_anomaly_rad)
-                + 0.00953 * Math.cos (2 * mean_elongation_rad - moon_mean_anomaly_rad)
-                + 0.00784 * Math.cos (2 * mean_elongation_rad)
-                + 0.00282 * Math.cos (2 * sun_mean_anomaly_rad);
+            double geocentric_dist_km = 385000.6
+                - 20905.0 * Math.cos (moon_mean_anomaly_rad)
+                - 3699.0 * Math.cos (2 * mean_elongation_rad - moon_mean_anomaly_rad)
+                - 2956.0 * Math.cos (2 * mean_elongation_rad)
+                - 570.0 * Math.cos (2 * moon_mean_anomaly_rad)
+                + 246.0 * Math.cos (2 * mean_elongation_rad - 2 * moon_mean_anomaly_rad)
+                - 205.0 * Math.cos (sun_mean_anomaly_rad)
+                - 171.0 * Math.cos (2 * mean_elongation_rad + moon_mean_anomaly_rad);
 
-            double horizontal_parallax_rad = horizontal_parallax_deg * DEG2RAD;
+            double parallax_sin = 6378.137 / geocentric_dist_km;
 
             double sun_mean_longitude = 280.46646 + 36000.76983 * centuries_since_j2000 + 0.0003032 * centuries_since_j2000_sq;
             sun_mean_longitude = Math.fmod (sun_mean_longitude, 360.0);
@@ -921,7 +950,6 @@ public class LunarCalc : Adw.Application {
             double hour_angle_rad = local_mean_sidereal_time_rad - geocentric_ra_rad;
 
             double declination_cos = Math.cos (geocentric_dec_rad);
-            double parallax_sin = Math.sin (horizontal_parallax_rad);
 
             double sin_hour_angle = Math.sin (hour_angle_rad);
             double cos_hour_angle = Math.cos (hour_angle_rad);
@@ -943,7 +971,7 @@ public class LunarCalc : Adw.Application {
             moon_angles[i] = Math.asin (elevation_sin.clamp (-1.0, 1.0)) * RAD2DEG;
 
             double dist_ratio = Math.sqrt (a_sq + b_sq + c_sq);
-            moon_distances[i] = dist_ratio * (6378.137 / parallax_sin);
+            moon_distances[i] = dist_ratio * geocentric_dist_km;
         }
     }
 
