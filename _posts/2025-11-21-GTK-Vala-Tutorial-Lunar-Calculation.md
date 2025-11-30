@@ -177,11 +177,19 @@ $$
 \beta = \Sigma_b
 $$
 
-### 地心距离与视差
+### 坐标转换：从黄道到赤道
 
-| [![地心视差示意图](/img/astronomy/geocentric_parallax.svg)](/img/astronomy/geocentric_parallax.svg) |
-| :---: |
-| 地心视差示意图：由于观测者位于地球表面 $P$ 而非地心 $O$，观测到的月球位置会发生偏移。视差角 $\pi$ 导致月球的视高度角 $z'$ 低于地心高度角 $z$。 |
+利用黄赤交角 $\epsilon$，我们将地心黄道坐标 $(\lambda, \beta)$ 转换为地心赤道坐标——赤经 ($\alpha$) 和赤纬 ($\delta$)。
+
+$$
+\tan \alpha = \frac{\sin \lambda \cos \epsilon - \tan \beta \sin \epsilon}{\cos \lambda}
+$$
+
+$$
+\sin \delta = \sin \beta \cos \epsilon + \cos \beta \sin \epsilon \sin \lambda
+$$
+
+### 地心距离计算
 
 为了将地心坐标转换为观测者所在的**站心坐标（Topocentric Coordinates）**，我们需要知道月球的距离。在本实现中，我们采用了更高精度的方法：**先直接计算地心距离，再由距离推算视差**，而非传统的先算视差再算距离的做法。这种方法的优势在于距离计算公式可以包含更多摄动修正项，从而获得更高的精度。
 
@@ -207,39 +215,29 @@ $$
 *   **$\cos(2D)$ 项（系数 $-2956.0$ km）**：二均差效应的距离分量，与月球相对于太阳的位置（朔望/上下弦）直接相关。
 *   **其他项**：更精细的摄动修正，包括椭圆轨道的二阶修正、周年差等。
 
-有了地心距离后，我们可以计算用于视差修正的**赤道地平视差 ($\pi$)**，即地球赤道半径 $R_\oplus$ 在月球中心的张角：
+### 视差修正与站心坐标
+
+| [![地心视差示意图](/img/astronomy/geocentric_parallax.svg)](/img/astronomy/geocentric_parallax.svg) |
+| :---: |
+| 地心视差示意图：由于观测者位于地球表面 $P$ 而非地心 $O$，观测到的月球位置会发生偏移。视差角 $\pi$ 导致月球的视高度角 $z'$ 低于地心高度角 $z$。 |
+
+视差修正是月球计算中至关重要的一步。之前的计算都是假设观测者位于地心，但实际上观测者位于地球表面。对于月球这样近的天体，这种位置差异会导致视位置的显著改变。
+
+有了地心距离后，我们首先计算用于视差修正的**赤道地平视差 ($\pi$)**，即地球赤道半径 $R_\oplus$ 在月球中心的张角：
 
 $$
 \sin \pi = \frac{R_\oplus}{r_{geo}} = \frac{6378.137}{r_{geo}}
 $$
 
-这个视差值大约在 $0.9°$ 到 $1°$ 之间变化，用于后续的站心坐标转换。
+这个视差值大约在 $0.9°$ 到 $1°$ 之间变化。
 
-值得注意的是，本程序在侧栏显示及在 CSV 中导出的距离并不是地心距离，而是站心距离（即观测者与月球之间的直线距离），这两者可能存在显著差异，这一点将在后续的视差修正部分详细说明。
-
-### 坐标转换：从黄道到赤道
-
-利用黄赤交角 $\epsilon$，我们将地心黄道坐标 $(\lambda, \beta)$ 转换为地心赤道坐标——赤经 ($\alpha$) 和赤纬 ($\delta$)。
-
-$$
-\tan \alpha = \frac{\sin \lambda \cos \epsilon - \tan \beta \sin \epsilon}{\cos \lambda}
-$$
-
-$$
-\sin \delta = \sin \beta \cos \epsilon + \cos \beta \sin \epsilon \sin \lambda
-$$
-
-### 视差修正
-
-这是月球计算中至关重要的一步。之前的计算都是假设观测者位于地心，但实际上观测者位于地球表面。对于月球这样近的天体，这种位置差异会导致视位置的显著改变。
-
-我们需要计算观测者的**地方恒星时 (LST)**，然后得到**时角 (H)**。
+接下来，我们需要计算观测者的**地方恒星时 (LST)**，然后得到**时角 (H)**：
 
 $$
 H = \text{LST} - \alpha
 $$
 
-接着，利用视差 $\pi$ 和观测者的地理纬度 $\phi$，我们将地心坐标 $(\alpha, \delta)$ 转换为站心坐标 $(\alpha', \delta')$。地球实际上并非理想的球体，而是一个扁球体，这对较精密的计算有明显影响，因此我们需要考虑地球的扁率 $f \approx 1/298.257223563$，使用椭球模型。这里我们使用严密的矢量公式（或其分量形式）：
+利用视差 $\pi$ 和观测者的地理纬度 $\phi$，我们将地心坐标 $(\alpha, \delta)$ 转换为站心坐标 $(\alpha', \delta')$。地球实际上并非理想的球体，而是一个扁球体，这对较精密的计算有明显影响，因此我们需要考虑地球的扁率 $f \approx 1/298.257223563$，使用椭球模型。这里我们使用严密的矢量公式（或其分量形式）：
 
 $$
 \begin{aligned}
@@ -269,7 +267,9 @@ $$
 
 其中，$r_{geo}$ 是我们之前算出的地心距离。这正是代码中计算 `moon_distances` 的方法。最终程序界面上显示的，便是这个经过完整视差修正后的站心距离。由于站心距是观测者与月球的“直线距离”，它叠加了观测者在地球上的**位置**及**地球大小**的影响，因此这个值完全可以**大于远地点或者小于近地点距离**，这完全是合理的。
 
-最后，利用站心赤纬 $\delta'$ 和站心时角 $H'$，通过标准的球面三角公式计算出月球的**地平高度角 (Elevation)**：
+### 地平高度角
+
+利用站心赤纬 $\delta'$ 和站心时角 $H'$，通过标准的球面三角公式计算出月球的**地平高度角 (Elevation)**：
 
 $$
 \sin(\text{El}) = \sin \phi \sin \delta' + \cos \phi \cos \delta' \cos H'
@@ -902,8 +902,8 @@ public class LunarCalc : Adw.Application {
             if (sun_mean_longitude < 0) sun_mean_longitude += 360.0;
 
             double sun_eq_center = sun_eq_c1 * Math.sin (sun_mean_anomaly_rad)
-                                 + sun_eq_c2 * Math.sin (2 * sun_mean_anomaly_rad)
-                                 + 0.000289 * Math.sin (3 * sun_mean_anomaly_rad);
+                + sun_eq_c2 * Math.sin (2 * sun_mean_anomaly_rad)
+                + 0.000289 * Math.sin (3 * sun_mean_anomaly_rad);
 
             double sun_true_longitude = sun_mean_longitude + sun_eq_center;
 
