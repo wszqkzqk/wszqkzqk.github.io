@@ -203,7 +203,7 @@ r_{geo} = &\, 385000.6 \quad (\text{平均距离}) \\
 &- 2956.0 \cos(2D) \quad (\text{二均差项}) \\
 &- 570.0 \cos(2M') \quad (\text{椭圆轨道二阶项}) \\
 &+ 246.0 \cos(2D - 2M') \quad (\text{出差二阶项}) \\
-&- 205.0 \cos(M) \quad (\text{周年差项}) \\
+&- 205.0 \cos(2D - M) \quad (\text{混合摄动项}) \\
 &- 171.0 \cos(2D + M') \quad (\text{混合摄动项})
 \end{aligned}
 $$
@@ -344,20 +344,20 @@ chmod +x lunarcalc.vala
 
 | 地点 | 样本数 | 高度角 RMSD (°) | 距离 RMSD (km) | 月相 RMSD |
 | :--- | ---: | ---: | ---: | ---: |
-| 北京 | 885,360 | 0.154 | 302 | 0.0036 |
-| 重庆 | 885,360 | 0.175 | 302 | 0.0039 |
-| 新加坡 | 885,360 | 0.201 | 302 | 0.0043 |
-| 悉尼 | 885,360 | 0.166 | 302 | 0.0038 |
-| 斯德哥尔摩 | 885,360 | 0.118 | 302 | 0.0029 |
-| 南极点 | 885,360 | 0.087 | 302 | 0.0023 |
+| 北京 | 885,360 | 0.154 | 198 | 0.0036 |
+| 重庆 | 885,360 | 0.175 | 199 | 0.0039 |
+| 新加坡 | 885,360 | 0.201 | 199 | 0.0043 |
+| 悉尼 | 885,360 | 0.166 | 198 | 0.0038 |
+| 斯德哥尔摩 | 885,360 | 0.118 | 198 | 0.0029 |
+| 南极点 | 885,360 | 0.087 | 198 | 0.0023 |
 
 **整体统计汇总**（5,312,160 个样本点）：
 
 | 评估指标 | 均方根偏差 (RMSD) | 95% 分位数误差绝对值 (95% Abs) | 最大误差绝对值 (Max Abs) | 误差平均值 (Mean Error) |
 | :--- | ---: | ---: | ---: | ---: |
-| 高度角 (°) | 0.155 | 0.330 | 0.612 | $-1.13 \times 10^{-4}$ |
-| 地月距离 (km) | 302 | 558 | 899 | $1.40 \times 10^{-2}$ |
-| 月相 (照明度) | 0.0035 | 0.0074 | 0.0132 | $1.5 \times 10^{-4}$ |
+| 高度角 (°) | 0.155 | 0.330 | 0.613 | $-1.13 \times 10^{-4}$ |
+| 地月距离 (km) | 198 | 379 | 627 | $1.40 \times 10^{-2}$ |
+| 月相 (照明度) | 0.0035 | 0.0074 | 0.0132 | $1.6 \times 10^{-4}$ |
 
 | [![#~/img/astronomy/lunar-error-histograms.svg](/img/astronomy/lunar-error-histograms.svg)](/img/astronomy/lunar-error-histograms.svg) |
 | :---: |
@@ -894,7 +894,7 @@ public class LunarCalc : Adw.Application {
                 - 2956.0 * Math.cos (2 * mean_elongation_rad)
                 - 570.0 * Math.cos (2 * moon_mean_anomaly_rad)
                 + 246.0 * Math.cos (2 * mean_elongation_rad - 2 * moon_mean_anomaly_rad)
-                - 205.0 * Math.cos (sun_mean_anomaly_rad)
+                - 205.0 * Math.cos (2 * mean_elongation_rad - sun_mean_anomaly_rad)
                 - 171.0 * Math.cos (2 * mean_elongation_rad + moon_mean_anomaly_rad);
 
             double parallax_sin = 6378.137 / geocentric_dist_km;
