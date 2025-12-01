@@ -358,7 +358,7 @@ chmod +x lunarcalc.vala
 | :--- | ---: | ---: | ---: | ---: |
 | 高度角 (°) | 0.155 | 0.330 | 0.613 | $-1.13 \times 10^{-4}$ |
 | 地月距离 (km) | 167 | 320 | 531 | 0.0698 |
-| 月相 (照明度) | 0.0035 | 0.0074 | 0.0132 | $1.6 \times 10^{-4}$ |
+| 月相 (照明度) | 0.0035 | 0.0074 | 0.0132 | $1.57 \times 10^{-4}$ |
 
 | [![#~/img/astronomy/lunar-error-histograms.svg](/img/astronomy/lunar-error-histograms.svg)](/img/astronomy/lunar-error-histograms.svg) |
 | :---: |
