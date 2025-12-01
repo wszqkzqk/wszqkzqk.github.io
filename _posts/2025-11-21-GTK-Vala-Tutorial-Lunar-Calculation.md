@@ -204,7 +204,7 @@ r_{geo} = &\, 385000.6 \quad (\text{平均距离}) \\
 &- 570.0 \cos(2M') \quad (\text{椭圆轨道二阶项}) \\
 &+ 246.0 \cos(2D - 2M') \quad (\text{出差二阶项}) \\
 &- 205.0 \cos(2D - M) \quad (\text{地球离心率导致二均差的周年变化}) \\
-&- 171.0 \cos(2D + M') \quad (\text{混合摄动项}) \\
+&- 171.0 \cos(2D + M') \quad (\text{出差变体}) \\
 &- 152.0 \cos(2D - M - M') \quad (\text{地球离心率导致出差的周年变化}) \\
 \end{aligned}
 $$
