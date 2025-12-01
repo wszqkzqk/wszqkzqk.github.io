@@ -141,11 +141,11 @@ $$
 \Sigma_l = &+ 6.2888 \sin(M') \quad (\text{中心方程：椭圆轨道修正}) \\
 &+ 1.2740 \sin(2D - M') \quad (\text{出差：离心率摄动}) \\
 &+ 0.6583 \sin(2D) \quad (\text{二均差：切向力摄动}) \\
+&+ 0.2136 \sin(2D - M) \quad (\text{地球离心率导致二均差的周年变化}) \\
 &- 0.1856 \sin(M) \quad (\text{周年差：日地距离变化}) \\
 &- 0.1143 \sin(2F) \quad (\text{黄道差：轨道倾角投影}) \\
-&+ 0.2136 \sin(2D - M) \quad (\text{混合摄动项}) \\
 &- 0.0588 \sin(2D - 2M') \quad (\text{出差二阶项}) \\
-&- 0.0572 \sin(2D - M - M') \quad (\text{混合摄动项}) \\
+&- 0.0572 \sin(2D - M - M') \quad (\text{地球离心率导致出差的周年变化}) \\
 &+ 0.0533 \sin(2D + M') \quad (\text{出差变体})
 \end{aligned}
 $$
@@ -203,9 +203,9 @@ r_{geo} = &\, 385000.6 \quad (\text{平均距离}) \\
 &- 2956.0 \cos(2D) \quad (\text{二均差项}) \\
 &- 570.0 \cos(2M') \quad (\text{椭圆轨道二阶项}) \\
 &+ 246.0 \cos(2D - 2M') \quad (\text{出差二阶项}) \\
-&- 205.0 \cos(2D - M) \quad (\text{混合摄动项}) \\
+&- 205.0 \cos(2D - M) \quad (\text{地球离心率导致二均差的周年变化}) \\
 &- 171.0 \cos(2D + M') \quad (\text{混合摄动项}) \\
-&- 152.0 \cos(2D - M - M') \quad (\text{混合摄动项}) \\
+&- 152.0 \cos(2D - M - M') \quad (\text{地球离心率导致出差的周年变化}) \\
 \end{aligned}
 $$
 
@@ -877,9 +877,9 @@ public class LunarCalc : Adw.Application {
                 + 6.2888 * Math.sin (moon_mean_anomaly_rad)
                 + 1.2740 * Math.sin (2 * mean_elongation_rad - moon_mean_anomaly_rad)
                 + 0.6583 * Math.sin (2 * mean_elongation_rad)
+                + 0.2136 * Math.sin (2 * mean_elongation_rad - sun_mean_anomaly_rad)
                 - 0.1856 * Math.sin (sun_mean_anomaly_rad)
                 - 0.1143 * Math.sin (2 * moon_argument_of_latitude_rad)
-                + 0.2136 * Math.sin (2 * mean_elongation_rad - sun_mean_anomaly_rad)
                 - 0.0588 * Math.sin (2 * mean_elongation_rad - 2 * moon_mean_anomaly_rad)
                 - 0.0572 * Math.sin (2 * mean_elongation_rad - sun_mean_anomaly_rad - moon_mean_anomaly_rad)
                 + 0.0533 * Math.sin (2 * mean_elongation_rad + moon_mean_anomaly_rad);
