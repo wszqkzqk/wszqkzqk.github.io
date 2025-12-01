@@ -345,20 +345,20 @@ chmod +x lunarcalc.vala
 
 | 地点 | 样本数 | 高度角 RMSD (°) | 距离 RMSD (km) | 月相 RMSD |
 | :--- | ---: | ---: | ---: | ---: |
-| 北京 | 885,360 | 0.154 | 167 | 0.0036 |
-| 重庆 | 885,360 | 0.175 | 167 | 0.0039 |
-| 新加坡 | 885,360 | 0.201 | 167 | 0.0043 |
-| 悉尼 | 885,360 | 0.166 | 167 | 0.0038 |
-| 斯德哥尔摩 | 885,360 | 0.118 | 167 | 0.0029 |
-| 南极点 | 885,360 | 0.087 | 166 | 0.0023 |
+| 北京 | 885,360 | 0.145 | 167 | 0.0036 |
+| 重庆 | 885,360 | 0.164 | 167 | 0.0039 |
+| 新加坡 | 885,360 | 0.188 | 167 | 0.0043 |
+| 悉尼 | 885,360 | 0.156 | 167 | 0.0038 |
+| 斯德哥尔摩 | 885,360 | 0.112 | 167 | 0.0029 |
+| 南极点 | 885,360 | 0.083 | 166 | 0.0023 |
 
 **整体统计汇总**（5,312,160 个样本点）：
 
 | 评估指标 | 均方根偏差 (RMSD) | 95% 分位数误差绝对值 (95% Abs) | 最大误差绝对值 (Max Abs) | 误差平均值 (Mean Error) |
 | :--- | ---: | ---: | ---: | ---: |
-| 高度角 (°) | 0.155 | 0.330 | 0.613 | $-1.13 \times 10^{-4}$ |
-| 地月距离 (km) | 167 | 320 | 531 | 0.0698 |
-| 月相 (照明度) | 0.0035 | 0.0074 | 0.0132 | $1.57 \times 10^{-4}$ |
+| 高度角 (°) | 0.146 | 0.308 | 0.586 | $-1.14 \times 10^{-4}$ |
+| 地月距离 (km) | 167 | 320 | 525 | 0.0698 |
+| 月相 (照明度) | 0.0035 | 0.0073 | 0.0135 | $1.56 \times 10^{-4}$ |
 
 | [![#~/img/astronomy/lunar-error-histograms.svg](/img/astronomy/lunar-error-histograms.svg)](/img/astronomy/lunar-error-histograms.svg) |
 | :---: |
@@ -881,7 +881,7 @@ public class LunarCalc : Adw.Application {
                 - 0.1856 * Math.sin (sun_mean_anomaly_rad)
                 - 0.1143 * Math.sin (2 * moon_argument_of_latitude_rad)
                 - 0.0588 * Math.sin (2 * mean_elongation_rad - 2 * moon_mean_anomaly_rad)
-                - 0.0572 * Math.sin (2 * mean_elongation_rad - sun_mean_anomaly_rad - moon_mean_anomaly_rad)
+                + 0.0572 * Math.sin (2 * mean_elongation_rad - sun_mean_anomaly_rad - moon_mean_anomaly_rad)
                 + 0.0533 * Math.sin (2 * mean_elongation_rad + moon_mean_anomaly_rad);
 
             double geocentric_ecliptic_latitude_deg = 5.1282 * Math.sin (moon_argument_of_latitude_rad)
