@@ -260,6 +260,22 @@ sun_angles[i] = Math.asin (elevation_sin) * RAD2DEG - geocentric_parallax_deg;
 
 至此，我们就完成了从一个日期和时间点，到其精确太阳高度角的完整计算链条。
 
+### 大气折射修正 (Atmospheric Refraction Correction)
+
+除了视差，大气折射也是影响地基观测的重要因素。当光线穿过地球大气层时，由于大气密度的变化，光线会发生弯曲，使得天体的视位置比真位置要高。
+
+本程序使用了 **Saemundsson 公式** 来估算大气折射量 $R$（单位：度）：
+
+$$
+R = 1.02 \cot \left( h + \frac{10.3}{h + 5.11} \right) \times \frac{1}{60}
+$$
+
+其中 $h$ 是真高度角（单位：度）。值得注意的是，该公式在数学上存在适用范围。当真高度角 $h$ 过低（小于约 -5°）或接近天顶（大于约 89.9°）时，公式计算出的修正值会变得不合理（例如变为负数）。因此，我们在代码中加入了范围检查，仅在 $-5.0015^\circ < h < 89.8915^\circ$ 的范围内应用此修正，超出范围则视为无折射。
+
+考虑到大气折射受温度、气压等气象条件影响较大，我们在界面上提供了一个 **Refraction** 调节项（`refraction_factor`），允许用户调整折射修正的强度。设置为 `1.0` 表示标准大气条件下的修正，设置为 `0.0` 则关闭修正。
+
+需要注意的是，本文后续的精度验证是在**无大气折射**的理想情况下进行的，验证的是真实的几何角度而非目测角度。开启大气折射修正后，计算结果将更接近实际观测值，但具体偏差将取决于实际的大气环境。
+
 ### 地日距离 (Earth-Sun Distance)
 
 除了太阳的方位，我们还可以计算地球到太阳的距离。这首先需要地球轨道的**离心率 (Eccentricity, $e$)**，它也随时间微小变化：
@@ -449,7 +465,8 @@ $$
             double elevation_sin = (sin_lat * declination_sin + cos_lat * declination_cos * Math.cos (hour_angle_rad)).clamp (-1.0, 1.0);
             double elevation_cos = Math.sqrt (1.0 - elevation_sin * elevation_sin); // non-negative in [-90 deg, +90 deg]
             double geocentric_parallax_deg = 0.00244 * elevation_cos;
-            sun_angles[i] = Math.asin (elevation_sin) * RAD2DEG - geocentric_parallax_deg;
+            double true_elevation_deg = Math.asin (elevation_sin) * RAD2DEG - geocentric_parallax_deg;
+            sun_angles[i] = true_elevation_deg + calculate_refraction (true_elevation_deg, refraction_factor);
 
             double true_anomaly_rad = mean_anomaly_rad + equation_of_center_deg * DEG2RAD;
             double distance_au = (1.0 - eccentricity * eccentricity) / (1.0 + eccentricity * Math.cos (true_anomaly_rad));
@@ -473,6 +490,29 @@ $$
         // Clear click point when data updates
         has_click_point = false;
         click_info_label.label = DEFAULT_INFO_LABEL;
+    }
+
+    /**
+     * Calculates atmospheric refraction using Saemundsson's formula.
+     *
+     * The formula R = 1.02 / tan(h + 10.3/(h+5.11)) mathematically fails
+     * when the inner argument exceeds 90 degrees or creates a singularity.
+     * The roots are exactly ~ -5.0015 and ~ 89.8915.
+     * Inside this range, the formula is valid.
+     *
+     * @param true_elevation_deg True elevation angle in degrees.
+     * @param refraction_factor Factor to scale the refraction effect.
+     */
+    private static double calculate_refraction (double true_elevation_deg, double refraction_factor) {
+        if (refraction_factor == 0.0) {
+            return 0.0;
+        }
+        if (true_elevation_deg > 89.8915 || true_elevation_deg < -5.0015) {
+            return 0.0;
+        }
+
+        double angle_arg = (true_elevation_deg + 10.3 / (true_elevation_deg + 5.11)) * DEG2RAD;
+        return 1.02 / 60.0 / Math.tan (angle_arg) * refraction_factor;
     }
 ```
 
