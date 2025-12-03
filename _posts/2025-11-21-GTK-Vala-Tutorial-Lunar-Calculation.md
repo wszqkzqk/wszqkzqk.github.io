@@ -656,7 +656,7 @@ public class LunarCalc : Adw.Application {
 
         // Click Info Group
         var click_info_group = new Adw.PreferencesGroup () {
-            title = "Selected Point",
+            title = "Lunar Info",
         };
 
         click_info_label = new Gtk.Label (DEFAULT_INFO_LABEL) {
