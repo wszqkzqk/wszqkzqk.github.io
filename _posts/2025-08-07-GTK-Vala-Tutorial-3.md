@@ -838,7 +838,7 @@ public class SolarCalc : Adw.Application {
 
         // Click Info Group
         var click_info_group = new Adw.PreferencesGroup () {
-            title = "Selected Point",
+            title = "Solar Info",
         };
 
         click_info_label = new Gtk.Label (DEFAULT_INFO_LABEL) {
