@@ -241,13 +241,14 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 ### 太阳高度角计算
 
-> 本程序使用基于 **Meeus** 在 **《天文算法》** (*Astronomical Algorithms*) 一书中提出的实现，能在不依赖大型星历表的情况下，达到很不错的精度。笔者进行了实测：分散选取南北半球低中高纬度共6个不同的代表性位置，在 1975-2075 的 100 年间，测试其中每个整时刻的高度角计算值与公认高精度的专业天文库 [Astropy](https://github.com/astropy/astropy) 的结果的误差，测试数据点高达 5,312,160 个。测试发现整体上基本不存在系统性的偏差，**RMSD 仅 0.0030°**，95% 的误差绝对值不超过 0.0058°，如广泛此的数据中最大误差绝对值也仅为 0.0121°。
+> 本程序使用基于 **Meeus** 在 **《天文算法》** (*Astronomical Algorithms*) 一书中提出的实现，能在不依赖大型星历表的情况下，达到很不错的精度。笔者进行了实测：分散选取南北半球低中高纬度共6个不同的代表性位置，在 1975-2075 的 100 年间，测试其中每个整时刻的高度角计算值与公认高精度的专业天文库 [Astropy](https://github.com/astropy/astropy) 的结果的误差，测试数据点高达 5,312,160 个。测试发现整体上高度角基本不存在系统性的偏差，**RMSD 仅 0.0030°**，95% 的误差绝对值不超过 0.0058°，如广泛此的数据中最大误差绝对值也仅为 0.0121°。对于站心距离计算，RMSD 为 2816 km，95% 的误差绝对值不超过 5355 km，最大误差绝对值为 8160 km，主要是金星、木星等行星的较长周期的摄动所致。考虑到太阳距离地球约 1.5 亿公里，这样的误差已经非常小了，足以满足绝大多数业余天文观测和日常应用的需求。
 > 如果你对算法的理论背景、实现细节及其在 Vala 语言中的最佳实践感兴趣，请移步阅读笔者的续篇教程：**[Vala 数值计算实践：高精度太阳位置算法](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation/)**。
 
 `generate_sun_angles` 函数是应用计算的核心。笔者在此实现了 Meeus 算法的等价变体，通过精确的天体力学模型计算太阳位置。这个算法较简单，但具有很高的精度，适合我们这个应用的需求。
 
-|[![#~/img/astronomy/solar-meeus_error_histogram.svg](/img/astronomy/solar-meeus_error_histogram.svg)](/img/astronomy/solar-meeus_error_histogram.svg)|
+|[![#~/img/astronomy/solar_signed_error_histograms.svg](/img/astronomy/solar_signed_error_histograms.svg)](/img/astronomy/solar_signed_error_histograms.svg)|
 |:----:|
+|[![#~/img/astronomy/solar_error_histograms.svg](/img/astronomy/solar_error_histograms.svg)](/img/astronomy/solar_error_histograms.svg)|
 | 本程序实现的 Meeus 算法相对专业天文库 Astropy 的误差分布直方图 |
 
 #### 时间基准：从 J2000.0 历元起算的天数
@@ -311,13 +312,25 @@ $$
 \nu = M + C
 $$
 
-有了离心率和真近点角，就可以计算出以天文单位（AU）为单位的日地距离：
+有了离心率和真近点角，就可以计算出以天文单位（AU）为单位的日地距离（实际上是地月系质心到太阳的距离）：
 
 $$
 R_\text{AU} = \frac{1 - e^2}{1 + e \cos(\nu)}
 $$
 
-最后，我们将它转换为千米再输出即可。此距离实际上是**地月系质心到太阳**的距离，并非观测者所在位置到太阳的距离，但由于地球半径和地月系质心偏移相对于天文单位来说非常小，这个差异可以忽略不计。
+最后，我们将它转换为千米，并进行更精细的修正。
+
+为了解答经典有趣的“两小儿辩日”中关于早晨与中午太阳距离的争论，我们需要计算**站心距离**，即观测者直接到太阳的距离，而非仅仅是地心到太阳的距离。
+
+代码中引入了两个修正项：
+1.  **站心修正**：考虑到地球半径（约 6371 km），这将导致当太阳处于高仰角（中午）时，观测者比在低仰角（早晚）时离太阳更近。
+2.  **月球摄动修正**：利用月球平距角（Mean Elongation of the Moon）估算地球相对于地月系质心的位置，将地月系质心距离修正为地心距离。
+
+$$
+R_\text{topo} \approx R_\text{geo} - R_\text{Earth} \sin(\alpha)
+$$
+
+经过这些修正，本程序的计算结果不仅精度更高，更能直观反映一天中日地距离随时间的变化，从而通过科学计算回答“日初出远，而日中时近也”还是“日初出大去人近，而日中时远也”的问题。这一问题由于椭圆轨道、地球半径、所在位置的影响，实际结论会因地点和日期而异，本程序虽然在距离计算上看似存在上千千米的误差，与一天内的距离变化量级相当，但实际上，这些误差主要来源于行星摄动等较长周期的复杂因素，并不影响对日地距离在一天中变化趋势的正确判断。
 
 #### 坐标转换：赤纬 ($\delta$) 和赤经 (RA)
 
@@ -1114,8 +1127,12 @@ public class SolarCalc : Adw.Application {
             sun_angles[i] = true_elevation_deg + calculate_refraction (true_elevation_deg, refraction_factor);
 
             double true_anomaly_rad = mean_anomaly_rad + equation_of_center_deg * DEG2RAD;
-            double distance_au = (1.0 - eccentricity * eccentricity) / (1.0 + eccentricity * Math.cos (true_anomaly_rad));
-            sun_distances[i] = distance_au * 149597870.7; // Convert AU to km
+            // Sun-(Earth+Moon) distance and then correct to Sun-Earth distance
+            double distance_emb = (1.0 - eccentricity * eccentricity) / (1.0 + eccentricity * Math.cos (true_anomaly_rad));
+            double moon_mean_elong_deg = 297.8501921 + 12.190749114398 * base_days_from_epoch - 1.41064e-12 * base_days_sq + 3.75960e-20 * base_days_cb;
+            double distance_au = distance_emb + 0.0000312 * Math.cos (moon_mean_elong_deg * DEG2RAD);
+            double topocentric_correction_km = 6371.0 * Math.sin (true_elevation_deg * DEG2RAD);
+            sun_distances[i] = distance_au * 149597870.7 - topocentric_correction_km;
         }
     }
 
@@ -1186,7 +1203,7 @@ public class SolarCalc : Adw.Application {
             int minutes = (int) ((clicked_time_hours - hours) * 60);
 
             // Update info label
-            string info_text = "Time: %02d:%02d\nElevation: %.2f°\nDistance: %.4E km".printf (
+            string info_text = "Time: %02d:%02d\nElevation: %.2f°\nDistance: %.5E km".printf (
                 hours, minutes, corresponding_angle, sun_distances[time_minutes]
             );
 
