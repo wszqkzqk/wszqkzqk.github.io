@@ -334,7 +334,7 @@ $$
 
 其中 $149597870.7$ 为 1 AU 对应的千米数。
 
-经过这些修正，本程序的计算结果不仅精度更高，更能直观反映一天中日地距离随时间的变化，从而通过科学计算回答“日初出远，而日中时近也”还是“日初出大去人近，而日中时远也”的问题。
+经过这些修正，本程序的计算结果不仅精度更高，更能直观反映一天中日地距离随时间的变化，从而通过科学计算回答太阳到底是早晨还是中午更近的问题。
 
 “两小儿辩日”问题由于椭圆轨道、地球半径、所在位置的影响，实际结论会因地点和日期而异。在太阳高度角更高时，观测者距离太阳更近；此外，由于地球轨道的离心率，当地球运行在不同轨道位置时，日地距离也会有所不同。综合考虑这些因素后，在不同的地点和日期，会得出不同的结论。
 
@@ -1135,11 +1135,11 @@ public class SolarCalc : Adw.Application {
 
             double true_anomaly_rad = mean_anomaly_rad + equation_of_center_deg * DEG2RAD;
             // Sun-(Earth+Moon) distance and then correct to Sun-Earth distance
-            double distance_emb = (1.0 - eccentricity * eccentricity) / (1.0 + eccentricity * Math.cos (true_anomaly_rad));
-            double moon_mean_elong_deg = 297.8501921 + 12.190749114398 * days_from_epoch - 1.41064e-12 * days_from_epoch_sq + 3.75960e-20 * days_from_epoch_cb;
-            double distance_au = distance_emb + 0.0000312 * Math.cos (moon_mean_elong_deg * DEG2RAD);
+            double distance_emb_au = (1.0 - eccentricity * eccentricity) / (1.0 + eccentricity * Math.cos (true_anomaly_rad));
+            double moon_mean_elong_deg = 297.8501921 + 12.190749114398 * days_from_epoch - 1.41064e-12 * days_from_epoch_sq + 3.7596e-20 * days_from_epoch_cb;
+            double moon_correction_km = 4671.0 * Math.cos (moon_mean_elong_deg * DEG2RAD);
             double topocentric_correction_km = 6371.0 * Math.sin (true_elevation_deg * DEG2RAD);
-            sun_distances[i] = distance_au * 149597870.7 - topocentric_correction_km;
+            sun_distances[i] = 149597870.7 * distance_emb_au - topocentric_correction_km + moon_correction_km;
         }
     }
 
