@@ -1010,7 +1010,7 @@ public class LunarCalc : Adw.Application {
             double topocentric_declination_rad = Math.atan2 (c_component, topocentric_horizontal_distance);
 
             double elevation_sin = sin_lat * Math.sin (topocentric_declination_rad)
-                             + cos_lat * Math.cos (topocentric_declination_rad) * Math.cos (topocentric_hour_angle_rad);
+                + cos_lat * Math.cos (topocentric_declination_rad) * Math.cos (topocentric_hour_angle_rad);
 
             double true_elevation_deg = Math.asin (elevation_sin.clamp (-1.0, 1.0)) * RAD2DEG;
             moon_angles[i] = true_elevation_deg + calculate_refraction (true_elevation_deg, refraction_factor);
