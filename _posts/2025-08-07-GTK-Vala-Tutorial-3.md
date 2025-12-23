@@ -239,7 +239,7 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 现在，我们来实现应用的核心功能：计算与表达。
 
-### 太阳高度角计算
+### 太阳参数计算
 
 > 本程序使用基于 **Meeus** 在 **《天文算法》** (*Astronomical Algorithms*) 一书中提出的实现，能在不依赖大型星历表的情况下，达到很不错的精度。笔者进行了实测：分散选取南北半球低中高纬度共6个不同的代表性位置，在 1975-2075 的 100 年间，测试其中每个整时刻的高度角计算值与公认高精度的专业天文库 [Astropy](https://github.com/astropy/astropy) 的结果的误差，测试数据点高达 5,312,160 个。测试发现整体上**高度角**基本不存在系统性的偏差，**RMSD 仅 0.0030°**，95% 的误差绝对值不超过 0.0058°，如广泛此的数据中最大误差绝对值也仅为 0.0121°。对于**站心距离**计算，**RMSD 为 2804 km**，95% 的误差绝对值为 5332 km，最大误差绝对值为 7611 km，主要是金星、木星等行星的较长周期的摄动所致。考虑到太阳距离地球约 1.5 亿公里，这样的误差已经非常小了，足以满足绝大多数业余天文观测和日常应用的需求。
 > 如果你对算法的理论背景、实现细节及其在 Vala 语言中的最佳实践感兴趣，请移步阅读笔者的续篇教程：**[Vala 数值计算实践：高精度太阳位置算法](https://wszqkzqk.github.io/2025/10/08/GTK-Vala-Tutorial-Advanced-Solar-Calculation/)**。
@@ -296,54 +296,6 @@ $$
 \lambda = L + C
 $$
 
-#### 地日距离 (Earth-Sun Distance)
-
-除了太阳的方位，我们还可以计算地球到太阳的距离。这需要地球轨道的离心率 $e$ 和真近点角 $\nu$。
-
-地球轨道的离心率 $e$ 随时间微小变化：
-
-$$
-e = 0.016708634 - 1.15091 \times 10^{-9} d - 9.497 \times 10^{-17} d^2
-$$
-
-真近点角 $\nu$ 是从近地点开始计算的角度，它等于平近点角 $M$ 和中心差 $C$ 的和：
-
-$$
-\nu = M + C
-$$
-
-有了离心率和真近点角，就可以计算出以天文单位（AU）为单位的日地距离（实际上是地月系质心到太阳的距离）：
-
-$$
-R_\text{EMB} = \frac{1 - e^2}{1 + e \cos(\nu)}
-$$
-
-其中 $R_\text{EMB}$ 是地月系质心到太阳的距离（单位：天文单位 AU）。
-
-为了使得计算结果可以解答经典有趣的“两小儿辩日”中关于早晨与中午太阳距离的争论，我们需要计算**站心距离**，即观测者直接到太阳的距离，而非仅仅是地心到太阳的距离。
-
-代码中引入了两个修正项：
-1.  **月球摄动修正**：利用月球平距角 $D$ 估算地球相对于地月系质心的位置，将地月系质心距离修正为地心距离。这一摄动周期约为 29.53 天（朔望月），幅度约为 4671 km。其中月球平距角 $D$ 的计算公式为：
-
-    $$ 
-    D_\text{degrees} = 297.8501921 + 12.190749114398 \times d - 1.41064e-12 \times d^2 + 3.7596e-20 \times d^3
-    $$
-   
-2.  **站心修正**：考虑到地球半径 $R_\text{Earth}$（约 6371 km），这将导致当太阳处于高仰角（中午）时，观测者比在低仰角（早晚）时离太阳更近。
-
-综合计算公式如下（结果转换为千米）：
-
-$$
-R_\text{topo} \approx  149597870.7 R_\text{EMB} - R_\text{Earth} \sin(\alpha) + 4671 \cos(D)
-$$
-
-其中 $149597870.7$ 为 1 AU 对应的千米数。
-
-经过这些修正，本程序的计算结果不仅精度更高，更能直观反映一天中日地距离随时间的变化，从而通过科学计算回答太阳到底是早晨还是中午更近的问题。
-
-“两小儿辩日”问题由于椭圆轨道、地球半径、所在位置的影响，实际结论会因地点和日期而异。在太阳高度角更高时，观测者距离太阳更近；此外，由于地球轨道的离心率，当地球运行在不同轨道位置时，日地距离也会有所不同。综合考虑这些因素后，在不同的地点和日期，会得出不同的结论。
-
-本程序虽然在距离计算上看似存在上千千米的误差，与一天内的距离变化量级相当，但实际上，这些误差主要来源于行星摄动等较长周期的复杂因素，这些长期摄动在一天之内几乎没有相对变化，并不影响对日地距离在一天中变化趋势的正确判断。
 
 #### 坐标转换：赤纬 ($\delta$) 和赤经 (RA)
 
@@ -424,6 +376,55 @@ $$
 需要注意的是，前文提到的精度验证是在**无大气折射**的理想情况下进行的，验证的是真实的几何角度而非目测角度。开启大气折射修正后，计算结果将更接近目测值，但具体偏差将取决于实际的大气环境。
 
 算法对一天中每一分钟都进行采样计算，将结果存储在 `sun_angles` 数组中，为后续的可视化和交互提供数据支持。
+
+#### 地日距离 (Earth-Sun Distance)
+
+除了太阳的方位，我们还可以计算地球到太阳的距离。这需要地球轨道的离心率 $e$ 和真近点角 $\nu$。
+
+地球轨道的离心率 $e$ 随时间微小变化：
+
+$$
+e = 0.016708634 - 1.15091 \times 10^{-9} d - 9.497 \times 10^{-17} d^2
+$$
+
+真近点角 $\nu$ 是从近地点开始计算的角度，它等于平近点角 $M$ 和中心差 $C$ 的和：
+
+$$
+\nu = M + C
+$$
+
+有了离心率和真近点角，就可以计算出以天文单位（AU）为单位的日地距离（实际上是地月系质心到太阳的距离）：
+
+$$
+R_\text{EMB} = \frac{1 - e^2}{1 + e \cos(\nu)}
+$$
+
+其中 $R_\text{EMB}$ 是地月系质心到太阳的距离（单位：天文单位 AU）。
+
+为了使得计算结果可以解答经典有趣的“两小儿辩日”中关于早晨与中午太阳距离的争论，我们需要计算**站心距离**，即观测者直接到太阳的距离，而非仅仅是地心到太阳的距离。
+
+代码中引入了两个修正项：
+1.  **月球摄动修正**：利用月球平距角 $D$ 估算地球相对于地月系质心的位置，将地月系质心距离修正为地心距离。这一摄动周期约为 29.53 天（朔望月），幅度约为 4671 km。其中月球平距角 $D$ 的计算公式为：
+
+    $$ 
+    D_\text{degrees} = 297.8501921 + 12.190749114398 \times d - 1.41064e-12 \times d^2 + 3.7596e-20 \times d^3
+    $$
+   
+2.  **站心修正**：考虑到地球半径 $R_\text{Earth}$（约 6371 km），这将导致当太阳处于高地心高度角时比在低地心高度角时更近。在代码实现中，我们直接复用了前文计算地心高度角时得到的正弦值 `elevation_sin`（即 $\sin(\alpha)$），这不仅简化了计算，也避免了重复调用三角函数带来的开销。
+
+综合计算公式如下（结果转换为千米）：
+
+$$
+R_\text{topo} \approx  149597870.7 R_\text{EMB} - R_\text{Earth} \sin(\alpha) + 4671 \cos(D)
+$$
+
+其中 $149597870.7$ 为 1 AU 对应的千米数。
+
+经过这些修正，本程序的计算结果不仅精度更高，更能直观反映一天中日地距离随时间的变化，从而通过科学计算回答太阳到底是早晨还是中午更近的问题。
+
+“两小儿辩日”问题由于椭圆轨道、地球半径、所在位置的影响，实际结论会因地点和日期而异。在太阳高度角更高时，观测者距离太阳更近；此外，由于地球轨道的离心率，当地球运行在不同轨道位置时，日地距离也会有所不同。综合考虑这些因素后，在不同的地点和日期，会得出不同的结论。
+
+本程序虽然在距离计算上看似存在上千千米的误差，与一天内的距离变化量级相当，但实际上，这些误差主要来源于行星摄动等较长周期的复杂因素，这些长期摄动在一天之内几乎没有相对变化，并不影响对日地距离在一天中变化趋势的正确判断。
 
 ### 自定义绘图与 Cairo
 
@@ -1134,16 +1135,16 @@ public class SolarCalc : Adw.Application {
             double hour_angle_rad = ((i + eqtime_minutes + tst_offset) / 4.0 - 180.0) * DEG2RAD;
             double elevation_sin = (sin_lat * declination_sin + cos_lat * declination_cos * Math.cos (hour_angle_rad)).clamp (-1.0, 1.0);
             double elevation_cos = Math.sqrt (1.0 - elevation_sin * elevation_sin); // non-negative in [-90 deg, +90 deg]
-            double geocentric_parallax_deg = 0.00244 * elevation_cos;
-            double true_elevation_deg = Math.asin (elevation_sin) * RAD2DEG - geocentric_parallax_deg;
-            sun_angles[i] = true_elevation_deg + calculate_refraction (true_elevation_deg, refraction_factor);
+            double geocentric_elevation_deg = Math.asin (elevation_sin) * RAD2DEG;
+            double topocentric_elevation_deg = geocentric_elevation_deg - 0.00244 * elevation_cos; // Geocentric parallax correction
+            sun_angles[i] = topocentric_elevation_deg + calculate_refraction (topocentric_elevation_deg, refraction_factor);
 
             double true_anomaly_rad = mean_anomaly_rad + equation_of_center_deg * DEG2RAD;
             // Sun-(Earth+Moon) distance and then correct to Sun-Earth distance
             double distance_emb_au = (1.0 - eccentricity * eccentricity) / (1.0 + eccentricity * Math.cos (true_anomaly_rad));
             double moon_mean_elong_deg = 297.8501921 + 12.190749114398 * days_from_epoch - 1.41064e-12 * days_from_epoch_sq + 3.7596e-20 * days_from_epoch_cb;
             double moon_correction_km = 4671.0 * Math.cos (moon_mean_elong_deg * DEG2RAD);
-            double topocentric_correction_km = 6371.0 * Math.sin (true_elevation_deg * DEG2RAD);
+            double topocentric_correction_km = 6371.0 * elevation_sin;
             sun_distances[i] = 149597870.7 * distance_emb_au - topocentric_correction_km + moon_correction_km;
         }
     }
