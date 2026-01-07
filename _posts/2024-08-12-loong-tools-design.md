@@ -240,7 +240,7 @@ export-loong64-patches
 
 # 软件包的手动上传
 
-参见[龙芯Arch Linux移植技巧 #软件包的手动上传](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/#软件包的手动上传)一节
+参见[龙芯Arch Linux移植技巧 #软件包的上传](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/#软件包的上传)一节
 
 # 更多阅读材料
 
