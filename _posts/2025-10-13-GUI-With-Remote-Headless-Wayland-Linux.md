@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      将远程Wayland应用窗口转发到本地
-subtitle:   实现远程无桌面环境的单个Wayland GUI应用的本地显示
+subtitle:   利用Waypipe实现远程无桌面环境的单个Wayland GUI应用的本地显示
 date:       2025-10-13
 author:     wszqkzqk
 header-img: img/wayland/wayland-bg.webp
