@@ -934,6 +934,26 @@ go mod tidy
 
 当然，如果上游并没有支持loong64的版本或者提交，则可以自行fork并修复，再向上游提交PR。如果上游暂时没有合并，则同样可以在`PKGBUILD`中通过`go mod edit -replace=...`来使用我们自己的fork。
 
+## 为什么会有看起来架构无关的依赖/版本不兼容错误？上游为什么没有这一问题？
+
+有时候我们会遇到一些看起来架构无关的软件包在构建时出现依赖错误，而上游并没有这一问题。这种情况一般是我们的实际构建顺序与上游不同导致的：例如上游可能使用了更低版本的依赖来构建，随后将软件包一直放在testing仓库中，等软件包进入core/extra仓库后，依赖版本已经升级了，导致我们在重构建时遇到了版本不兼容的问题。
+
+这一问题可以下载Arch Linux官方的软件包文件来确认，在镜像站中下载对应的软件包文件后，解压：
+
+```bash
+mkdir temp
+cd temp
+bsdtar -xvf ../<package-file>.pkg.tar.zst
+```
+
+然后查看其中的`.BUILDINFO`文件，在以`installed =`开头的行中可以看到上游使用的依赖版本，例如：
+
+```log
+installed = python 3.13.7-1-x86_64
+```
+
+如果出错的内容恰好与功能版本不同的依赖有关，则基本可以确定是该依赖升级导致的问题。
+
 # 更多阅读材料
 
 * [龙芯的Arch Linux移植工作流程 by wszqkzqk](https://wszqkzqk.github.io/2024/08/22/loongarchlinux-port-tips/)
