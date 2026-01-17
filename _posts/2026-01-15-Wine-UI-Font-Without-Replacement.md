@@ -28,4 +28,8 @@ wine reg add "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Fo
 
 这样，Wine的UI字体就会使用`Noto Sans CJK SC`，而不会影响其他场景下的宋体等字体的显示。运行`winecfg`等程序时，界面字体将变得更加协调。
 
+|[![#~/img/wine/winecfg-ui.webp](/img/wine/winecfg-ui.webp)](/img/wine/winecfg-ui.webp)|
+|:----:|
+|winecfg的字体显示|
+
 不过，需要注意的是，在Wine升级后，可能需要重新设置这些注册表项，因为升级可能会重置这些配置。
