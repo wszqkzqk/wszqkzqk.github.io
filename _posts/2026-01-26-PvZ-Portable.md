@@ -32,7 +32,8 @@ tags:         C++ SDL2 OpenGL 开源软件 游戏移植
     *   PvZ-Portable **支持任意缩放比例**，也支持**窗口最大化**和全屏。
 2.  **真正、全面跨平台**：
     *   **OS**: Linux, Windows, macOS
-    *   **ISA**: x86_64, aarc64, riscv64, loongarch64, ...
+        *   32 位和 64 位支持
+    *   **ISA**: i686, x86_64, aarch64, riscv64, loongarch64, ...
     *   **主机**: Nintendo Switch
     *   **其他**: Haiku OS 等小众系统
 3.  **音频升级**：基于 [Headshotnoby](https://github.com/headshot2017/) 的适配工作，使用 [SDL Mixer X](https://github.com/WohlSoft/SDL-Mixer-X) 和 libopenmpt，支持 MO3 音乐格式。
