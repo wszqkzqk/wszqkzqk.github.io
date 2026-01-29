@@ -15,7 +15,7 @@ tags:         C++ SDL2 OpenGL 开源软件 游戏移植
 
 时隔几年，随着技术栈的深入，在开源社区前人大量代码[^1] [^2]的基础上，笔者带来了一个强大得多的新项目 —— [**PvZ-Portable**](https://github.com/wszqkzqk/PvZ-Portable)。
 
-这是一个**跨平台**的社区驱动项目，是对《植物大战僵尸：年度版》（GOTY Edition）的完整重实现。与之前的玩具项目不同，PvZ-Portable 的目标是 **100% 还原原版游戏体验**，同时让它能在现代硬件和各种非官方支持的平台上流畅运行。项目开源开发，用于交流学习**跨平台移植技术**、**引擎现代化**以及研究如何将经典游戏逻辑适配到各种不同的硬件架构（如 ARM, RISC-V, LoongArch）上。
+这是一个**跨平台**的社区驱动项目，是对《植物大战僵尸：年度版》（GOTY Edition）的完整源码重实现。与之前的玩具项目不同，PvZ-Portable 的目标是 **100% 还原原版游戏体验**，同时让它能在现代硬件和各种非官方支持的平台上流畅运行。项目开源开发，用于交流学习**跨平台移植技术**、**引擎现代化**以及研究如何将经典游戏逻辑适配到各种不同的硬件架构（如 ARM, RISC-V, LoongArch）上。
 
 | 🌿 原汁原味 | 🎮 可移植/跨平台 | 🛠️ 开源开放 |
 | :---: | :---: | :---: |
@@ -76,6 +76,10 @@ PvZ-Portable 会自动在各操作系统的标准应用数据目录下存储存�
 *   **Arch Linux**:
     ```bash
     sudo pacman -S --needed base-devel cmake glew libjpeg-turbo libogg libopenmpt libpng libvorbis mpg123 ninja sdl2-compat
+    ```
+*   **Debian/Ubuntu**:
+    ```bash
+    sudo apt install cmake ninja-build libogg-dev libglew-dev libjpeg-dev libopenmpt-dev libpng-dev libvorbis-dev libmpg123-dev libsdl2-dev
     ```
 *   **Windows (MSYS2 UCRT64)**:
     ```bash
