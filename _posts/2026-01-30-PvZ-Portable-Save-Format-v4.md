@@ -1,6 +1,6 @@
 ---
 layout:       post
-title:        PvZ-Portable v4 存档格式：实现真正的跨架构关卡内无损存档
+title:        PvZ-Portable v4 存档格式：实现跨架构关卡内无损存档
 subtitle:     实现跨架构、跨平台且完美保存关卡内状态的游戏存档系统
 date:         2026-01-30
 author:       wszqkzqk
@@ -64,7 +64,7 @@ void SaveGame(Board* board) {
 
 ### 设计原则
 
-1.  **显式序列化（Explicit Serialization）**：
+1.  **显式序列化**：
     不再 Dump 内存。每个字段（坐标、血量、状态）都必须通过代码明确地读写。
     *   `mX` (float) -> 写入 4 字节浮点。
     *   `mZombieType` (enum) -> 写入 4 字节整数。
@@ -79,7 +79,7 @@ void SaveGame(Board* board) {
     所有多字节整数强制使用 **小端序（Little-Endian）** 写入，确保在任何架构上读取一致。
 
 4.  **块结构（Chunk-based）与 TLV**：
-    文件被组织成不同的“块（Chunk）”，每个块负责一类数据（如僵尸列表、植物列表）。这提高了格式的扩展性和容错性。
+    文件被组织成不同的块（Chunk），每个块负责一类数据（如僵尸列表、植物列表）。这提高了格式的扩展性和容错性。
 
 ### 文件结构详解
 
@@ -276,6 +276,8 @@ PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属�
 *   `properties/` 目录
 
 本项目仅提供引擎代码，用于技术学习，**不包含**上述任何游戏资源文件，任何游戏资源均需要用户自行提供正版游戏文件。
+
+本项目的源代码以 [**LGPL v2.1+**](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html) 许可证开源，欢迎学习和贡献。
 
 ## 附录：v4 存档结构文档
 
