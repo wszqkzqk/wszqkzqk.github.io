@@ -60,10 +60,10 @@ PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属�
 
 PvZ-Portable 会自动在各操作系统的标准应用数据目录下存储存档和配置：
 
-*   **Linux**: `~/.local/share/io.github.wszqkzqk/PlantsVsZombies/`
-*   **Windows**: `%APPDATA%\io.github.wszqkzqk\PlantsVsZombies\`
-*   **macOS**: `~/Library/Application Support/io.github.wszqkzqk/PlantsVsZombies/`
-*   **Nintendo Switch**: `sdmc:/switch/PlantsvsZombies`
+*   **Linux**: `~/.local/share/io.github.wszqkzqk/PvZPortable/`
+*   **Windows**: `%APPDATA%\io.github.wszqkzqk\PvZPortable\`
+*   **macOS**: `~/Library/Application Support/io.github.wszqkzqk/PvZPortable/`
+*   **Nintendo Switch**: `sdmc:/switch/PvZPortable`
 
 你可以手动将原版的**用户进度**文件复制到上述路径的 `userdata` 子目录下，以继续你的游戏进度（例如复制 `users.dat`, `user1.dat` 等）。但是请注意，由于**关卡内进度**（例如 `game1_13.dat`）的保存涉及到内存数据，无法兼容原版。
 
@@ -121,12 +121,12 @@ cmake --build build
 由于法律原因，我们无法在软件包中分发游戏资源。在打包前，你需要**自行提供**正版游戏资源：
 1.  找到你购买的正版游戏安装目录，常见路径包括：
     *   **Steam (Linux/Proton)**:
-        `~/.steam/steam/steamapps/common/PlantsVsZombies/`
+        `~/.steam/steam/steamapps/common/PvZPortable/`
     *   **Steam (Windows)**:
-        `C:\Program Files (x86)\Steam\steamapps\common\PlantsVsZombies\`
+        `C:\Program Files (x86)\Steam\steamapps\common\PvZPortable\`
     *   **PopCap (Windows)**:
-        `C:\Program Files (x86)\PopCap Games\PlantsVsZombies\` 或
-        `C:\Program Files\PopCap Games\PlantsVsZombies\`
+        `C:\Program Files (x86)\PopCap Games\PvZPortable\` 或
+        `C:\Program Files\PopCap Games\PvZPortable\`
 2.  将 `main.pak` 和 `properties/` 目录打包为 `Plants_vs._Zombies_1.2.0.1073_EN.zip`。
     *   确保 `main.pak` 位于 ZIP 文件的根目录，而不是子目录内。例如，可以使用以下命令（假设你在游戏目录下）：
         ```bash
