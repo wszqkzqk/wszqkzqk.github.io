@@ -65,7 +65,7 @@ PvZ-Portable 会自动在各操作系统的标准应用数据目录下存储存�
 *   **macOS**: `~/Library/Application Support/io.github.wszqkzqk/PvZPortable/`
 *   **Nintendo Switch**: `sdmc:/switch/PvZPortable`
 
-你可以手动将原版的**用户进度**文件复制到上述路径的 `userdata` 子目录下，以继续你的游戏进度（例如复制 `users.dat`, `user1.dat` 等）。但是请注意，由于**关卡内进度**（例如 `game1_13.dat`）的保存涉及到内存数据，无法兼容原版。
+你可以手动将原版的**用户进度**文件复制到上述路径的 `userdata` 子目录下，以继续你的游戏进度（例如复制 `users.dat`, `user1.dat` 等）。但是请注意，由于**关卡内进度**（例如 `game1_13.dat`）的保存涉及到内存数据，无法兼容原版。虽然笔者自己实现的[存档格式 v4](https://wszqkzqk.github.io/2026/01/30/PvZ-Portable-Save-Format-v4/) 支持跨平台使用，但很遗憾，原版的存档格式是与 ABI 高度绑定的，不具有可移植性。
 
 ## 构建与测试
 
