@@ -50,15 +50,15 @@ void SaveGame(Board* board) {
 2.  **内存对齐（Alignment）与填充（Padding）**：
     不同的编译器（MSVC vs GCC）或不同的 CPU 架构（x86 vs ARM vs LoongArch）对于结构体成员的内存对齐规则不同。编译器可能会在 `bool` 和 `int` 之间插入填充字节。直接 Dump 内存会将这些不可移植的填充字节也写入文件。
 
-3.  **大端与小端（Endianness）**：
+3.  **字节序（Endianness）**：
     虽然目前主流桌面设备（PC, Mac, Android, Switch）几乎都是小端序（Little-Endian），但直接 Dump 内存意味着不仅失去了对大端架构（如 Wii U, PS3）的潜在支持，也缺乏明确的格式规范。
 
 4.  **指针失效**：
-    原版存档中保存的“指针”其实是内存地址。重新加载时，游戏必须小心翼翼地把这些无效的地址“修复”为新分配的内存地址。如果对象布局稍有变化，这个修复过程就会出错崩溃。
+    原版存档中保存的指针其实是运行时的内存地址。重新加载时，游戏必须小心翼翼地把这些无效的地址修复为新分配的内存地址。如果对象布局稍有变化，这个修复过程就会出错崩溃。
 
 因此，**原版存档无法在不同架构之间互通**。你无法把 Linux 版的存档直接放到 32 位的 MSVC 构建的 Windrows 上运行。
 
-## 解决方案：Project v4 Portable Save Format
+## 解决方案：全新 v4 可移植存档格式
 
 为了彻底解决这个问题，笔者设计并实现了 **v4 可移植存档格式**（内部代号 `PVZP_SAVE4`）。
 
@@ -69,6 +69,7 @@ void SaveGame(Board* board) {
     *   `mX` (float) -> 写入 4 字节浮点。
     *   `mZombieType` (enum) -> 写入 4 字节整数。
     *   `mIsEating` (bool) -> 写入 1 字节布尔值。
+    *   ……
 
 2.  **消除指针，使用 ID**：
     不保存内存地址。所有引用关系通过 ID 或索引来重建。
@@ -183,7 +184,7 @@ static void SyncZombieTailPortable(PortableSaveContext& theContext, Zombie& theZ
 4.  游戏误以为音乐系统可用，尝试调用 `PlayMusic`，结果在底层触发了断言失败。
 
 **修复方案**：
-笔者在序列化层引入了**运行时状态隔离**。对于 `mMusicDisabled` 这种反映硬件/驱动状态的字段，笔者在读档时**只读不写** —— 读取存档中的字节仅仅是为了维持文件流的对齐，读取后直接丢弃，不修改内存中的真实状态。
+笔者在序列化层引入了**运行时状态隔离**。对于 `mMusicDisabled` 这种反映硬件/驱动状态的字段，笔者在读档时**只读取不操作** —— 读取存档中的字节仅仅是为了维持文件流的对齐，读取后直接丢弃，不修改内存中的真实状态。
 
 ```cpp
 // src/Lawn/System/SaveGame.cpp 中的修复片段
@@ -236,22 +237,22 @@ else
 
 ### 使用方法
 
-首先确保安装了 PyYAML依赖。
+首先确保安装了 PyYAML 依赖，随后即可使用：
 
 ```bash
 # 进入脚本目录
 cd scripts
 
-# 1. 查看存档基本信息
+# 查看存档基本信息
 python pvzp-v4-converter.py info game1_13.v4
 
-# 2. 导出为 YAML (默认模式，wave 数据保持紧凑)
+# 导出为 YAML (默认模式，wave 数据保持紧凑)
 python pvzp-v4-converter.py export game1_13.v4 game1_13.yaml
 
-# 3. 导出为 YAML (展开模式，可编辑每一波僵尸)
+# 导出为 YAML (展开模式，可编辑每一波僵尸)
 python pvzp-v4-converter.py export --expand-waves game1_13.v4 game1_13.yaml
 
-# 4. 修改 YAML 后，导入回 v4 格式
+# 修改 YAML 后，导入回 v4 格式
 python pvzp-v4-converter.py import game1_13.yaml game1_13_mod.v4
 ```
 
