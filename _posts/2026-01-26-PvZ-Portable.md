@@ -6,7 +6,7 @@ date:         2026-01-26
 author:       wszqkzqk
 header-img:   img/bg-pvz.webp
 catalog:      true
-tags:         C++ SDL2 OpenGL 开源软件 游戏移植
+tags:         C++ SDL2 OpenGL 开源软件 游戏移植 开源游戏
 ---
 
 # [PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable)
