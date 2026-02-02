@@ -75,7 +75,11 @@ PvZ-Portable 会自动在各操作系统的标准应用数据目录下存储存�
 
 ### 构建
 
-这部分仅涉及引擎的编译，适用于开发者或希望手动管理游戏文件的用户。确保安装了 CMake, Ninja, SDL2, OpenGL, libopenmpt 等依赖。这里列出了部分平台的依赖安装命令：
+这部分涉及引擎的编译。
+
+#### 依赖安装
+
+确保安装了 CMake, Ninja, SDL2, OpenGL, libopenmpt 等依赖。这里列出了部分平台的依赖安装命令：
 
 *   **Arch Linux**:
     ```bash
@@ -94,13 +98,40 @@ PvZ-Portable 会自动在各操作系统的标准应用数据目录下存储存�
     brew install cmake dylibbundler glew jpeg-turbo libogg libopenmpt libpng libvorbis mpg123 ninja sdl2
     ```
 
-**配置项目 (Release 模式)**:
+#### 基本配置
+
+这里列出的是**最基础、不含编译器优化等其他选项的编译步骤**。进入项目根目录，执行以下命令：
+
+```bash
+cmake -G Ninja -B build
+```
+
+#### 性能优化
+
+在实际使用中，推荐使用 Release 模式编译以获得更好的性能：
 
 ```bash
 cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
 ```
 
-如果需要使用**作弊键** `-tod` 等功能，可以启用 `PVZ_DEBUG` 选项：
+对于需要调试的用户，可以使用 RelWithDebInfo 模式：
+
+```bash
+cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+```
+
+#### 构建选项
+
+在配置 CMake 项目时，你可以使用以下选项来启用或禁用特定功能：
+
+| 选项 | 默认值 | 说明 |
+| :--- | :--- | :--- |
+| `PVZ_DEBUG` | `OFF`<br>(如果 `CMAKE_BUILD_TYPE` 是 `Debug` 则默认为 `ON`) | 启用**作弊键**、调试显示和其他调试功能。 |
+| `LIMBO_PAGE` | `ON` | 启用隐藏关卡页面（Limbo Page）。 |
+| `DO_FIX_BUGS` | `OFF` | 应用社区对官方 1.2.0.1073 GOTY 版的“错误”修复。[^6] 不过这些“错误”通常被许多玩家视为“特性”。 |
+| `CONSOLE` | `OFF`<br>(如果 `CMAKE_BUILD_TYPE` 是 `Debug` 则默认为 `ON`) | 显示控制台窗口（仅限 Windows）。 |
+
+例如，如果需要使用**作弊键** `-tod` 等功能，可以启用 `PVZ_DEBUG` 选项：
 
 ```bash
 cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -DPVZ_DEBUG=ON
@@ -108,7 +139,7 @@ cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -DPVZ_DEBUG=ON
 
 这样如果在运行时向程序添加 `-tod` 参数，就可以启用作弊功能。[^5]
 
-**编译**:
+#### 编译
 
 ```bash
 cmake --build build
@@ -182,9 +213,13 @@ exec /usr/share/pvz-portable/pvz-portable "$@"
 ## 备注
 
 [^1]: [Patoke 的 re-plants-vs-zombies](https://github.com/Patoke/re-plants-vs-zombies)
+
 [^2]: [Headshotnoby 的 re-plants-vs-zombies fork](https://github.com/headshot2017/re-plants-vs-zombies)
+
 [^3]: 互联网上存在大量关于植物大战僵尸游戏机制的研究文档，部分基于逆向分析，例如在 [植物大战僵尸吧](https://tieba.baidu.com/f?ie=utf-8&kw=%E6%A4%8D%E7%89%A9%E5%A4%A7%E6%88%98%E5%83%B5%E5%B0%B8), [PVZ Wiki](https://wiki.pvz1.com/doku.php?id=home) 和 [PvZ Tools](https://pvz.tools/memory/) 等平台上都有丰富详尽的游戏机制细节资料。但**笔者从未对游戏进行过任何逆向工程分析**。
+
 [^4]: 原版植物大战僵尸使用 DirectX 7 进行渲染，无法跨平台且性能较差。目前为止，移植到 OpenGL 的主要工作由 [Patoke](https://github.com/Patoke/re-plants-vs-zombies) 和 [Headshotnoby](https://github.com/headshot2017/re-plants-vs-zombies) 完成。
+
 [^5]: 以下为作弊键清单（仅在编译时启用 `PVZ_DEBUG` 且运行参数带 `-tod` 时有效，且不少只在特定界面/模式生效）：
     * **标题/主菜单**：
         * 按键记录“快速进入”目标：
@@ -239,3 +274,15 @@ exec /usr/share/pvz-portable/pvz-portable "$@"
         * `1`~`7`、`q`~`t`、`a`~`g` 跳转到不同字幕段。
         * `n` 切换字幕与音乐同步。
 
+[^6]: 目前 `DO_FIX_BUGS` 包含以下修复：
+    * 修复我是僵尸关卡中蹦极僵尸同时命中同一朵向日葵时重复掉落阳光的问题。
+    * 使魅惑的巨人僵尸攻击敌方僵尸，而非植物。
+    * 使魅惑的巨人僵尸投掷魅惑小鬼（修正比例、生命值和方向）。
+    * 使魅惑的巨人僵尸在解谜模式中可以砸碎花瓶。
+    * 使魅惑的豌豆/机枪头僵尸向前射击而非向后。
+    * 使魅惑的辣椒/窝瓜僵尸伤害敌方僵尸而非植物。
+    * 修正魅惑南瓜僵尸追踪和砸碎敌方僵尸的坐标问题。
+    * 使魅惑的辣椒僵尸正确清除僵王博士的技能（冰球/火球）和梯子。
+    * 同步舞王僵尸动画（修复“女仆秘籍”）。
+    * 修复扶梯僵尸手臂恢复的视觉故障。
+    * 修复僵王博士的攻击（扔车、火球/冰球）和6车道（泳池）关卡的召唤范围覆盖问题。
