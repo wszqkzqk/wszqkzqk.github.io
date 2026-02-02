@@ -183,7 +183,7 @@ script -c "time extra-loong64-build -- -- -A" build-log-all.log
 需要注意的是，如果上游已经对`loong64`架构进行了处理，则**不应该**使用`-A`参数，否则可能会打乱一些制定好的判断机制。所以，**现在更推荐使用以下命令**，自动根据`arch=`数组中是否包含`loong64`来决定是否添加`-A`参数：
 
 ```bash
-script -c "bash -c 'source PKGBUILD; if [[ \" \${arch[@]} \" =~ \" loong64 \" ]]; then time extra-loong64-build; else time extra-loong64-build -- -- -A; fi'" build-log-all.log
+script -c 'bash -c "time extra-loong64-build \$(source PKGBUILD; [[ \" \${arch[*]} \" =~ \" loong64 \" ]] || echo -- -- -A)"' build-log-all.log
 ```
 
 #### 首次构建可能问题
