@@ -35,7 +35,7 @@ libRemarks.so=16-64                                           | libRemarks.so=18
 * `extra-*-build`默认并不会保存输出到`stderr`的输出，因此日志中**默认不会包含**`checkpkg`的输出。
   * 可以结合`script`命令来保存**全部**的输出，例如：
     ```bash
-    script -c "extra-loong64-build -- -- -A" build-log-all.log
+    script -c 'time extra-loong64-build $(bash -c "source PKGBUILD; [[ \" \${arch[*]} \" =~ \" loong64 \" ]] || echo -- -- -A")' build-log-all.log
     ```
 
 其中给出了发生soname变化的软件包名`llvm-libs`，以及变化的soname：`libLLVM.so`、`libLTO.so`、`libRemarks.so`。
