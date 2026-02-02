@@ -180,6 +180,12 @@ extra-loong64-build -- -- -A
 script -c "time extra-loong64-build -- -- -A" build-log-all.log
 ```
 
+需要注意的是，如果上游已经对`loong64`架构进行了处理，则**不应该**使用`-A`参数，否则可能会打乱一些制定好的判断机制。所以，**现在更推荐使用以下命令**，自动根据`arch=`数组中是否包含`loong64`来决定是否添加`-A`参数：
+
+```bash
+script -c "bash -c 'source PKGBUILD; if [[ \" \${arch[@]} \" =~ \" loong64 \" ]]; then time extra-loong64-build; else time extra-loong64-build -- -- -A; fi'" build-log-all.log
+```
+
 #### 首次构建可能问题
 
 首次运行时，程序会在`/var/lib/archbuild/`下创建目录`extra-loong64`，如果是Btrfs文件系统，会在`extra-loong64`下创建一个名为`root`的子卷，用于存放LoongArch Linux的基本chroot环境，在后续每次运行构建时，将会对这一子卷中的环境进行升级同步，并创建一个新的快照子卷进行构建。（其他文件系统则是创建普通目录、复制目录）
