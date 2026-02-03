@@ -54,7 +54,7 @@ PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属�
 
 本项目仅提供引擎代码，用于技术学习，**不包含**上述任何游戏资源文件，任何游戏资源均需要用户自行提供正版游戏文件。
 
-本项目的源代码以 [**LGPL v2.1+**](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html) 许可证开源，欢迎学习和贡献。
+本项目的源代码以 [**LGPL-3.0-or-later**](https://www.gnu.org/licenses/lgpl-3.0.html) 许可证开源，欢迎学习和贡献。
 
 ## 使用指南
 
@@ -204,7 +204,7 @@ exec /usr/share/pvz-portable/pvz-portable "$@"
 * 特别感谢 [Patoke](https://github.com/Patoke/) 和 [Headshotnoby](https://github.com/headshot2017/) 对引擎的跨平台移植的杰出贡献！
 *  感谢 SDL 开发团队提供的强大跨平台库！
 *  感谢所有为游戏研究做出贡献的社区成员！
-*  感谢宝开创造了这个经典游戏！
+*  感谢宝开创造了这个经典游戏，并使用宽松的[PopCap Games Framework License](https://github.com/wszqkzqk/PvZ-Portable/blob/main/src/SexyAppFramework/LICENSE)开放`SexyAppFramework`，让开源社区能够更方便地研究这个游戏引擎！
 
 如果你对游戏引擎开发或者跨平台移植感兴趣，欢迎访问项目仓库给个 Star，或者参与贡献！
 

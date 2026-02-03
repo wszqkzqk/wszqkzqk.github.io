@@ -280,7 +280,7 @@ PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属�
 
 本项目仅提供引擎代码，用于技术学习，**不包含**上述任何游戏资源文件，任何游戏资源均需要用户自行提供正版游戏文件。
 
-本项目的源代码以 [**LGPL v2.1+**](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html) 许可证开源，欢迎学习和贡献。
+本项目的源代码以 [**LGPL-3.0-or-later**](https://www.gnu.org/licenses/lgpl-3.0.html) 许可证开源，欢迎学习和贡献。
 
 ## 附录：v4 存档结构文档
 
