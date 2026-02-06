@@ -9,7 +9,7 @@ catalog:      true
 tags:         C++ 跨平台 游戏移植 开源软件 开源游戏
 ---
 
-## 引言
+## 前言
 
 在[上一篇文章](https://wszqkzqk.github.io/2026/01/30/PvZ-Portable-Save-Format-v4/)中，笔者介绍了全新的 v4 存档格式，解决了不同架构间存档互通的难题。
 
