@@ -73,6 +73,13 @@ PvZ-Portable 会自动在各操作系统的标准应用数据目录下存储存�
 
 作为开源项目，你可以自由地编译它。本项目使用了现代化的 CMake 构建系统。
 
+在构建前首先克隆 Git 仓库：
+
+```bash
+git clone https://github.com/wszqkzqk/PvZ-Portable.git
+cd PvZ-Portable
+```
+
 ### 构建
 
 这部分涉及引擎的编译。
