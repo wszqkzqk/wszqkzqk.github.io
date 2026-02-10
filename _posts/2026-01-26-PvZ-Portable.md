@@ -15,7 +15,7 @@ tags:         C++ SDL2 OpenGL 开源软件 游戏移植 开源游戏
 
 时隔几年，随着技术栈的深入，在开源社区前人大量代码[^1] [^2]的基础上，笔者带来了一个强大得多的新项目 —— [**PvZ-Portable**](https://github.com/wszqkzqk/PvZ-Portable)。
 
-这是一个**跨平台**的社区驱动项目，是对《植物大战僵尸：年度版》（GOTY Edition）的完整源码重实现。与之前的玩具项目不同，PvZ-Portable 的目标是 **100% 还原原版游戏体验**，同时让它能在现代硬件和各种非官方支持的平台上流畅运行。项目开源开发，用于交流学习**跨平台移植技术**、**引擎现代化**以及研究如何将经典游戏逻辑适配到各种不同的软硬件平台上。
+这是一个**跨平台**的社区驱动项目，是对《植物大战僵尸：年度版》（GOTY Edition）的完整源码重实现。与之前的玩具项目不同，PvZ-Portable 的目标是 **100% 还原原版游戏体验**，同时让它能在现代软件、硬件和各种官方未支持的平台上流畅运行。项目开源开发，用于交流学习**跨平台移植技术**、**引擎现代化**以及研究如何将经典游戏逻辑适配到各种不同的软硬件平台上。
 
 | 🌿 原汁原味 | 🎮 可移植/跨平台 | 🛠️ 开源开放 |
 | :---: | :---: | :---: |
@@ -27,7 +27,7 @@ tags:         C++ SDL2 OpenGL 开源软件 游戏移植 开源游戏
 
 在开源社区，已经有前人基于逆向工程得到的文档和社区研究，[^3]重写了游戏引擎。PvZ-Portable 在此基础上进一步开发，是一个专注于跨平台移植技术的研究项目，主要实现：
 
-1.  **现代化渲染**：使用 SDL2 和 OpenGL 替代了古老的 DirectX[^4]，支持硬件加速，并且终于**支持调整窗口大小**了！
+1.  **现代化渲染**：使用 SDL2 和 OpenGL 替代了古老的 DirectX 7[^4]，支持硬件加速，并且终于**支持调整窗口大小**了！
     *   由于游戏分辨率仅有 800x600，在高分辨率屏幕上运行原版时窗口会非常小，只有开启全屏模式才能放大。
     *   PvZ-Portable **支持任意缩放比例**，也支持**窗口最大化**和全屏。
 2.  **真正、全面跨平台**：
@@ -212,7 +212,7 @@ exec /usr/share/pvz-portable/pvz-portable "$@"
 * 特别感谢 [Patoke](https://github.com/Patoke/) 和 [Headshotnoby](https://github.com/headshot2017/) 对引擎的跨平台移植的杰出贡献！
 *  感谢 SDL 开发团队提供的强大跨平台库！
 *  感谢所有为游戏研究做出贡献的社区成员！
-*  感谢宝开创造了这个经典游戏，并使用宽松的[PopCap Games Framework License](https://github.com/wszqkzqk/PvZ-Portable/blob/main/src/SexyAppFramework/LICENSE)开放`SexyAppFramework`，让开源社区能够更方便地研究这个游戏引擎！
+*  感谢宝开创造了这个经典游戏，并使用宽松的 [PopCap Games Framework License](https://github.com/wszqkzqk/PvZ-Portable/blob/main/src/SexyAppFramework/LICENSE) 开放 `SexyAppFramework`，让开源社区能够更方便地研究这个游戏引擎！
 
 如果你对游戏引擎开发或者跨平台移植感兴趣，欢迎访问项目仓库给个 Star，或者参与贡献！
 
@@ -224,9 +224,9 @@ exec /usr/share/pvz-portable/pvz-portable "$@"
 
 [^2]: [Headshotnoby 的 re-plants-vs-zombies fork](https://github.com/headshot2017/re-plants-vs-zombies)
 
-[^3]: 互联网上存在大量关于植物大战僵尸游戏机制的研究文档，部分基于逆向分析，例如在 [植物大战僵尸吧](https://tieba.baidu.com/f?ie=utf-8&kw=%E6%A4%8D%E7%89%A9%E5%A4%A7%E6%88%98%E5%83%B5%E5%B0%B8), [PVZ Wiki](https://wiki.pvz1.com/doku.php?id=home) 和 [PvZ Tools](https://pvz.tools/memory/) 等平台上都有丰富详尽的游戏机制细节资料。但**笔者从未对游戏进行过任何逆向工程分析**。
+[^3]: 互联网上存在大量关于植物大战僵尸游戏机制的研究文档，部分基于逆向分析，例如在 [植物大战僵尸吧](https://tieba.baidu.com/f?ie=utf-8&kw=%E6%A4%8D%E7%89%A9%E5%A4%A7%E6%88%98%E5%83%B5%E5%B0%B8), [PVZ Wiki](https://wiki.pvz1.com/doku.php?id=home) 和 [PvZ Tools](https://pvz.tools/memory/) 等平台上都有丰富详尽的游戏机制细节资料。但**笔者从未对游戏进行过任何逆向工程分析**。笔者仅通过**公开的社区研究资料**和**实际游戏测试**来理解游戏机制，并在此基础上进行重实现。
 
-[^4]: 原版植物大战僵尸使用 DirectX 7 进行渲染，无法跨平台且性能较差。目前为止，移植到 OpenGL 的主要工作由 [Patoke](https://github.com/Patoke/re-plants-vs-zombies) 和 [Headshotnoby](https://github.com/headshot2017/re-plants-vs-zombies) 完成。
+[^4]: 原版植物大战僵尸使用 DirectX 7 进行渲染，无法跨平台且性能较差。将游戏移植到 OpenGL 的大量工作离不开 [Patoke](https://github.com/Patoke/re-plants-vs-zombies) 和 [Headshotnoby](https://github.com/headshot2017/re-plants-vs-zombies) 的贡献。
 
 [^5]: 以下为作弊键清单（仅在编译时启用 `PVZ_DEBUG` 且运行参数带 `-tod` 时有效，且不少只在特定界面/模式生效）：
     * **标题/主菜单**：
