@@ -125,7 +125,7 @@ bool ZenGarden::IsStinkyHighOnChocolate() {
 
 ## 结语
 
-通过这次的底层重构，PvZ-Portable 不仅拓宽了“空间”上的边界（从小端序到大端序架构），也拓宽了“时间”上的边界。欢迎在项目 [GitHub 仓库](https://github.com/wszqkzqk/PvZ-Portable)查看详情。
+通过这次的底层重构，PvZ-Portable 不仅拓宽了空间上的边界（从小端序到大端序架构），也拓宽了时间上的边界。欢迎在项目 [GitHub 仓库](https://github.com/wszqkzqk/PvZ-Portable)查看详情。
 
 ## ⚠️ 版权与说明
 
