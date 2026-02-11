@@ -59,6 +59,10 @@ PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属�
 
 ## 使用指南
 
+### 程序下载
+
+你可以从 [GitHub Releases 页面](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载预编译的二进制文件，或者从源代码自行编译（见下文）。请注意，本项目需要**自行提供正版游戏资源**，二进制包中不包含任何游戏素材。
+
 ### 数据存储
 
 PvZ-Portable 会自动在各操作系统的标准应用数据目录下存储存档和配置：

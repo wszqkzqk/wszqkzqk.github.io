@@ -11,7 +11,7 @@ tags:         C++ 游戏移植 序列化 游戏存档 开源软件 开源游戏
 
 ## 引言
 
-在之前的[文章](https://wszqkzqk.github.io/2026/01/26/PvZ-Portable/)中，我介绍了 [PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable) 项目。这是一个致力于将《植物大战僵尸：年度版》带向所有平台的开源重实现研究项目。
+在之前的[文章](https://wszqkzqk.github.io/2026/01/26/PvZ-Portable/)中，笔者介绍了 [PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable) 项目。这是一个致力于将《植物大战僵尸：年度版》带向所有平台的开源重实现研究项目。
 
 实现跨平台不仅仅意味着让代码在 Linux、Windows、macOS 上编译通过，更意味着**用户体验的一致性**。而这其中最关键的一环，就是**存档的互通性**。
 
