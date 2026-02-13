@@ -61,7 +61,7 @@ PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属�
 
 ### 程序下载
 
-你可以从 [GitHub Releases 页面](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载预编译的二进制文件，或者从源代码自行编译（见下文）。预案构建二进制仅包含若干主流架构和操作系统搭配，实际支持的平台远远不止这些，如果你需要其他平台的版本，也请自行从源代码编译。
+你可以从 [GitHub Releases 页面](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载预编译的二进制文件，或者从源代码自行编译（见下文）。预案构建二进制仅包含若干主流架构和操作系统搭配，实际支持的平台远远不止这些，如果你需要其他平台的版本，也请自行从源代码编译。预构建二进制均使用 GitHub Actions 编译，主要用于测试，没有进行任何签名。macOS 用户如果不想处理签名问题，**推荐自行编译**。本项目编译流程较为简单，也推荐其他**有条件的用户尽量自行编译**。若没有条件自行构建且有对应平台的预构建文件，从 [GitHub Releases](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载使用**亦可**。
 
 再次提醒，本项目需要**自行提供正版游戏资源**，二进制包和源码仓库中均不包含任何游戏素材。
 
