@@ -17,7 +17,7 @@ tags:         C++ OpenGL 跨平台 游戏移植 开源软件 开源游戏
 
 这个 Bug 表现出极强的随机性，背景图似乎在这个过程中被随机交换了内存。
 
-经过漫长的排查，笔者终于在近日根治了这个问题（Commit [f83ad81](https://github.com/wszqkzqk/PvZ-Portable/commit/f83ad81e5637921eb24c714230b7cf25fb28d4c0)）。这远远比看上去的更复杂，是一个跨越了资源管理、渲染状态机和底层 OpenGL 接口实现的连锁反应。
+经过漫长的排查，笔者根治了这个问题（Commit [f83ad81](https://github.com/wszqkzqk/PvZ-Portable/commit/f83ad81e5637921eb24c714230b7cf25fb28d4c0)）。这远远比看上去的更复杂，是一个跨越了资源管理、渲染状态机和底层 OpenGL 接口实现的连锁反应。
 
 ## 抽丝剥茧：排查之路
 
@@ -89,7 +89,7 @@ void TextureData::CheckCreateTextures(MemoryImage *theImage)
 
 引擎误以为图片属性变了，于是销毁现有的 GPU 纹理，试图从内存中重新读取数据并上传。
 
-### 第四步：致命一击——破碎的 RecoverBits
+### 第四步：水落石出——破碎的 RecoverBits
 
 纹理重建本应只是性能损耗，不该导致画面错误。除非……重建过程本身就是坏的。
 
@@ -97,7 +97,7 @@ void TextureData::CheckCreateTextures(MemoryImage *theImage)
 
 笔者检查了 `RecoverBits` 的实现，瞬间倒吸一口凉气。
 
-PvZ 的背景图很大（通常是 1400x600），会被切割成多个 64x64 的小块纹理（Texture Piece）存储。`RecoverBits` 的逻辑是遍历这些小块，用 `glGetTexImage` 读回数据。
+该游戏的背景图很大（通常是 1400x600），会被切割成多个 64x64 的小块纹理（Texture Piece）存储。`RecoverBits` 的逻辑是遍历这些小块，用 `glGetTexImage` 读回数据。
 
 但这部分的实现存在在一个低级失误：
 
@@ -107,7 +107,7 @@ for (int aPieceRow = 0; ... ) {
     for (int aPieceCol = ... ) {
         // ... 绑定当前块的纹理 ...
         
-        // 灾难现场：直接写入到 GetBits() 起始位置，没有加偏移量！
+        // 直接写入到 GetBits() 起始位置，没有加偏移量！
         glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, ..., theImage->GetBits());
     }
 }
@@ -132,7 +132,6 @@ for (int aPieceRow = 0; ... ) {
 
 1.  **修复 `RecoverBits`**：
     这是根本性的修复。笔者重写了读取逻辑，为每个纹理块分配临时缓冲，读取后使用 `memcpy` 将其逐行拷贝到大图缓冲区正确的 `(offx, offy)` 坐标处。不管是什么平台处理上下文丢失，正确的显存回读都是必须的。
-
 2.  **修复标志位检测**：
     在 `CheckCreateTextures` 中引入掩码机制。`Sanding` 这种只影响一次性预处理的瞬态标志，不应作为判断纹理是否需要重建的依据。我们忽略这些无关标志的变动，从而彻底避免了不必要的纹理重建开销。
 
@@ -146,7 +145,7 @@ if ((theImage->mRenderFlags & RenderImageFlag_TextureMask) != mImageFlags)
     CreateTextures(theImage);
 ```
 
-至此，这个困扰笔者已久的幽灵 Bug 终于被彻底消灭。这也再次提醒了我们：在实现复杂的代码时，对于每一行看似冗余的标志位操作和每一个底层的数据搬运函数，都必须保持十分的警惕。
+至此，这个困扰笔者已久的奇怪 Bug 终于被彻底消灭。这也再次提醒了我们：在实现复杂的代码时，对于每一行看似冗余的标志位操作和每一个底层的数据搬运函数，都必须保持十分的警惕。
 
 ## 结语
 
