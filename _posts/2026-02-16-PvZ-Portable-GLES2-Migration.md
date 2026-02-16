@@ -295,7 +295,7 @@ platform/switch/Input.cpp
 
 迁移过程中暴露了一个潜伏的颜色处理 bug。在之前的一次字节序清理中，`Color::ToInt()` 被错误地修改为返回 ABGR 格式（`0xAABBGGRR`），而游戏内部的 `TriVertex.color` 等数据结构始终期望标准的 ARGB 格式（`0xAARRGGBB`）。
 
-在旧的分立代码中，这个问题被一些特定的平台代码路径掩盖了。但统一渲染器后，问题立即浮现——最明显的症状是冰冻的巨人僵尸（Gargantuar）从蓝色变成了红色，因为 R 和 B 通道被交换了两次。
+在旧的分立代码中，这个问题被一些特定的平台代码路径掩盖了。但统一渲染器后，问题立即浮现——最明显的症状是冰冻的僵尸部分渲染块从蓝色变成了红色，因为 R 和 B 通道被交换了两次。
 
 修复方案分两步：
 
@@ -317,7 +317,6 @@ uint32_t Color::ToInt() const
 ```cpp
 static inline uint32_t ArgbToRgba(uint32_t argb) noexcept
 {
-    // ARGB → ABGR (swap R↔B), then force little-endian for GL byte order
     uint32_t abgr = (argb & 0xFF00FF00u)
                   | ((argb >> 16) & 0x000000FFu)
                   | ((argb << 16) & 0x00FF0000u);
@@ -335,6 +334,119 @@ static inline uint32_t ArgbToRgba(uint32_t argb) noexcept
 - **glm**：不再需要。矩阵运算直接在 shader 中用 `mat4` 完成，投影矩阵在 C++ 侧手动构造（正交投影矩阵非常简单，完全不需要一个数学库）。
 - **OpenGL 系统库**：不再需要 `find_package(OpenGL)` 或链接 `OpenGL::GL`。glad 通过 `GetProcAddress` 在运行时加载所有函数，不需要编译时链接 GL 库。
 - **Switch 上的 glad（devkitPro 版）**：替换为项目内置的精简 glad header-only 版本，不再链接 `glad` 库。
+
+### 第九步：修复纹理过滤状态管理
+
+统一渲染后端后，笔者注意到部分缩放或旋转渲染的图像存在**锯齿状阶梯纹**——例如舞王僵尸脚下的聚光灯光圈、水族馆和禅境花园的背景图等。这些图像在游戏中需要经过缩放或旋转绘制，理应使用双线性过滤（`GL_LINEAR`）来获得平滑的采样效果，但实际渲染却表现为最近邻采样（`GL_NEAREST`）的粗糙像素边缘。
+
+#### 根本原因：过滤参数被设置到了错误的纹理上
+
+调查后发现，问题的根源在于 **OpenGL 的纹理过滤状态是绑定在纹理对象（texture object）上的，而非全局状态**。
+
+旧代码中，`SetLinearFilter()` 在每次绘制前通过 `glTexParameteri` 设置过滤模式：
+
+```cpp
+void GLInterface::SetLinearFilter(bool linearFilter)
+{
+    GLenum filter = linearFilter ? GL_LINEAR : GL_NEAREST;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+}
+```
+
+然而，`glTexParameteri` 作用的对象是**当前绑定的纹理**——即上一次 `glBindTexture` 所绑定的那个。在实际绘制路径中，调用顺序是：
+
+1. `SetLinearFilter(true)` → 将过滤参数设到**上一次绘制残留的旧纹理**
+2. `glBindTexture(GL_TEXTURE_2D, newTexture)` → 绑定**本次实际要绘制的纹理**
+3. `glDrawArrays(...)` → 绘制，使用的是 `newTexture` 自身已有的过滤参数
+
+也就是说，`SetLinearFilter` 的调用效果总是作用在**错误的纹理**上，实际要绘制的纹理从未收到过滤参数的更新。
+
+#### 修复方案：引入 GfxBindTexture
+
+修复思路很直接：**将纹理绑定和过滤参数设置合并为一个原子操作**。笔者引入了 `GfxBindTexture()` 函数：
+
+```cpp
+static bool gLinearFilter = true;
+
+void GLInterface::SetLinearFilter(bool linearFilter)
+{
+    gLinearFilter = linearFilter;
+}
+
+static void GfxBindTexture(GLuint texture)
+{
+    glBindTexture(GL_TEXTURE_2D, texture);
+    GLenum filter = gLinearFilter ? GL_LINEAR : GL_NEAREST;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+}
+```
+
+`SetLinearFilter()` 不再直接调用 GL API，只是设置一个标志位。真正的 `glTexParameteri` 调用被移到 `GfxBindTexture()` 中——在 `glBindTexture()` **之后**立即执行，确保过滤参数一定作用在正确的纹理对象上。所有原先直接调用 `glBindTexture` 的地方都替换为 `GfxBindTexture`。
+
+#### 默认使用双线性过滤
+
+既然过滤功能修复了，笔者顺便将默认过滤模式从 `GL_NEAREST` 改为 `GL_LINEAR`：
+
+- `Graphics` 构造函数中的 `mLinearBlend` 默认值：`false` → `true`
+- `Blt()` / `BltMirror()` 的 `linearFilter` 默认参数：`false` → `true`
+
+这一改动的安全性在于：**当纹理以 1:1 像素对齐方式绘制时，`GL_LINEAR` 和 `GL_NEAREST` 的采样结果完全一致**——因为采样点恰好落在纹素中心，双线性插值的四个权重退化为 `(1, 0, 0, 0)`。只有在纹理被缩放或旋转时，`GL_LINEAR` 才会产生平滑的插值效果，而这正是我们所期望的行为。在现代 GPU 上，双线性过滤是硬件原生支持的操作，与最近邻采样相比没有可测量的性能差异。
+
+对于确实需要最近邻采样的场景（如种子包上的缩放文字渲染），代码已在对应位置显式调用了 `SetLinearBlend(false)`，不受默认值影响。
+
+#### 清理死代码
+
+修复后，`PreDraw()` 中原本在每次绘制前重置 `gLinearFilter = false` 的代码变成了无效逻辑——因为每条绘制路径都会通过 `SetLinearFilter()` 重新设置这个标志。笔者移除了这三行死代码，使 `PreDraw()` 只保留混合模式的重置。同理，`CopyImageToTexture()` 中在纹理上传时设置过滤参数的代码也是冗余的——后续 `GfxBindTexture()` 绑定该纹理时会重新设置过滤参数——一并移除。
+
+### 第十步：禁用 sRGB 帧缓冲
+
+迁移完成后，笔者在 Windows 上测试时发现画面整体**偏亮**，颜色像被漂白了一样。经调查，这是一个由上下文类型变更引发的 **sRGB gamma 双重校正**问题。
+
+#### 根本原因：ES 上下文改变了帧缓冲的 sRGB 属性
+
+迁移前，PC 平台请求的是**桌面 OpenGL 兼容性上下文**（`SDL_GL_CONTEXT_PROFILE_COMPATIBILITY`）。在这种上下文下，Windows 驱动通常选择**不带 sRGB 标记**的像素格式，`GL_FRAMEBUFFER_SRGB` 默认禁用——这符合 OpenGL 规范的默认行为。
+
+迁移后，PC 平台改为优先请求 **OpenGL ES 2.0 上下文**（`SDL_GL_CONTEXT_PROFILE_ES`）。在 Windows 上，SDL 创建 ES 上下文通常走以下两条路径之一：
+
+1. **驱动原生 ES 模拟**：NVIDIA/AMD 的桌面驱动提供 ES 兼容性时，WGL 的像素格式选择路径与桌面 GL 不同，可能倾向选择带 `WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB` 标记的像素格式。
+2. **ANGLE 后端**：ANGLE 将 GLES 调用翻译为 Direct3D。其 D3D11 后端默认使用 `DXGI_FORMAT_R8G8B8A8_UNORM_SRGB` 格式创建交换链（swap chain），使默认帧缓冲天然具有 sRGB 属性。
+
+无论哪种情况，结果都是默认帧缓冲变成了 **sRGB-capable**。此时某些驱动会自动启用 `GL_FRAMEBUFFER_SRGB`，使 GPU 在写入帧缓冲时执行**线性 → sRGB** 的 gamma 转换（约 $\gamma = 1/2.2$）。
+
+然而，PvZ-Portable 的整个渲染管线都在 **sRGB 空间**中直接工作——纹理采样后不做线性化，fragment shader 直接输出 sRGB 值。如果帧缓冲端又额外做一次 sRGB 编码，相当于 **gamma 校正被重复应用**，导致画面发白。
+
+#### 修复方案
+
+修复非常直接——在 GL 初始化时无条件禁用 `GL_FRAMEBUFFER_SRGB`：
+
+```cpp
+// Windows GL implementations may auto-enable sRGB on the default framebuffer.
+glDisable(GL_FRAMEBUFFER_SRGB);
+glGetError(); // clear error if unsupported
+```
+
+由于 `GL_FRAMEBUFFER_SRGB`（`0x8DB9`）是桌面 OpenGL 3.0+（`GL_ARB_framebuffer_sRGB`）的枚举，GLES 2.0 头文件中没有定义，因此还需要一个兼容性宏：
+
+```cpp
+#ifndef GL_FRAMEBUFFER_SRGB
+#define GL_FRAMEBUFFER_SRGB 0x8DB9
+#endif
+```
+
+#### 跨平台安全性
+
+这个修复对所有平台都是安全的：
+
+| 平台 | 行为 |
+| :--- | :--- |
+| **Windows（ES 上下文或桌面 GL 回退）** | 关键修复。驱动可能自动启用 sRGB，`glDisable` 将其关闭。 |
+| **Linux / Mesa** | 桌面 GL 兼容模式通常不自动启用 sRGB，`glDisable` 无害。 |
+| **macOS** | 同 Linux，默认不启用。 |
+| **原生 GLES 2.0 设备** | 此枚举不被识别，`glDisable` 产生 `GL_INVALID_ENUM`，紧随的 `glGetError()` 将其清除，不影响后续逻辑。 |
+
+`glGetError()` 的调用是关键的安全网——它确保即使在不支持此枚举的 GLES 实现上，错误标志也不会残留，不会干扰后续的 GL 错误检查逻辑。
 
 ## 迁移成效
 
@@ -429,6 +541,8 @@ if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 - 消除了三套渲染代码的平台分裂，统一为一份约 1500 行的共享实现。
 - 移除了 GLEW、glm 等外部依赖，降低了构建和部署门槛。
 - 修复了潜伏的颜色处理 bug。
+- 修复了纹理过滤状态管理的 bug，消除了缩放/旋转图像的锯齿伪影，并将默认过滤模式切换为更合理的双线性过滤。
+- 修复了 Windows 上因 ES 上下文导致 sRGB 帧缓冲自动启用引起的画面发白问题。
 - 解决了 XWayland 下黑边区域可能出现的闪烁问题（旧版固定管线代码在某些 Wayland 合成器上通过 XWayland 运行时表现不稳定）。
 - 支持通过 ANGLE 对接 DirectX/Metal/Vulkan），在 OpenGL 驱动不佳的平台上提供额外的兼容性保障。
 - 使渲染 bug 修复只需改一处，所有平台同时受益。
