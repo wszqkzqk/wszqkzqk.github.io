@@ -387,14 +387,22 @@ static void GfxBindTexture(GLuint texture)
 
 #### 默认使用双线性过滤
 
-既然过滤功能修复了，笔者顺便将默认过滤模式从 `GL_NEAREST` 改为 `GL_LINEAR`：
+既然过滤功能修复了，笔者将默认过滤模式从 `GL_NEAREST` 改为 `GL_LINEAR`：
 
 - `Graphics` 构造函数中的 `mLinearBlend` 默认值：`false` → `true`
 - `Blt()` / `BltMirror()` 的 `linearFilter` 默认参数：`false` → `true`
 
-这一改动的安全性在于：**当纹理以 1:1 像素对齐方式绘制时，`GL_LINEAR` 和 `GL_NEAREST` 的采样结果完全一致**——因为采样点恰好落在纹素中心，双线性插值的四个权重退化为 `(1, 0, 0, 0)`。只有在纹理被缩放或旋转时，`GL_LINEAR` 才会产生平滑的插值效果，而这正是我们所期望的行为。在现代 GPU 上，双线性过滤是硬件原生支持的操作，与最近邻采样相比没有可测量的性能差异。
+这一改动不仅仅是"顺便"——它直接解决了从 DirectX 7 迁移以来一直存在的**纹理缩放品质退化**问题。原版游戏的 DirectX 7 渲染器对缩放和旋转的纹理默认使用双线性过滤，而 OpenGL 移植版之前一直使用 `GL_NEAREST`（最近邻采样），导致多处视觉效果明显劣于原版：
 
-对于确实需要最近邻采样的场景（如种子包上的缩放文字渲染），代码已在对应位置显式调用了 `SetLinearBlend(false)`，不受默认值影响。
+- **舞王僵尸的聚光灯光圈**：原版中聚光灯是一个平滑的圆形渐变光幕，而 `GL_NEAREST` 下呈现明显的像素方块和网格状锯齿，严重破坏了舞台效果。
+- **水族馆关卡的背景图**：背景纹理被缩放绘制以填满屏幕，`GL_NEAREST` 下呈现粗糙的像素化背景，而原版中是平滑过渡的。
+- **禅境花园的背景图**：同样因为纹理缩放，`GL_NEAREST` 下呈现出马赛克状。
+
+切换为 `GL_LINEAR` 后，这些场景的渲染效果恢复到了与原版游戏一致的品质。
+
+这一改动的安全性在于：**当纹理以 1:1 像素对齐方式绘制时，`GL_LINEAR` 和 `GL_NEAREST` 的采样结果完全一致**——因为采样点恰好落在纹素中心，双线性插值的四个权重退化为 $(1, 0, 0, 0)$。只有在纹理被缩放或旋转时，`GL_LINEAR` 才会产生平滑的插值效果，而这正是我们所期望的行为。在现代 GPU 上，双线性过滤是硬件原生支持的操作，与最近邻采样相比没有可测量的性能差异。
+
+然而，切换到 `GL_LINEAR` 也引入了一个新的回归问题——字体渲染出现异常。这一问题及其修复将在下文"第十一步"中详细讨论。
 
 #### 清理死代码
 
@@ -447,6 +455,76 @@ glGetError(); // clear error if unsupported
 | **原生 GLES 2.0 设备** | 此枚举不被识别，`glDisable` 产生 `GL_INVALID_ENUM`，紧随的 `glGetError()` 将其清除，不影响后续逻辑。 |
 
 `glGetError()` 的调用是关键的安全网——它确保即使在不支持此枚举的 GLES 实现上，错误标志也不会残留，不会干扰后续的 GL 错误检查逻辑。
+
+### 第十一步：修复纹理渗透——基于 Uniform 的 UV 钳位
+
+切换到 `GL_LINEAR` 后，大部分渲染效果有了显著提升，但同时也引入了一个**纹理渗透**问题。最明显的症状是位图字体文字下方出现了一条不应存在的细横线，此外部分被拆分到多个纹理 piece 中的图片在 piece 边界处也会出现可见的接缝。
+
+#### 根本原因：双线性采样越界
+
+PvZ 的渲染引擎会将大图拆分成固定大小的纹理 piece（以适应 GPU 的最大纹理尺寸限制）。字体系统也类似——所有字形紧密排列在一张图集纹理中，中间没有间隙。
+
+当使用 `GL_NEAREST` 时，每个像素只采样最近的一个纹素，不会越界。但 `GL_LINEAR` 在纹素边界处会采样相邻的 $2 \times 2$ 个纹素并加权插值。如果采样点落在纹理 piece 或字形的边缘，插值器会看到相邻 piece 或字形的像素，以很小的权重混入当前渲染结果——这就是渗色的来源。
+
+#### 修复方案：片段着色器中的 UV 钳位
+
+修复思路是在片段着色器中，将 UV 坐标 clamp 到当前纹理 piece 的有效范围内，使采样器永远不会越界。
+
+具体来说，对每个纹理 piece 计算一个**半纹素内缩边界**：如果 piece 的宽度是 $W$ 纹素，那么有效 UV 范围从 $[u_1, u_2]$ 收缩为 $[u_1 + 0.5/W, \; u_2 - 0.5/W]$。这样，即使 `GL_LINEAR` 在边界处向外扩展半个纹素的采样范围，也不会触及相邻 piece 的数据。
+
+关键的设计决策是**如何将这个边界传递给着色器**。有两种选择：
+
+| 方式 | 实现 | 开销 |
+| :--- | :--- | :--- |
+| **per-vertex attribute** | 在 `GLVertex` 中添加 `float uvBounds[4]`，作为顶点属性传入 | 顶点结构 +16 字节（+67%），需要额外的 varying 插值 |
+| **uniform** | 通过 `glUniform4fv` 在每次 draw call 前设置 | 每次 draw call 一次 GL 调用，顶点结构不变 |
+
+笔者选择了 **uniform** 方案。原因很简单：在同一个 draw call 中，所有顶点都来自同一个纹理 piece，它们的 uvBounds **完全相同**——把相同的值塞进每个顶点是纯粹的带宽浪费。uniform 天然就是为每次 draw call 一个值设计的。
+
+修改后的片段着色器：
+
+```glsl
+uniform sampler2D u_texture;
+uniform int u_useTexture;
+uniform vec4 u_uvBounds;   // {uMin, vMin, uMax, vMax}
+void main() {
+    if (u_useTexture == 1)
+        FRAG_OUT = TEX2D(u_texture, clamp(v_uv, u_uvBounds.xy, u_uvBounds.zw)) * v_color;
+    else
+        FRAG_OUT = v_color;
+}
+```
+
+顶点着色器和 `GLVertex` 结构**完全不变**——不需要额外的顶点属性，不需要额外的 varying。
+
+> **性能**：`clamp` 在 GPU 上编译为 1-2 条 ALU 指令（`MAX` + `MIN`），与加法/乘法同级，单周期完成。相比于同一行 `texture2D()` 涉及的纹理单元寻址、缓存查找和硬件双线性插值，一条 clamp 的开销完全可以忽略。对于 PvZ 这种纹理带宽受限的 2D 游戏，ALU 侧有大量空闲周期，clamp 不构成任何瓶颈。
+
+#### C++ 侧的边界计算
+
+在 `GetTexture()` 中计算半纹素内缩边界，通过全局变量传递给 `GfxEnd()` 中的 `glUniform4fv`：
+
+```cpp
+float halfU = 0.5f / p.mWidth, halfV = 0.5f / p.mHeight;
+float midU  = (u1 + u2) * 0.5f, midV = (v1 + v2) * 0.5f;
+uvBounds[0] = std::min(u1 + halfU, midU);
+uvBounds[1] = std::min(v1 + halfV, midV);
+uvBounds[2] = std::max(u2 - halfU, midU);
+uvBounds[3] = std::max(v2 - halfV, midV);
+```
+
+`midU`/`midV` 的回退确保在极端情况下（piece 只有 1 纹素宽时 $u_1 + 0.5/W > u_2 - 0.5/W$）边界不会反转。
+
+绘制流程变为：
+
+1. `GetTexture()` 返回纹理 ID、UV 坐标和 uvBounds
+2. `GfxSetUvBounds(uvb)` 将边界存入全局变量
+3. `GfxEnd()` 在 `glDrawArrays()` 之前通过 `glUniform4fv` 上传边界，绘制完成后自动重置为 `{0, 0, 1, 1}`（不钳位）
+
+对于 `BltTriangles` 等不需要钳位的路径，默认的 `{0, 0, 1, 1}` 边界使得 `clamp` 不产生任何效果——UV 值本身就在 $[0, 1]$ 范围内，钳位退化为恒等操作。
+
+#### 附带修复：缩放字体路径的键值错误
+
+在排查字体渲染问题的过程中，笔者还发现并修复了 `ImageFont.cpp` 中一个长期潜伏的 bug。在缩放字体路径中，`mScaledCharImageRects` 的存储键使用了自增计数器 `aCharNum`（值为 1, 2, 3, ...），但渲染时查找使用的键是实际的字符值（如 `'A'` = 0x41）。键完全不匹配——缩放后的字形位置查找会全部失败，使得缩放字体实际上从未正确工作过。由于游戏中绝大多数字体在 `mScale == 1.0` 时使用无缩放路径，不受此 bug 影响，因此这个问题一直没有被注意到。修复后统一使用实际字符值作为键，彻底消除了这个隐患。
 
 ## 迁移成效
 
@@ -544,7 +622,11 @@ if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 - 修复了纹理过滤状态管理的 bug，消除了缩放/旋转图像的锯齿伪影，并将默认过滤模式切换为更合理的双线性过滤。
 - 修复了 Windows 上因 ES 上下文导致 sRGB 帧缓冲自动启用引起的画面发白问题。
 - 解决了 XWayland 下黑边区域可能出现的闪烁问题（旧版固定管线代码在某些 Wayland 合成器上通过 XWayland 运行时表现不稳定）。
-- 支持通过 ANGLE 对接 DirectX/Metal/Vulkan），在 OpenGL 驱动不佳的平台上提供额外的兼容性保障。
+- 支持通过 ANGLE 对接 DirectX/Metal/Vulkan，在 OpenGL 驱动不佳的平台上提供额外的兼容性保障。
+  - 在 macOS 上，如果存在 ANGLE，程序会**默认使用 ANGLE** 的 Metal 后端。
+  - 在 Windows 上，程序会**默认使用原生 OpenGL ES 上下文**，如果要使用 ANGLE 映射到 DirectX 11，需要设置环境变量 `ANGLE_PLATFORM=windows`，不过一般**仍然建议使用原生驱动**。
+  - 在 Linux 等其他操作系统，**不建议使用 ANGLE**，因为原生 OpenGL 驱动通常更稳定，程序默认也不会使用 ANGLE。
+- 通过片段着色器中基于 uniform 的 UV 钳位，从渲染层面根治了双线性过滤带来的纹理 piece 边界和字形图集渗透问题，且不增加顶点结构体积。
 - 使渲染 bug 修复只需改一处，所有平台同时受益。
 
 ## ⚠️ 版权与说明
