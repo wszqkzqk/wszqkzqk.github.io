@@ -6,7 +6,7 @@ date:         2026-02-09
 author:       wszqkzqk
 header-img:   img/games/bg-pvz-portable.webp
 catalog:      true
-tags:         C++ OpenGL 跨平台 游戏移植 开源软件 开源游戏
+tags:         C++ OpenGL 跨平台 游戏移植 开源软件 开源游戏 PvZ-Portable
 ---
 
 ## 引言

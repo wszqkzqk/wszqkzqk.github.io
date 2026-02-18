@@ -6,7 +6,7 @@ date:         2026-02-06
 author:       wszqkzqk
 header-img:   img/games/bg-pvz-portable.webp
 catalog:      true
-tags:         C++ 性能优化 Linux 文件系统 开源游戏 开源软件
+tags:         C++ 性能优化 Linux 文件系统 开源游戏 开源软件 PvZ-Portable
 ---
 
 ## 背景：大小写敏感的历史包袱

@@ -6,7 +6,7 @@ date:         2026-01-30
 author:       wszqkzqk
 header-img:   img/games/bg-pvz-portable.webp
 catalog:      true
-tags:         C++ 游戏移植 序列化 游戏存档 开源软件 开源游戏
+tags:         C++ 游戏移植 序列化 游戏存档 开源软件 开源游戏 PvZ-Portable
 ---
 
 ## 引言
