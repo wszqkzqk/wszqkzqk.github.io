@@ -169,11 +169,12 @@ void main() {
 // 片段着色器
 uniform sampler2D u_texture;
 uniform int u_useTexture;
+uniform vec4 u_uvBounds;
 V2F vec4 v_color;
 V2F vec2 v_uv;
 void main() {
     if (u_useTexture == 1)
-        FRAG_OUT = TEX2D(u_texture, v_uv) * v_color;
+        FRAG_OUT = TEX2D(u_texture, clamp(v_uv, u_uvBounds.xy, u_uvBounds.zw)) * v_color;
     else
         FRAG_OUT = v_color;
 }
@@ -364,7 +365,7 @@ void GLInterface::SetLinearFilter(bool linearFilter)
 
 #### 修复方案：引入 GfxBindTexture
 
-修复思路很直接：**将纹理绑定和过滤参数设置合并为一个原子操作**。笔者引入了 `GfxBindTexture()` 函数：
+修复思路很直接：**将纹理绑定和过滤参数设置合并为一个原子操作**。笔者引入了 `GfxBindTexture()` 函数（它同时承担了后文第十一步中 UV bounds 上传的职责——这里展示的是最终版本）：
 
 ```cpp
 static bool gLinearFilter = true;
@@ -374,16 +375,19 @@ void GLInterface::SetLinearFilter(bool linearFilter)
     gLinearFilter = linearFilter;
 }
 
-static void GfxBindTexture(GLuint texture)
+static constexpr float kDefaultUvBounds[4] = { 0.f, 0.f, 1.f, 1.f };
+
+static void GfxBindTexture(GLuint tex, const float *uvBounds = kDefaultUvBounds)
 {
-    glBindTexture(GL_TEXTURE_2D, texture);
-    GLenum filter = gLinearFilter ? GL_LINEAR : GL_NEAREST;
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    int f = gLinearFilter ? GL_LINEAR : GL_NEAREST;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, f);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, f);
+    glUniform4fv(gUfUvBounds, 1, uvBounds);
 }
 ```
 
-`SetLinearFilter()` 不再直接调用 GL API，只是设置一个标志位。真正的 `glTexParameteri` 调用被移到 `GfxBindTexture()` 中——在 `glBindTexture()` **之后**立即执行，确保过滤参数一定作用在正确的纹理对象上。所有原先直接调用 `glBindTexture` 的地方都替换为 `GfxBindTexture`。
+`SetLinearFilter()` 不再直接调用 GL API，只是设置一个标志位。真正的 `glTexParameteri` 调用被移到 `GfxBindTexture()` 中——在 `glBindTexture()` **之后**立即执行，确保过滤参数一定作用在正确的纹理对象上。所有原先直接调用 `glBindTexture` 的地方都替换为 `GfxBindTexture`。函数同时通过 `glUniform4fv` 上传 UV bounds uniform（详见第十一步），默认参数 `kDefaultUvBounds = {0, 0, 1, 1}` 表示不限制 UV 范围——不需要钳位的调用点无需任何代码变更。
 
 #### 默认使用双线性过滤
 
@@ -501,7 +505,7 @@ void main() {
 
 #### C++ 侧的边界计算
 
-在 `GetTexture()` 中计算半纹素内缩边界，通过全局变量传递给 `GfxEnd()` 中的 `glUniform4fv`：
+在 `GetTexture()` / `GetTextureF()` 中计算半纹素内缩边界，通过输出参数 `uvBounds` 返回给调用者：
 
 ```cpp
 float halfU = 0.5f / p.mWidth, halfV = 0.5f / p.mHeight;
@@ -514,13 +518,40 @@ uvBounds[3] = std::max(v2 - halfV, midV);
 
 `midU`/`midV` 的回退确保在极端情况下（piece 只有 1 纹素宽时 $u_1 + 0.5/W > u_2 - 0.5/W$）边界不会反转。
 
+#### 原子化绑定：将 UV bounds 合并进 GfxBindTexture
+
+最初的实现使用了一个全局数组 `gUvBounds[4]` 和辅助函数 `GfxSetUvBounds()` 来传递边界，在 `GfxEnd()` 的 `glDrawArrays()` 之前上传 uniform 并在之后重置。然而这种设计存在三个问题：
+
+1. **可遗忘的全局可变状态**：`BltTriangles()` 等路径如果忘记调用 `GfxSetUvBounds()`，就会**继承上一次绘制残留的边界**，导致纹理渲染错乱（实际测试中确实因此出现过 Zomboss 机甲的贴图错误）。
+2. **冗余重置**：需要在 `GfxEnd()` 和 `PreDraw()` 中都做安全重置，增加维护负担。
+3. **非纹理绘制的无用开销**：`FillRect` 等不使用纹理的路径也会在 `GfxEnd()` 中触发 `glUniform4fv`。
+
+重构后的方案是将 UV bounds 上传**合并进 `GfxBindTexture()` 的调用签名中**，即第九步中展示的最终版本：
+
+```cpp
+static void GfxBindTexture(GLuint tex, const float *uvBounds = kDefaultUvBounds)
+{
+    glBindTexture(GL_TEXTURE_2D, tex);
+    int f = gLinearFilter ? GL_LINEAR : GL_NEAREST;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, f);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, f);
+    glUniform4fv(gUfUvBounds, 1, uvBounds);
+}
+```
+
+这一设计的关键优势：
+
+- **不可能遗漏**：纹理绑定和 UV bounds 上传是同一次函数调用的原子操作——只要绑定了纹理，边界就一定被正确设置。
+- **零性能退化**：默认参数 `kDefaultUvBounds = {0, 0, 1, 1}` 使得不需要钳位的路径无需任何代码变更。
+- **非纹理绘制零开销**：`FillRect` 等路径不调用 `GfxBindTexture()`，完全不触发 `glUniform4fv`。`GfxEnd()` 中也不再有任何 uniform 上传或重置逻辑——它只负责提交顶点数据并调用 `glDrawArrays()`。
+
 绘制流程变为：
 
-1. `GetTexture()` 返回纹理 ID、UV 坐标和 uvBounds
-2. `GfxSetUvBounds(uvb)` 将边界存入全局变量
-3. `GfxEnd()` 在 `glDrawArrays()` 之前通过 `glUniform4fv` 上传边界，绘制完成后自动重置为 `{0, 0, 1, 1}`（不钳位）
+1. `GetTexture()` 返回纹理 ID、UV 坐标和 `uvBounds`
+2. `GfxBindTexture(tex, uvb)` **一次性完成**纹理绑定、过滤参数设置和 UV bounds 上传
+3. `GfxBegin()` → `GfxAddVertices()` → `GfxEnd()` 提交并绘制
 
-对于 `BltTriangles` 等不需要钳位的路径，默认的 `{0, 0, 1, 1}` 边界使得 `clamp` 不产生任何效果——UV 值本身就在 $[0, 1]$ 范围内，钳位退化为恒等操作。
+对于 `BltTriangles()`（Reanimation 系统的三角形批量渲染），也需要计算 UV bounds——单纹理快速路径根据 piece 尺寸和实际 UV 范围计算半纹素 inset，多纹理路径在内层循环中为每个 piece 分别计算。所有路径都通过 `GfxBindTexture(piece.mTexture, uvb)` 原子化传递。
 
 #### 附带修复：缩放字体路径的键值错误
 
