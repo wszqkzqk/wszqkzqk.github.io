@@ -15,6 +15,12 @@ tags:         C++ OpenGL 跨平台 游戏移植 开源软件 开源游戏 PvZ-Po
 
 当玩家播放《Zombies On Your Lawn》MV（即主题曲/通关字幕/制作人员表）时，画面的背景图即开始出现混乱与错位——屋顶的背景变成了草地，白天的变成了黑夜，甚至出现花屏。更诡异的是，一旦播放过这个 MV，即使退回到主菜单重新开始正常游戏，游戏里的关卡背景也会全部错乱。如果不播放 MV，一切正常。
 
+|[![#~/img/games/pvz-portable-bug-credits-mv-bg.webp](/img/games/pvz-portable-bug-credits-mv-bg.webp)](/img/games/pvz-portable-bug-credits-mv-bg.webp)|
+|:----:|
+|Credits MV 中的背景图错乱|
+|[![#~/img/games/pvz-portable-bug-level-bg-after-credits-mv.webp](/img/games/pvz-portable-bug-level-bg-after-credits-mv.webp)](/img/games/pvz-portable-bug-level-bg-after-credits-mv.webp)|
+|关卡背景在播放 Credits MV 后错乱|
+
 这个 Bug 表现出极强的随机性，背景图似乎在这个过程中被随机交换了内存。
 
 经过漫长的排查，笔者根治了这个问题（Commit [f83ad81](https://github.com/wszqkzqk/PvZ-Portable/commit/f83ad81e5637921eb24c714230b7cf25fb28d4c0)）。这远远比看上去的更复杂，是一个跨越了资源管理、渲染状态机和底层 OpenGL 接口实现的连锁反应。
