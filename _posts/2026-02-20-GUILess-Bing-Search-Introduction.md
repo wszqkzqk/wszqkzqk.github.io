@@ -68,7 +68,7 @@ curl -s -X POST http://localhost:8765/search \
 
 既然问题出在 TLS 层面，最直接的解决思路就是使用一个**真正的浏览器引擎**。笔者选择了 Qt WebEngine、，它内嵌了完整的 Chromium 引擎，配合 Qt 的 `offscreen` 模式可以在完全无 GUI 的环境中运行，同时对外暴露一个极简的 HTTP API 供命令行调用——这正是笔者想要的形态。
 
-此外，这种标准化的 HTTP JSON 接口也天然适合作为本地 LLM 工具（如 OpenWebUI）的搜索后端，为模型提供 `search_web` 工具调用能力（详见[后文](#与本地-llm-工具的集成仅供研究测试)）。
+此外，这种标准化的 HTTP JSON 接口也天然适合作为 LLM 前端工具（如 OpenWebUI）的搜索后端，为模型提供 `search_web` 工具调用能力（详见[后文](#与本地-llm-工具的集成仅供研究测试)）。
 
 ## 技术架构
 
@@ -221,7 +221,7 @@ journalctl -u guiless-bing-search -f
 
 ## 与本地 LLM 工具的集成（仅供研究测试）
 
-近年来，越来越多的本地部署 LLM 方案（如 [OpenWebUI](https://github.com/open-webui/open-webui)、Dify、LangChain 等）支持为 AI 对话接入外部搜索引擎，以实现检索增强生成（RAG）的联网搜索能力或者原生的 `search_web` 工具调用。
+近年来，越来越多的本地部署 LLM 方案（如 [OpenWebUI](https://github.com/open-webui/open-webui)、LobeChat、LangChain 等）支持为 AI 对话接入外部搜索引擎，以实现检索增强生成（RAG）的联网搜索能力或者原生的 `search_web` 工具调用。
 
 GUI-Less Bing Search 暴露的 HTTP JSON API 是一个非常标准的 RESTful 接口，返回结构清晰的 `[{"title": "...", "link": "...", "snippet": "..."}]` 数组。这种格式天然契合大模型的 Tool Calling（工具调用）需求，这意味着它在**技术上**可以无缝接入各种本地 LLM 工具作为搜索后端。
 
