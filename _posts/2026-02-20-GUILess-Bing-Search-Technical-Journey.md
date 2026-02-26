@@ -6,7 +6,7 @@ date:         2026-02-20
 author:       wszqkzqk
 header-img:   img/llm/ai-bg-lossless.webp
 catalog:      true
-tags:         Python PySide Qt 开源软件 搜索引擎 LLM
+tags:         Python PySide Qt 开源软件 搜索引擎 LLM OpenWebUI
 ---
 
 ## 前言
