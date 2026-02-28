@@ -21,6 +21,12 @@ tags:         Python PySide Qt 开源软件 搜索引擎 LLM OpenWebUI AI
 
 本文将详细介绍这一完整配置方法，涵盖两个后端服务的部署、OpenWebUI 的三种集成方式（External Search Engine、External Web Loader、Custom Tool Plugin）、传统 RAG 模式与 Native（Agentic）模式的区别与选择，以及通过提示词工程进一步优化检索行为的实践。
 
+|[![#~/img/llm/DeepAnalyze-Fast.webp](/img/llm/DeepAnalyze-Fast.webp)](/img/llm/DeepAnalyze-Fast.webp)|
+|:----:|
+|DeepAnalyze Fast 模型展示|
+|[![#~/img/llm/DeepAnalyze.webp](/img/llm/DeepAnalyze.webp)](/img/llm/DeepAnalyze.webp)|
+|DeepAnalyze 模型展示|
+
 > **⚠️ 关于 GUILess Bing Search 的责任警告：** 
 > 
 > 笔者**不鼓励也不建议**将 GUILess Bing Search 用作 LLM 的高频自动化搜索后端。LLM 自动生成的查询可能导致搜索频率超出合理范围，触发搜索引擎的风控机制，甚至可能违反 Bing 的服务条款。
