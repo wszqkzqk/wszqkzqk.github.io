@@ -40,7 +40,8 @@ tags:         C++ SDL2 OpenGL 开源软件 游戏移植 开源游戏 PvZ-Portabl
 3.  **音频升级**：基于 [Headshotnoby](https://github.com/headshot2017/) 的适配工作，使用 [SDL Mixer X](https://github.com/WohlSoft/SDL-Mixer-X) 和 libopenmpt，支持 MO3 音乐格式。
 4.  **修复原版 Bug**：在保持原汁原味的同时，本项目还**可选**修复一些原版游戏中存在的逻辑错误（例如有关特殊的魅惑僵尸的某些行为等）。当然，如果你喜欢那些“特性”，也可以选择不开启修复。（默认不启用额外修复，保证体验与原版一致）
 5.  **全平台 Unicode 路径支持**：原版游戏在 Windows 上不支持非 ASCII 路径，PvZ-Portable 彻底解决了这个问题，在所有平台上支持 Unicode 路径。
-6.  **现代化实现**：使用 `std::string` 取代原版的宽字串，使用 `std::thread` 实现线程管理，使用 `std::filesystem` 实现文件操作，代码更简洁易懂。
+6.  **多语言支持**：支持各种语言的官方年度版资源包，包括**汉语、德语、法语、西班牙语、意大利语**等。
+7.  **现代化实现**：使用 `std::string` 取代原版的宽字串，使用 `std::thread` 实现线程管理，使用 `std::filesystem` 实现文件操作，代码更简洁易懂。
 
 ## ⚠️ 版权与使用说明
 
