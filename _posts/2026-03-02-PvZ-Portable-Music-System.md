@@ -1,6 +1,6 @@
 ---
 layout:       post
-title:        植物大战僵尸开源实现 PvZ-Portable: 通过通道级音量控制实现单流音乐系统
+title:        植物大战僵尸社区开源实现（PvZ-Portable）：通过通道级音量控制实现单流音乐系统
 subtitle:     MOD 音乐的通道级音量控制、动态打击乐切换与音符残留修复
 date:         2026-03-02
 author:       wszqkzqk
