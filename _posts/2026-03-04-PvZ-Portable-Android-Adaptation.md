@@ -261,6 +261,25 @@ protected void onCreate(Bundle savedInstanceState) {
 
 `"LandscapeLeft LandscapeRight"` 允许左右两个横屏方向，即用户转动手机 180° 时画面会自动翻转，但不允许竖屏。这个 hint 的设置时机很关键——必须在 `SDL_Init(SDL_INIT_VIDEO)` 之前，因为 SDL 在初始化视频子系统时就会读取它并调用 `setRequestedOrientation()`。
 
+#### 尊重系统的方向锁定
+
+当在 SDL 中指定多个方向（如两个横屏）时，`SDLActivity` 在底层会调用 `setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)`。在 Android 中，`SENSOR_LANDSCAPE`（6）的意思是“**强制根据传感器**判断使用左横还是右横”，它的副作用是会**无视用户在系统下拉栏中设置的“方向锁定”**！
+
+如果玩家躺在床上并且关闭了系统自动旋转，游戏却依然跟着传感器的细微角度乱切横屏，体验会非常糟糕。为了解决这个问题并尊重玩家的系统设置锁定，我们必须在自定义的 `PvZPortableActivity` 中重写 `setRequestedOrientation` 拦截 SDL 的强制请求，将其替换为同时兼容横屏限制与系统锁定设置的 `USER_LANDSCAPE`（11）：
+
+```java
+// PvZPortableActivity.java
+@Override
+public void setRequestedOrientation(int requestedOrientation) {
+    if (requestedOrientation == android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
+        requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE;
+    }
+    super.setRequestedOrientation(requestedOrientation);
+}
+```
+
+同时，我们最好也将 `AndroidManifest.xml` 中的默认声明改为 `android:screenOrientation="userLandscape"` 以保持所有地方的行为一致。
+
 值得注意的是，`ResourceImportActivity`（资源导入界面）**不设置固定方向**——它跟随系统默认的自动旋转行为。这是因为导入界面是一个竖向滚动列表，在竖屏和横屏下都能正常使用。
 
 ### 沉浸式全屏
@@ -510,6 +529,7 @@ dependencies {
     <application
         android:allowBackup="true"
         android:appCategory="game"
+        android:isGame="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:hasFragileUserData="true"
@@ -519,7 +539,7 @@ dependencies {
 </manifest>
 ```
 
-唯一的 `<uses-feature>` 声明是 OpenGL ES 2.0——这是游戏渲染的硬性需求。`appCategory="game"` 告诉 Android 系统这是一个游戏应用——系统会据此优化性能调度（如 CPU 频率策略）和勿扰模式行为。`hasFragileUserData="true"` 告诉 Android 在用户卸载应用时提示是否保留数据，避免存档意外丢失。除此之外，没有 `READ_EXTERNAL_STORAGE`、没有 `WRITE_EXTERNAL_STORAGE`、没有 `MANAGE_EXTERNAL_STORAGE`、没有 `FileProvider`——所有文件访问都通过 SAF 完成。
+唯一的 `<uses-feature>` 声明是 OpenGL ES 2.0——这是游戏渲染的硬性需求。`appCategory="game"`（适用于 Android 8.0+）和 `isGame="true"`（兼容旧版系统和各类国产 ROM 控制中心）告诉 Android 系统这是一个游戏应用——系统会据此优化性能调度（如 CPU 频率策略）、触发各大厂商的“游戏空间/游戏加速”功能，并适配勿扰模式行为。`hasFragileUserData="true"` 告诉 Android 在用户卸载应用时提示是否保留数据，避免存档意外丢失。除此之外，没有 `READ_EXTERNAL_STORAGE`、没有 `WRITE_EXTERNAL_STORAGE`、没有 `MANAGE_EXTERNAL_STORAGE`、没有 `FileProvider`——所有文件访问都通过 SAF 完成。
 
 ## 技术挑战回顾
 
@@ -529,7 +549,7 @@ Android 适配过程中遇到的主要技术挑战可以归纳为以下几类：
 | :--- | :--- | :--- | :--- |
 | **构建** | `dlopen failed: library "libSDL2.so" not found` | vcpkg 在 Android 上默认构建静态库，而 SDLActivity 通过 JNI 动态加载 SDL2 | 从源码单独构建 SDL2 共享库，vcpkg 中排除 Android 的 SDL2 |
 | **生命周期** | `SuperNotCalledException` 崩溃 | 检测到无资源时直接 `finish()`，跳过了 `super.onCreate()` | 在 `finish()` 之前先调用 `super.onCreate()` |
-| **屏幕方向** | Manifest 中声明的 `screenOrientation` 无效 | `SDLActivity` 在运行时通过 `setRequestedOrientation()` 覆盖 Manifest 声明 | 在 C++ 侧 `SDL_Init` 之前设置 `SDL_HINT_ORIENTATIONS` |
+| **屏幕方向** | Manifest 中声明的 `screenOrientation` 无效，且忽略用户旋转锁定 | `SDLActivity` 在运行时覆盖声明，设置双向横屏会触发无视锁定的 `SENSOR_LANDSCAPE` | C++ 侧设置 hint 并在 Java 侧拦截替换为 `USER_LANDSCAPE` |
 | **竞态** | `GLImage::GLImage(GLInterface*)+16` 概率性崩溃 | Activity 生命周期事件导致 EGL surface 短暂不可用，`SDL_GL_CreateContext` 返回 `NULL` | Android 端重试上下文创建 + `Init()` 失败传播 + `GLImage` 构造函数防御 |
 | **内存安全** | `Reanimation::DrawTrack` 僵尸图鉴必现崩溃 | `ReanimAtlas` 固定 64 元素数组被 171 张图片越界写入，Release 中 `TOD_ASSERT` 为空 | `AddImage` 运行时溢出保护 + 编码/解码阶段边界检查 + 排序比较器严格弱序修正 |
 | **文件访问** | Android Scoped Storage 限制直接文件访问 | Android 10+ 逐步禁用传统存储权限 | 全面采用 SAF，零权限设计 |
