@@ -410,55 +410,22 @@ if (mShutdown)
 
 区分原则很简单：**Android app 行为**（外部存储路径、Android 日志、横屏锁定）需要排除 Termux；**Android 内核/驱动行为**（EGL/GLES、ABI 可见性）不需要排除。
 
-### 动画图集（ReanimAtlas）缓冲区溢出
+### 动画图集（ReanimAtlas）缓冲区越界与动态容器重构
 
-在 Android 上打开僵尸图鉴时发现一个必现的原生崩溃：
+在 Android 上打开僵尸图鉴时发现过一个必现的原生崩溃：
 
 ```
 Reanimation::DrawTrack(Sexy::Graphics*, int, int, TodTriangleGroup*)+496
 DrawRenderGroup → MakeCachedZombieFrame → DrawCachedZombie → AlmanacDialog::DrawZombies
 ```
 
-**根因分析**：PvZ-Portable 的动画系统使用 `ReanimAtlas`（动画图集）来优化渲染——将同一动画的多张小贴图合并到一张大纹理上，减少 draw call。创建图集时，每张贴图的原始 `Image*` 指针会被替换为一个编码后的小整数索引（`(Image*)(index + 1)`，值域 1~64），渲染时通过 `GetEncodedReanimAtlas()` 反查回真正的贴图数据。
+**根因分析**：PvZ-Portable 的动画系统使用 `ReanimAtlas`（动画图集）来优化渲染——将同一动画的多张小贴图合并到一张大纹理上，减少 draw call。创建图集时，每张贴图的原始 `Image*` 指针会被替换为一个编码后的小整数索引（`(Image*)(index + 1)`，旧版本值域为 1~64），渲染时再反查回真正的贴图数据。
 
-问题出在图集的容量限制上。`ReanimAtlas::mImageArray` 是一个固定大小为 `MAX_REANIM_IMAGES = 64` 的数组，但 `AddImage()` 的越界保护使用的是 `TOD_ASSERT`——在 Release 构建中被编译为空语句。GOTY 版游戏中 `zombatar_zombie_head.reanim` 引用了 **171 张**独立贴图，远超 64 的上限。在桌面平台上，这种越界写入恰好覆盖到 `mImageCount` 和 `mMemoryImage` 字段但未触发段错误；而 Android 的 Scudo 内存分配器对堆布局更严格，越界访问直接导致 SIGSEGV。
+问题出在图集的容量限制上。`ReanimAtlas::mImageArray` 曾经是一个固定大小为 `MAX_REANIM_IMAGES = 64` 的数组，且 `AddImage()` 的越界保护使用的是 `TOD_ASSERT`——这在 Release 构建中会被编译为空语句。GOTY 版游戏中 `zombatar_zombie_head.reanim` 实际引用了 **171 张**独立贴图，远超 64 的上限。在桌面平台上，这种越界写入恰好覆盖到了结构体内相邻的字段（甚至是一些未被操作系统捕获的安全内存），并未触发明显的段错误；而 Android 的现代通用内存分配器（如 Scudo）对堆布局和越界行为管理更为严格，越界访问直接导致了 SIGSEGV 崩溃。
 
-修复集中在 `ReanimAtlas.cpp` 的四个根因点：
+**动态容器重构**：早期的临时修补方式仅仅是增加了越界时的运行时拦截，这虽然避免了崩溃，但会导致超过上限的贴图在游戏中被静默丢弃。为了优雅且彻底地解决这一缺陷，我们将底层的固定数组替换为了基于 C++ 的动态容器 `std::vector<ReanimAtlasImage>`，彻底解除了 64 张这一硬性上限。
 
-**1. `AddImage` 溢出保护**。将 debug-only 的 `TOD_ASSERT(mImageCount < MAX_REANIM_IMAGES)` 替换为运行时检查，超限时直接跳过：
-
-```cpp
-if (mImageCount >= MAX_REANIM_IMAGES)  // Prevent array overflow
-    return;
-```
-
-**2. 编码阶段条件修正**。`ReanimAtlasCreate` 的编码阶段（将 `Image*` 替换为整数索引）中，原代码对 `FindImage` 返回 -1（图片未加入图集）的情况使用 `TOD_ASSERT`，Release 下会编码为 `(Image*)(0)`（即 `nullptr`）。修正为 `continue` 跳过：
-
-```cpp
-intptr_t aImageIndex = FindImage(aImage);
-if (aImageIndex < 0)  // Image not in atlas (e.g. mNumCols>1 or atlas full)
-    continue;
-aImage = (Image*)(aImageIndex + 1);  // Encode atlas index as Image*
-```
-
-**3. `GetEncodedReanimAtlas` 运行时边界检查**。原代码的越界保护同样是 debug-only 的 `TOD_ASSERT`，在 Release 中可能返回越界指针。替换为运行时检查，并将指针比较从 `intptr_t` 改为语义更正确的 `uintptr_t`：
-
-```cpp
-if (theImage == nullptr || reinterpret_cast<uintptr_t>(theImage) > 1000)
-    return nullptr;
-intptr_t aAtlasIndex = reinterpret_cast<intptr_t>(theImage) - 1;
-if (aAtlasIndex < 0 || aAtlasIndex >= mImageCount)  // Runtime bounds check
-    return nullptr;
-```
-
-**4. 排序比较器修正**。`sSortByNonIncreasingHeight` 在高度和宽度都相同时，使用 `&image1` vs `&image2`（元素地址）作为 tiebreaker。但 `std::sort` 在排序过程中会交换元素，元素的地址不是稳定标识符，导致比较函数违反**严格弱序**要求（同一对逻辑元素在交换前后可能返回不同的比较结果），属于未定义行为。修正为使用 `mOriginalImage` 指针（排序过程中不变的元素属性）：
-
-```cpp
-return reinterpret_cast<uintptr_t>(image1.mOriginalImage)
-     > reinterpret_cast<uintptr_t>(image2.mOriginalImage);
-```
-
-这四处修复全部集中在 `ReanimAtlas.cpp`（+10/-7 行），是纯粹的根因层修复。由于修复后编码阶段只编码确实存在于图集中的图片、`GetEncodedReanimAtlas` 对所有合法编码值都能正确解码，**不需要**在 `DrawTrack` 等消费端做额外的防御性空指针检查——任何此类检查都是死代码。
+同时，相关的清理行为也从易于遗漏的手动 `ReanimAtlasDispose()` 两阶段清理转移到了类的析构函数中进行 RAII 自动管理。在享受安全与便利的同时，该重构几乎没有任何性能折损：由于保留了原引擎巧妙的 O(1) 下标寻址的整数解码逻辑，每帧热路径的运行时渲染性能与原始 C 数组版本完全等价。由此，我们不仅填补了因为跨平台分配器差异而暴雷的隐患，也使引擎的核心组件具备了更加现代、泛用的能力。
 
 ### 资源导入的实现细节
 
@@ -551,7 +518,7 @@ Android 适配过程中遇到的主要技术挑战可以归纳为以下几类：
 | **生命周期** | `SuperNotCalledException` 崩溃 | 检测到无资源时直接 `finish()`，跳过了 `super.onCreate()` | 在 `finish()` 之前先调用 `super.onCreate()` |
 | **屏幕方向** | Manifest 中声明的 `screenOrientation` 无效，且忽略用户旋转锁定 | `SDLActivity` 在运行时覆盖声明，设置双向横屏会触发无视锁定的 `SENSOR_LANDSCAPE` | C++ 侧设置 hint 并在 Java 侧拦截替换为 `USER_LANDSCAPE` |
 | **竞态** | `GLImage::GLImage(GLInterface*)+16` 概率性崩溃 | Activity 生命周期事件导致 EGL surface 短暂不可用，`SDL_GL_CreateContext` 返回 `NULL` | Android 端重试上下文创建 + `Init()` 失败传播 + `GLImage` 构造函数防御 |
-| **内存安全** | `Reanimation::DrawTrack` 僵尸图鉴必现崩溃 | `ReanimAtlas` 固定 64 元素数组被 171 张图片越界写入，Release 中 `TOD_ASSERT` 为空 | `AddImage` 运行时溢出保护 + 编码/解码阶段边界检查 + 排序比较器严格弱序修正 |
+| **内存安全** | 僵尸图鉴在高贴图数动画下崩溃 | `ReanimAtlas` 固定容量数组（64）无法承载 171 张贴图，触发越界风险 | `ReanimAtlas` 重构为 `std::vector` 动态存储 + RAII 析构管理，并保留编码/解码边界检查 |
 | **文件访问** | Android Scoped Storage 限制直接文件访问 | Android 10+ 逐步禁用传统存储权限 | 全面采用 SAF，零权限设计 |
 | **平台区分** | Termux 编译器定义 `__ANDROID__` 但应走桌面 Linux 逻辑 | Termux 是 Android 上的 Linux 终端环境，底层为 Android 但用户空间行为类似桌面 Linux | 使用 `defined(__ANDROID__) && !defined(__TERMUX__)` 区分真正的 Android app 和 Termux 环境；EGL/GLES 相关代码保持 `__ANDROID__` 不变 |
 
@@ -561,7 +528,7 @@ PvZ-Portable 的 Android 适配是一次典型的桌面引擎移动化实践。G
 
 这些问题的解决方案遵循一个共同的原则：**尊重平台的规则，而不是试图绕过它**。使用 SAF 而非申请危险权限、通过 SDL hint 而非强行 override 来控制方向、在 `finish()` 前确保 `super.onCreate()` 被调用——每一项都是在 Android 平台的框架内找到正确的做法。
 
-整个 Android 适配的代码量并不大——约 390 行 Java（`ResourceImportActivity`）、约 80 行 Java（`PvZPortableActivity`）、几十行 XML（Manifest、layout、shortcuts、strings）、几十行 C++ 补丁（SDL hint、GL 上下文重试、GLImage 防御和 ReanimAtlas 越界修复），以及 CI 配置的调整。真正的工作量在于理解 Android 平台的各层抽象——从 Gradle/NDK/vcpkg 的构建体系到 SDLActivity 的运行时行为——并找到每个问题的正确解法。
+整个 Android 适配的代码量并不大——约 390 行 Java（`ResourceImportActivity`）、约 80 行 Java（`PvZPortableActivity`）、几十行 XML（Manifest、layout、shortcuts、strings）、几十行 C++ 补丁（SDL hint、GL 上下文重试、GLImage 防御和 ReanimAtlas 动态容器重构），以及 CI 配置的调整。真正的工作量在于理解 Android 平台的各层抽象——从 Gradle/NDK/vcpkg 的构建体系到 SDLActivity 的运行时行为——并找到每个问题的正确解法。
 
 👉 **项目地址**: [https://github.com/wszqkzqk/PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable)
 
