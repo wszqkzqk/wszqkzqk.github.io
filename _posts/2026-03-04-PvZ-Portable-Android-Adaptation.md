@@ -13,7 +13,9 @@ tags:         C++ SDL2 OpenGL Android 开源软件 游戏移植 开源游戏 PvZ
 
 在之前的[项目总览](https://wszqkzqk.github.io/2026/01/26/PvZ-Portable/)和 [GLES2 渲染后端迁移](https://wszqkzqk.github.io/2026/02/16/PvZ-Portable-GLES2-Migration/)中，笔者介绍了 [PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable) 如何将《植物大战僵尸：年度版》的引擎带向 Linux, macOS, Windows 等各大平台。其中，GLES2 迁移尤其关键——将渲染后端统一到 OpenGL ES 2.0 这一最小公共子集，使得 Android 适配在图形层面成为可能。
 
-然而，GPU 能渲染只是万里长征的起点。一个桌面 C++ 游戏引擎要在 Android 上跑起来，还需要解决一长串平台特异的问题：SDL2 的动态链接需求与 vcpkg 静态构建的冲突、Android FUSE 存储对游戏资源导入的限制、`SDLActivity` 的生命周期陷阱、屏幕方向控制的权责归属……
+然而，GPU 能渲染只是万里长征的起点。尽管 Android 底层基于 Linux 内核，但它与桌面 Linux 的用户空间差异巨大——Android 有自己的应用打包格式 APK、Java/Kotlin Activity 生命周期模型、Scoped Storage 沙箱存储机制和独特的构建工具链（NDK + Gradle）。换言之，我们不能简单地交叉编译出一个 ELF 可执行文件就直接在 Android 上运行；从一个能跑的 native 二进制到一个可安装的 APK，中间还隔着一整套平台适配工作。
+
+PvZ-Portable 的 C++ 游戏引擎要在 Android 上跑起来，还需要解决一长串平台特异的问题：SDL2 的动态链接需求与 vcpkg 静态构建的冲突、Android FUSE 存储对游戏资源导入的限制、`SDLActivity` 的生命周期陷阱、屏幕方向控制的权责归属……
 
 本文将从使用指南、设计决策和技术实现三个维度，完整记录 PvZ-Portable 的 Android 适配过程。
 
