@@ -406,7 +406,7 @@ if (mShutdown)
 #endif
 ```
 
-注意并非所有 `__ANDROID__` 检查都需要排除 Termux。EGL/GLES 相关的代码（如 GL 上下文创建重试、跳过桌面 GL 2.1 回退）保持 `#ifdef __ANDROID__` 不变——因为 Termux 底层同样使用 Android 的 EGL/GLES 驱动，不支持桌面 OpenGL。同理，`glad/gles2.h` 中的 `KHRONOS_APICALL` 可见性属性是 ABI 层面的定义，也不需要排除 Termux。
+注意并非所有 `__ANDROID__` 检查都需要排除 Termux。EGL/GLES 相关的代码（如 GL 上下文创建重试、跳过桌面 GL 2.1 回退）保持 `#ifdef __ANDROID__` 不变——因为 Termux 底层同样使用 Android 的 EGL/GLES 驱动，不支持桌面 OpenGL。同理，`glad/gles2.h` 中的 `KHRONOS_APICALL` 可见性属性是 ABI 层面的定义，也不需要排除 Termux。（当然，这个自动生成的文件也不应该动）
 
 区分原则很简单：**Android app 行为**（外部存储路径、Android 日志、横屏锁定）需要排除 Termux；**Android 内核/驱动行为**（EGL/GLES、ABI 可见性）不需要排除。
 
@@ -524,9 +524,9 @@ Android 适配过程中遇到的主要技术挑战可以归纳为以下几类：
 
 ## 总结
 
-PvZ-Portable 的 Android 适配是一次典型的桌面引擎移动化实践。GLES2 迁移解决了图形 API 的兼容性问题，但 Android 平台还带来了一系列图形之外的挑战——从最基础的构建链路（SDL2 必须动态链接）到 Android 特有的存储模型（SAF）、Activity 生命周期约束和 SDL 运行时行为的隐含覆盖（屏幕方向）。
+PvZ-Portable 的 Android 适配是一次引擎跨平台迁移实践。此前早已完成的 GLES2 迁移解决了图形 API 的兼容性问题，但 Android 平台还带来了一系列图形之外的挑战——从最基础的构建链路（SDL2 必须动态链接）到 Android 特有的存储模型（SAF）、Activity 生命周期约束和 SDL 运行时行为的隐含覆盖（屏幕方向）。
 
-这些问题的解决方案遵循一个共同的原则：**尊重平台的规则，而不是试图绕过它**。使用 SAF 而非申请危险权限、通过 SDL hint 而非强行 override 来控制方向、在 `finish()` 前确保 `super.onCreate()` 被调用——每一项都是在 Android 平台的框架内找到正确的做法。
+这些问题的解决方案遵循一个共同的原则：**尊重平台的规则**。使用 SAF 而非申请危险权限、通过 SDL hint 而非强行 override 来控制方向、在 `finish()` 前确保 `super.onCreate()` 被调用——每一项都是在 Android 平台的框架内找到正确的做法。
 
 整个 Android 适配的代码量并不大——约 390 行 Java（`ResourceImportActivity`）、约 80 行 Java（`PvZPortableActivity`）、几十行 XML（Manifest、layout、shortcuts、strings）、几十行 C++ 补丁（SDL hint、GL 上下文重试、GLImage 防御和 ReanimAtlas 动态容器重构），以及 CI 配置的调整。真正的工作量在于理解 Android 平台的各层抽象——从 Gradle/NDK/vcpkg 的构建体系到 SDLActivity 的运行时行为——并找到每个问题的正确解法。
 
