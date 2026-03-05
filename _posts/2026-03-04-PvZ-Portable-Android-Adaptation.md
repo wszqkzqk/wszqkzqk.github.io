@@ -250,8 +250,9 @@ protected void onCreate(Bundle savedInstanceState) {
 如果 `SDL_HINT_ORIENTATIONS` 没有被设置，`SDLActivity` 在某些代码路径中可能使用默认值（取决于 SDL 版本），导致屏幕方向行为不可预测。为了确保横屏锁定行为的可靠性，笔者在 C++ 侧的窗口创建代码中，**在 `SDL_Init(SDL_INIT_VIDEO)` 之前**设置了这个 hint：
 
 ```cpp
-#ifdef __ANDROID__
-    // Lock to landscape on Android; SDL's Java layer reads this hint
+#if defined(__ANDROID__) && !defined(__TERMUX__)
+    // Lock to landscape on Android app; SDL's Java layer reads this hint.
+    // Termux runs as a normal windowed app, so it should not force landscape.
     SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
 #endif
 
@@ -333,7 +334,7 @@ TodLoadNextResource → TodLoadResources → LawnApp::Init → SDL_main
 #endif
 ```
 
-同时，`#ifdef __ANDROID__` / `#else` 条件编译跳过了 Android 上无意义的桌面 GL 2.1 回退路径。
+同时，`#ifdef __ANDROID__` / `#else` 条件编译跳过了 Android 上无意义的桌面 GL 2.1 回退路径。注意这里使用不带 Termux 排除的 `#ifdef __ANDROID__`——Termux 底层同样使用 Android 的 EGL/GLES 驱动，不支持桌面 GL 2.1，因此 EGL 重试和跳过桌面 GL 回退对 Termux 同样正确。
 
 **第二层——失败传播**。在 `SexyAppBase::Init()` 中，`MakeWindow()` 返回后检查 `mGLInterface`，若为空则标记 `mShutdown = true` 并立即返回。`LawnApp::Init()` 在 `SexyApp::Init()` 之后检查 `mShutdown`，若已标记则跳过后续资源加载直接退出。这保证了即便所有重试都失败，应用也能优雅退出而非崩溃：
 
@@ -354,6 +355,41 @@ if (mShutdown)
 ```
 
 **第三层——GLImage 构造函数防御**。`GLImage(GLInterface*)` 的初始化列表改为三元表达式 `theGLInterface ? theGLInterface->mApp : gSexyAppBase`，`AddGLImage` / `RemoveGLImage` 调用前加空指针检查。这是零开销的防御性编程，确保即使有未预见的代码路径传入 `nullptr`，也不会立即崩溃。
+
+### Termux 兼容性：区分 Android app 与终端环境
+
+[Termux](https://termux.dev/) 是 Android 上的 Linux 终端模拟器，提供了完整的包管理器和编译工具链。由于 Termux 运行在 Android 内核之上，其编译器（如 clang）会自动定义 `__ANDROID__` 宏。然而，Termux 中编译运行的程序在用户空间的行为更接近桌面 Linux——它使用标准的文件系统路径、`stdout` 输出、窗口管理器（如通过 Termux:X11 或 VNC），而非 Android app 的 `SDLActivity` + 外部存储路径 + `android/log.h` 模型。
+
+如果不加区分，Termux 编译的 PvZ-Portable 会错误地：
+
+- 调用 `SDL_AndroidGetExternalStoragePath()` 获取资源路径（在 Termux 中返回不可用的 app-specific 路径）
+- 将日志输出到 `__android_log_write()`（在 Termux 中不可见）
+- 强制设置横屏旋转 hint（Termux 中程序运行在普通窗口内，不应锁定方向）
+
+解决方案是利用 Termux 编译器额外定义的 `__TERMUX__` 宏，在所有 Android app 特有的代码路径中加上 `!defined(__TERMUX__)` 排除条件：
+
+```cpp
+// 资源目录：Termux 走 SDL_GetBasePath()，Android app 走外部存储
+#elif defined(__ANDROID__) && !defined(__TERMUX__)
+    const char* aExtPath = SDL_AndroidGetExternalStoragePath();
+    ...
+#else
+    char* aBasePath = SDL_GetBasePath();
+    ...
+```
+
+```cpp
+// 存档目录：Termux 走 SDL_GetPrefPath()，Android app 走外部存储
+#if defined(__ANDROID__) && !defined(__TERMUX__)
+    ...  // SDL_AndroidGetExternalStoragePath()
+#elif !defined(__SWITCH__) && !defined(__3DS__)
+    ...  // SDL_GetPrefPath()
+#endif
+```
+
+注意并非所有 `__ANDROID__` 检查都需要排除 Termux。EGL/GLES 相关的代码（如 GL 上下文创建重试、跳过桌面 GL 2.1 回退）保持 `#ifdef __ANDROID__` 不变——因为 Termux 底层同样使用 Android 的 EGL/GLES 驱动，不支持桌面 OpenGL。同理，`glad/gles2.h` 中的 `KHRONOS_APICALL` 可见性属性是 ABI 层面的定义，也不需要排除 Termux。
+
+区分原则很简单：**Android app 行为**（外部存储路径、Android 日志、横屏锁定）需要排除 Termux；**Android 内核/驱动行为**（EGL/GLES、ABI 可见性）不需要排除。
 
 ### 动画图集（ReanimAtlas）缓冲区溢出
 
@@ -473,6 +509,7 @@ dependencies {
         android:required="true" />
     <application
         android:allowBackup="true"
+        android:appCategory="game"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:hasFragileUserData="true"
@@ -482,7 +519,7 @@ dependencies {
 </manifest>
 ```
 
-唯一的 `<uses-feature>` 声明是 OpenGL ES 2.0——这是游戏渲染的硬性需求。`hasFragileUserData="true"` 告诉 Android 在用户卸载应用时提示是否保留数据，避免存档意外丢失。除此之外，没有 `READ_EXTERNAL_STORAGE`、没有 `WRITE_EXTERNAL_STORAGE`、没有 `MANAGE_EXTERNAL_STORAGE`、没有 `FileProvider`——所有文件访问都通过 SAF 完成。
+唯一的 `<uses-feature>` 声明是 OpenGL ES 2.0——这是游戏渲染的硬性需求。`appCategory="game"` 告诉 Android 系统这是一个游戏应用——系统会据此优化性能调度（如 CPU 频率策略）和勿扰模式行为。`hasFragileUserData="true"` 告诉 Android 在用户卸载应用时提示是否保留数据，避免存档意外丢失。除此之外，没有 `READ_EXTERNAL_STORAGE`、没有 `WRITE_EXTERNAL_STORAGE`、没有 `MANAGE_EXTERNAL_STORAGE`、没有 `FileProvider`——所有文件访问都通过 SAF 完成。
 
 ## 技术挑战回顾
 
@@ -496,6 +533,7 @@ Android 适配过程中遇到的主要技术挑战可以归纳为以下几类：
 | **竞态** | `GLImage::GLImage(GLInterface*)+16` 概率性崩溃 | Activity 生命周期事件导致 EGL surface 短暂不可用，`SDL_GL_CreateContext` 返回 `NULL` | Android 端重试上下文创建 + `Init()` 失败传播 + `GLImage` 构造函数防御 |
 | **内存安全** | `Reanimation::DrawTrack` 僵尸图鉴必现崩溃 | `ReanimAtlas` 固定 64 元素数组被 171 张图片越界写入，Release 中 `TOD_ASSERT` 为空 | `AddImage` 运行时溢出保护 + 编码/解码阶段边界检查 + 排序比较器严格弱序修正 |
 | **文件访问** | Android Scoped Storage 限制直接文件访问 | Android 10+ 逐步禁用传统存储权限 | 全面采用 SAF，零权限设计 |
+| **平台区分** | Termux 编译器定义 `__ANDROID__` 但应走桌面 Linux 逻辑 | Termux 是 Android 上的 Linux 终端环境，底层为 Android 但用户空间行为类似桌面 Linux | 使用 `defined(__ANDROID__) && !defined(__TERMUX__)` 区分真正的 Android app 和 Termux 环境；EGL/GLES 相关代码保持 `__ANDROID__` 不变 |
 
 ## 总结
 
