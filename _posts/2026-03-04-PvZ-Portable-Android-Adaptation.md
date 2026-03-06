@@ -85,7 +85,7 @@ Android 平台上，让用户导入游戏资源文件的方式大致有以下几
 | 方式 | 需要权限 | Android 适用版本 | 用户体验 |
 | :--- | :--- | :--- | :--- |
 | `READ_EXTERNAL_STORAGE` | 运行时危险权限 | Android 10 以下（10+ 被限制） | 需要弹出权限授予对话框，用户可能感到不安 |
-| `MANAGE_EXTERNAL_STORAGE` | 特殊权限 | Android 11+ | 需要跳转系统设置页面，体验极差，且 Google Play 对此审查严格 |
+| `MANAGE_EXTERNAL_STORAGE` | 特殊权限 | Android 11+ | 需要跳转系统设置页面，体验极差，系统对此审查严格 |
 | **Storage Access Framework (SAF)** | **无需任何权限** | Android 4.4+ | 调用系统文件选择器，用户主动选择文件，无需授权 |
 
 SAF 是 Android 官方推荐的现代文件访问方式。它基于一个简单的原则：**用户通过系统文件选择器主动选择文件或目录，应用获得对所选内容的临时访问权**。这意味着：
