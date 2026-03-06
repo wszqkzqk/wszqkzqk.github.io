@@ -284,7 +284,7 @@ public void setRequestedOrientation(int requestedOrientation) {
 
 值得注意的是，`ResourceImportActivity`（资源导入界面）**不设置固定方向**——它跟随系统默认的自动旋转行为。这是因为导入界面是一个竖向滚动列表，在竖屏和横屏下都能正常使用。
 
-### 沉浸式全屏
+### 沉浸式全屏与 Edge-to-Edge
 
 游戏运行时应该隐藏系统的状态栏和导航栏以获得沉浸式的全屏体验。Android 的全屏 API 在不同版本间有显著变化：
 
@@ -297,6 +297,7 @@ public void setRequestedOrientation(int requestedOrientation) {
 private void hideSystemUI() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         Window window = getWindow();
+        window.setDecorFitsSystemWindows(false);
         WindowInsetsController controller = window.getInsetsController();
         if (controller != null) {
             controller.hide(WindowInsets.Type.statusBars()
@@ -315,6 +316,12 @@ private void hideSystemUI() {
     }
 }
 ```
+
+这里有一个关键细节：API 30+ 分支中的 `window.setDecorFitsSystemWindows(false)` 不可省略。这行代码告诉系统**不要为系统栏（状态栏、导航栏）预留任何占位空间**，让应用内容绘制到整个屏幕。
+
+在旧版 API 分支中，`SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | SYSTEM_UI_FLAG_LAYOUT_STABLE` 三个 flag 的组合效果等同于 `setDecorFitsSystemWindows(false)`——它们告诉系统"让布局延伸到系统栏下面"。但当迁移到 API 30+ 的 `WindowInsetsController` API 时，这些 layout flag 的语义并不自动跟随——`controller.hide()` 仅仅隐藏了系统栏的视觉显示，**系统仍然会为其保留空间占位**。如果缺少 `setDecorFitsSystemWindows(false)`，在部分 Android 11~14 设备上就会出现游戏画面被缩小、四周出现黑边的问题（系统为已被 `hide()` 的状态栏和导航栏留了空白占位）。
+
+而在 Android 15 (API 35) 及以上，Google 强制所有应用启用 Edge-to-Edge（即 `setDecorFitsSystemWindows(false)` 成为系统默认行为），因此 Android 15+ 设备即使没有这行代码也不会出现上述问题。这会导致**同一份代码在 Android 15+ 设备上表现正常，在 Android 14 及以下设备上却四周留空**。因此，这里显式调用 `setDecorFitsSystemWindows(false)` 是确保所有 Android 版本上都能获得真正全屏体验的正确做法。
 
 此外，`PvZPortableActivity` 还在 `onWindowFocusChanged(hasFocus)` 中重新调用 `hideSystemUI()`——这是因为当用户从通知栏或多任务切回游戏时，系统栏可能会被重新显示。配合 Manifest 中 `android:theme="@android:style/Theme.NoTitleBar.Fullscreen"` 的声明（隐藏 Action Bar 上的标题栏和默认的状态栏），游戏在运行时实现了完整的无边框沉浸式体验。
 
@@ -523,6 +530,7 @@ Android 适配过程中遇到的主要技术挑战可以归纳为以下几类：
 | **内存安全** | 僵尸图鉴在高贴图数动画下崩溃 | `ReanimAtlas` 固定容量数组（64）无法承载 171 张贴图，触发越界风险 | `ReanimAtlas` 重构为 `std::vector` 动态存储 + RAII 析构管理，并保留编码/解码边界检查 |
 | **文件访问** | Android Scoped Storage 限制直接文件访问 | Android 10+ 逐步禁用传统存储权限 | 全面采用 SAF，零权限设计 |
 | **平台区分** | Termux 编译器定义 `__ANDROID__` 但应走桌面 Linux 逻辑 | Termux 是 Android 上的 Linux 终端环境，底层为 Android 但用户空间行为类似桌面 Linux | 使用 `defined(__ANDROID__) && !defined(__TERMUX__)` 区分真正的 Android app 和 Termux 环境；EGL/GLES 相关代码保持 `__ANDROID__` 不变 |
+| **全屏显示** | Android 11~14 设备上游戏画面四周留空黑边 | 迁移到 `WindowInsetsController` API 时缺少 `setDecorFitsSystemWindows(false)`，系统仍为已隐藏的系统栏保留占位空间 | 在 API 30+ 分支中调用 `window.setDecorFitsSystemWindows(false)` |
 
 ## 总结
 
