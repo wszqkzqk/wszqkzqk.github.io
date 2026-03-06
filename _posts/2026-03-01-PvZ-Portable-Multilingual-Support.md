@@ -43,7 +43,7 @@ tags:         C++ SDL2 国际化 开源软件 游戏移植 开源游戏 PvZ-Port
 
 原先 `Buffer::UTF8ToString()` 直接将 Buffer 中的原始字节当作 UTF-8 返回。这对英语版没有问题，但非英语版的文件往往带有 BOM，甚至使用 UTF-16 LE 编码。
 
-笔者将该方法重构为 `Buffer::ToUTF8String()`，加入了 BOM 检测逻辑：
+笔者将该方法重构为 `Buffer::ToUTF8String()`，加入了 BOM 检测与自动编码识别逻辑：
 
 ```cpp
 bool Buffer::ToUTF8String(std::string* theString) const
@@ -62,16 +62,28 @@ bool Buffer::ToUTF8String(std::string* theString) const
     } else if (aLen >= 2 && memcmp(aData, "\xFE\xFF", 2) == 0) {
         // UTF-16 BE BOM
         aStringBuffer = SDL_iconv_string("UTF-8", "UTF-16BE", aData + 2, aLen - 2);
-    } else {
-        // No BOM: treat as UTF-8,  covers ASCII as well
+    } else if (IsValidUTF8(aData, aLen)) {
+        // Valid UTF-8 without BOM: use as-is
         *theString = std::string(aData, aLen);
+        return true;
+    } else {
+        // Not valid UTF-8: convert from Windows-1252
+        *theString = Win1252ToUTF8(aData, aLen);
         return true;
     }
     // ...
 }
 ```
 
-这里使用了 SDL 自带的 `SDL_iconv_string` 进行 UTF-16 到 UTF-8 的转码，避免引入额外的依赖。同时新增了 `ReadUTF8StringFromFile` 方法，将文件读取和 BOM 处理封装在一起，`DescParser`、`PropertiesParser` 和 `TodStringFile` 中所有的文本文件加载都统一改为调用这个方法。
+对于带 BOM 的文件，直接根据 BOM 类型进行处理。对于无 BOM 的文件，先通过 `IsValidUTF8()` 做严格的 RFC 3629 校验（包括拒绝 overlong encoding 和 surrogate 码点），通过则直接当 UTF-8 使用；未通过则视为 Windows-1252 编码并通过自实现的 `Win1252ToUTF8()` 转为 UTF-8。（无 BOM 分支的自动检测逻辑是在[第六步](#第六步无-bom-文件编码自动检测)中补充的，这里展示的是最终版本。）
+
+之所以不使用 `SDL_iconv_string` 进行 Windows-1252 转码和 UTF-8 校验，是因为：
+- `SDL_iconv_string("UTF-8", "UTF-8", ...)` 在遇到非法 UTF-8 字节时**不返回错误**，而是**静默丢弃**非法字节，无法用作校验
+- `SDL_iconv_string("UTF-8", "WINDOWS-1252", ...)` 在 Wine 环境下会产生**错误的转换结果**（例如将 `®` (0xAE) 转为"ÿ"而非正确的 U+00AE）
+
+C++20 标准库同样没有提供 UTF-8 校验 API，因此手动实现是必要的选择。UTF-16 的转码仍使用 `SDL_iconv_string`，因为 UTF-16 BOM 转换在各平台上均可靠。
+
+同时新增了 `ReadUTF8StringFromFile` 方法，将文件读取和编码处理封装在一起，`DescParser`、`PropertiesParser` 和 `TodStringFile` 中所有的文本文件加载都统一改为调用这个方法。
 
 ### 字体渲染的 `char32_t` 改造
 
@@ -318,6 +330,124 @@ if (!aIsSpace && !aIsNewline && Sexy::IsAutoBreakChar(aCurChar) &&
 
 注意这里记录的断行位置是 `aCharStart`（当前字符之前），而不是 `aCharEnd`（当前字符之后），确保断行发生在字符边界的正确一侧。同时 `aPrevChar` 的更新被移到了断行判断之后，避免因顺序问题在本次迭代中检查到的是已经更新过的 `aPrevChar`。
 
+## 第六步：无 BOM 文件编码自动检测
+
+**对应 Commit**: [`bfbbe84`](https://github.com/wszqkzqk/PvZ-Portable/commit/bfbbe84c625ec58d5f12ee7b2cd84d66a62566b3)
+
+### 问题背景
+
+在第一步中，`ToUTF8String()` 对无 BOM 文件的处理方式是将原始字节直接当作 UTF-8 返回。这对 ASCII 内容和合法 UTF-8 没有问题，但某些资源文件（如字体描述符 `BrianneTod32.txt` 等）实际上是 **Windows-1252 编码**的——其中包含 `®`（0xAE）等非 ASCII 字节。在第一步的 `char32_t` 字体改造之后，渲染管线中的 `UTF8DecodeNext()` 会严格按 UTF-8 解码，遇到非法的 0xAE 起始字节时直接跳过该字符，导致 `®` 不显示。
+
+### 为什么不能用 SDL_iconv
+
+最直观的方案是用 `SDL_iconv_string` 做 UTF-8 校验和 Windows-1252 转码，但实测发现两个问题：
+
+1. **`SDL_iconv_string("UTF-8", "UTF-8", ...)`**：遇到非法 UTF-8 字节时**不返回 NULL**，而是**静默丢弃**非法字节。例如输入 `"hello\xAEworld"`，输出为 `"helloworld"`——无法以此判断输入是否为合法 UTF-8。
+2. **`SDL_iconv_string("UTF-8", "WINDOWS-1252", ...)`**：在 Wine/Windows 环境下产生**错误的转换结果**——`®`（0xAE）被转为类似 `ÿ` 的错误字符，而非正确的 U+00AE。
+
+C++20 标准库同样没有提供 UTF-8 校验 API，因此必须手动实现。
+
+### IsValidUTF8：严格 RFC 3629 校验
+
+实现了一个零分配、单遍扫描的 UTF-8 校验函数。除了检查基本的 lead byte / continuation byte 长度匹配之外，还拒绝以下非法序列：
+
+- **Overlong encoding**：`0xC0`-`0xC1` 的 2 字节序列、`0xE0` 开头但第二字节 < `0xA0` 的 3 字节序列、`0xF0` 开头但第二字节 < `0x90` 的 4 字节序列
+- **Surrogate 码点**：`0xED` 开头且第二字节 > `0x9F`（即 U+D800-U+DFFF）
+- **超出 Unicode 范围**：`0xF4` 开头且第二字节 > `0x8F`（即 > U+10FFFF），或以 `0xF5`+ 开头
+
+```cpp
+static bool IsValidUTF8(const char* theData, int theLen)
+{
+    auto p = reinterpret_cast<const unsigned char*>(theData);
+    auto anEnd = p + theLen;
+    while (p < anEnd)
+    {
+        unsigned char aFirst = *p;
+        int aSeqLen;
+        if (aFirst < 0x80) { ++p; continue; }
+        else if ((aFirst & 0xE0) == 0xC0 && aFirst >= 0xC2) aSeqLen = 2;
+        else if ((aFirst & 0xF0) == 0xE0) aSeqLen = 3;
+        else if ((aFirst & 0xF8) == 0xF0 && aFirst <= 0xF4) aSeqLen = 4;
+        else return false;
+
+        if (p + aSeqLen > anEnd) return false;
+        for (int i = 1; i < aSeqLen; ++i)
+            if ((p[i] & 0xC0) != 0x80) return false;
+
+        if (aSeqLen == 3 && aFirst == 0xE0 && p[1] < 0xA0) return false;
+        if (aSeqLen == 3 && aFirst == 0xED && p[1] > 0x9F) return false;
+        if (aSeqLen == 4 && aFirst == 0xF0 && p[1] < 0x90) return false;
+        if (aSeqLen == 4 && aFirst == 0xF4 && p[1] > 0x8F) return false;
+        p += aSeqLen;
+    }
+    return true;
+}
+```
+
+### Win1252ToUTF8：平台无关的 Windows-1252 转码
+
+Windows-1252（也称 CP1252）与 ISO 8859-1 的区别在于 `0x80`-`0x9F` 范围：ISO 8859-1 这一段是 C1 控制字符，而 Windows-1252 将其映射为可打印字符（如欧元符号 `€`、智能引号、省略号等）。`0xA0`-`0xFF` 两者一致，都直接映射到 U+00A0-U+00FF。
+
+实现使用一个 32 元素的查找表处理 `0x80`-`0x9F` 区间，其余范围直接映射：
+
+```cpp
+static constexpr char32_t gWin1252ToUnicode[32] = {
+    0x20AC, 0x0081, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021,
+    0x02C6, 0x2030, 0x0160, 0x2039, 0x0152, 0x008D, 0x017D, 0x008F,
+    0x0090, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014,
+    0x02DC, 0x2122, 0x0161, 0x203A, 0x0153, 0x009D, 0x017E, 0x0178
+};
+
+static std::string Win1252ToUTF8(const char* theData, int theLen)
+{
+    std::string aResult;
+    aResult.reserve(theLen);
+    for (int i = 0; i < theLen; ++i)
+    {
+        auto aByte = static_cast<unsigned char>(theData[i]);
+        char32_t aCodepoint;
+        if (aByte < 0x80)
+            aCodepoint = aByte;
+        else if (aByte <= 0x9F)
+            aCodepoint = gWin1252ToUnicode[aByte - 0x80];
+        else
+            aCodepoint = aByte; // 0xA0-0xFF → U+00A0-U+00FF
+
+        if (aCodepoint < 0x80)
+            aResult += static_cast<char>(aCodepoint);
+        else if (aCodepoint < 0x0800) {
+            aResult += static_cast<char>(0xC0 | (aCodepoint >> 6));
+            aResult += static_cast<char>(0x80 | (aCodepoint & 0x3F));
+        } else {
+            aResult += static_cast<char>(0xE0 | (aCodepoint >> 12));
+            aResult += static_cast<char>(0x80 | ((aCodepoint >> 6) & 0x3F));
+            aResult += static_cast<char>(0x80 | (aCodepoint & 0x3F));
+        }
+    }
+    return aResult;
+}
+```
+
+查找表中的所有码点均位于 BMP 内（≤ U+FFFF），因此 UTF-8 编码最多 3 字节，不需要处理 4 字节序列。
+
+### ToUTF8String 的最终逻辑
+
+结合以上两个函数，无 BOM 文件的处理变为简单的二分支：
+
+```cpp
+} else if (IsValidUTF8(aData, aLen)) {
+    // Valid UTF-8 without BOM: use as-is
+    *theString = std::string(aData, aLen);
+    return true;
+} else {
+    // Not valid UTF-8: convert from Windows-1252
+    *theString = Win1252ToUTF8(aData, aLen);
+    return true;
+}
+```
+
+纯 ASCII 文件天然通过 `IsValidUTF8` 校验，零开销直通；合法 UTF-8 同样直通；仅 Windows-1252 文件才需要转码——而这类文件在实际资源包中占比很小。
+
 ## 总结：踩坑回顾
 
 整个多语言支持的实现可以用一张时间线来概括：
@@ -329,6 +459,7 @@ if (!aIsSpace && !aIsNewline && Sexy::IsAutoBreakChar(aCurChar) &&
 | ③ CJK 自动换行 | `IsAutoBreakChar` + UTF-8 码点遍历 | 中文文本不换行（全挤一行）；改完后英语版 FLAVOR 文本出现回归（`\n` 被硬换行） |
 | ④ 本地化属性加载 | 加载 `default.xml` / `Layout.xml`、成就翻译 | `STORE_USE_*_IMAGE_LABEL` 导致德语版商店标签消失 |
 | ⑤ 换行回归修复 + 禁则处理 | `TOD_FORMAT_IGNORE_NEWLINES`、`\r` 跳过、开闭标点禁则 | 必须区分软换行 `\n` 和硬换行 |
+| ⑥ 无 BOM 文件编码自动检测 | `IsValidUTF8` 校验 + `Win1252ToUTF8` 转码 | `SDL_iconv` 静默丢弃非法字节；Wine 下 Win1252 转码结果错误 |
 
 几个关键教训：
 
@@ -337,6 +468,7 @@ if (!aIsSpace && !aIsNewline && Sexy::IsAutoBreakChar(aCurChar) &&
 3. **`signed char` 是 C/C++ 中的经典陷阱**——UTF-8 continuation bytes 的高位为 1，在有符号 `char` 下变成负数，各种数值比较都可能出错。
 4. **CJK 排版不只是能断行**——还需要考虑禁则处理，否则标点符号会出现在不合适的位置。
 5. **不同版本之间的字符串键不兼容**——宝开在 1.2.0.1073 到 1.2.0.1093/1096 之间修改了不少键名，因此完全跨版本兼容几乎不可能，只能在标准版本上保证正确行为，其他版本尽力适配。
+6. **`SDL_iconv` 并不总是可靠**——`SDL_iconv_string("UTF-8","UTF-8",...)` 会静默丢弃非法字节而非报错，不能用于 UTF-8 校验；`SDL_iconv_string("UTF-8","WINDOWS-1252",...)` 在 Wine 下转码结果错误。跨平台项目中如果对正确性有严格要求，字符编码转换还是自己实现更稳妥。
 
 ## 支持的版本
 
