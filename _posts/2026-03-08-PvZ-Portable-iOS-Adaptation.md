@@ -237,7 +237,7 @@ iOS（和 Android）上不存在"窗口模式"的概念——app 始终全屏运
 
 更微妙的是，即使用户不碰全屏复选框，只是打开选项菜单再关闭，也可能触发黑屏。这是因为关闭对话框的 `KillNewOptionsDialog()` 会无条件读取复选框状态并调用 `SwitchScreenMode`——如果 `mIsWindowed` 的值与复选框状态不一致（例如引擎默认 `mIsWindowed = true` 但实际全屏运行），就会触发不必要的模式切换。
 
-修复分三层，各自解决不同层面的问题：
+修复分四层，各自解决不同层面的问题：
 
 **第一层——初始状态正确**：在构造函数中将 `mIsWindowed` 设为 `false`：
 
@@ -250,9 +250,30 @@ iOS（和 Android）上不存在"窗口模式"的概念——app 始终全屏运
 #endif
 ```
 
-这确保选项对话框中全屏复选框**初始就是勾选状态**，与实际运行状态一致。
+这确保选项对话框中全屏复选框**初始就是勾选状态**（复选框通过 `!theApp->mIsWindowed` 决定是否勾选），与实际运行状态一致。
 
-**第二层——UI 锁定**：同样在构造函数中将 `mForceFullscreen` 设为 `true`：
+**第二层——配置读取守卫**：阻止配置和存档覆写 `mIsWindowed`：
+
+引擎在初始化过程中会从配置文件和注册表/存档中读取窗口模式设置，这些读取可能将 `mIsWindowed` 从 `false` 改回 `true`，导致复选框显示为未勾选。在移动平台上跳过这些读取：
+
+```cpp
+// SexyApp.cpp — 跳过配置文件中的 DefaultWindowed 属性
+#if !defined(__IPHONEOS__) && (!defined(__ANDROID__) || defined(__TERMUX__)) \
+    && !defined(__SWITCH__) && !defined(__3DS__)
+    mIsWindowed = GetBoolean("DefaultWindowed", mIsWindowed);
+#endif
+
+// SexyAppBase.cpp — 跳过注册表/存档中的 ScreenMode 读取
+#if !defined(__IPHONEOS__) && (!defined(__ANDROID__) || defined(__TERMUX__)) \
+    && !defined(__SWITCH__) && !defined(__3DS__)
+    if (RegistryReadInteger("ScreenMode", &anInt))
+        mIsWindowed = anInt == 0;
+#endif
+```
+
+这确保 `mIsWindowed` 在移动平台上始终保持构造函数中设置的 `false`，不会被任何外部配置覆写。
+
+**第三层——UI 锁定**：同样在构造函数中将 `mForceFullscreen` 设为 `true`：
 
 ```cpp
 #if defined(__IPHONEOS__) || (defined(__ANDROID__) && !defined(__TERMUX__)) \
@@ -265,7 +286,7 @@ iOS（和 Android）上不存在"窗口模式"的概念——app 始终全屏运
 
 这利用了引擎已有的 `mForceFullscreen` 机制——当它为 `true` 时，选项对话框中取消全屏复选框会弹出"不支持窗口模式"的提示并自动恢复为勾选状态。
 
-**第三层——彻底阻断模式切换**：在 `SwitchScreenMode()` 入口处直接 early return：
+**第四层——彻底阻断模式切换**：在 `SwitchScreenMode()` 入口处直接 early return：
 
 ```cpp
 void SexyAppBase::SwitchScreenMode(bool wantWindowed, bool is3d, bool force)
@@ -279,9 +300,9 @@ void SexyAppBase::SwitchScreenMode(bool wantWindowed, bool is3d, bool force)
 }
 ```
 
-这是最关键的一层。`SwitchScreenMode` 是触发 `MakeWindow()` 和 `SDL_SetWindowFullscreen` 的唯一入口。在移动平台上直接跳过所有逻辑（仅保留 3D 加速设置），确保无论 `mIsWindowed` 的值如何、无论调用来源（用户操作、配置读取、存档恢复），都不会执行任何窗口模式变更。
+这是最后的安全网。`SwitchScreenMode` 是触发 `MakeWindow()` 和 `SDL_SetWindowFullscreen` 的唯一入口。在移动平台上直接跳过所有逻辑（仅保留 3D 加速设置），确保无论 `mIsWindowed` 的值如何、无论调用来源（用户操作、配置读取、存档恢复），都不会执行任何窗口模式变更。
 
-这三层各有明确职责且互不冗余：第一层管 UI 显示正确性，第二层管用户交互体验，第三层管代码路径安全性。第三层的 early return 兜底了所有可能的触发路径（包括存档中保存的窗口模式、配置文件中的 `DefaultWindowed` 属性等），避免在每个可能修改 `mIsWindowed` 的位置都加平台守卫。
+这四层各有明确职责且互不冗余：第一层管初始 UI 显示正确性，第二层防止配置/存档覆写破坏第一层的状态，第三层管用户交互体验（提供友好的提示反馈），第四层管代码路径安全性（兜底所有可能的触发路径）。
 
 ### EAGL 上下文创建重试
 
@@ -390,7 +411,7 @@ IPA 打包方式与 `build-ios.sh` 相同：找到 `.app` bundle，创建 `Paylo
 | **构建工具** | Gradle + NDK + CMake | CMake + Xcode Generator |
 | **签名与安装** | debug keystore（自动），`adb install` 即可 | ad-hoc / sideload，**需要 Mac 或特殊工具** |
 | **本地调试效率** | 高（编译→adb install→即时测试） | **极低**（无 Mac 则依赖 CI + 远程协助） |
-| **全屏处理** | Edge-to-Edge + WindowInsetsController | `SwitchScreenMode` early return + `mForceFullscreen` |
+| **全屏处理** | Edge-to-Edge + WindowInsetsController | 四层锁定：`mIsWindowed = false` + 配置读取守卫 + `mForceFullscreen` + `SwitchScreenMode` early return |
 | **方向控制** | Manifest + SDL hint + Java 拦截 `SENSOR_LANDSCAPE` | Info.plist + SDL hint |
 
 从代码量看，iOS 适配远比 Android "轻量"——零平台 UI 代码，C++ 改动量也更少。但从实际开发体验看，两者的难点截然不同：Android 的挑战在于编码——需要理解 Java/JNI 桥接、SAF 存储框架、Activity 生命周期，工具链本身是友好的；iOS 的挑战则在于编码之外——侧载安装门槛高、没有 Mac 时本地测试困难、vcpkg 交叉编译偶发构建失败。Android 的导入 UI 是在编写 Java Activity 时顺便实现的，成本很低；而 iOS 要实现类似功能则需要额外引入 ObjC/Swift，与整体零平台 UI 代码的设计不符。
@@ -403,7 +424,7 @@ IPA 打包方式与 `build-ios.sh` 相同：找到 `.app` bundle，创建 `Paylo
 | **构建** | SDL-Mixer-X 链接 Cocoa/Carbon/ForceFeedback 失败 | `if(APPLE)` 不区分 macOS 和 iOS | 用 `if(NOT IOS)` 守卫 macOS 专有框架 |
 | **构建** | LaunchScreen.storyboard "Unknown target runtime" | `targetRuntime="AppleSDK"` 在部分 Xcode 版本不支持 | 改为 `targetRuntime="iOS.CocoaTouch"` |
 | **运行时** | 资源文件找不到（崩溃） | `SDL_GetPrefPath()` 返回 `Library/Application Support/`，用户不可见 | 改用 `getenv("HOME")/Documents` |
-| **运行时** | Full Screen 选项导致黑屏 | `SDL_SetWindowFullscreen(window, 0)` 在 iOS 上破坏渲染上下文 | `mIsWindowed = false` + `mForceFullscreen = true` + `SwitchScreenMode` early return |
+| **运行时** | Full Screen 选项导致黑屏 | `SDL_SetWindowFullscreen(window, 0)` 在 iOS 上破坏渲染上下文 | 四层锁定：`mIsWindowed = false` + 配置读取守卫 + `mForceFullscreen = true` + `SwitchScreenMode` early return |
 | **资源** | App 图标显示为空白占位符 | PNG 带 alpha 通道，且 asset catalog 缺少 `MACOSX_PACKAGE_LOCATION` | 去除 alpha + 设置 `MACOSX_PACKAGE_LOCATION Resources` |
 
 ## 总结
