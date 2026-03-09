@@ -47,7 +47,7 @@ tags:         C++ SDL2 OpenGL 开源软件 游戏移植 开源游戏 PvZ-Portabl
 
 **重要：本项目仅包含代码引擎，不包含任何游戏素材！**
 
-PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属于 PopCap/EA。
+PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属于 PopCap/EA。本项目与 EA/PopCap 没有任何商业合作或授权关系，也不包含任何受版权保护的游戏资源。
 
 要研究或使用此项目，你**必须**拥有正版游戏（如果没有，请在 [Steam](https://store.steampowered.com/app/3590/Plants_vs_Zombies_GOTY_Edition/) 或 [EA 官网](https://www.ea.com/games/plants-vs-zombies/plants-vs-zombies) 上购买）。你需要从正版游戏中提取以下文件放到 PvZ-Portable 的程序所在目录中：
 
