@@ -1,6 +1,6 @@
 ---
 layout:       post
-title:        PvZ-Portable：100% 复原的植物大战僵尸正式登陆 iOS/iPadOS
+title:        PvZ-Portable：100% 复原的植物大战僵尸正式支持 iOS/iPadOS
 subtitle:     在 iPhone 和 iPad 上运行完整的 PvZ 引擎——纯 C++ 的跨平台移植实践
 date:         2026-03-08
 author:       wszqkzqk
@@ -13,13 +13,13 @@ tags:         C++ SDL2 OpenGL iOS 开源软件 游戏移植 开源游戏 PvZ-Por
 
 在完成 [Android 适配](https://wszqkzqk.github.io/2026/03/04/PvZ-Portable-Android-Adaptation/)后，PvZ-Portable 已经在 Linux、Windows、macOS、Android、Nintendo Switch 和 Nintendo 3DS 上运行。现在，iOS/iPadOS 也加入了这个大家庭——你可以在 iPhone 和 iPad 上运行 100% 复原的开源版植物大战僵尸了。
 
-与 Android 适配不同，iOS 适配**不需要任何 Objective-C 或 Swift 代码**，整个适配在纯 C++ 层面完成（18 个文件，+465/-13 行，C++ 逻辑修改不到 60 行）。不过，代码量小并不意味着过程轻松——没有 Mac 的情况下，iOS 的调试测试远比 Android 困难，笔者在整个过程中完全依赖 CI 编译，并在北京大学学生 Linux 俱乐部中召集游戏爱好者协助完成真机测试。本文将记录适配中遇到的问题和解决方案。
+与 Android 适配不同，iOS 适配**不需要任何 Objective-C 或 Swift 代码**，整个适配在纯 C++ 层面完成。不过，代码量小并不意味着过程轻松——没有 Mac 的情况下，iOS 的调试测试远比 Android 困难，笔者在整个过程中完全依赖 CI 编译，并在北京大学学生 Linux 俱乐部中召集游戏爱好者协助完成真机测试。本文将记录适配中遇到的问题和解决方案。
 
 ## ⚠️ 重要说明
 
 **本项目仅包含代码引擎，不包含任何游戏素材！**
 
-PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属于 PopCap/EA。本项目的 iOS 适配**纯粹是跨平台移植技术的研究**——研究如何将一个使用 SDL2 和 OpenGL ES 的 C++ 引擎适配到 iOS 平台，仅用于技术学习。
+PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属于 PopCap/EA。本项目的 iOS 适配**纯粹是跨平台移植技术的研究**——研究如何将一个使用 SDL2 和 OpenGL ES 的 C++ 引擎适配到 iOS 平台，仅用于技术学习。本项目与 EA/PopCap 没有任何商业合作或授权关系，也不包含任何受版权保护的游戏资源。
 
 要研究或使用此项目，你**必须**拥有正版 PC 版《植物大战僵尸：年度版》（GOTY Edition）的资源文件（如果没有，请在 [Steam](https://store.steampowered.com/app/3590/Plants_vs_Zombies_GOTY_Edition/) 或 [EA 官网](https://www.ea.com/games/plants-vs-zombies/plants-vs-zombies)上购买）。
 
