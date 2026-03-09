@@ -11,7 +11,7 @@ tags:         C++ SDL2 OpenGL iOS 开源软件 游戏移植 开源游戏 PvZ-Por
 
 ## 引言
 
-在完成 [Android 适配](https://wszqkzqk.github.io/2026/03/04/PvZ-Portable-Android-Adaptation/)后，PvZ-Portable 已经在 Linux、Windows、macOS、Android、Nintendo Switch 和 Nintendo 3DS 上运行。现在，iOS/iPadOS 也加入了这个大家庭——你可以在 iPhone 和 iPad 上运行 100% 复原的开源版植物大战僵尸了。
+在完成 [Android 适配](https://wszqkzqk.github.io/2026/03/04/PvZ-Portable-Android-Adaptation/)后，PvZ-Portable 已经在 Linux、Windows、macOS、Android、Nintendo Switch 等平台上运行。现在，iOS/iPadOS 也加入了这个大家庭——你可以在 iPhone 和 iPad 上运行 100% 复原的开源版植物大战僵尸了。
 
 与 Android 适配不同，iOS 适配**不需要任何 Objective-C 或 Swift 代码**，整个适配在纯 C++ 层面完成。不过，代码量小并不意味着过程轻松——没有 Mac 的情况下，iOS 的调试测试远比 Android 困难，笔者在整个过程中完全依赖 CI 编译，并在北京大学学生 Linux 俱乐部中召集游戏爱好者协助完成真机测试。本文将记录适配中遇到的问题和解决方案。
 
