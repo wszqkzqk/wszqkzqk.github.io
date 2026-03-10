@@ -1,7 +1,7 @@
 ---
 layout:       post
 title:        PvZ-Portable：100% 复原的植物大战僵尸登陆浏览器——零安装即点即玩
-subtitle:     将经典游戏全功能完美适配 WebAssembly
+subtitle:     将经典游戏全功能完美适配浏览器免安装运行（WebAssembly + Emscripten 技术详解）
 date:         2026-03-10
 author:       wszqkzqk
 header-img:   img/games/bg-pvz-portable.webp
