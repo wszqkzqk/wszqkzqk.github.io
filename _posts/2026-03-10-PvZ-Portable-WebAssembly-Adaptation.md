@@ -510,7 +510,7 @@ GitHub Actions 添加了 `build-wasm` job，在 Ubuntu runner 上使用 `myminds
 | **构建工具** | Gradle + NDK + CMake | CMake + Xcode | emcmake + CMake + Ninja |
 | **安装方式** | `adb install` / APK 直装 | 签名侧载（AltStore 等） | **零安装**，打开网页即可 |
 
-从用户体验角度看，WebAssembly 版本提供了**最低的使用门槛**——不需要下载安装包、不需要处理签名、不需要配置环境，一个链接即可使用。代价是每次进入游戏都需要上传游戏资源（约 40-70 MB），以及浏览器环境下的性能略低于原生平台。
+从用户体验角度看，WebAssembly 版本提供了**最低的使用门槛**——不需要下载安装包、不需要处理签名、不需要配置环境，一个链接即可使用。代价是每次进入游戏都需要导入游戏资源（约 40-70 MB，不过过程全在本地运行，没有网络传输，速度很快），以及浏览器环境下的性能略低于原生平台。
 
 从开发角度看，WebAssembly 适配是三者中**技术复杂度最高的**——需要理解浏览器的事件循环模型、Asyncify 的栈保存机制、IDBFS 的同步语义、Emscripten 的 Port 系统和 CMake 集成。Android 的挑战在于 Java/JNI 对接和存储框架，iOS 的挑战在于编码之外的签名与调试门槛，而 WebAssembly 的挑战则集中在**重新思考 C++ 代码中隐含的同步执行假设**。
 
