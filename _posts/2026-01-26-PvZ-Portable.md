@@ -21,6 +21,8 @@ tags:         C++ SDL2 OpenGL 开源软件 游戏移植 开源游戏 PvZ-Portabl
 | :---: | :---: | :---: |
 | 几乎 100% 复刻原版所有特性 | 支持 Linux, Windows, macOS, Android, iOS/iPadOS, WebAssembly, Switch... | 基于 OpenGL & SDL |
 
+> **想先体验？**现在已经可以**直接在浏览器中运行**。访问 [浏览器免安装体验页面](https://wszqkzqk.github.io/pvz-portable-wasm/pvz-portable.html)，导入正版游戏的 `main.pak` 和 `properties/` 目录后即可**免安装开始游玩**。
+
 ## 为什么要重写？
 
 原版《植物大战僵尸》虽然经典，但毕竟是十几年前的游戏。原版使用了 DirectX 7 等过时技术，且只提供了 32 位可执行文件，在现代操作系统上运行可能会遇到兼容性问题，而且它从未官方支持过 Linux，也没有适配过 LoongArch 等新兴指令集架构。
@@ -85,15 +87,15 @@ PvZ-Portable 支持加载**非英语版本**的正版游戏资源。引擎能够
 
 ### 程序下载
 
-你可以从 [GitHub Releases 页面](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载预编译的二进制文件，或者从源代码自行编译（见下文）。预案构建二进制仅包含若干主流架构和操作系统搭配，实际支持的平台远远不止这些，如果你需要其他平台的版本，也请自行从源代码编译。预构建二进制均使用 GitHub Actions 编译，主要用于测试。Android 用户可以直接从 Releases 下载 APK 安装。iOS/iPadOS 用户可以从 Releases 下载未签名的 IPA（`pvz-portable-ios-arm64.ipa`），通过 AltStore、TrollStore 或 Xcode 等方式侧载安装。macOS 用户如果不想处理签名问题，**推荐自行编译**。本项目编译流程较为简单，也推荐其他**有条件的用户尽量自行编译**。若没有条件自行构建且有对应平台的预构建文件，从 [GitHub Releases](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载使用**亦可**。
+你可以从 [GitHub Releases 页面](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载预编译的二进制文件，或者从源代码自行编译（见下文）。如果你只是想快速体验，也可以直接使用下文的**浏览器在线体验版**，无需下载安装。预构建二进制仅包含若干主流架构和操作系统搭配，实际支持的平台远远不止这些，如果你需要其他平台的版本，也请自行从源代码编译。预构建二进制均使用 GitHub Actions 编译，主要用于测试。Android 用户可以直接从 Releases 下载 APK 安装。iOS/iPadOS 用户可以从 Releases 下载未签名的 IPA（`pvz-portable-ios-arm64.ipa`），通过 AltStore、TrollStore 或 Xcode 等方式侧载安装。macOS 用户如果不想处理签名问题，**推荐自行编译**。本项目编译流程较为简单，也推荐其他**有条件的用户尽量自行编译**。若没有条件自行构建且有对应平台的预构建文件，从 [GitHub Releases](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载使用**亦可**。
 
 再次提醒，本项目需要**自行提供正版游戏资源**，二进制包和源码仓库中均不包含任何游戏素材。
 
 ### WebAssembly（浏览器）使用说明
 
-**无需下载安装——打开浏览器即可游玩。** 访问 **[在线体验页面](https://wszqkzqk.github.io/pvz-portable-wasm/pvz-portable.html)**，上传你的 `main.pak` 和 `properties/` 目录，点击 **Start Game** 即可开始。存档自动保存在浏览器的 IndexedDB 中，支持导出/导入。
+**无需下载安装——打开浏览器即可游玩。** 访问 **[浏览器免安装体验页面](https://wszqkzqk.github.io/pvz-portable-wasm/pvz-portable.html)**，导入你的 `main.pak` 和 `properties/` 目录，点击 **Start Game** 即可开始。存档自动保存在浏览器的 IndexedDB 中，支持导出/导入。资源与存档数据等所有数据均保存在本地，**没有任何数据会被上传到服务器**。
 
-也可以从 [Releases](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载 WASM 构建包（`.html` + `.js` + `.wasm`），用 HTTP 服务器本地托管。更多技术细节见 [WebAssembly 适配技术博客](https://wszqkzqk.github.io/2026/03/10/PvZ-Portable-WebAssembly-Adaptation/)。
+也可以从 [Releases](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载或从源码构建 WASM 构建包（`.html` + `.js` + `.wasm`），用本地 HTTP 服务器本地托管。更多技术细节见 [WebAssembly 适配技术博客](https://wszqkzqk.github.io/2026/03/10/PvZ-Portable-WebAssembly-Adaptation/)。
 
 ### Android 使用说明
 
