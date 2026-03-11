@@ -59,7 +59,7 @@ Switch 平台有自己完全独立的一套：
 
 OpenGL ES 2.0 是几乎所有现代 GPU 都支持的最低标准：
 
-- **桌面 GPU**：所有支持 OpenGL 2.1+ 的桌面驱动都内含 ES 2.0 的函数集。自 OpenGL 4.1 起，标准更是通过 `GL_ARB_ES2_compatibility` 扩展明确保证了对 ES 2.0 着色器的兼容（包括 `#version 100` 和 `precision` 限定符）。实际上，即便是不支持该扩展的 OpenGL 2.1 兼容模式驱动（如 macOS）也能正常编译 `#version 100` 着色器。
+- **桌面 GPU**：所有支持 OpenGL 2.1+ 的桌面驱动都内含 ES 2.0 的函数集。自 OpenGL 4.1 起，标准更是通过 `GL_ARB_ES2_compatibility` 扩展明确保证了对 ES 2.0 着色器的兼容（包括 `#version 100` 和 `precision` 限定符）。实际上，即便是不支持该扩展的 OpenGL 2.1 兼容模式驱动（如 AMD/Intel/NVIDIA）也能正常编译 `#version 100` 着色器。
 - **移动 GPU**：Android、iOS 设备的标配，在 ARM 开发板上支持非常完善。
 - **游戏主机**：Nintendo Switch 的 GPU 原生支持 ES 2.0（它支持到 OpenGL 4.3，ES 2.0 自然包含在内）。
 - **软件渲染**：即便 Mesa 的 llvmpipe（软件渲染器）也支持 ES 2.0。
