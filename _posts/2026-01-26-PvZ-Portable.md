@@ -31,7 +31,7 @@ tags:         C++ SDL2 OpenGL 开源软件 游戏移植 开源游戏 PvZ-Portabl
     *   由于游戏分辨率仅有 800x600，在高分辨率屏幕上运行原版时窗口会非常小，只有开启全屏模式才能放大。
     *   PvZ-Portable **支持任意缩放比例**，也支持**窗口最大化**和全屏。
 2.  **真正、全面跨平台**：
-    *   **OS**: Linux, Windows, macOS, Android, iOS/iPadOS, Web (WebAssembly)
+    *   **OS**: Linux, Windows, macOS, Android, iOS/iPadOS, Web (WebAssembly), BSD家族, ...
         *   32 位和 64 位支持
     *   **ISA**: i686, x86_64, aarch64, riscv64, loongarch64, ...
     *   **字节序**: 小端和大端均支持，且**可移植存档相互兼容**
