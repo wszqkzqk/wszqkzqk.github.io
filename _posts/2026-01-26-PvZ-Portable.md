@@ -21,7 +21,7 @@ tags:         C++ SDL2 OpenGL 开源软件 游戏移植 开源游戏 PvZ-Portabl
 | :---: | :---: | :---: |
 | 几乎 100% 复刻原版所有特性 | 支持 Linux, Windows, macOS, Android, iOS/iPadOS, WebAssembly, Switch... | 基于 OpenGL & SDL |
 
-> **想先体验？**现在已经可以**直接在浏览器中运行**。访问 [浏览器免安装体验页面](https://wszqkzqk.github.io/pvz-portable-wasm/pvz-portable.html)，导入正版游戏的 `main.pak` 和 `properties/` 目录后即可**免安装开始游玩**。
+> **想先体验？**现在已经可以**直接在浏览器中运行**。访问 [**浏览器免安装体验页面**](https://wszqkzqk.github.io/pvz-portable-wasm/pvz-portable.html)，导入正版游戏的 `main.pak` 和 `properties/` 目录后即可**免安装开始游玩**。
 
 ## 为什么要重写？
 
