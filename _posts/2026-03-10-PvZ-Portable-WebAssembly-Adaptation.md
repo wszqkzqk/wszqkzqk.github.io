@@ -456,6 +456,26 @@ EM_ASM(
 
 文件遍历使用 `webkitGetAsEntry()` API 递归处理目录结构，确保 `properties/` 目录中的所有子文件都正确写入文件系统。
 
+### 移动端文本输入：为软键盘提供真实焦点目标
+
+WebAssembly 版本上线后，又暴露出一个只在移动浏览器上出现的问题：创建用户时，名字输入框虽然在游戏里已经获得焦点，但 **Android 和 iOS 下的浏览器不会仅因为 canvas 获得焦点就弹出软键盘**。桌面端有物理键盘，因此看起来一切正常；Android APK 则运行在原生 SDL 窗口中，也不受这个限制。
+
+根本原因是浏览器的软键盘策略要求页面中必须存在一个**真实的、可聚焦的原生文本输入元素**。游戏内部的 `EditWidget` 走的是 SDL 文本输入事件链路，本身没有问题；缺的是浏览器这一侧的焦点桥接。
+
+最小且不破坏架构的修复方式，是继续保留现有的 `EditWidget` 和 SDL 输入分发逻辑，只在 wasm 平台增加一个隐藏的文本输入代理，并在 JavaScript 与 C++ 之间做一层很薄的桥接：
+
+* 在 `wasm/shell.html` 中添加一个不可见但真实存在的 `textarea`
+* 在 `src/SexyAppFramework/platform/default/Input.cpp` 的 `StartTextInput()` / `StopTextInput()` 中，仅在 `__EMSCRIPTEN__` 下对该元素执行 `focus()` / `blur()`
+* 在同一个 `Input.cpp` 中，通过 `EM_JS` 维护一个轻量的浏览器侧输入队列，把 `textarea` 的 `input` / `keydown` 事件转换成现有 `WidgetManager->KeyChar()` / `KeyDown()` 能消费的字符和编辑键
+
+这样修复后：
+
+- 桌面浏览器仍然可以直接用物理键盘输入，不受影响
+- 移动浏览器在创建用户、重命名用户等文本输入场景下可以正常弹出软键盘
+- 原生端完全不需要改动，因为这条桥接逻辑只存在于 wasm shell 和 Emscripten 分支中
+
+这个方案的关键优点是：**没有改动任何游戏对话框、编辑框或输入法过滤逻辑，只是把浏览器原生文本输入可靠地桥接回现有的游戏输入通道**。相比直接把 SDL 的键盘目标强行绑定到隐藏元素，这种做法对桌面物理键盘和移动软键盘的兼容性更稳定，也更容易控制编辑键行为。
+
 ### 窗口与渲染：Emscripten 平台 Window.cpp
 
 为 Emscripten 新增了专门的 `Window.cpp`（`src/SexyAppFramework/platform/emscripten/Window.cpp`），负责创建 WebGL 上下文。与桌面平台的主要区别：
@@ -474,6 +494,7 @@ EM_ASM(
 | `SexyAppBase.cpp` | 主循环改造、sleep 消除、加载线程同步化、IDBFS 同步 | `#ifdef`/`#ifndef __EMSCRIPTEN__` |
 | `Dialog.cpp` | Asyncify 协程等待 | `#ifdef __EMSCRIPTEN__` |
 | `GLInterface.cpp` | 跳过 swap 后 `glClear` | `#ifndef __EMSCRIPTEN__` |
+| `platform/default/Input.cpp` | wasm 文本输入开始/结束时切换隐藏输入元素焦点，并桥接浏览器输入事件到 `WidgetManager` | `#ifdef __EMSCRIPTEN__` |
 | `main.cpp` | 跳过 `Shutdown`/`delete`（Start 不返回） | `#ifndef __EMSCRIPTEN__` |
 | `ImageLib.cpp` | `optimize_coding = TRUE`（C 布尔类型修正） | 无条件（所有平台受益） |
 
@@ -494,6 +515,7 @@ GitHub Actions 添加了 `build-wasm` job，在 Ubuntu runner 上使用 `myminds
 | **性能** | 商店/图鉴帧率低 | Asyncify yield 后只执行单步更新 | yield 前添加完整帧循环 |
 | **阻塞** | 加载线程 sleep 死锁 | 单线程中 `nanosleep` + 线程等待 = 死锁 | 同步加载 + 跳过所有 sleep |
 | **持久化** | 存档关闭后丢失 | 内存文件系统页面关闭即清空 | IDBFS + 5 秒自动同步 + 生命周期事件 |
+| **输入** | 移动浏览器创建用户时无法弹出软键盘 | canvas 焦点不满足浏览器软键盘唤起条件 | 隐藏 `textarea` + 文本输入时 focus/blur + `EM_JS` 输入桥接 |
 | **构建** | libopenmpt 无 Emscripten Port | 第三方库未提供 wasm 预编译 | `emmake make` 从源码构建 |
 | **构建** | shell.html 修改后不重新链接 | CMake 不感知模板文件变化 | `LINK_DEPENDS` 显式依赖 |
 
