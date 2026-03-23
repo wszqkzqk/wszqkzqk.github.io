@@ -21,6 +21,8 @@ tags:       开源软件 GTK Vala 数值计算
 
 本文将继续我们的 Vala 数值计算之旅，以**月球位置计算**为例，展示如何处理比太阳算法更复杂的数学模型，并实现一个包含视差修正和月相计算的完整月球计算器。
 
+> **在线体验**：你可以随时访问笔者使用现代 Web 技术（JavaScript/Chart.js）实现的[**天文学计算器在线版**](https://wszqkzqk.github.io/astrocalc/)，该工具直接在浏览器中运行了本文介绍的 Meeus 算法，供你交叉比对计算结果和可视化效果（尽管技术栈完全不同，但内核公式一致）。
+
 本文的代码实现可在 [GitHub 对应仓库](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/lunarcalc.vala)中获取也可以在[文末](#完整代码实现)查看。
 
 ## 界面设计与效果展示
