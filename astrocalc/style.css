@@ -49,6 +49,26 @@ header {
 
 header h1 { margin: 0; font-size: 1.1rem; font-weight: 600; }
 
+.nav-link {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+    transform: translateX(-3px);
+}
+
 .main-container {
     display: flex; flex: 1; overflow: hidden;
 }
@@ -118,13 +138,32 @@ button {
     color: white; border: none;
     padding: 0.6rem 1rem; border-radius: 8px;
     cursor: pointer; font-weight: 600; font-size: 0.9rem;
-    width: 100%; transition: opacity 0.2s;
+    width: 100%; transition: all 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    opacity: 0.9;
+}
+
+button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 button.secondary {
     background-color: var(--secondary-bg);
     color: var(--text-color);
     border: 1px solid var(--border-color);
+}
+
+button.secondary:hover:not(:disabled) {
+    background-color: var(--card-bg);
 }
 
 .info-display {

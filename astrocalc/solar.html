@@ -71,6 +71,7 @@
 
         const inputs = ['lat', 'lon', 'tz', 'date-picker', 'refraction'].map(id => document.getElementById(id));
         document.getElementById('date-picker').valueAsDate = new Date();
+        document.getElementById('tz').value = 0;
 
         // Standard Background Plugin for Day/Night distinction
         const horizonPlugin = {
@@ -170,7 +171,10 @@
         async function detectLocation() {
             const status = document.getElementById('geo-status');
             const btn = document.getElementById('btn-detect');
+            const originalBtnText = btn.innerHTML;
+            
             btn.disabled = true;
+            btn.innerHTML = '⏳ Locating...';
             status.innerText = "Attempting to locate...";
 
             // 1. Try Browser Geolocation (Best accuracy)
@@ -182,6 +186,8 @@
                 const pos = await getBrowserGeo();
                 document.getElementById('lat').value = pos.coords.latitude.toFixed(4);
                 document.getElementById('lon').value = pos.coords.longitude.toFixed(4);
+                const tzOffset = -new Date().getTimezoneOffset() / 60;
+                document.getElementById('tz').value = tzOffset;
                 status.innerText = "Located via Browser GPS";
             } catch (err) {
                 // 2. Fallback to IP Geolocation (Better compatibility for desktops)
@@ -200,6 +206,7 @@
                     status.innerText = "Detection failed. Please enter manually.";
                 }
             } finally {
+                btn.innerHTML = originalBtnText;
                 btn.disabled = false;
                 update();
             }

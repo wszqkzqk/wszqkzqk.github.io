@@ -6,71 +6,126 @@
     <title>Astro Calculators</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        body {
+            overflow: auto !important;
+            min-height: 100vh !important;
+            height: auto !important;
+            background: linear-gradient(135deg, var(--bg-color) 0%, var(--secondary-bg) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         .landing-container {
             max-width: 800px;
-            margin: 4rem auto;
+            width: 100%;
+            margin: auto;
             padding: 2rem;
             text-align: center;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: -webkit-linear-gradient(45deg, var(--accent-color), #8a2be2);
+            background: linear-gradient(45deg, var(--accent-color), #8a2be2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 3rem;
         }
         .app-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
-            margin-top: 3rem;
-        }
-        @media (max-width: 600px) {
-            .app-grid {
-                grid-template-columns: 1fr;
-            }
         }
         .app-card {
             background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
+            border-radius: 20px;
+            padding: 2.5rem 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             border: 1px solid var(--border-color);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             cursor: pointer;
             text-decoration: none;
             color: var(--text-color);
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            z-index: 1;
         }
         .app-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border-color: var(--accent-color);
         }
         .app-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            z-index: 2;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            transition: transform 0.3s ease;
+        }
+        .app-card:hover .app-icon {
+            transform: scale(1.1);
         }
         .app-card h2 {
             margin: 0.5rem 0;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+            z-index: 2;
         }
         .app-card p {
-            opacity: 0.7;
-            font-size: 0.9rem;
+            opacity: 0.75;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            z-index: 2;
+            margin-top: 1rem;
+        }
+        @media (max-width: 600px) {
+            body {
+                align-items: flex-start;
+                padding-top: 2rem;
+            }
+            .landing-container {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .app-card {
+                padding: 2rem 1rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="landing-container">
         <h1>Astronomical Calculators</h1>
-        <p>Web versions of Solar and Lunar elevation tools.</p>
+        <p class="subtitle">High-precision Solar & Lunar tracking tools</p>
         
         <div class="app-grid">
             <a href="solar.html" class="app-card">
                 <div class="app-icon">☀️</div>
                 <h2>Solar Calculator</h2>
-                <p>Calculate solar elevation, distance, and more throughout the day.</p>
+                <p>Track solar elevation, hourly distance, and daily trajectory with standard astronomical formulas.</p>
             </a>
             
             <a href="lunar.html" class="app-card">
                 <div class="app-icon">🌙</div>
                 <h2>Lunar Calculator</h2>
-                <p>Calculate lunar elevation, distance, and phases throughout the day.</p>
+                <p>Calculate precise moon phases, real-time elevation, and distance using Meeus's algorithms.</p>
             </a>
         </div>
     </div>
