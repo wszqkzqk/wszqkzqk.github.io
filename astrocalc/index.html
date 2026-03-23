@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astro Calculators</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .landing-container {
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 2rem;
+            text-align: center;
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        @media (max-width: 600px) {
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .app-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .app-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        .app-card h2 {
+            margin: 0.5rem 0;
+            font-size: 1.5rem;
+        }
+        .app-card p {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <h1>Astronomical Calculators</h1>
+        <p>Web versions of Solar and Lunar elevation tools.</p>
+        
+        <div class="app-grid">
+            <a href="solar.html" class="app-card">
+                <div class="app-icon">☀️</div>
+                <h2>Solar Calculator</h2>
+                <p>Calculate solar elevation, distance, and more throughout the day.</p>
+            </a>
+            
+            <a href="lunar.html" class="app-card">
+                <div class="app-icon">🌙</div>
+                <h2>Lunar Calculator</h2>
+                <p>Calculate lunar elevation, distance, and phases throughout the day.</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
