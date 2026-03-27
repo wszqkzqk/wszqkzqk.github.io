@@ -161,13 +161,13 @@ layout: default
                 </section>
                 {% endif %}
 
-                <!-- Friends Blog -->
-                {% if site.friends %}
+                <!-- Projects -->
+                {% if site.projects %}
                 <hr>
-                <h5>FRIENDS</h5>
+                <h5>PROJECTS</h5>
                 <ul class="list-inline">
-                    {% for friend in site.friends %}
-                        <li><a href="{{friend.href}}">{{friend.title}}</a></li>
+                    {% for project in site.projects %}
+                        <li><a href="{{ project.href | prepend: site.baseurl }}">{{project.title}}</a></li>
                     {% endfor %}
                 </ul>
                 {% endif %}

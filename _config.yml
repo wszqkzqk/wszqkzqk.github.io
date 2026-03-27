@@ -97,31 +97,13 @@ service-worker: true
 
 
 
-# Friends
-friends: [
+# Projects
+projects: [
     {
-        title: "Wikipedia",
-        href: "https://www.wikipedia.org"
+        title: "Astro Calculator",
+        href: "/astrocalc/"
     },{
-        title: "Arch Linux",
-        href: "https://archlinux.org/"
-    },{
-        title: "KDE",
-        href: "https://kde.org/"
-    },{
-        title: "GNOME",
-        href: "https://www.gnome.org"
-    },{
-        title: "MSYS2",
-        href: "https://www.msys2.org/"
-    },{
-        title: "Vala Programming Language",
-        href: "https://vala.dev/"
-    },{
-        title: "北京大学学生 Linux 俱乐部",
-        href: "https://lcpu.club/wiki/"
-    },{
-        title: "竹林里有冰的博客",
-        href: "https://zhul.in/"
+        title: "PvZ-Portable Web Edition",
+        href: "/pvz-portable-wasm/pvz-portable.html"
     }
 ]
