@@ -1,7 +1,7 @@
 ---
 layout:       post
-title:        Qt Web Extractor 新增 MCP 支持：让 AI 编程助手直接读取网页
-subtitle:     基于 MCP 协议为 Claude Code、OpenCode 等终端 AI 工具提供开箱即用的网页内容提取能力
+title:        Qt Web Extractor 新增 MCP 支持：为 AI 编程助手提供高级网页提取
+subtitle:     完整渲染复杂页面并输出干净 Markdown，为 Claude Code、OpenCode 等终端 AI 工具提供开箱即用的网页内容提取能力
 date:         2026-04-04
 author:       wszqkzqk
 header-img:   img/llm/ai-bg-lossless.webp
@@ -14,6 +14,8 @@ tags:         Python Qt PySide 开源软件 LLM MCP
 之前笔者写过一篇介绍 [Qt Web Extractor](https://github.com/wszqkzqk/qt-web-extractor) 的文章，讲了这个项目是怎么用系统 Qt WebEngine 来做轻量级网页内容提取的。项目一直提供了 HTTP REST API 和 Open WebUI 的集成方式，给 AI 平台调用本来就不是问题——在 Open WebUI 里配置一下外部网页加载器，或者直接用 `tool.py` 作为自定义工具，都能很方便地让 LLM 获取网页内容，几乎是一键式集成。
 
 不过对于 Claude Code、OpenCode 这类 AI 编程助手，[Qt Web Extractor](https://github.com/wszqkzqk/qt-web-extractor) 此前事实上还不能开箱即用，需要手动配置。这些工具本身支持 MCP 协议来扩展能力，如果网页提取服务也能以 MCP 的方式暴露出来，那在终端对话中需要查阅在线文档、阅读 API 参考的时候，AI 助手就能直接调用，不需要任何额外的脚本或配置。
+
+与简单的 HTTP 抓取服务不同，本工具有能力处理目前占据主流的复杂动态渲染页面，不仅能**提取出其他基础工具获取不到的动态内容**，基于完整渲染页面转换得到的 Markdown 还保留了**超链接、表格结构、代码块**等丰富结构信息。这意味着模型在阅读内容后，可以顺着超链接继续获取相关的参考文档，形成信息获取的良性循环。
 
 所以这次更新，项目在原有的 HTTP 服务基础上内建了 [MCP（Model Context Protocol）](https://modelcontextprotocol.io/) 支持。这算是锦上添花——几乎没有引入任何额外的代码负担和运行开销，只是 `server.py` 里多处理了一个 `/mcp` 端点，但大大方便了终端 AI 工具的使用体验。Claude Code、OpenCode 这类工具在对话中遇到需要读取网页内容的场景时，会调用这个 MCP 工具，整个过程非常顺畅。
 
