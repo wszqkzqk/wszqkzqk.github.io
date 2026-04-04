@@ -55,9 +55,20 @@ header-img: "img/bg-3-darken.webp"
 
 如果您赞赏本网站的内容或愿意支持本网站的维护，欢迎捐赠！
 
-| **支付宝** | **微信支付** |
-|:----------:|:------------:|
-| [![支付宝](/img/donate-alipay.webp)](/img/donate-alipay.webp) | [![微信支付](/img/donate-wechatpay.webp)](/img/donate-wechatpay.webp) |
+<table style="table-layout: fixed; width: 100%;">
+  <thead>
+    <tr>
+      <th style="text-align: center; width: 50%;"><strong>支付宝</strong></th>
+      <th style="text-align: center; width: 50%;"><strong>微信支付</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center;"><a href="/img/donate-alipay.webp"><img src="/img/donate-alipay.webp" alt="支付宝" /></a></td>
+      <td style="text-align: center;"><a href="/img/donate-wechatpay.webp"><img src="/img/donate-wechatpay.webp" alt="微信支付" /></a></td>
+    </tr>
+  </tbody>
+</table>
 
 </div>
 
