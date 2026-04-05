@@ -40,11 +40,11 @@ MCP 基于 JSON-RPC 2.0，服务端需要处理几个标准方法：
 * `tools/list`：返回可用的工具列表
 * `tools/call`：执行具体的工具调用
 
-这些都在 `server.py` 的 `_Handler` 类中实现。以 `tools/list` 为例，它会返回一个 `extract_url` 工具的定义：
+这些都在 `server.py` 的 `_Handler` 类中实现。以 `tools/list` 为例，它会返回一个 `fetch_url` 工具的定义：
 
 ```python
 {
-    "name": "extract_url",
+    "name": "fetch_url",
     "description": (
         "Advanced web content extractor. Fully evaluates JavaScript "
         "to render modern web pages and converts the result into clean "
@@ -72,7 +72,7 @@ MCP 基于 JSON-RPC 2.0，服务端需要处理几个标准方法：
 
 ### 提取流程
 
-当 AI 助手调用 `extract_url` 工具时，服务端会走和 REST API 相同的提取管线：
+当 AI 助手调用 `fetch_url` 工具时，服务端会走和 REST API 相同的提取管线：
 
 1. 解析请求参数，获取目标 URL
 2. 自动检测是否为 PDF 链接（先检查 `.pdf` 后缀作为快速路径，否则发送 HEAD 请求检查 Content-Type）
@@ -136,10 +136,10 @@ Claude Code 提供了命令行方式来添加 MCP 服务端：
 
 ```bash
 # 无认证
-claude mcp add --transport http qt-web-extractor http://127.0.0.1:8766/mcp
+claude mcp add --transport http web-extractor http://127.0.0.1:8766/mcp
 
 # 如果服务端设置了 --api-key
-claude mcp add --transport http qt-web-extractor http://127.0.0.1:8766/mcp \
+claude mcp add --transport http web-extractor http://127.0.0.1:8766/mcp \
   --header "Authorization: Bearer mysecretkey"
 ```
 
@@ -148,7 +148,7 @@ claude mcp add --transport http qt-web-extractor http://127.0.0.1:8766/mcp \
 ```json
 {
   "mcpServers": {
-    "qt-web-extractor": {
+    "web-extractor": {
       "type": "http",
       "url": "http://127.0.0.1:8766/mcp",
       "headers": {
@@ -167,7 +167,7 @@ OpenCode 的配置写在 `opencode.json`（项目根目录）或 `~/.config/open
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "qt_web_extractor": {
+    "web_extractor": {
       "type": "remote",
       "url": "http://127.0.0.1:8766/mcp",
       "enabled": true,
@@ -191,7 +191,7 @@ MCP 端点和 REST API 共用同一个认证机制。手动启动服务时通过
 > 帮我看看 https://github.com/wszqkzqk/qt-web-extractor 是怎么设计的
 ```
 
-模型会自动调用 `extract_url` 工具把页面内容拉下来，然后基于渲染后的完整页面转化得到的干净整洁的 Markdown 来回答。对于查阅在线文档、对比 API 设计、看某个项目的使用说明这些场景，这个流程都颇为顺畅。
+模型会自动调用 `fetch_url` 工具把页面内容拉下来，然后基于渲染后的完整页面转化得到的干净整洁的 Markdown 来回答。对于查阅在线文档、对比 API 设计、看某个项目的使用说明这些场景，这个流程都颇为顺畅。
 
 ## 与原有功能的配合
 
