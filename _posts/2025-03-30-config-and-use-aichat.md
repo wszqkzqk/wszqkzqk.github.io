@@ -239,6 +239,8 @@ AIChat支持文本、图片、PDF文档等多种文件类型，还支持传入UR
 aichat $(git diff HEAD) $(git log -n 30) 根据历史Git提交信息的风格，为本次修改生成Git提交信息
 ```
 
+Windows环境中如果在Chat-REPL下遇到了编码错误，也可以尝试以上不依赖Chat-REPL的命令行方式。
+
 ## RAG增强问答
 
 RAG（Retrieval-Augmented Generation）是一种增强问答的技术，它结合了检索和生成模型的优势。AIChat支持RAG功能，我们可以使用`.rag`命令来初始化或访问RAG。例如，如果我们想要基于AIChat的Wiki文档进行增强问答，可以使用以下命令：
