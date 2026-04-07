@@ -233,6 +233,12 @@ AIChat支持文本、图片、PDF文档等多种文件类型，还支持传入UR
 
 这里的`git diff HEAD`会将当前工作区和暂存的差异内容传递给LLM，而`git log -n 30`会将近30条项目历史提交信息传递给LLM作为范例。这样，LLM就可以根据历史提交信息的风格来生成符合项目风格的提交信息。
 
+如果不愿意启用`aichat`的Chat-REPL环境，也可以直接在命令行中使用`aichat`：
+
+```bash
+aichat $(git diff HEAD) $(git log -n 30) 根据历史Git提交信息的风格，为本次修改生成Git提交信息
+```
+
 ## RAG增强问答
 
 RAG（Retrieval-Augmented Generation）是一种增强问答的技术，它结合了检索和生成模型的优势。AIChat支持RAG功能，我们可以使用`.rag`命令来初始化或访问RAG。例如，如果我们想要基于AIChat的Wiki文档进行增强问答，可以使用以下命令：
