@@ -51,7 +51,7 @@ header-img: "img/bg-3-darken.webp"
 
 [![GitHub Profile](https://githubcard.com/wszqkzqk.svg?d=75sA8ArE)](https://github.com/wszqkzqk)
 
-### 捐赠本站
+## 捐赠本站
 
 如果您赞赏本网站的内容或愿意支持本网站的维护，欢迎捐赠！
 
