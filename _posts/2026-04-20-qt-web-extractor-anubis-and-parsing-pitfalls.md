@@ -124,17 +124,39 @@ inner_text_len = 1171958
 
 目前的状态是小页面（如 gitlab.winehq.org/wine/wine）的 Anubis 流程顺畅，大概率能在 2 秒内完成重定向，能正常提取；大页面 Anubis 运算后在 2 秒内通常无法完成页面内容加载，提取到的是挑战页，真实内容拿不到，但至少不会 OOM。
 
-## 另一个问题：checkVisibility 的误判
+## 内容丢失问题
 
-在排查过程中，笔者还遇到了一个更隐蔽的问题。之前的 Shadow DOM flatten JS 中加入了这行：
+在排查过程中，笔者还遇到了两个内容提取不完整的问题，修复方式各不相同。
+
+### checkVisibility 的误判
+
+之前的 Shadow DOM flatten JS 中加入了这行：
 
 ```javascript
 if (node.checkVisibility && !node.checkVisibility()) return '';
 ```
 
-意图是过滤掉不可见元素。但在某些现代网页中，`checkVisibility()` 会因为计算时机、CSS 动画状态或元素尚未进入 viewport 而返回 `false`，导致可见内容被错误过滤。笔者在测试 [Google Open Source Blog](https://opensource.googleblog.com/2024/04/introducing-jpegli-new-jpeg-coding-library.html) 的一篇文章时，提取结果几乎只剩一个 `1`——正文被全部过滤掉了。
+意图是过滤掉不可见元素。但在某些现代网页中，`checkVisibility()` 会因为计算时机、CSS 动画状态或元素尚未进入 viewport 而返回 `false`，导致可见内容被错误过滤。笔者在测试 [SemiAnalysis Newsletter](https://newsletter.semianalysis.com/p/nvidia-tensor-core-evolution-from-volta-to-blackwell) 的一篇文章时，提取结果大量缺失——正文被全部过滤掉了。
 
-修复是直接移除了这行。不可见元素的过滤应该属于内容处理的后续阶段，不应该在 DOM 序列化时做硬拦截。
+修复是直接移除了这行（commit `948ed7a`）。不可见元素的过滤应该属于内容处理的后续阶段，不应该在 DOM 序列化时做硬拦截。
+
+### DOM 遍历范围的遗漏
+
+另一个问题出在 DOM 序列化的入口点上。原来的代码从 `document.body` 开始遍历：
+
+```javascript
+return '<html><body>' + walk(document.body) + '</body></html>';
+```
+
+这导致某些页面的 head 内容无法被正确捕获，提取结果异常。笔者在测试 [Google Open Source Blog](https://opensource.googleblog.com/2024/04/introducing-jpegli-new-jpeg-coding-library.html) 的一篇文章时，提取结果几乎只剩一个 `1`——正文结构完全丢失。
+
+修复是将遍历入口改为 `document.documentElement`，并扩展 SKIP 集合以显式排除 `meta`、`link`、`base`、`title` 等标签（commit `8ca4503`）：
+
+```javascript
+const SKIP = new Set(['script','style','svg','noscript','template','meta','link','base','title']);
+// ...
+return walk(document.documentElement);
+```
 
 ## 总结
 
@@ -142,6 +164,7 @@ if (node.checkVisibility && !node.checkVisibility()) return '';
 
 - `loadStarted` 信号连接，在导航时重置 stability timer
 - 移除了 `checkVisibility` 过滤
+- DOM 遍历入口从 `document.body` 改为 `document.documentElement`，并扩展 SKIP 标签集合
 
 stability delay 保持 2 秒不变。Anubis 这种基于 PoW 的反爬虫系统，对于一个本身就有完整 Chromium 内核的 headless 提取器来说，适配成本非常低——它不需要绕过任何复杂检测，只需要等待 PoW 计算完成即可。整个核心修复只有几行代码。
 
