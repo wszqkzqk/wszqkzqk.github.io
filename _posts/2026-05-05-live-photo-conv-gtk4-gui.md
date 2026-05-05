@@ -25,7 +25,9 @@ tags:       开源软件 Vala GTK4 LibAdwaita 媒体文件 Flatpak 动态照片
 
 Live Photo Converter 基于 GTK4 / LibAdwaita 构建了现代化的图形界面，遵循平台设计规范。界面布局简洁，操作直观，用户无需任何技术背景就能上手。
 
-![Live Photo Converter UI](/img/media/live-photo-conv/ui-overview-cn.webp)
+<div align="center">
+  <img src="/img/media/live-photo-conv/ui-overview-cn.webp" alt="Live Photo Converter UI" style="width: 500px; max-width: 100%;" />
+</div>
 
 图形界面围绕三个核心操作组织，以标签页的形式切换。操作方式非常简单——把文件拖进窗口，勾选需要的内容，点击按钮——不需要终端，不需要命令行，没有任何技术门槛。
 
