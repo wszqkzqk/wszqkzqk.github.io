@@ -180,7 +180,7 @@ sudo systemd-nspawn -aD /path/to/snapshot
 
 ### 4.1 PKGBUILD 补丁策略详解：将冲突降至最低
 
-在维护 `loong.patch`（针对 Arch Linux 官方 `PKGBUILD` 的补丁集）时，**核心原则是避免与上游日常更新产生 merge conflict**。由于我们维护的是补丁而非直接修改上游仓库，任何对原数组的直接修改都可能在上游升级时导致补丁失效。注意这里修改，`PKGBUILD` 时不要同步更新 `.SRCINFO`；`loong.patch` 应当使用 `export-loong64-patched` 命令导出，默认 `export-loong64-patched` 不加任何参数时将当前构建脚本所在目录的规范补丁导出到 `loong64-patches/` 子目录下。
+在维护 `loong.patch`（针对 Arch Linux 官方 `PKGBUILD` 的补丁集）时，**核心原则是避免与上游日常更新产生 merge conflict**。由于我们维护的是补丁而非直接修改上游仓库，任何对原数组的直接修改都可能在上游升级时导致补丁失效。注意不得修改 `arch=` 数组，这由构建命令处理，不应在构建脚本中编辑。注意这里修改 `PKGBUILD` 时不要同步更新 `.SRCINFO`；`loong.patch` 应当使用 `export-loong64-patched` 命令导出，默认 `export-loong64-patched` 不加任何参数时将当前构建脚本所在目录的规范补丁导出到 `loong64-patches/` 子目录下。
 
 #### 为什么优先追加而非修改？
 
