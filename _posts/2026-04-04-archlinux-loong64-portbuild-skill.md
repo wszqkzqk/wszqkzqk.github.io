@@ -184,7 +184,7 @@ sudo systemd-nspawn -aD /path/to/snapshot
 
 * 注意不得修改 `arch=` 数组，这由构建命令处理，不应在构建脚本中编辑。
 * 注意这里修改 `PKGBUILD` 时不要同步更新 `.SRCINFO`
-* `loong.patch` 应当使用 `export-loong64-patched` 命令导出，默认 `export-loong64-patched` 不加任何参数时将当前构建脚本所在目录的规范补丁导出到 `loong64-patches/` 子目录下。
+* `loong.patch` 应当使用 `export-loong64-patches` 命令导出，默认 `export-loong64-patches` 不加任何参数时将当前构建脚本所在目录的规范补丁导出到 `loong64-patches/` 子目录下。
 
 #### 为什么优先追加而非修改？
 
