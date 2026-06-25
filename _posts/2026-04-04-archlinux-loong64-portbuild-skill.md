@@ -89,8 +89,8 @@ description: 'Assist with Arch Linux for Loong64 (loongarch64) package porting, 
 当用户运行构建命令（如 `extra-loong64-build`）时，后台发生了以下流程。理解此流程是调试的关键：
 
 1.  **环境准备**：
-    *   系统读取干净的 chroot 模板（通常位于 `/var/lib/archbuild/extra-loong64-build/root`）。
-    *   系统创建一个 Btrfs 快照或副本作为用户的工作区（位于 `/var/lib/archbuild/extra-loong64-build/<user-name>`）。
+    *   系统读取干净的 chroot 模板（通常位于 `/var/lib/archbuild/extra-loong64/root`）。
+    *   系统创建一个 Btrfs 快照或副本作为用户的工作区（位于 `/var/lib/archbuild/extra-loong64/<user-name>`）。
 2.  **目录挂载**：
     *   宿主机的 `PKGBUILD` 所在目录（即 `pkgbase` 目录）被**只读挂载**到容器内的 `/startdir`。
     *   这意味着容器内可以看到 `PKGBUILD` 和 `loong.patch`，但无法修改它们。
@@ -115,8 +115,8 @@ description: 'Assist with Arch Linux for Loong64 (loongarch64) package porting, 
 | **构建工作区** | N/A | `/build/<pkgbase>/` | `builduser` 的家目录 |
 | **源码目录** | N/A | `/build/<pkgbase>/src/` | 源码实际所在位置 |
 | **构建产物** | N/A | `/build/<pkgbase>/pkg/` | 打包后的文件 |
-| **用户 Chroot** | `/var/lib/archbuild/extra-loong64-build/<user>/` | `/` (根目录) | 完整的文件系统 |
-| **干净模板** | `/var/lib/archbuild/extra-loong64-build/root/` | N/A | **禁止触碰** |
+| **用户 Chroot** | `/var/lib/archbuild/extra-loong64/<user>/` | `/` (根目录) | 完整的文件系统 |
+| **干净模板** | `/var/lib/archbuild/extra-loong64/root/` | N/A | **禁止触碰** |
 
 ---
 
@@ -127,7 +127,7 @@ description: 'Assist with Arch Linux for Loong64 (loongarch64) package porting, 
 ### 步骤 A：保存现场
 默认情况下，下次构建可能会覆盖当前环境。建议用户先保存快照：
 ```bash
-sudo btrfs subvolume snapshot /var/lib/archbuild/extra-loong64-build/<user-name> /path/to/snapshot
+sudo btrfs subvolume snapshot /var/lib/archbuild/extra-loong64/<user-name> /path/to/snapshot
 ```
 
 ### 步骤 B：进入环境
