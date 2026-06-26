@@ -255,6 +255,8 @@ makedepends=($(printf "%s\n" "${makedepends[@]}" | grep -Ev '^(cuda|cudnn|python
 - 灵活适配上游对数组顺序或内容的任何修改
 - 补丁本身不依赖上游数组的具体结构
 
+此外，移除了某 `pkgname` 后，与之对应的 `package_` 函数会自动失效，`makepkg` 会忽略它们，无需手动注释掉或删除。
+
 #### 处理 `pkgver()` 函数
 
 如果 `pkgver()` 函数因环境差异导致版本号不一致（如 git hash 位数不同）：
