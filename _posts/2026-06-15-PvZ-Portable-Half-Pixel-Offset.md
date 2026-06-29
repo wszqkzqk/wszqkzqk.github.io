@@ -6,7 +6,7 @@ header-img:   img/games/bg-pvz-portable.webp
 date:         2026-06-15
 author:       wszqkzqk
 catalog:      true
-tags:         C++ OpenGL 游戏移植 图形渲染 开源软件 开源游戏 PvZ-Portable
+tags:         OpenGL 游戏移植 图形渲染 开源软件 开源游戏 PvZ-Portable
 ---
 
 ## 引言
@@ -31,7 +31,7 @@ peashooter2 提交 Issue 时附了两张截图，一张原版、一张 PvZ-Porta
 
 PvZ-Portable 的图形栈是从 SexyAppFramework 继承而来，原版基于 D3DX7/Direct3D。Direct3D 9 及更早版本里，屏幕像素中心位于整数坐标的 `(0.5, 0.5)` 处，而纹理采样通常按 texel 中心对齐。很多旧引擎为了把逻辑坐标（整数像素左上角）映射到 D3D 的像素中心，会在顶点或变换矩阵里手动减去 `0.5f`。
 
-今年初，笔者在把渲染管线统一迁移到 OpenGL ES 2.0 时，提交了 [eb6526a](https://github.com/wszqkzqk/PvZ-Portable/commit/eb6526a3625985205cb982632cc68a5532492d40)「Fix: normalize coordinate mapping and remove D3DX7 legacy offsets」。那次改动做了三件事：
+今年初，笔者在把渲染管线统一迁移到 OpenGL ES 2.0 时，提交了 [eb6526a](https://github.com/wszqkzqk/PvZ-Portable/commit/eb6526a3625985205cb982632cc68a5532492d40)“Fix: normalize coordinate mapping and remove D3DX7 legacy offsets”。那次改动做了三件事：
 
 1. 正交投影矩阵的范围从 `(width - 1, height - 1)` 改为 `(width, height)`，让逻辑视口覆盖完整像素范围；
 2. 在 `TextureData::Blt`、`TextureData::BltTransformed`、`GLInterface::FillRect` 里移除了手动 `-0.5f` 的顶点偏移；
@@ -53,7 +53,7 @@ SexyMatrix3Translation(
 );
 ```
 
-注释写着「轨道震动及 g 的影响」，但 `-0.5f` 显然不是震动，而是当年为了适配 D3D 像素中心而塞进去的修正项。在 OpenGL ES 2.0 的管线里，逻辑坐标 `(x, y)` 直接对应片元的左下角/左上角（取决于投影矩阵方向），再去手动偏移半个像素，反而会把贴图推离正确位置。
+注释写着“轨道震动及 g 的影响”，但 `-0.5f` 显然不是震动，而是当年为了适配 D3D 像素中心而塞进去的修正项。在 OpenGL ES 2.0 的管线里，逻辑坐标 `(x, y)` 直接对应片元的左下角/左上角（取决于投影矩阵方向），再去手动偏移半个像素，反而会把贴图推离正确位置。
 
 更关键的是，这个偏移只在**未使用图集**的动画路径上生效。PvZ-Portable 支持 Reanim Atlas 优化，图集路径下的绘制流程在 `AddTriangle` 时走的是另一套坐标映射。而主菜单的草皮恰好没有进图集，于是这个漏网的 `-0.5f` 就在屏幕左下角制造了一道缝隙。
 
@@ -70,7 +70,7 @@ SexyMatrix3Translation(
 
 对应的提交是 [4f80f04](https://github.com/wszqkzqk/PvZ-Portable/commit/4f80f0469ef800a42b618dc5efaec927243e71cf)。
 
-验证阶段，笔者在本地重新截图对比：修复前左下角草丛有明显亮缝，修复后缝隙消失，与原版一致。peashooter2 重新确认后也表示问题解决。那场截图顺序乌龙反而让笔者更确信：对于这种像素级差异，必须建立明确的「修复前 / 修复后 / 原版」三组对照，否则连当事人都会看混。
+验证阶段，笔者在本地重新截图对比：修复前左下角草丛有明显亮缝，修复后缝隙消失，与原版一致。peashooter2 重新确认后也表示问题解决。那场截图顺序乌龙反而让笔者更确信：对于这种像素级差异，必须建立明确的“修复前 / 修复后 / 原版”三组对照，否则连当事人都会看混。
 
 ## 还有另一个 -0.5f
 
@@ -89,7 +89,7 @@ SexyMatrix3Translation(theMatrix, aTrackInstance->mShakeX - 0.5f, aTrackInstance
 
 D3DX7 时代的手动 `0.5f` 修正在当年是正确的，因为那是 Direct3D 像素中心的定义方式。但当渲染后端换成 OpenGL ES 2.0 后，同样的偏移就变成了错误。年初的大规模清理没有覆盖到 Reanimator 的绘制路径，原因在于 PvZ-Portable 同时支持 Atlas 和非 Atlas 两种绘制模式，而问题只出现在后者，测试时容易遗漏。
 
-对笔者来说，这次修复的最大收获不是这一行改动，而是再次验证了**视觉回归必须靠坐标语义根治**。肉眼对比截图可以作为触发点，但如果不能讲清楚「这个偏移在目标平台上意味着什么」，修复就永远是碰运气。把 D3DX7 的遗产逐条清理干净，才能让 PvZ-Portable 在不同平台、不同分辨率下都稳定地像素级复刻原版。
+对笔者来说，这次修复的最大收获不是这一行改动，而是再次验证了**视觉回归必须靠坐标语义根治**。肉眼对比截图可以作为触发点，但如果不能讲清楚“这个偏移在目标平台上意味着什么”，修复就永远是碰运气。把 D3DX7 的遗产逐条清理干净，才能让 PvZ-Portable 在不同平台、不同分辨率下都稳定地像素级复刻原版。
 
 ## ⚠️ 版权与说明
 
