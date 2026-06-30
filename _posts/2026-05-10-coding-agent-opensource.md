@@ -6,6 +6,8 @@ date:       2026-05-10
 author:     wszqkzqk
 header-img: img/bg-sunrise.webp
 catalog:    true
+pinned:     true
+pinned_order: 1
 tags:       开源软件 AI LLM
 ---
 

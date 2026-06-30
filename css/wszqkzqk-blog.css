@@ -654,6 +654,18 @@ pre code {
     font-size: 18px;
   }
 }
+.pinned-badge {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  background-color: #0085a1;
+  border-radius: 3px;
+  padding: 3px 6px;
+  margin-right: 6px;
+}
 .post-content-preview {
   font-size: 13px;
   font-style: italic;

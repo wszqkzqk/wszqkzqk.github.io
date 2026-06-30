@@ -1,0 +1,20 @@
+<div class="post-preview">
+    <a href="{{ include.post.url | prepend: site.baseurl }}">
+        <h2 class="post-title">
+            {% if include.pinned %}<span class="pinned-badge">置顶</span>{% endif %}
+            {{ include.post.title }}
+        </h2>
+        {% if include.post.subtitle %}
+        <h3 class="post-subtitle">
+            {{ include.post.subtitle }}
+        </h3>
+        {% endif %}
+        <div class="post-content-preview">
+            {{ include.post.content | strip_html | truncate:200 }}
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by {% if include.post.author %}{{ include.post.author }}{% else %}{{ site.title }}{% endif %} on {{ include.post.date | date: "%B %-d, %Y" }}
+    </p>
+</div>
+<hr>
