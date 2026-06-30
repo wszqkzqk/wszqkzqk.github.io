@@ -1,13 +1,14 @@
 ---
-layout:     post
-title:      Live Photo Converter：处理动态照片从未如此简单
-subtitle:   便捷且强大的动态照片处理工具，GTK4 + LibAdwaita 图形界面、多种语言、全平台一键安装
-date:       2026-05-05
-author:     wszqkzqk
-header-img: img/bg-sunrise.webp
-catalog:    true
+layout:       post
+title:        Live Photo Converter：处理动态照片从未如此简单
+subtitle:     便捷且强大的动态照片处理工具，GTK4 + LibAdwaita 图形界面、多种语言、全平台一键安装
+date:         2026-05-05
+author:       wszqkzqk
+header-img:   img/bg-sunrise.webp
+catalog:      true
+pinned:       true
 pinned_order: 3
-tags:       开源软件 Vala GTK4 LibAdwaita 媒体文件 Flatpak 动态照片
+tags:         开源软件 Vala GTK4 LibAdwaita 媒体文件 Flatpak 动态照片
 ---
 
 ## 动态照片，能做的事比你想象的更多
