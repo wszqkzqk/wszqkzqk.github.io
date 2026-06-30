@@ -6,6 +6,7 @@ date:       2024-08-22
 author:     wszqkzqk
 header-img: img/bg-mountain-darken.webp
 catalog:    true
+pinned:     true
 tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 虚拟化 龙芯 LoongArchLinux 容器
 ---
 
