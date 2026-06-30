@@ -3,8 +3,8 @@ layout: page
 description: "天下难事，必作于易；天下大事，必作于细"
 ---
 
-{% assign pinned_ordered = site.posts | where_exp: "post", "post.pinned and post.pinned_order" | sort: "pinned_order" %}
-{% assign pinned_unordered = site.posts | where_exp: "post", "post.pinned and post.pinned_order == nil" %}
+{% assign pinned_ordered = site.posts | where_exp: "post", "post.pinned" | where_exp: "post", "post.pinned_order" | sort: "pinned_order" %}
+{% assign pinned_unordered = site.posts | where_exp: "post", "post.pinned" | where_exp: "post", "post.pinned_order == nil" %}
 {% if paginator.page == 1 %}
 {% for post in pinned_ordered %}
 {% include post-preview.html post=post pinned=true %}
