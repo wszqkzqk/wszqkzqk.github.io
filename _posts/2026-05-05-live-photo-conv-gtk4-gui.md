@@ -78,7 +78,14 @@ flatpak install --user live-photo-conv*.flatpak
 
 Flatpak 的 GNOME Platform 运行时自带全部依赖，无需额外配置。安装完成后，桌面启动器里会出现 Live Photo Converter 图标，点击即用。
 
-macOS 和需要自行编译的用户可参照项目 README 构建。对绝大多数用户而言，上面三条路任选一条即可。
+**macOS** 用户可以通过 Homebrew tap 一键安装：
+
+```bash
+brew tap wszqkzqk/live-photo-conv https://github.com/wszqkzqk/live-photo-conv
+HOMEBREW_NO_REQUIRE_TAP_TRUST=1 brew install --HEAD wszqkzqk/live-photo-conv/live-photo-conv
+```
+
+需要自行编译的用户可参照项目 README 构建。对绝大多数用户而言，上面几条路任选一条即可。
 
 ## 不止界面——命令行和程序库同样强大
 
