@@ -15,7 +15,7 @@ tags:       开源软件 AI LLM
 
 从我小学毕业考试前夕注册算起，我在 GitHub 上已走过十一年。作为一个维护着多个开源项目的个人开发者，我的 GitHub 迄今也累计收获了 7000+ star。今年我想谈谈自己感受到的一个深刻变化——coding agent 对我和我的开源项目之间的影响。
 
-[![GitHub Profile](https://githubcard.com/wszqkzqk.svg?d=75sA8ArE)](https://github.com/wszqkzqk)
+[![GitHub Profile](https://github-stats-extended.vercel.app/api?username=wszqkzqk&show_icons=true&include_all_commits=true)](https://github.com/wszqkzqk)
 
 我想先从一个小小的个人项目谈起，[Live Photo Converter](https://github.com/wszqkzqk/live-photo-conv) 是我开发的一个 Android 动态照片处理工具。它的核心功能——合成、提取、修复——从一开始就通过命令行完整实现了。CLI 对我够用，一行命令，一秒搞定。
 

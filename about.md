@@ -49,7 +49,7 @@ header-img: "img/bg-3-darken.webp"
 
 ### 我的GitHub
 
-[![GitHub Profile](https://githubcard.com/wszqkzqk.svg?d=75sA8ArE)](https://github.com/wszqkzqk)
+[![GitHub Profile](https://github-stats-extended.vercel.app/api?username=wszqkzqk&show_icons=true&include_all_commits=true)](https://github.com/wszqkzqk)
 
 ## 捐赠本站
 
