@@ -143,11 +143,11 @@ $$
 \Sigma_l = &+ 6.2888 \sin(M') \quad (\text{中心方程：椭圆轨道修正}) \\
 &+ 1.2740 \sin(2D - M') \quad (\text{出差：离心率摄动}) \\
 &+ 0.6583 \sin(2D) \quad (\text{二均差：切向力摄动}) \\
-&+ 0.2136 \sin(2D - M) \quad (\text{地球离心率导致二均差的周年变化}) \\
+&+ 0.2136 \sin(2M') \quad (\text{中心方程二阶项：椭圆轨道二阶修正}) \\
 &- 0.1856 \sin(M) \quad (\text{周年差：日地距离变化}) \\
 &- 0.1143 \sin(2F) \quad (\text{黄道差：轨道倾角投影}) \\
-&- 0.0588 \sin(2D - 2M') \quad (\text{出差二阶项}) \\
-&- 0.0572 \sin(2D - M - M') \quad (\text{地球离心率导致出差的周年变化}) \\
+&+ 0.0588 \sin(2D - 2M') \quad (\text{出差二阶项}) \\
+&+ 0.0572 \sin(2D - M - M') \quad (\text{地球离心率导致出差的周年变化}) \\
 &+ 0.0533 \sin(2D + M') \quad (\text{出差变体})
 \end{aligned}
 $$
@@ -363,20 +363,20 @@ chmod +x lunarcalc.vala
 
 | 地点 | 样本数 | 高度角 RMSD (°) | 距离 RMSD (km) | 月相 RMSD |
 | :--- | ---: | ---: | ---: | ---: |
-| 北京 | 885,360 | 0.145 | 167 | 0.0036 |
-| 重庆 | 885,360 | 0.164 | 167 | 0.0039 |
-| 新加坡 | 885,360 | 0.188 | 167 | 0.0043 |
-| 悉尼 | 885,360 | 0.156 | 167 | 0.0038 |
-| 斯德哥尔摩 | 885,360 | 0.112 | 167 | 0.0029 |
-| 南极点 | 885,360 | 0.083 | 166 | 0.0023 |
+| 北京 | 885,360 | 0.059 | 166 | 0.0033 |
+| 重庆 | 885,360 | 0.059 | 166 | 0.0036 |
+| 新加坡 | 885,360 | 0.060 | 166 | 0.0040 |
+| 悉尼 | 885,360 | 0.059 | 166 | 0.0035 |
+| 斯德哥尔摩 | 885,360 | 0.059 | 166 | 0.0025 |
+| 南极点 | 885,360 | 0.059 | 166 | 0.0017 |
 
 **整体统计汇总**（5,312,160 个样本点）：
 
 | 评估指标 | 均方根偏差 (RMSD) | 95% 分位数误差绝对值 (95% Abs) | 最大误差绝对值 (Max Abs) | 误差平均值 (Mean Error) |
 | :--- | ---: | ---: | ---: | ---: |
-| 高度角 (°) | 0.146 | 0.308 | 0.586 | $-1.14 \times 10^{-4}$ |
-| 地月距离 (km) | 167 | 320 | 525 | 0.0698 |
-| 月相 (照明度) | 0.0035 | 0.0073 | 0.0135 | $1.56 \times 10^{-4}$ |
+| 高度角 (°) | 0.059 | 0.116 | 0.249 | $-1.10 \times 10^{-4}$ |
+| 地月距离 (km) | 166 | 319 | 523 | 0.0696 |
+| 月相 (照明度) | 0.0032 | 0.0065 | 0.0094 | $1.56 \times 10^{-4}$ |
 
 | [![#~/img/astronomy/lunar-error-histograms.svg](/img/astronomy/lunar-error-histograms.svg)](/img/astronomy/lunar-error-histograms.svg) |
 | :---: |
@@ -384,11 +384,11 @@ chmod +x lunarcalc.vala
 | [![#~/img/astronomy/lunar-error-abs-histograms.svg](/img/astronomy/lunar-error-abs-histograms.svg)](/img/astronomy/lunar-error-abs-histograms.svg) |
 | 误差绝对值分布直方图 |
 
-数据表明，本算法在极低的计算负载下实现了优异的精度平衡。从各地点的结果可以看出，高度角误差与地理纬度有一定相关性：高纬度地区（如斯德哥尔摩、南极点）的误差较小，而低纬度赤道附近地区（如新加坡）的误差相对较大。这是因为在赤道附近，天体运动轨迹垂直于地平线，地心坐标到地平坐标的转换中，时角的变化对高度角的影响最为直接和剧烈。简化算法中对月球轨道经度的误差，在赤道地区被最大程度地投影到了高度角误差上。在极地，天体运动轨迹几乎平行于地平线。经度上的计算误差主要变成了方位角误差，而对高度角的影响被几何投影缩小了。但总体上，程序表现良好：
+数据表明，本算法在极低的计算负载下实现了优异的精度平衡。从各地点的结果可以看出，高度角误差在不同纬度间几乎一致（均约 0.059°），与地理纬度没有明显相关性。这说明残差主要来源于截断的地心黄经/黄纬级数本身，而非站心坐标转换中的投影效应。程序的具体表现如下：
 
-* 0.15° 的高度角误差仅相当于满月视直径的三分之一，这意味着在绝大多数时间里，程序计算出的月球位置依然落在实际月球的轮廓范围内，在肉眼观测或广角摄影中几乎无法察觉差异
-* 167 km 的距离误差（相对误差约 0.04%）完全不影响对"超级月亮"等视直径变化的判断
-* 0.35% 的月相误差更是远超人眼辨识极限
+* 0.06° 的高度角误差仅相当于满月视直径（约 0.5°）的八分之一，这意味着在绝大多数时间里，程序计算出的月球位置依然落在实际月球的轮廓范围内，在肉眼观测或广角摄影中几乎无法察觉差异
+* 166 km 的距离误差（相对误差约 0.04%）完全不影响对"超级月亮"等视直径变化的判断
+* 0.32% 的月相误差更是远超人眼辨识极限
 
 这证明本程序虽然简化了部分微小摄动项，但依然能在摄影构图、赏月规划及科普演示等场景中，提供与专业天文年历无异的使用体验。
 
@@ -487,14 +487,8 @@ public class LunarCalc : Adw.Application {
         line_r: 1.0, line_g: 0.5, line_b: 0.0, line_a: 0.7  // Orange guide lines
     };
 
-    /**
-     * Creates a new LunarCalc instance.
-     *
-     * Initializes the application with a unique application ID and sets
-     * the selected date to the current local date.
-     */
-    public LunarCalc () {
-        Object (application_id: "com.github.wszqkzqk.LunarCalc");
+    construct {
+        application_id = "io.github.wszqkzqk.LunarCalc";
         selected_date = new DateTime.now_local ();
     }
 
@@ -919,10 +913,10 @@ public class LunarCalc : Adw.Application {
                 + 6.2888 * Math.sin (moon_mean_anomaly_rad)
                 + 1.2740 * Math.sin (2 * mean_elongation_rad - moon_mean_anomaly_rad)
                 + 0.6583 * Math.sin (2 * mean_elongation_rad)
-                + 0.2136 * Math.sin (2 * mean_elongation_rad - sun_mean_anomaly_rad)
+                + 0.2136 * Math.sin (2 * moon_mean_anomaly_rad)
                 - 0.1856 * Math.sin (sun_mean_anomaly_rad)
                 - 0.1143 * Math.sin (2 * moon_argument_of_latitude_rad)
-                - 0.0588 * Math.sin (2 * mean_elongation_rad - 2 * moon_mean_anomaly_rad)
+                + 0.0588 * Math.sin (2 * mean_elongation_rad - 2 * moon_mean_anomaly_rad)
                 + 0.0572 * Math.sin (2 * mean_elongation_rad - sun_mean_anomaly_rad - moon_mean_anomaly_rad)
                 + 0.0533 * Math.sin (2 * mean_elongation_rad + moon_mean_anomaly_rad);
 

@@ -164,10 +164,12 @@ export class LunarCalculator {
                 + 6.2888 * Math.sin(Mm)
                 + 1.2740 * Math.sin(2 * D - Mm)
                 + 0.6583 * Math.sin(2 * D)
-                + 0.2136 * Math.sin(2 * D - M)
+                + 0.2136 * Math.sin(2 * Mm)
                 - 0.1856 * Math.sin(M)
                 - 0.1143 * Math.sin(2 * F)
-                - 0.0588 * Math.sin(2 * D - 2 * Mm);
+                + 0.0588 * Math.sin(2 * D - 2 * Mm)
+                + 0.0572 * Math.sin(2 * D - M - Mm)
+                + 0.0533 * Math.sin(2 * D + Mm);
 
             const eclLat = 5.1282 * Math.sin(F)
                 + 0.2806 * Math.sin(Mm + F)
