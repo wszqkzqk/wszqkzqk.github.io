@@ -44,13 +44,13 @@ tags:       开源软件 GTK Vala 数值计算
 *   **短周期摄动**：这些摄动项与日、地、月三者的瞬时相对位置紧密相关，周期通常在一个月或一年左右。主要包括：
     *   [**出差 (Evection)**](https://en.wikipedia.org/wiki/Evection)：这是太阳摄动中对月球轨道离心率影响最大的项。其物理本质是太阳引力潮汐对月球轨道形状的周期性拉伸。当月球轨道的长轴（拱线）指向太阳时（即近地点位于朔或望），太阳引力倾向于进一步拉长轨道，导致离心率增大；反之，当长轴与太阳方向垂直时（即近地点位于上弦或下弦），太阳引力倾向于拉宽轨道（拉长短轴），导致离心率减小。这种效应的强弱取决于“日-地”连线与“地-月近地点”连线的相对夹角，其变化周期由近点月（月球相对于近地点运动周期）频率和朔望月（月球相对于太阳运动周期）频率的两倍之差决定，本质上是这两个频率的**拍频**，周期约 31.8 天，振幅可达 1.274°。
 
-    | [![出差示意图](/img/astronomy/lunar_evection.svg)](/img/astronomy/lunar_evection.svg) |
+    | [![出差示意图](/img/astronomy/lunar/lunar_evection.svg)](/img/astronomy/lunar/lunar_evection.svg) |
     | :---: |
     | 出差：太阳引力导致月球轨道离心率随日-地-月相对位置发生周期性变化。 |
 
     *   [**二均差 (Variation)**](https://en.wikipedia.org/wiki/Variation_(astronomy))：由太阳对月球的直接引力梯度效应引起。太阳引力的切向分量在月球从上/下弦运行至朔/望的过程中对月球加速，而在从朔/望运行至上/下弦的过程中对月球减速。因此，在朔（新月）和望（满月）时，月球的角速度达到最大；而在上下弦时，角速度最小。周期约为朔望月的二分之一（约14.8天）。
 
-    | [![二均差示意图](/img/astronomy/lunar_variation.svg)](/img/astronomy/lunar_variation.svg) |
+    | [![二均差示意图](/img/astronomy/lunar/lunar_variation.svg)](/img/astronomy/lunar/lunar_variation.svg) |
     | :---: |
     | 二均差：太阳引力的切向分量在朔望时使月球速度极大，在上下弦时速度极小。 |
 
@@ -59,14 +59,14 @@ tags:       开源软件 GTK Vala 数值计算
 *   **轨道自身的周期性演化**：除了短周期项，月球轨道自身的几何形态也在发生着周期性的、影响更为深远的变化。这些变化描述了月球轨道的平均状态是如何“漂移”的：
     *   **轨道倾角 (Orbital Inclination)**：月球的公转轨道平面（白道面）与地球的公转轨道平面（黄道面）并不重合，而是存在一个约 **5.145°** 的夹角。这个倾角是月球能够出现在黄道南北两侧的原因，是计算**月球黄纬**的首要参数。若无此倾角，月球将永远在黄道上运行，每个朔望月都会发生日食和月食。
 
-    |[![#~/img/astronomy/lunar-orbital-inclination.webp](/img/astronomy/lunar-orbital-inclination.webp)](/img/astronomy/lunar-orbital-inclination.webp)|
+    |[![#~/img/astronomy/lunar/lunar-orbital-inclination.webp](/img/astronomy/lunar/lunar-orbital-inclination.webp)](/img/astronomy/lunar/lunar-orbital-inclination.webp)|
     |:----:|
     |月球的轨道倾角，来自[Wikipedia](https://commons.wikimedia.org/wiki/File:Earth-Moon.PNG)|
 
     *   [**交点退行 (Regression of the Nodes)**](https://en.wikipedia.org/wiki/Lunar_precession#Nodal_precession)：月球轨道与黄道的两个交点——升交点和降交点——并非固定不动。在太阳引力的作用下，这两个交点会沿着黄道向西（与月球公转方向相反）缓慢移动，每 **18.6 年**完成一周的退行。这一现象深刻影响着月球黄纬的计算（通过纬度参数 $F$ 体现），并且是预测日食和月食发生的关键周期，也是“沙罗周期”等食周期形成的核心因素。
     *   [**近地点进动 (Apsidal Precession)**](https://en.wikipedia.org/wiki/Lunar_precession#Apsidal_precession)：月球轨道的近地点和远地点连成的线（拱线）也非固定。在地球非球形引力场的四极矩和太阳摄动等因素的共同作用下，它会沿着月球的公转方向向东缓慢旋转，每 **8.85 年**完成一周的进动。这意味着月球从一个近地点出发，再次回到近地点所需的时间（近点月）比它完成 360° 公转的时间（恒星月）要长。这一效应是修正月球**平近点角 ($M'$)** 和计算真实距离所必需的。
 
-    |[![#~/img/astronomy/lunar_perturbation.webp](/img/astronomy/lunar_perturbation.webp)](/img/astronomy/lunar_perturbation.webp)|
+    |[![#~/img/astronomy/lunar/lunar_perturbation.webp](/img/astronomy/lunar/lunar_perturbation.webp)](/img/astronomy/lunar/lunar_perturbation.webp)|
     |:----:|
     |月球轨道的交点退行与近地点进动，来自[Wikipedia](https://commons.wikimedia.org/wiki/File:Lunar_perturbation.jpg)|
 
@@ -152,7 +152,7 @@ $$
 \end{aligned}
 $$
 
-| [![主要摄动项随时间的变化](/img/astronomy/lunar_perturbations.svg)](/img/astronomy/lunar_perturbations.svg) |
+| [![主要摄动项随时间的变化](/img/astronomy/lunar/lunar_perturbations.svg)](/img/astronomy/lunar/lunar_perturbations.svg) |
 | :---: |
 | 主要摄动项（出差、二均差、周年差）在 60 天内的变化曲线：可以看到它们具有不同的周期和振幅，共同影响着月球的黄经。 |
 
@@ -220,7 +220,7 @@ $$
 
 ### 视差修正与站心坐标
 
-| [![地心视差示意图](/img/astronomy/geocentric_parallax.svg)](/img/astronomy/geocentric_parallax.svg) |
+| [![地心视差示意图](/img/astronomy/lunar/geocentric_parallax.svg)](/img/astronomy/lunar/geocentric_parallax.svg) |
 | :---: |
 | 地心视差示意图：由于观测者位于地球表面 $P$ 而非地心 $O$，观测到的月球位置会发生偏移。 |
 | 图中 $z$ 为**地心天顶距**，$z'$ 为**站心天顶距**（$z = 90^\circ - El$，$z' = 90^\circ - El'$）。
@@ -314,7 +314,7 @@ $$
 k = \frac{1 - \cos \psi}{2}
 $$
 
-| [![月相与距角示意图](/img/astronomy/moon_phases.svg)](/img/astronomy/moon_phases.svg) |
+| [![月相与距角示意图](/img/astronomy/lunar/moon_phases.svg)](/img/astronomy/lunar/moon_phases.svg) |
 | :---: |
 | 月相与距角：月球绕地球公转，随着日、地、月三者相对位置的变化（距角变化），地球上看到的月球亮面比例（月相）也随之改变。 |
 
@@ -378,10 +378,10 @@ chmod +x lunarcalc.vala
 | 地月距离 (km) | 166 | 319 | 523 | 0.0696 |
 | 月相 (照明度) | 0.0032 | 0.0065 | 0.0094 | $1.56 \times 10^{-4}$ |
 
-| [![#~/img/astronomy/lunar-error-histograms.svg](/img/astronomy/lunar-error-histograms.svg)](/img/astronomy/lunar-error-histograms.svg) |
+| [![#~/img/astronomy/lunar/lunar-error-histograms.svg](/img/astronomy/lunar/lunar-error-histograms.svg)](/img/astronomy/lunar/lunar-error-histograms.svg) |
 | :---: |
 | 误差分布直方图 |
-| [![#~/img/astronomy/lunar-error-abs-histograms.svg](/img/astronomy/lunar-error-abs-histograms.svg)](/img/astronomy/lunar-error-abs-histograms.svg) |
+| [![#~/img/astronomy/lunar/lunar-error-abs-histograms.svg](/img/astronomy/lunar/lunar-error-abs-histograms.svg)](/img/astronomy/lunar/lunar-error-abs-histograms.svg) |
 | 误差绝对值分布直方图 |
 
 数据表明，本算法在极低的计算负载下实现了优异的精度平衡。从各地点的结果可以看出，高度角误差在不同纬度间几乎一致（均约 0.059°），与地理纬度没有明显相关性。这说明残差主要来源于截断的地心黄经/黄纬级数本身，而非站心坐标转换中的投影效应。程序的具体表现如下：

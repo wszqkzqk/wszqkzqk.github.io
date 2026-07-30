@@ -4,7 +4,7 @@ title:        PvZ-Portable v4 存档格式：实现跨架构关卡内无损存�
 subtitle:     实现跨架构/跨平台且完美保存关卡内状态的游戏存档系统
 date:         2026-01-30
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ 游戏移植 序列化 游戏存档 开源软件 开源游戏 PvZ-Portable
 ---

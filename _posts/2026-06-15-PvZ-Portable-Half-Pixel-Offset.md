@@ -2,7 +2,7 @@
 layout:       post
 title:        PvZ-Portable：主菜单左下角的缝隙——追踪一个被遗漏的 D3DX7 半像素偏移
 subtitle:     在坐标系迁移三个月后，Reanimator 矩阵里还藏着一个制造像素级错位的 -0.5f
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 date:         2026-06-15
 author:       wszqkzqk
 catalog:      true

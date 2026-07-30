@@ -2,7 +2,7 @@
 layout:       post
 title:        PvZ-Portable：Android 体验优化两则——native 库直载与 edge-to-edge
 subtitle:     优化安装后占用体积与资源导入界面显示
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 date:         2026-07-10
 author:       wszqkzqk
 catalog:      true

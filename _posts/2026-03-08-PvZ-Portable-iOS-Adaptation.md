@@ -4,7 +4,7 @@ title:        PvZ-Portable：100% 复原的植物大战僵尸正式支持 iOS/iP
 subtitle:     在 iPhone 和 iPad 上运行完整的 PvZ 引擎——纯 C++ 的跨平台移植实践
 date:         2026-03-08
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ SDL2 OpenGL iOS 开源软件 游戏移植 开源游戏 PvZ-Portable
 ---

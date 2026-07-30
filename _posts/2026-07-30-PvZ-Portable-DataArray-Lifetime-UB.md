@@ -2,7 +2,7 @@
 layout:       post
 title:        PvZ-Portable：治理 DataArray 的对象生命周期 UB
 subtitle:     重写管理所有游戏实体的对象池以消除UB
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 date:         2026-07-30
 author:       wszqkzqk
 catalog:      true

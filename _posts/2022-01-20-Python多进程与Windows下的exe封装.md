@@ -4,7 +4,7 @@ title:      Python多进程与Windows下exe封装的踩坑实践
 subtitle:   multiprocessing、pyinstaller、nuitka的尝试
 date:       2022-01-20
 author:     wszqkzqk
-header-img: img/nuitka-pyinstaller.webp
+header-img: img/python-exe-packaging/nuitka-pyinstaller.webp
 catalog:    true
 tags:       Python 程序打包
 ---
@@ -220,13 +220,13 @@ print(out)
 
 以上代码在我的Linux平台上运行毫无问题：
 
-|[![#~Linux-integ-single-multi.webp](/img/Linux-integ-single-multi.webp)](/img/Linux-integ-single-multi.webp)|
+|[![#~Linux-integ-single-multi.webp](/img/python-exe-packaging/Linux-integ-single-multi.webp)](/img/python-exe-packaging/Linux-integ-single-multi.webp)|
 |----|
 |Linux下单进程与多进程程序效率对比：在100,0000次分割的高计算量下，多进程程序效率是单进程程序的7.5倍 [^1]|
 
 但是在Windows下会出现以下情况：
 
-|[![#~integrator-windows-bug.webp](/img/integrator-windows-bug.webp)](/img/integrator-windows-bug.webp)|
+|[![#~integrator-windows-bug.webp](/img/python-exe-packaging/integrator-windows-bug.webp)](/img/python-exe-packaging/integrator-windows-bug.webp)|
 |----|
 |  Windows平台下各个子进程从头执行程序，并非只执行目标函数  |
 
@@ -347,7 +347,7 @@ pyinstaller编译的并非是机器码文件，它只是将代码编译为python
 
 但是，当我运行编译后的exe程序时，那个bug又出现了：
 
-[![#~integrator-windows-bug.webp](/img/integrator-windows-bug.webp)](/img/integrator-windows-bug.webp)
+[![#~integrator-windows-bug.webp](/img/python-exe-packaging/integrator-windows-bug.webp)](/img/python-exe-packaging/integrator-windows-bug.webp)
 
 ### 解决办法
 

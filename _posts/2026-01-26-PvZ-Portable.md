@@ -4,7 +4,7 @@ title:        PvZ-Portable：跨平台植物大战僵尸重实现
 subtitle:     近乎100%复现植物大战僵尸年度版体验的开源引擎，支持Linux、Windows、macOS、Android、iOS/iPadOS、浏览器(WebAssembly)等多平台
 date:         2026-01-26
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 pinned:       true
 pinned_order: 2

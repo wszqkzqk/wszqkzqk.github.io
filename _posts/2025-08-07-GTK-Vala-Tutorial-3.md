@@ -246,9 +246,9 @@ drawing_area.set_draw_func (draw_sun_angle_chart);
 
 `generate_sun_angles` 函数是应用计算的核心。笔者在此实现了 Meeus 算法的等价变体，通过精确的天体力学模型计算太阳位置。这个算法较简单，但具有很高的精度，适合我们这个应用的需求。
 
-|[![#~/img/astronomy/solar_signed_error_histograms.svg](/img/astronomy/solar_signed_error_histograms.svg)](/img/astronomy/solar_signed_error_histograms.svg)|
+|[![#~/img/astronomy/solar/solar_signed_error_histograms.svg](/img/astronomy/solar/solar_signed_error_histograms.svg)](/img/astronomy/solar/solar_signed_error_histograms.svg)|
 |:----:|
-|[![#~/img/astronomy/solar_error_histograms.svg](/img/astronomy/solar_error_histograms.svg)](/img/astronomy/solar_error_histograms.svg)|
+|[![#~/img/astronomy/solar/solar_error_histograms.svg](/img/astronomy/solar/solar_error_histograms.svg)](/img/astronomy/solar/solar_error_histograms.svg)|
 | 本程序实现的 Meeus 算法相对专业天文库 Astropy 的误差分布直方图 |
 
 #### 时间基准：从 J2000.0 历元起算的天数

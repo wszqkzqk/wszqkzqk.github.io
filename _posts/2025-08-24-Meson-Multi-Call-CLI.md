@@ -4,7 +4,7 @@ title:      在使用Meson为构建系统的项目中处理多调用CLI
 subtitle:   保证跨平台且与Meson集成的前提下妥善管理多调用CLI的复杂构建
 date:       2025-08-24
 author:     wszqkzqk
-header-img: img/media/bg-modern-img-comp.webp
+header-img: img/bg-modern-img-comp.webp
 catalog:    true
 tags:       开源软件 构建工具 Meson Vala
 ---

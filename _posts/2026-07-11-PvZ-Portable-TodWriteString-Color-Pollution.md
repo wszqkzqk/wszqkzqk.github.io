@@ -2,7 +2,7 @@
 layout:       post
 title:        PvZ-Portable：修复图鉴里提前标红的文字
 subtitle:     一次本不该改变任何状态的宽度测量，把行尾的颜色标签渗回了行首
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 date:         2026-07-11
 author:       wszqkzqk
 catalog:      true

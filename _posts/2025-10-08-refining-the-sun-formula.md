@@ -221,17 +221,17 @@ $$
 | 原 Wikipedia | 0.1819 | 0.260 | 0.642 |
 | 优化 Wikipedia | 0.0865 | 0.117 | 0.286 |
 
-|[![#~/img/astronomy/solar-meeus_error_histogram.svg](/img/astronomy/solar-meeus_error_histogram.svg)](/img/astronomy/solar-meeus_error_histogram.svg)|
+|[![#~/img/astronomy/solar/solar-meeus_error_histogram.svg](/img/astronomy/solar/solar-meeus_error_histogram.svg)](/img/astronomy/solar/solar-meeus_error_histogram.svg)|
 |:----:|
 | Meeus 算法（含视差修正）误差分布直方图 |
-|[![#~/img/astronomy/solar-meeus-old_error_histogram.svg](/img/astronomy/solar-meeus-old_error_histogram.svg)](/img/astronomy/solar-meeus-old_error_histogram.svg)|
+|[![#~/img/astronomy/solar/solar-meeus-old_error_histogram.svg](/img/astronomy/solar/solar-meeus-old_error_histogram.svg)](/img/astronomy/solar/solar-meeus-old_error_histogram.svg)|
 |:----:|
 | Meeus 算法（无修正）误差分布直方图 |
-|[![#~/img/astronomy/solar-fourier_error_histogram.svg](/img/astronomy/solar-fourier_error_histogram.svg)](/img/astronomy/solar-fourier_error_histogram.svg)|
+|[![#~/img/astronomy/solar/solar-fourier_error_histogram.svg](/img/astronomy/solar/solar-fourier_error_histogram.svg)](/img/astronomy/solar/solar-fourier_error_histogram.svg)|
 | 傅里叶级数算法误差分布直方图 |
-|[![#~/img/astronomy/solar-wikipedia_error_histogram.svg](/img/astronomy/solar-wikipedia_error_histogram.svg)](/img/astronomy/solar-wikipedia_error_histogram.svg)|
+|[![#~/img/astronomy/solar/solar-wikipedia_error_histogram.svg](/img/astronomy/solar/solar-wikipedia_error_histogram.svg)](/img/astronomy/solar/solar-wikipedia_error_histogram.svg)|
 | 维基百科算法误差分布直方图 |
-|[![#~/img/astronomy/solar-wikiimp_error_histogram.svg](/img/astronomy/solar-wikiimp_error_histogram.svg)](/img/astronomy/solar-wikiimp_error_histogram.svg)|
+|[![#~/img/astronomy/solar/solar-wikiimp_error_histogram.svg](/img/astronomy/solar/solar-wikiimp_error_histogram.svg)](/img/astronomy/solar/solar-wikiimp_error_histogram.svg)|
 | 优化 Wikipedia 算法误差分布直方图 |
 
 - **年份稳定性**：优化版在 1975 年 RMSD 0.057°，2075 年 0.056°（稳定）；原版 1975 年 0.073°，2075 年 0.221°（误差增长 200%）。

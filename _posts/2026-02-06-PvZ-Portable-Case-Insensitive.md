@@ -4,7 +4,7 @@ title:        PvZ-Portable 优化实录：从 6 秒到 1.5 秒的启动速度提
 subtitle:     记一次针对类 Unix 平台下的文件大小写不敏感 I/O 性能优化
 date:         2026-02-06
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ 性能优化 Linux 文件系统 开源游戏 开源软件 PvZ-Portable
 ---

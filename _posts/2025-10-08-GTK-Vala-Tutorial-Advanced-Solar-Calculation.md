@@ -242,10 +242,10 @@ $$
 
 虽然这个修正量很小（最大约 8.8 角秒，即 0.00244°），但在高精度计算中却可能成为系统误差的主要来源。
 
-|[![#~/img/astronomy/solar-meeus-old_error_histogram.svg](/img/astronomy/solar-meeus-old_error_histogram.svg)](/img/astronomy/solar-meeus-old_error_histogram.svg)|
+|[![#~/img/astronomy/solar/solar-meeus-old_error_histogram.svg](/img/astronomy/solar/solar-meeus-old_error_histogram.svg)](/img/astronomy/solar/solar-meeus-old_error_histogram.svg)|
 |:----:|
 | 视差修正前的 Meeus 算法误差分布直方图 |
-|[![#~/img/astronomy/solar-meeus_error_histogram.svg](/img/astronomy/solar-meeus_error_histogram.svg)](/img/astronomy/solar-meeus_error_histogram.svg)|
+|[![#~/img/astronomy/solar/solar-meeus_error_histogram.svg](/img/astronomy/solar/solar-meeus_error_histogram.svg)](/img/astronomy/solar/solar-meeus_error_histogram.svg)|
 | 视差修正后的 Meeus 算法误差分布直方图 |
 
 在加入地心视差修正前，可以在图上明显看到分布峰值在 0.0020° 而不是 0°；加入修正后，误差分布则基本关于 0° 对称，显著提升了计算的准确性。
@@ -383,10 +383,10 @@ $$
 
 笔者将上述算法应用于 GUI 程序中，结合 GTK4/Libadwaita/JSON-GLib等技术栈，制作了一个[太阳高度角计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/solarcalc.vala)和一个[白昼时长计算器](https://github.com/wszqkzqk/FunValaGtkExamples/blob/master/daylengthadw.vala)，将计算结果可视化展示。两个程序均支持浅色和深色主题，并能自动从 IP 获取地理位置，自动识别时区，还支持导出 PNG、SVG、PDF 等格式的图表，以及 CSV 数据。
 
-| [![#~/img/GTK-examples/pku-light-solar-angle-250814.webp](/img/GTK-examples/pku-light-solar-angle-250814.webp)](/img/GTK-examples/pku-light-solar-angle-250814.webp) | [![#~/img/GTK-examples/pku-dark-solar-angle-250814.webp](/img/GTK-examples/pku-dark-solar-angle-250814.webp)](/img/GTK-examples/pku-dark-solar-angle-250814.webp) |
+| [![#~/img/GTK-examples/pku-light-solarcalc-251221.webp](/img/GTK-examples/pku-light-solarcalc-251221.webp)](/img/GTK-examples/pku-light-solarcalc-251221.webp) | [![#~/img/GTK-examples/pku-dark-solarcalc-250621.webp](/img/GTK-examples/pku-dark-solarcalc-250621.webp)](/img/GTK-examples/pku-dark-solarcalc-250621.webp) |
 | :--: | :--: |
 | 太阳高度角计算器（浅色模式）| 太阳高度角计算器（深色模式）|
-| [![#~/img/GTK-examples/fetching-location-solarangle.webp](/img/GTK-examples/fetching-location-solarangle.webp)](/img/GTK-examples/fetching-location-solarangle.webp) | [![#~/img/GTK-examples/timezone-mismatch-solarangle.webp](/img/GTK-examples/timezone-mismatch-solarangle.webp)](/img/GTK-examples/timezone-mismatch-solarangle.webp) |
+| [![#~/img/GTK-examples/fetching-location-solarangle.webp](/img/GTK-examples/fetching-location-solarangle.webp)](/img/GTK-examples/fetching-location-solarangle.webp) | [![#~/img/GTK-examples/timezone-mismatch-solarcalc.webp](/img/GTK-examples/timezone-mismatch-solarcalc.webp)](/img/GTK-examples/timezone-mismatch-solarcalc.webp) |
 | 获取地理位置时的加载动画 | 提示与选择 |
 
 |[![#~/img/GTK-examples/day-length-pku-light.webp](/img/GTK-examples/day-length-pku-light.webp)](/img/GTK-examples/day-length-pku-light.webp)|[![#~/img/GTK-examples/day-length-pku-dark.webp](/img/GTK-examples/day-length-pku-dark.webp)](/img/GTK-examples/day-length-pku-dark.webp)|
@@ -1337,14 +1337,14 @@ if __name__ == "__main__":
 | 全局最大误差 | **0.0121** | 0.0145 | 0.2864 | 0.4853 | 0.6415 |
 | 平均误差 (Bias) | **-0.0000** | 0.0020 | 0.0018 | 0.0041 | 0.0024 |
 
-|[![#~/img/astronomy/solar-meeus_error_histogram.svg](/img/astronomy/solar-meeus_error_histogram.svg)](/img/astronomy/solar-meeus_error_histogram.svg)|
+|[![#~/img/astronomy/solar/solar-meeus_error_histogram.svg](/img/astronomy/solar/solar-meeus_error_histogram.svg)](/img/astronomy/solar/solar-meeus_error_histogram.svg)|
 |:----:|
 | Meeus 算法（含视差修正）误差分布直方图 |
-|[![#~/img/astronomy/solar-meeus-old_error_histogram.svg](/img/astronomy/solar-meeus-old_error_histogram.svg)](/img/astronomy/solar-meeus-old_error_histogram.svg)|
+|[![#~/img/astronomy/solar/solar-meeus-old_error_histogram.svg](/img/astronomy/solar/solar-meeus-old_error_histogram.svg)](/img/astronomy/solar/solar-meeus-old_error_histogram.svg)|
 | Meeus 算法（无视差修正）误差分布直方图 |
-|[![#~/img/astronomy/solar-fourier_error_histogram.svg](/img/astronomy/solar-fourier_error_histogram.svg)](/img/astronomy/solar-fourier_error_histogram.svg)|
+|[![#~/img/astronomy/solar/solar-fourier_error_histogram.svg](/img/astronomy/solar/solar-fourier_error_histogram.svg)](/img/astronomy/solar/solar-fourier_error_histogram.svg)|
 | 傅里叶级数算法误差分布直方图 |
-|[![#~/img/astronomy/solar-wikipedia_error_histogram.svg](/img/astronomy/solar-wikipedia_error_histogram.svg)](/img/astronomy/solar-wikipedia_error_histogram.svg)|
+|[![#~/img/astronomy/solar/solar-wikipedia_error_histogram.svg](/img/astronomy/solar/solar-wikipedia_error_histogram.svg)](/img/astronomy/solar/solar-wikipedia_error_histogram.svg)|
 | 维基百科算法误差分布直方图 |
 
 *   **MeeusFixed (含视差修正)** 展现了惊人的精度，其全局 RMSD 仅为 0.0030°。最关键的是，其平均误差为 $-1.8 \times 10^{-7}$，几乎为 0，进一步定量计算可知其系统误差显著性 $Z = -0.14$，其绝对值远远小于95%置信水平临界值 1.96，说明加入了视差修正后，消除了系统性偏差。

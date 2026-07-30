@@ -4,7 +4,7 @@ title:        PvZ-Portable：渲染层缓冲区的安全重构与边界保护
 subtitle:     修复 OpenGL 顶点缓冲中的越界风险、内存泄漏与未定义行为
 date:         2026-04-09
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ OpenGL SDL2 游戏移植 开源软件 开源游戏 PvZ-Portable
 ---

@@ -4,7 +4,7 @@ title:        PvZ-Portable：100% 复原的植物大战僵尸登陆浏览器—�
 subtitle:     将经典游戏全功能完美适配浏览器免安装运行（WebAssembly + Emscripten 技术详解）
 date:         2026-03-10
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ SDL2 OpenGL WebAssembly Emscripten 开源软件 游戏移植 开源游戏 PvZ-Portable
 ---
@@ -21,7 +21,7 @@ tags:         C++ SDL2 OpenGL WebAssembly Emscripten 开源软件 游戏移植 �
 
 打开页面后，导入你**合法拥有的正版** PC 版《植物大战僵尸：年度版》的 `main.pak` 和 `properties/` 目录，点击 **Start Game**，即可开始游戏。存档数据会自动保存在浏览器的 IndexedDB 中，关闭页面后再次打开需要重新导入资源包，但是存档会自动保存，可以直接继续游戏。
 
-|[![#~/img/games/pvz-portable-wasm-import-screen.webp](/img/games/pvz-portable-wasm-import-screen.webp)](/img/games/pvz-portable-wasm-import-screen.webp)|[![#~/img/games/pvz-portable-wasm-gameplay.webp](/img/games/pvz-portable-wasm-gameplay.webp)](/img/games/pvz-portable-wasm-gameplay.webp)|
+|[![#~/img/games/pvz-portable/pvz-portable-wasm-import-screen.webp](/img/games/pvz-portable/pvz-portable-wasm-import-screen.webp)](/img/games/pvz-portable/pvz-portable-wasm-import-screen.webp)|[![#~/img/games/pvz-portable/pvz-portable-wasm-gameplay.webp](/img/games/pvz-portable/pvz-portable-wasm-gameplay.webp)](/img/games/pvz-portable/pvz-portable-wasm-gameplay.webp)|
 |:----:|:----:|
 | 导入资源界面 | 浏览器中的游戏画面 |
 

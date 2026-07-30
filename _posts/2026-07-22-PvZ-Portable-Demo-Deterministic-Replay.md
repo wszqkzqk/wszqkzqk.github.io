@@ -2,7 +2,7 @@
 layout:       post
 title:        PvZ-Portable：构建可复现的游戏录制与回放系统
 subtitle:     从时区、音频时钟与 RNG 流等多个角度，保证录制和回放在任何机器上都能逐 tick 复现
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 date:         2026-07-22
 author:       wszqkzqk
 catalog:      true

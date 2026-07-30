@@ -2,7 +2,7 @@
 layout:       post
 title:        PvZ-Portable：挑战页的中文标题为什么往上跑——把字节数当成字符数的换行误判
 subtitle:     一个 6 字的中文挑战名有 18 个字节，size() 让它被误判成长标题，画到了不该在的位置
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 date:         2026-06-29
 author:       wszqkzqk
 catalog:      true

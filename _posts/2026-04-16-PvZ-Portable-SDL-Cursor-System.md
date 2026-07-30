@@ -4,7 +4,7 @@ title:        PvZ-Portable：跨平台光标系统的 SDL 实现与自定义光�
 subtitle:     从 Windows API 到 SDL 的完整迁移，以及 MemoryImage 动态创建自定义光标的链路设计
 date:         2026-04-16
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ SDL2 游戏移植 开源软件 开源游戏 PvZ-Portable
 ---

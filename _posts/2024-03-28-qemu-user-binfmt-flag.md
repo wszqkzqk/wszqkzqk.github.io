@@ -4,7 +4,7 @@ title:      binfmt_misc flags与QEMU用户模式下的跨架构构建环境
 subtitle:   Acrh Linux龙架构移植踩坑
 date:       2024-03-28
 author:     wszqkzqk
-header-img: img/media/bg-modern-img-comp.webp
+header-img: img/bg-modern-img-comp.webp
 catalog:    true
 tags:       系统配置 系统维护 开源软件 龙芯 LoongArchLinux 容器 QEMU
 ---

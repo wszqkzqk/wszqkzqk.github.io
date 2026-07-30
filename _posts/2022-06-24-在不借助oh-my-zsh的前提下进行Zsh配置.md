@@ -4,7 +4,7 @@ title:        在不借助oh-my-zsh的前提下进行Zsh配置
 subtitle:     Windows(MSYS2)或Arch Linux平台下Zsh的配置
 date:         2022-06-24
 author:       wszqkzqk
-header-img:   img/shell-config-bg.webp
+header-img:   img/zsh-config/shell-config-bg.webp
 catalog:      true
 tags:         Linux Windows MSYS2 Zsh 开源软件 Pacman 系统配置
 ---
@@ -170,7 +170,7 @@ paru -S oh-my-posh
 
 Zsh需要有对应的`.zshrc`文件才能正常启动，在正式配置流程开始之前，我们不妨先让Zsh自动建立一个无功能的初始化`.zshrc`文件：
 
-|[![#~/img/首次运行Zsh.webp](/img/首次运行Zsh.webp)](/img/首次运行Zsh.webp)|
+|[![#~/img/zsh-config/首次运行Zsh.webp](/img/zsh-config/首次运行Zsh.webp)](/img/zsh-config/首次运行Zsh.webp)|
 |:----:|
 |首次运行Zsh|
 
@@ -198,7 +198,7 @@ eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/想要使用�
 
 如果配置成功，就会显示界面：
 
-|[![#~/img/预览中的oh-my-posh主题效果.webp](/img/预览中的oh-my-posh主题效果.webp)](/img/预览中的oh-my-posh主题效果.webp)|
+|[![#~/img/zsh-config/预览中的oh-my-posh主题效果.webp](/img/zsh-config/预览中的oh-my-posh主题效果.webp)](/img/zsh-config/预览中的oh-my-posh主题效果.webp)|
 |:----:|
 |预览中的oh-my-posh主题效果|
 
@@ -294,7 +294,7 @@ Windows下则需要手动下载并安装，官方推荐的字体是[Meslo LGM NF
 
 安装完成后，在终端中切换到对应的`Nerd Front`字体即可，安装成功后，配置了oh-my-posh主题的Zsh便不再乱码。
 
-|[![#~/img/oh-my-posh配置好字体以后的显示情况.webp](/img/oh-my-posh配置好字体以后的显示情况.webp)](/img/oh-my-posh配置好字体以后的显示情况.webp)|
+|[![#~/img/zsh-config/oh-my-posh配置好字体以后的显示情况.webp](/img/zsh-config/oh-my-posh配置好字体以后的显示情况.webp)](/img/zsh-config/oh-my-posh配置好字体以后的显示情况.webp)|
 |:----:|
 |配置好字体以后的显示情况|
 

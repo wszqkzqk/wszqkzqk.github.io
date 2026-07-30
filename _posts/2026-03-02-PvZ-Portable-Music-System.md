@@ -4,7 +4,7 @@ title:        植物大战僵尸社区开源实现（PvZ-Portable）：通过通
 subtitle:     MOD 音乐的通道级音量控制、动态打击乐切换与音符残留修复
 date:         2026-03-02
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ SDL2 开源软件 游戏移植 开源游戏 PvZ-Portable 音频
 ---

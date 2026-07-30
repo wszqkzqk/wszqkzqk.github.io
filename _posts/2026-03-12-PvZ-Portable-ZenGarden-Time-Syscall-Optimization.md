@@ -4,7 +4,7 @@ title:        PvZ-Portable：禅境花园性能优化——实现应用层系统
 subtitle:     time(0) 与 localtime() 热路径分析、逐帧缓存策略与为 Wine 11.4 修复上游化
 date:         2026-03-12
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ 性能优化 Wine 系统调用 跨平台 开源软件 开源游戏 PvZ-Portable
 ---

@@ -2,7 +2,7 @@
 layout:       post
 title:        PvZ-Portable：智慧树只报身高不报单位——TodDrawStringMatrix 里按字节数的 UTF-8 漏洞
 subtitle:     字体早就 Unicode 化了，可这条带矩阵变换的绘制路径还在把每个 UTF-8 字节当成一个字符去查字图
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 date:         2026-06-28
 author:       wszqkzqk
 catalog:      true

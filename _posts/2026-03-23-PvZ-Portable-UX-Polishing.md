@@ -4,7 +4,7 @@ title:        PvZ-Portable 输入系统与主循环优化：原生字符合成�
 subtitle:     解决跨平台开发中的输入响应与事件派发问题
 date:         2026-03-23
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ SDL2 开源软件 游戏移植 开源游戏 PvZ-Portable WebAssembly
 ---

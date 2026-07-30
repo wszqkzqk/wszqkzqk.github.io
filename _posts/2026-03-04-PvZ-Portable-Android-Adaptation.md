@@ -4,7 +4,7 @@ title:        PvZ-Portable：进军 Android——将 100% 还原的植物大战�
 subtitle:     社区开源引擎实现的 Android 适配全纪录
 date:         2026-03-04
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ SDL2 OpenGL Android 开源软件 游戏移植 开源游戏 PvZ-Portable
 ---
@@ -44,7 +44,7 @@ PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属�
 * 导入成功后界面状态更新为 "Ready"，点击 **Start Game** 即可开始游戏。
 * `Import Game Resources` 是必做的第一步，**不导入资源无法进入游戏**。如果用户之前在其他平台还有存档数据，还可以可选地通过下方的 `Import/Export Save Data (Optional)` 功能区迁移存档。
 
-|[![#~/img/games/pvz-portable-android-manage-data-first-lossless.webp](/img/games/pvz-portable-android-manage-data-first-lossless.webp)](/img/games/pvz-portable-android-manage-data-first-lossless.webp)|[![#~/img/games/pvz-portable-android-import-resources-dir-lossless.webp](/img/games/pvz-portable-android-import-resources-dir-lossless.webp)](/img/games/pvz-portable-android-import-resources-dir-lossless.webp)|
+|[![#~/img/games/pvz-portable/pvz-portable-android-manage-data-first-lossless.webp](/img/games/pvz-portable/pvz-portable-android-manage-data-first-lossless.webp)](/img/games/pvz-portable/pvz-portable-android-manage-data-first-lossless.webp)|[![#~/img/games/pvz-portable/pvz-portable-android-import-resources-dir-lossless.webp](/img/games/pvz-portable/pvz-portable-android-import-resources-dir-lossless.webp)](/img/games/pvz-portable/pvz-portable-android-import-resources-dir-lossless.webp)|
 |:----:|:----:|
 | 首次打开时需按提示导入资源数据 | 选择需要导入的资源数据目录 |
 
@@ -52,7 +52,7 @@ PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属�
 
 导入资源后，如果需要**重新导入资源或管理存档**，可以通过 **App Shortcut** 快速访问。长按桌面上的应用图标，选择 **Manage Data**，即可打开资源管理界面，与首次启动时的导入界面相同——包含所有的导入/导出按钮。
 
-|[![#~/img/games/pvz-portable-android-how-to-enter-manage-data-ui.webp](/img/games/pvz-portable-android-how-to-enter-manage-data-ui.webp)](/img/games/pvz-portable-android-how-to-enter-manage-data-ui.webp)|[![#~/img/games/pvz-portable-android-manage-data-ui-lossless.webp](/img/games/pvz-portable-android-manage-data-ui-lossless.webp)](/img/games/pvz-portable-android-manage-data-ui-lossless.webp)|
+|[![#~/img/games/pvz-portable/pvz-portable-android-how-to-enter-manage-data-ui.webp](/img/games/pvz-portable/pvz-portable-android-how-to-enter-manage-data-ui.webp)](/img/games/pvz-portable/pvz-portable-android-how-to-enter-manage-data-ui.webp)|[![#~/img/games/pvz-portable/pvz-portable-android-manage-data-ui-lossless.webp](/img/games/pvz-portable/pvz-portable-android-manage-data-ui-lossless.webp)](/img/games/pvz-portable/pvz-portable-android-manage-data-ui-lossless.webp)|
 |:----:|:----:|
 | 在桌面长按图标可弹出数据管理按钮 | 数据管理界面可导入资源或管理存档 |
 
@@ -64,10 +64,10 @@ PvZ-Portable 的 Android 移植保留了原版游戏的 4:3 宽高比和鼠标�
 
 PvZ-Portable 目标特性即是在**任何平台**上都 **100% 还原**原版游戏的玩法和体验。因此，Android 版本一切游戏机制都与桌面版保持一致，**实现了在 Android 平台上的智慧树、生存困难模式等完整体验**。
 
-|[![#~/img/games/pvz-portable-android-game-showcase1.webp](/img/games/pvz-portable-android-game-showcase1.webp)](/img/games/pvz-portable-android-game-showcase1.webp)|[![#~/img/games/pvz-portable-android-game-showcase2.webp](/img/games/pvz-portable-android-game-showcase2.webp)](/img/games/pvz-portable-android-game-showcase2.webp)|[![#~/img/games/pvz-portable-android-game-showcase3.webp](/img/games/pvz-portable-android-game-showcase3.webp)](/img/games/pvz-portable-android-game-showcase3.webp)|
+|[![#~/img/games/pvz-portable/pvz-portable-android-game-showcase1.webp](/img/games/pvz-portable/pvz-portable-android-game-showcase1.webp)](/img/games/pvz-portable/pvz-portable-android-game-showcase1.webp)|[![#~/img/games/pvz-portable/pvz-portable-android-game-showcase2.webp](/img/games/pvz-portable/pvz-portable-android-game-showcase2.webp)](/img/games/pvz-portable/pvz-portable-android-game-showcase2.webp)|[![#~/img/games/pvz-portable/pvz-portable-android-game-showcase3.webp](/img/games/pvz-portable/pvz-portable-android-game-showcase3.webp)](/img/games/pvz-portable/pvz-portable-android-game-showcase3.webp)|
 |:----:|:----:|:----:|
 |智慧树|禅境花园|戴夫商店|
-|[![#~/img/games/pvz-portable-android-game-showcase4.webp](/img/games/pvz-portable-android-game-showcase4.webp)](/img/games/pvz-portable-android-game-showcase4.webp)|[![#~/img/games/pvz-portable-android-game-showcase5.webp](/img/games/pvz-portable-android-game-showcase5.webp)](/img/games/pvz-portable-android-game-showcase5.webp)|[![#~/img/games/pvz-portable-android-game-showcase6.webp](/img/games/pvz-portable-android-game-showcase6.webp)](/img/games/pvz-portable-android-game-showcase6.webp)|
+|[![#~/img/games/pvz-portable/pvz-portable-android-game-showcase4.webp](/img/games/pvz-portable/pvz-portable-android-game-showcase4.webp)](/img/games/pvz-portable/pvz-portable-android-game-showcase4.webp)|[![#~/img/games/pvz-portable/pvz-portable-android-game-showcase5.webp](/img/games/pvz-portable/pvz-portable-android-game-showcase5.webp)](/img/games/pvz-portable/pvz-portable-android-game-showcase5.webp)|[![#~/img/games/pvz-portable/pvz-portable-android-game-showcase6.webp](/img/games/pvz-portable/pvz-portable-android-game-showcase6.webp)](/img/games/pvz-portable/pvz-portable-android-game-showcase6.webp)|
 |生存·浓雾（无尽）|生存·泳池（无尽）|生存模式关卡选择|
 
 ### 数据存储与存档兼容

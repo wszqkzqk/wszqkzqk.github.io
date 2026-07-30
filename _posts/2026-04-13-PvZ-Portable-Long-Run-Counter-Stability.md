@@ -4,7 +4,7 @@ title:        PvZ-Portable：长期运行稳定性修复——从计数器溢出
 subtitle:     无尽模式数十小时后动画抖动、闪烁异常的根因与系统重构
 date:         2026-04-13
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ 游戏移植 开源软件 开源游戏 PvZ-Portable
 ---

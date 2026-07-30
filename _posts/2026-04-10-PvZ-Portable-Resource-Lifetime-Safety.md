@@ -4,7 +4,7 @@ title:        PvZ-Portable 资源释放时序安全：动画附件生命周期�
 subtitle:     修复对象析构阶段外部异步访问导致的崩溃
 date:         2026-04-10
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ SDL2 游戏移植 开源软件 开源游戏 PvZ-Portable
 ---

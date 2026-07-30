@@ -4,7 +4,7 @@ title:        记录从Manjaro直接切换到Arch Linux的过程
 subtitle:     折腾日志
 date:         2022-06-20
 author:       wszqkzqk
-header-img:   img/switch-manjaro-to-archlinux-bg.webp
+header-img:   img/switch-manjaro-to-archlinux/switch-manjaro-to-archlinux-bg.webp
 catalog:      true
 tags:         Linux Manjaro archlinux Pacman 开源软件 系统配置 系统安装
 ---
@@ -235,7 +235,7 @@ yay -S octopi-notifier-qt5
 
 最后贴上一张图，切换后`neofetch`与KDE信息中心的系统信息已经变成了Arch Linux：
 
-[![#~switch-manjaro-to-archlinux.webp](/img/switch-manjaro-to-archlinux.webp)](/img/switch-manjaro-to-archlinux.webp)
+[![#~switch-manjaro-to-archlinux.webp](/img/switch-manjaro-to-archlinux/switch-manjaro-to-archlinux.webp)](/img/switch-manjaro-to-archlinux/switch-manjaro-to-archlinux.webp)
 
 不过由本文可以看到，由Manjaro切换Arch Linux的过程仍然较为繁琐，仅推荐在需要将使用了很久、不便于迁移的Manjaro系统切换至Arch Linux时使用，不推荐用这个方法通过安装Manjaro来安装Arch Linux，如果需要直接安装Arch Linux又想要避免安装的麻烦可以尝试[EndeavourOS](https://endeavouros.com/)
 

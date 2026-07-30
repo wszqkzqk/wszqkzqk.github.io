@@ -4,7 +4,7 @@ title:      利用Android手机硬件进行高效灵活的编解码
 subtitle:   在Termux中启用硬件加速视频编解码
 date:       2025-10-26
 author:     wszqkzqk
-header-img: img/media/bg-hardware-acceleration-darken.webp
+header-img: img/media/hardware-acceleration/bg-hardware-acceleration-darken.webp
 catalog:    true
 tags:       Termux Android FFmpeg 开源软件 媒体编解码
 ---

@@ -11,7 +11,7 @@ tags:       化学 计算化学 有机化学
 
 在计算化学中，Gaussian是一款十分常用的软件，然而，笔者之前在本地Linux下使用它时，却一直出现段错误的报错提示，无法使用。
 
-[![#~/img/gaussian/segfault.webp](/img/gaussian/segfault.webp)](/img/gaussian/segfault.webp)
+[![#~/img/chem/gaussian/segfault.webp](/img/chem/gaussian/segfault.webp)](/img/chem/gaussian/segfault.webp)
 
 由于段错误一般是程序设计缺陷导致的，笔者之前一直以为Gaussian的Linux版程序有问题。
 

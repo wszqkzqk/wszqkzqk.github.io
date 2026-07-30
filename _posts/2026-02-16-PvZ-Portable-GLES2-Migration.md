@@ -4,7 +4,7 @@ title:        PvZ-Portable 渲染后端迁移：统一的 OpenGL ES 2.0
 subtitle:     用最小公共子集实现最大兼容性和良好性能
 date:         2026-02-16
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ OpenGL 开源软件 游戏移植 开源游戏 PvZ-Portable
 ---

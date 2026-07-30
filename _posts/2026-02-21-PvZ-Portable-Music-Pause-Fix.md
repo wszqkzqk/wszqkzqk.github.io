@@ -4,7 +4,7 @@ title:        PvZ-Portable：修复 MOD 音乐暂停恢复倒退与鼓点泄露
 subtitle:     从 Stop+Replay 到 PauseMusic/ResumeMusic，以及 Order/Row 精度与通道数边界的修复
 date:         2026-02-21
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ 跨平台 媒体文件 游戏移植 开源软件 开源游戏 PvZ-Portable
 ---

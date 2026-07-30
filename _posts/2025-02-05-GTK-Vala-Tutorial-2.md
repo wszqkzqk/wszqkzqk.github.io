@@ -1367,7 +1367,7 @@ public class SolarAngleApp : Gtk.Application {
 
 ## 运行效果
 
-|[![#~/img/GTK-examples/chongqing-solar-angle-adw.webp](/img/GTK-examples/chongqing-solar-angle-spring-adw.webp)](/img/GTK-examples/chongqing-solar-angle-spring-adw.webp)|[![#~/img/GTK-examples/beijing-solar-angle-summer-adw.webp](/img/GTK-examples/beijing-solar-angle-summer-adw.webp)](/img/GTK-examples/beijing-solar-angle-summer-adw.webp)|
+|[![#~/img/GTK-examples/chongqing-solar-angle-spring-adw.webp](/img/GTK-examples/chongqing-solar-angle-spring-adw.webp)](/img/GTK-examples/chongqing-solar-angle-spring-adw.webp)|[![#~/img/GTK-examples/beijing-solar-angle-summer-adw.webp](/img/GTK-examples/beijing-solar-angle-summer-adw.webp)](/img/GTK-examples/beijing-solar-angle-summer-adw.webp)|
 |:----:|:----:|
 |重庆(北半球春分)|北京(北半球夏至，深色模式)|
 |[![#~/img/GTK-examples/singapore-solar-angle-autumn-adw.webp](/img/GTK-examples/singapore-solar-angle-autumn-adw.webp)](/img/GTK-examples/singapore-solar-angle-autumn-adw.webp)|[![#~/img/GTK-examples/n-polar-solar-angle-winter-adw.webp](/img/GTK-examples/n-polar-solar-angle-winter-adw.webp)](/img/GTK-examples/n-polar-solar-angle-winter-adw.webp)|

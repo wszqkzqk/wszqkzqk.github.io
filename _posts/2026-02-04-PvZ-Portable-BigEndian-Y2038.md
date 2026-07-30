@@ -4,7 +4,7 @@ title:        PvZ-Portable：跨字节序存档互通与解决 2038 年问题
 subtitle:     实现大端序与小端序存档兼容与妥善处理时间戳溢出
 date:         2026-02-04
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ 跨平台 游戏移植 开源软件 开源游戏 PvZ-Portable
 ---

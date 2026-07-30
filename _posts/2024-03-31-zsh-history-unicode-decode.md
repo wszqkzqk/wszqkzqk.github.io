@@ -4,7 +4,7 @@ title:      解码含有Unicode的zsh历史记录
 subtitle:   Zsh历史记录编码解析
 date:       2024-03-31
 author:     wszqkzqk
-header-img: img/media/bg-modern-img-comp.webp
+header-img: img/bg-modern-img-comp.webp
 catalog:    true
 tags:       系统配置 系统维护 开源软件 Zsh
 ---

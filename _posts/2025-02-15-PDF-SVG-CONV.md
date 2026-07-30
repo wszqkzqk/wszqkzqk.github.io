@@ -4,7 +4,7 @@ title:      PDF/SVG格式转化工具
 subtitle:   基于Cairo/Poppler/Rsvg开发强大高效的多线程PDF/SVG转换工具
 date:       2025-02-15
 author:     wszqkzqk
-header-img: img/media/bg-modern-img-comp.webp
+header-img: img/bg-modern-img-comp.webp
 catalog:    true
 tags:       开源软件 Vala Meson 媒体文件 PDF
 ---

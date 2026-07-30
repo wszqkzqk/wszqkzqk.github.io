@@ -4,7 +4,7 @@ title:        PvZ-Portable：修复僵尸植物存档恢复后的贴图错误
 subtitle:     修复资源 ID 反查映射中一个指针与值的混淆以及 64 位平台的未定义行为
 date:         2026-02-20
 author:       wszqkzqk
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ 跨平台 游戏移植 开源软件 开源游戏 PvZ-Portable
 ---
@@ -13,7 +13,7 @@ tags:         C++ 跨平台 游戏移植 开源软件 开源游戏 PvZ-Portable
 
 在 [PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable) 中，有一个只在特定条件下才会出现的 Bug：当场上存在**植物僵尸**时进行存档，**读档恢复**后，这些僵尸会多出一个重叠的普通僵尸头部——本该被隐藏的默认头部贴图重新显示了出来，与植物头部叠在一起，看上去非常怪异。
 
-|[![#~/img/games/pvz-portable-bug-zombotany-image.webp](/img/games/pvz-portable-bug-zombotany-image.webp)](/img/games/pvz-portable-bug-zombotany-image.webp)|
+|[![#~/img/games/pvz-portable/pvz-portable-bug-zombotany-image.webp](/img/games/pvz-portable/pvz-portable-bug-zombotany-image.webp)](/img/games/pvz-portable/pvz-portable-bug-zombotany-image.webp)|
 |:----:|
 |植物僵尸在存档后读档恢复时的贴图错误<br>在植物头后还错误地渲染了一个普通僵尸的头|
 

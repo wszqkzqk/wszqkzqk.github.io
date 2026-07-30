@@ -20,7 +20,7 @@ tags:         开源软件 Vala GTK4 LibAdwaita 媒体文件 Flatpak 动态照�
 工具目前全方位覆盖 Linux、Windows 和 macOS，既有美观直观的图形界面，也为进阶用户保留了命令行和可编程的共享库。
 
 <div align="center">
-  <a href="/img/media/live-photo-conv-logo.png"><img src="/img/media/live-photo-conv-logo.png" alt="Live Photo Converter" style="width: 500px; max-width: 100%;" /></a>
+  <a href="/img/media/live-photo-conv/live-photo-conv-logo.png"><img src="/img/media/live-photo-conv/live-photo-conv-logo.png" alt="Live Photo Converter" style="width: 500px; max-width: 100%;" /></a>
 </div>
 
 ## 图形界面
