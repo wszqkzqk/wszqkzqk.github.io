@@ -137,6 +137,10 @@ PvZ-Portable 会自动在各操作系统的标准应用数据目录下存储存�
 
 你可以手动将原版的**用户进度**文件复制到上述路径的 `userdata` 子目录下，以继续你的游戏进度（例如复制 `users.dat`, `user1.dat` 等）。但是请注意，由于**关卡内进度**（例如 `game1_13.dat`）的保存涉及到内存数据，无法兼容原版。虽然笔者自己实现的[存档格式 v4](https://wszqkzqk.github.io/2026/01/30/PvZ-Portable-Save-Format-v4/) 支持跨平台使用，但很遗憾，原版的存档格式是与 ABI 高度绑定的，不具有可移植性。
 
+### 游戏录制与回放
+
+PvZ-Portable 可以把一段游戏过程录制为 `.dmo` 演示文件，并在之后**确定性地回放**，主要用于调试和回归测试。运行时加上 `-record` 参数即可将游戏过程录制到当前目录下的 `.dmo` 文件中，加上 `-play` 参数则会回放最近一次的录制。
+
 ## 构建与测试
 
 作为开源项目，你可以自由地编译它。本项目使用了现代化的 CMake 构建系统。
@@ -207,13 +211,13 @@ cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
 隐藏关卡页面（Limbo Page）默认隐藏，在**小游戏 / 解谜 / 生存模式选择界面快速连点空白处 5 次**即可解锁。
 
-例如，如果需要使用**作弊键** `-tod` 等功能，可以启用 `PVZ_DEBUG` 选项：
+例如，如果需要使用**作弊键** `-cheat` 等功能，可以启用 `PVZ_DEBUG` 选项：
 
 ```bash
 cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -DPVZ_DEBUG=ON
 ```
 
-这样如果在运行时向程序添加 `-tod` 参数，就可以启用作弊功能。[^5]
+这样如果在运行时向程序添加 `-cheat` 参数，就可以启用作弊功能。[^5]
 
 #### 编译
 
@@ -296,7 +300,7 @@ exec /usr/share/pvz-portable/pvz-portable "$@"
 
 [^4]: 原版植物大战僵尸使用 DirectX 7 进行渲染，无法跨平台且性能较差。将游戏移植到 OpenGL 的大量工作离不开 [Patoke](https://github.com/Patoke/re-plants-vs-zombies) 和 [Headshotnoby](https://github.com/headshot2017/re-plants-vs-zombies) 的贡献。
 
-[^5]: 以下为作弊键清单（仅在编译时启用 `PVZ_DEBUG` 且运行参数带 `-tod` 时有效，且不少只在特定界面/模式生效）：
+[^5]: 以下为作弊键清单（仅在编译时启用 `PVZ_DEBUG` 且运行参数带 `-cheat` 时有效，且不少只在特定界面/模式生效）：
     * **标题/主菜单**：
         * 按键记录“快速进入”目标：
             * `End` → 直接加载禅境花园。
