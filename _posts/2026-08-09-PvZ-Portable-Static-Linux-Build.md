@@ -37,11 +37,11 @@ PvZ-Portable 的情况有所不同。项目只能发布开源重实现的引擎�
 
 静态链接可以消除大部分这类依赖，但不能简单地给链接器传入全局 `-static`。SDL2 仍要使用宿主系统的显示、音频和 OpenGL 实现，因此需要先确定 libc 与这些运行时组件之间的边界。
 
-### musl
+### 为什么不能静态链接 musl
 
 musl 经常用于构建静态程序，但它的静态可执行文件不支持动态加载共享库。对服务端工具而言，这可能不是问题；但对 SDL2 游戏而言，无法使用 `dlopen` 就意味着无法按需加载显示、音频和 OpenGL 后端。将程序改用 musl，并不能满足这里的运行时要求。
 
-### 静态 glibc
+### 为何不可静态链接 glibc
 
 使用 glibc 并传入 `-static` 同样不合适。glibc 的名称解析、NSS 等功能本来就会在完全静态链接时产生限制，链接器也会给出相应警告。更直接的问题仍然是图形驱动：程序需要加载宿主提供的 `libGL` 或 Mesa 驱动，而这些共享对象依赖宿主的动态 glibc。
 
@@ -89,7 +89,7 @@ Linux 上启用 `BUILD_STATIC` 时，项目在 `CMakeLists.txt` 中设置：
 
 `CMAKE_FIND_LIBRARY_SUFFIXES` 让 `find_library` 只搜索 `.a`，因此 Zlib、libpng 和 libjpeg-turbo 等依赖都会解析到静态归档。这里没有使用全局 `-static`，否则链接器也会尝试静态链接 glibc。libgcc 和 libstdc++ 则通过 `-static-libgcc -static-libstdc++` 单独静态链接，避免依赖目标系统中的 C++ 运行时版本。
 
-SDL2 的 CMake 包同时导出 `SDL2::SDL2` 和 `SDL2::SDL2-static`，但 `SDL2::SDL2main` 的接口依赖指向前者，项目内置的 SDL-Mixer-X 也会传递这个依赖。如果不处理，最终链接时仍会引入共享版 SDL2。项目增加了一个辅助函数，将接口中的目标替换为 `SDL2::SDL2-static`：
+SDL2 的 CMake 包同时导出 `SDL2::SDL2` 和 `SDL2::SDL2-static`，但 `SDL2::SDL2main` 的接口依赖指向前者，项目内置的 SDL-Mixer-X 也会传递这个依赖。如果不处理，最终链接时仍会引入共享版 SDL2。项目在之前就增加了一个辅助函数，将接口中的目标替换为 `SDL2::SDL2-static`：
 
 ```cmake
 function(_pvz_patch_sdl2_iface_libs target)
@@ -125,7 +125,7 @@ AlmaLinux 9 的仓库并没有提供这次构建所需的全部静态库。Zlib 
 
 libogg 的源码包没有提供 CMake 构建入口，所以这里直接使用 Xiph 发布的 tarball 和 `./configure`。各项目的构建参数虽然不同，但结果都安装到同一个前缀，游戏的链接阶段不需要了解这些差异。
 
-## 在本地使用同一构建配置
+## 在本地使用静态构建配置
 
 上面的静态链接配置并不依赖 GitHub Actions。CI 负责准备统一的 glibc 基线、工具链和依赖，实际的链接策略则由项目自身的 CMake 配置控制。本地环境只要已经准备好各项依赖的 `.a` 静态库，也可以启用 `BUILD_STATIC`。
 
