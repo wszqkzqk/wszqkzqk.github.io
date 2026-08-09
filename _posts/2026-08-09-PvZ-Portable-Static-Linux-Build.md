@@ -19,7 +19,7 @@ PvZ-Portable 本身是一个用于研究与教育的项目。除了提供现成�
 
 相关改动已经合入 [#432](https://github.com/wszqkzqk/PvZ-Portable/pull/432)。构建产物 `pvz-portable-linux-static-x86_64` 并非完全静态链接：glibc 以及显示、音频和 OpenGL 后端仍由系统提供，其余构建依赖则放进可执行文件。这套链接配置既用于 release CI，在准备好静态库的本地环境中也可以直接使用。
 
-## 选择单独二进制，而不是 Flatpak 或 AppImage
+## 为何不用 Flatpak 或 AppImage 等沙箱方案
 
 Flatpak 和 AppImage 都能用来分发跨发行版的 Linux 应用。前者提供统一的运行时和沙箱，后者把程序及其依赖组织成一个可执行镜像。单从解决动态库兼容问题来看，两者都可以考虑。
 
