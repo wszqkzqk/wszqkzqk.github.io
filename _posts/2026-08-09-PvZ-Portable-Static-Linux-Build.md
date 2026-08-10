@@ -64,7 +64,7 @@ musl 经常用于构建静态程序，但它的静态可执行文件不支持动
 
 笔者最初计划使用 `ubuntu:22.04` 容器，对应 glibc 2.35 和 GCC 11。这个版本的兼容下限尚可，但不适合作为长期使用的发布环境。Ubuntu 22.04 的标准支持将在 2027 年结束，已经处在生命周期后段；仓库中的编译器、构建工具和许多开发库也停留在发行时的版本。若改用更新的 Ubuntu 容器，虽然能获得较新的工具链，却会同时提高 glibc 版本，缩小二进制能够覆盖的系统范围。
 
-最终使用的是 `manylinux_2_34_x86_64`：
+因此，笔者最终选择了 `manylinux_2_34_x86_64`：
 
 ```yaml
   build-linux-static:
@@ -73,7 +73,7 @@ musl 经常用于构建静态程序，但它的静态可执行文件不支持动
     container: quay.io/pypa/manylinux_2_34_x86_64 # Old glibc baseline with a recent toolchain
 ```
 
-manylinux 镜像由 Python 打包社区维护，主要用于构建可移植的 Python wheel，不过镜像提供的系统环境也可以直接用于普通 C/C++ 项目。`manylinux_2_34` 基于 AlmaLinux 9，将 glibc 基线固定在 2.34，同时提供 GCC 14 等较新的构建工具。项目所需的主要第三方库又会从源码构建，因此不必受 Ubuntu 22.04 仓库版本的限制。
+manylinux 镜像由 Python 打包社区维护，主要用于构建可移植的 Python wheel，不过镜像提供的系统环境也可以直接用于普通 C/C++ 项目。`manylinux_2_34` 基于 AlmaLinux 9，将 glibc 基线固定在 2.34，同时提供 GCC 14 等较新的构建工具。项目所需的主要第三方库又会从源码构建，因此不必受仓库版本的限制，能够保证使用上游的最新稳定版。
 
 glibc 版本决定了程序的主要兼容下限，编译器版本则不必与它同步停留在旧版本。manylinux 将二者分开维护，可以在不改变 glibc 2.34 兼容基线的前提下使用新工具链。由于 libgcc 和 libstdc++ 会静态链接，使用 GCC 14 也不会要求目标系统安装同版本的 C++ 运行时。
 
