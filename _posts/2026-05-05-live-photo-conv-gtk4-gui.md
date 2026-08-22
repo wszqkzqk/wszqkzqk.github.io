@@ -17,10 +17,10 @@ tags:         开源软件 Vala GTK4 LibAdwaita 媒体文件 Flatpak 动态照�
 
 笔者开发的 [Live Photo Converter](https://github.com/wszqkzqk/live-photo-conv) 就是专为这些场景打造的工具。它的核心能力覆盖四件事：**合成**——将视频与图片合成为动态照片；**提取**——从动态照片中分离静态图、嵌入视频、逐帧导出或生成长曝光；**修复**——重建损坏或缺失的 XMP 元数据，让无法播放的动态照片恢复正常；以及**元数据迁移**——解决不同品牌手机之间的兼容性问题。
 
-工具目前全方位覆盖 Linux、Windows 和 macOS，既有美观直观的图形界面，也为进阶用户保留了命令行和可编程的共享库。
+工具目前全方位覆盖 Android、Linux、Windows 和 macOS，既有美观直观的图形界面，也为进阶用户保留了命令行和可编程的共享库。
 
 <div align="center">
-  <a href="/img/media/live-photo-conv/live-photo-conv-logo.png"><img src="/img/media/live-photo-conv/live-photo-conv-logo.png" alt="Live Photo Converter" style="width: 500px; max-width: 100%;" /></a>
+  <a href="/img/media/live-photo-conv/live-photo-conv-logo.svg"><img src="/img/media/live-photo-conv/live-photo-conv-logo.svg" alt="Live Photo Converter" style="width: 500px; max-width: 100%;" /></a>
 </div>
 
 ## 图形界面
@@ -57,6 +57,8 @@ Live Photo Converter 基于 GTK4 / LibAdwaita 构建了现代化的图形界面�
 ## 安装
 
 Live Photo Converter 在全平台的安装都做到了极简。所有包由 CI 在打 tag 时自动构建并发布。
+
+**Android**（实验性）用户从 [GitHub Releases](https://github.com/wszqkzqk/live-photo-conv/releases) 下载对应架构的 APK 直接安装即可，绝大多数现代手机选择 `*-android-arm64-v8a.apk`，另有 x86_64 与通用包可选。需要 Android 12 及以上版本。
 
 **Windows** 用户安装 MSYS2 后，软件已进入 MSYS2 官方仓库：
 
@@ -95,7 +97,7 @@ HOMEBREW_NO_REQUIRE_TAP_TRUST=1 brew install --HEAD wszqkzqk/live-photo-conv/liv
 
 ## 多语言
 
-本项目的 GUI 内容经过了国际化处理。目前已支持 9 种语言：英语、简体中文、德语、西班牙语、法语、日语、韩语、葡萄牙语（巴西）和俄语。翻译在 [Hosted Weblate](https://hosted.weblate.org/projects/live-photo-conv/) 平台上管理，任何用户都可以直接参与贡献，无需技术背景。
+本项目的 GUI 内容经过了国际化处理。目前已支持 11 种语言：英语、简体中文、德语、西班牙语、法语、日语、韩语、葡萄牙语、葡萄牙语（巴西）、俄语和捷克语。翻译在 [Hosted Weblate](https://hosted.weblate.org/projects/live-photo-conv/) 平台上管理，任何用户都可以直接参与贡献，无需技术背景。
 
 ## 解决厂商兼容性
 
