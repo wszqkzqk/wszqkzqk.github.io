@@ -76,6 +76,8 @@ PvZ-Portable 目标特性即是在**任何平台**上都 **100% 还原**原版�
 
 需要注意的是，由于本项目目标是供研究学习，因此只对 APK 提供了 debug 签名。这意味着用户**不能直接升级覆盖安装新的 APK 版本**，而需要**先卸载旧版本，再安装新版本**。由于卸载时会删除 `Android/data/io.github.wszqkzqk.pvzportable/` 目录下的所有数据，因此如果需要保留存档数据，**请务必先使用 Export Save Data 功能将存档导出到外部目录**，完成 APK 卸载与重新安装后，再通过 Import Save Data 导入回应用目录。
 
+自 v0.2.0 起，Release APK 已改用 CI 注入的固定发布证书签名，可以直接覆盖安装升级，无需再执行上述导出-卸载-重装流程；从 debug 签名的旧版本（v0.1.27 及之前）迁移到 v0.2.0 时仍需执行最后一次手动迁移，详见 [Android APK 支持覆盖安装](https://wszqkzqk.github.io/2026/08/23/PvZ-Portable-Android-Release-Signing/)。
+
 ## 设计决策
 
 ### 为什么用 SAF 而非存储权限
