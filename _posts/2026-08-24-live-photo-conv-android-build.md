@@ -160,20 +160,18 @@ configure_file(
 GTK、gexiv2/exiv2 和 GStreamer 没有写在这份清单里，而是由仓库 `subprojects/` 中的 wrap 提供。原因是 `prepare` 会覆盖清单中声明的依赖对应的 wrap；需要自带补丁或固定版本的依赖，必须避开这一步：
 
 ```ini
-# GTK main (pinned; bump manually) plus the copy-foreign-source patch,
-# pending upstream merge. Declaring <gtk/> in pixiewood.xml would
-# overwrite this wrap.
+# GTK main (pinned; bump manually). Declaring <gtk/> in pixiewood.xml
+# would overwrite this wrap. A pinned commit cannot be shallow-cloned.
 [wrap-git]
 directory = gtk
 url = https://gitlab.gnome.org/GNOME/gtk.git
-revision = f4781e2bcb14a9bbb57afa50619e28ed326570ed
-diff_files = gtk/copy-foreign-source.patch
+revision = d1872a0b1f4da7fe132d41722fa7f1bf692beb92
 
 [provide]
 dependency_names = gtk4
 ```
 
-GTK 固定在 main 的一个 commit，并通过 `diff_files` 带上还未合并的修复。移植过程中提交的 [`gtk!10178`](https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10178) 已经合并，所以对应补丁已删除；[`gtk!10190`](https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10190) 仍在等待合并，`copy-foreign-source.patch` 暂时还要保留。这个补丁解决的就是 content file 写回问题，上一篇会展开说明。
+GTK 固定在 main 的一个 commit。移植时提交的两个上游修复——[`gtk!10178`](https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10178) 和 [`gtk!10190`](https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10190) 目前已经全部合并。content file 写回问题的来龙去脉会在下一篇展开说明。
 
 `gexiv2android.wrap` 也有意使用了不同的名字：它**不叫 `gexiv2`**，并且没有 `[provide]`：
 

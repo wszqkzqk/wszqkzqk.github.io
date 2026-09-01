@@ -2,7 +2,7 @@
 layout:     post
 title:      Live Photo Converter 的 Android 文件访问：适配 SAF 与 content URI
 subtitle:   从 GTK content file 补丁到跨平台暂存
-date:       2026-08-24
+date:       2026-08-25
 author:     wszqkzqk
 header-img: img/GTK-logo.webp
 catalog:    true
@@ -15,7 +15,7 @@ tags:       开源软件 Vala GTK LibAdwaita Android GIO
 
 SAF（Storage Access Framework）把用户选中的文件交给应用时，使用的是 `content://` URI。这种 URI 没有对应的本地路径，应用只能通过 SAF 提供的接口读写。可是 Live Photo Converter 的核心库和 gexiv2 都是按路径工作的，`LivePhoto.create (path, dest_dir)` 接收的就是路径。最后采用的方案分成两步：先修 GTK Android 后端对 content file 的处理，再在应用里增加一层暂存，把文件复制到本地临时路径，交给原有代码处理，完成后再复制回去。
 
-项目地址仍是 [github.com/wszqkzqk/live-photo-conv](https://github.com/wszqkzqk/live-photo-conv)。本文主要涉及 `src/gui.vala`、`src/sample2img.vala`，以及 `subprojects/packagefiles/gtk/` 下的补丁。
+项目地址仍是 [github.com/wszqkzqk/live-photo-conv](https://github.com/wszqkzqk/live-photo-conv)。本文主要涉及 `src/gui.vala` 和 `src/sample2img.vala`。
 
 ## 问题：content:// 没有路径
 
@@ -35,7 +35,7 @@ Linux 桌面上的 GVfs 远程位置（例如 smb://、sftp://）也有同样的
 
 第一个问题和文件选择器有关。HyperOS 返回的是普通的 MediaStore content URI，而不是 DocumentsContract 定义的 document URI。旧版 GTK 的 `from_uri()` 不接受这类 URI，选择文件后可能直接崩溃。[`gtk!10178`](https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10178) 扩大了可接受的 URI 范围。这个修复已经合并，所以仓库里对应的补丁已经删掉。
 
-第二个问题出现在写回结果时。把本地暂存文件复制到 content URI，GTK 也可能崩溃。对应修复是 [`gtk!10190`](https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10190)，目前还没有合并，因此项目通过 GTK wrap 临时应用 `copy-foreign-source.patch`：
+第二个问题出现在写回结果时。把本地暂存文件复制到 content URI，GTK 也可能崩溃。我给上游提交的修复是 [`gtk!10190`](https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10190)：
 
 ```diff
 @@ gdk/android/gdkandroidcontentfile.c
@@ -55,20 +55,7 @@ Linux 桌面上的 GVfs 远程位置（例如 smb://、sftp://）也有同样的
 
 补丁把这种情况改成返回 `G_IO_ERROR_NOT_SUPPORTED`。GIO 收到这个错误后会退回到流式复制：先读取本地源文件，再通过 content file 创建目标文件。此前的 [`gtk!9403`](https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/9403) 已经解决 [#7703](https://gitlab.gnome.org/GNOME/gtk/-/issues/7703) 中相反方向的复制；`gtk!10190` 补的正是本地文件写入 content file 这一侧。应用把结果写回 SAF 目录时会走这条路径。
 
-补丁通过 wrap 的 `diff_files` 引入，GTK 则锁定到包含其他上游修复的 main commit：
-
-```ini
-# GTK main (pinned; bump manually) plus the copy-foreign-source patch,
-# pending upstream merge. Declaring <gtk/> in pixiewood.xml would
-# overwrite this wrap.
-[wrap-git]
-directory = gtk
-url = https://gitlab.gnome.org/GNOME/gtk.git
-revision = f4781e2bcb14a9bbb57afa50619e28ed326570ed
-diff_files = gtk/copy-foreign-source.patch
-```
-
-因此仓库里的 GTK wrap 只保留还没进上游的补丁。等 [`gtk!10190`](https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10190) 合并后，删掉 `diff_files` 即可恢复使用 GTK 的实现。
+现在这个修复已经合并进 GTK main，以后的程序都不再需要单独携带这个补丁。
 
 ## 将文件暂存到本地路径
 
