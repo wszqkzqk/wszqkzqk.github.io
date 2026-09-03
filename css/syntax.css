@@ -2,7 +2,7 @@
 /* from http://stackoverflow.com/a/23393920 */
 
 .highlight pre code * {
-  white-space: nowrap;    /* this sets all children inside to nowrap */
+  white-space: pre;       /* keep newlines Rouge emits inside token spans (.cp, .gd/.gi) intact, still no wrapping */
 }
 
 .highlight pre {
