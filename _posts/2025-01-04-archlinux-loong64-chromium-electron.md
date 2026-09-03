@@ -36,7 +36,7 @@ build/rust/rust_target.gni
 
 此外，Arch Linux对于Chromium构建中的compiler-rt的路径也有修改，以适配`clang > 16`。而我们也需要在同样的构建文件中的相同位置进行修改，增加对龙架构的支持。我们可以再增加一个补丁`compiler-rt-adjust-paths-loong64.patch`，并在应用时选择我们的补丁替换Arch Linux的`compiler-rt-adjust-paths.patch`：
 
-```
+```diff
 diff --git a/build/config/clang/BUILD.gn b/build/config/clang/BUILD.gn
 index 890bf91c43e40..888804b675c7d 100644
 --- a/build/config/clang/BUILD.gn
@@ -189,7 +189,7 @@ git diff HEAD > /path/to/electron-add-loong64-support.patch
 
 除此之外，我们还需要对`depot_tools`进行适配，在`cipd`文件中添加对`loong64`的支持：
 
-```
+```diff
 diff --git a/cipd b/cipd
 index 7f9cca27..3acbe4ad 100755
 --- a/cipd
@@ -220,7 +220,7 @@ index 7f9cca27..3acbe4ad 100755
 
 首先，修改Arch Linux上游的`makepkg-source-roller.py`脚本，根据[项目的约定原则](https://wszqkzqk.github.io/2024/08/12/loong-tools-design/#%E7%BB%B4%E6%8A%A4%E4%BB%93%E5%BA%93)，对于Arch Linux构建文件仓库中跟踪的PKGBUILD以外的文件，我们一般不建议直接修改以免引发checksum变动，使补丁出现冲突。我们可以使用`+=`向`source`数组及checksum数组中添加我们对`makepkg-source-roller.py`的补丁`makepkg-source-roller.py.diff`，禁止使用Arch Linux的方式直接获取`esbuild`二进制文件：
 
-```
+```diff
 @@ -400,7 +400,9 @@ if __name__ == "__main__":
                      True,
                  ),  # only for new electron versions (probably >= 29)
@@ -279,7 +279,7 @@ darkyzhou的Electron修复补丁是“patch了Electron的patch过程”，更类
 
 除了Chromium的补丁，我们还需要对`electron_runtime_api_delegate.cc`文件进行适配，增加对`loong64`的支持，例如（对`electron`目录应用）：
 
-```
+```diff
 --- a/shell/browser/extensions/api/runtime/electron_runtime_api_delegate.cc
 +++ b/shell/browser/extensions/api/runtime/electron_runtime_api_delegate.cc
 @@ -67,6 +67,8 @@ bool ElectronRuntimeAPIDelegate::GetPlatformInfo(PlatformInfo* info) {
