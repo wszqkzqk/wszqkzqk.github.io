@@ -89,7 +89,7 @@ python3 cleanpatch.py defconfig.diff
 
 笔者在`PKGBUILD`的`prepare()`函数中，插入了一段逻辑，用于将`loong-addition.config`合并到`config`的末尾：
 
-```
+```bash
    echo "Setting config..."
    cp ../config .config
 +  if [ $CARCH == loong64 ]; then

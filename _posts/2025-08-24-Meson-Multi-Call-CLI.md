@@ -49,7 +49,7 @@ Meson内置了`install_symlink()`函数，可以方便地在安装阶段创建�
 
 首先，在 `src/meson.build` 中，我们正常定义主可执行文件，并创建一个列表来存储所有别名的名称。
 
-```
+```meson
 # 构建主程序
 main_exe_name = 'live-photo-conv'
 main_exe_bin = executable(main_exe_name,
@@ -69,7 +69,7 @@ sub_exe_names = ['live-photo-make', 'live-photo-extract', 'live-photo-repair']
 
 在这样的要求下，由于各个支持平台的系统命令并不兼容，尤其是Windows平台情况复杂，适配较为困难。然而，我们考虑到，Meson构建系统本身是依赖Python的，因此在我们支持的环境中**一定具有可用的Python解释器**。因此，笔者设计了**调用Python脚本**的`custom_target()`实现来处理。由于Python集成了强大的跨平台能力，我们不难在Python脚本中处理所有平台的差异。
 
-```
+```python
 # scripts/create-binary-symlinks.py
 import sys
 import shutil
@@ -107,14 +107,14 @@ def create_binary_symlink(source_binary, target_name):
 
 接下来，我们使用 Meson 的 `custom_target` 在构建时调用上述 Python 脚本，为每一个别名生成对应的文件。
 
-```
+```meson
 # meson.build
 ...
 # 获取 Python 解释器
 python = import('python').find_installation()
 ```
 
-```
+```meson
 # src/meson.build
 
 symlink_script = meson.project_source_root() / 'scripts' / 'create-binary-symlinks.py'
@@ -156,7 +156,7 @@ false to copy the link.
 
 为了绕过这个坑，笔者在`meson.build`中仍采用了分平台处理的策略：
 
-```
+```meson
 # src/meson.build (在 foreach 循环内部)
 
   linked_exe = custom_target('link-' + exe_name,
@@ -186,14 +186,14 @@ false to copy the link.
 
 既然我们在安装阶段有了多个“可执行文件”，通过 `help2man` 和 `custom_target`，我们便很容易为所有主程序和别名生成文档。
 
-```
+```meson
 # meson.build
 ...
 # 获取 help2man 程序
 help2man_prog = find_program('help2man', required: get_option('manpages'))
 ```
 
-```
+```meson
 # src/meson.build
 
 # 为主程序生成 man page
@@ -226,7 +226,7 @@ endforeach
 
 ### Python脚本实现
 
-```
+```python
 #!/usr/bin/env python3
 # SPDX-License-Identifier: LGPL-2.1-or-later
 """
@@ -293,7 +293,7 @@ if __name__ == '__main__':
 
 ### `custom_target`设计与改进
 
-```
+```meson
 # Create symlinks/copies in build directory and install them
 symlink_script = meson.project_source_root() / 'scripts' / 'create-binary-symlinks.py'
 sub_exe_bins = []

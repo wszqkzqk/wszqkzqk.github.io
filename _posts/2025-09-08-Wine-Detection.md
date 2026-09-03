@@ -29,7 +29,6 @@ tags:       Wine archlinux 系统配置 开源软件 Vala
 
 ```c
 #include <stdio.h>
-
 #include <windows.h>
 
 BOOL is_running_under_wine() {

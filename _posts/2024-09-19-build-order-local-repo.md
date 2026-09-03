@@ -45,7 +45,7 @@ repo-add local-repo.db.tar.gz package.pkg.tar.zst
 
 需要注意的是，一个仓库（`pkgbase`）构建完成后的**所有**软件包（`pkgname`）务必**同时添加到本地仓库**中。为了简化这一过程，可以封装一些脚本来实现：
 
-```
+```bash
 #!/bin/bash
 
 if [ -z "$1" ]; then
@@ -131,7 +131,7 @@ get-loong64-pkg package1
 
 * Bash
 
-```
+```bash
 for pkg in package1 package2 package3 ...; do
     get-loong64-pkg $pkg --skip-update
     cd $pkg

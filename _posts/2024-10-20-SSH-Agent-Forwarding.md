@@ -83,7 +83,7 @@ ssh-add ~/.ssh/id_rsa
 
 可以在**远程机器**的`~/.profile`中加入以下代码：
 
-```
+```bash
 if [[ -z "${SSH_CONNECTION}" ]]; then
     export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 fi
