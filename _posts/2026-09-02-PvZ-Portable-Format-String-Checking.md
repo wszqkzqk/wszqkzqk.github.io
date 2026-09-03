@@ -13,9 +13,9 @@ tags:         C++ 游戏移植 开源软件 开源游戏 PvZ-Portable
 
 printf 家族大概是 C 时代留下来、至今仍最常用的一套接口。它灵活，也足够危险：格式串和实参之间没有类型系统的约束，只要两边对不上，程序就进入未定义行为。更麻烦的是，这类问题通常不会立刻暴露。在常见的桌面 ABI 上，把 `size_t` 传给 `%d` 之类的错误，很多时候还能“正常运行”，最多输出一个不容易被发现的错误数字。
 
-[PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable) 从 SexyAppFramework 继承来的格式化接口，原来就是这种情况。引擎里的 `StrFormat`/`VFormat`、日志接口 `PvzpLogLn`/`PvzpTrace*`，以及断言宏 `PVZP_ASSERT`，在整个项目里有 560 多个调用点。编译器看不到它们的格式串和实参是否匹配，运行时只能按格式串去遍历 `va_list`；一旦传错，结果就是 UB。
+[PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable) 从 SexyAppFramework 继承来的格式化接口，原来就是这种情况。引擎里的 `StrFormat`/`VFormat`、日志接口 `PvzpLogLn`/`PvzpTrace*`，以及断言宏 `PVZP_ASSERT`，在整个项目里有 560 多个调用点。编译器看不到它们的格式串和实参是否匹配，运行时只能按格式串去遍历 `va_list`，一旦传错，结果就是 UB。
 
-我最近把这部分代码重新整理了一遍。先给仍在使用的 printf 风格接口加上 GNU format 属性，让编译器检查所有调用点（[#450](https://github.com/wszqkzqk/PvZ-Portable/pull/450)）；再把字面量格式串迁移到 `std::format`，只为运行时加载的格式串保留一个 printf 入口（[#460](https://github.com/wszqkzqk/PvZ-Portable/pull/460)）。第一轮检查就找出了 4 个真实的类型不匹配，其中一个已经影响了日志内容。下面记录一下这次迁移，以及过程中几个容易忽略的细节。
+我最近把这部分代码重新整理了一遍。先给仍在使用的 printf 风格接口加上 GNU format 属性，让编译器检查所有调用点（[#450](https://github.com/wszqkzqk/PvZ-Portable/pull/450)），再把字面量格式串迁移到 `std::format`，只为运行时加载的格式串保留一个 printf 入口（[#460](https://github.com/wszqkzqk/PvZ-Portable/pull/460)）。第一轮检查就找出了 4 个真实的类型不匹配，其中一个已经影响了日志内容。下面记录一下这次迁移，以及过程中几个容易忽略的细节。
 
 ## 原来的格式化接口
 
@@ -71,7 +71,7 @@ extern std::string	VFormat(const char* fmt, va_list argPtr) SEXY_FORMAT_ATTRIBUT
 extern std::string	StrFormat(const char* fmt ...) SEXY_FORMAT_ATTRIBUTE(1, 2);
 ```
 
-这里有两个容易弄错的下标。普通的变参函数用 `(1, 2)`；`VFormat` 把参数打包在 `va_list` 中，因此第三个下标写 `0`，编译器只能检查格式串本身，无法继续检查 `va_list` 里的实参。MSVC 没有对应的属性，宏在那里展开为空，所以 Windows 构建少这一层检查，这是方案本身的限制。
+这里有两个容易弄错的下标。普通的变参函数用 `(1, 2)`，`VFormat` 把参数打包在 `va_list` 中，因此第三个下标写 `0`，编译器只能检查格式串本身，无法继续检查 `va_list` 里的实参。MSVC 没有对应的属性，宏在那里展开为空，所以 Windows 构建少这一层检查，这是方案本身的限制。
 
 断言接口还遇到了一个 clang 特有的误报。原来的声明带有默认参数：
 
@@ -79,7 +79,7 @@ extern std::string	StrFormat(const char* fmt ...) SEXY_FORMAT_ATTRIBUTE(1, 2);
 void PvzpAssertFailed(const char* theCondition, const char* theFile, int theLine, const char* theMsg = "", ...);
 ```
 
-大多数调用点没有传消息，使用的是默认的 `""`。加上属性后，clang 的 `-Wformat-security` 把这些调用都当成了非字面量格式串，于是出现一批误报。处理方式是增加一个“不带消息”的重载，只给真正带格式串的重载加属性；格式参数从第 4 个变成第 5 个，所以属性下标也改为 `(4, 5)`：
+大多数调用点没有传消息，使用的是默认的 `""`。加上属性后，clang 的 `-Wformat-security` 把这些调用都当成了非字面量格式串，于是出现一批误报。处理方式是增加一个不带消息的重载，只给真正带格式串的重载加属性。格式参数从第 4 个变成第 5 个，所以属性下标也改为 `(4, 5)`：
 
 ```cpp
 void PvzpAssertFailed(const char* theCondition, const char* theFile, int theLine);
@@ -130,7 +130,7 @@ void PvzpAssertFailed(const char* theCondition, const char* theFile, int theLine
 
 format 属性能告诉我们“这里传错了”，但 printf 的接口设计本身仍然容易出错。格式串和实参在类型上完全脱钩，`%zu`、`%lld`、`%hhu` 等长度修饰符都要靠人手动对齐。
 
-`std::format` 把这层关系交给类型系统。`{}` 按实参的类型进行格式化；当格式串是字面量时，`std::format_string` 的 `consteval` 构造会在编译期检查占位符和实参是否匹配。这样迁移之后，调用点不再需要记住一套和类型分离的长度修饰符。
+`std::format` 把这层关系交给类型系统。`{}` 按实参的类型进行格式化。当格式串是字面量时，`std::format_string` 的 `consteval` 构造会在编译期检查占位符和实参是否匹配。这样迁移之后，调用点不再需要记住一套和类型分离的长度修饰符。
 
 这次一共迁移了 119 个字面量格式串。下面是商店金币显示的一处改动：
 
@@ -145,7 +145,7 @@ return std::format("${},{:03d},{:03d}", aValue / 1000000, (aValue - aValue / 100
 
 ### 封装接口也要改成 format 模板
 
-不能只把调用点里的 `StrFormat` 替换成 `std::format`。日志和断言这些封装，如果仍然接受 `const char*` 加省略号，编译期检查还是会在封装边界处丢掉。最后留下的是 5 个 format 模板；以 `PvzpLogLn` 为例（`src/PvzpLib/PvzpDebug.h`）：
+不能只把调用点里的 `StrFormat` 替换成 `std::format`。日志和断言这些封装，如果仍然接受 `const char*` 加省略号，编译期检查还是会在封装边界处丢掉。最后留下的是 5 个 format 模板，以 `PvzpLogLn` 为例（`src/PvzpLib/PvzpDebug.h`）：
 
 ```cpp
 template<typename... Args>
@@ -163,7 +163,7 @@ void PvzpLogLn(std::format_string<Args...> theFmt, Args&&... theArgs)
 
 迁移格式化接口时，我也把日志入口整理了一遍。此前 `PvzpTrace` 只写 SDL，`PvzpLogLn` 只写文件（而且只在 `PVZ_DEBUG` 构建中生效），`PvzpTraceAndLogLn` 才会两边都写。每个调用点都要自己决定日志去哪儿，写文件也只是每条消息单独打开 `std::ofstream`、追加一行再关闭。
 
-现在日志先进入同一个分发函数，再由它写 SDL；如果调试构建注册了文件 sink，就同时追加到日志文件（`src/SexyAppFramework/Common.cpp`）：
+现在日志先进入同一个分发函数，再由它写 SDL，如果调试构建注册了文件 sink，就同时追加到日志文件（`src/SexyAppFramework/Common.cpp`）：
 
 ```cpp
 void Sexy::DispatchLogLn(SexyLogPriority thePriority, std::string_view theText)
@@ -184,7 +184,7 @@ void Sexy::DispatchLogLn(SexyLogPriority thePriority, std::string_view theText)
 
 SDL 输出使用 `"%.*s"` 传入 `string_view` 的长度，不需要为了得到 NUL 结尾的字符串再做一次堆分配。文件 sink 只在 `PVZ_DEBUG` 构建的游戏初始化时注册，日志目的地也因此不再由每个调用点单独决定。
 
-`Ln` 后缀现在是接口契约的一部分：一次调用输出一行，换行由函数追加。迁移时发现有 46 个调用点在消息末尾自己写了 `\n`，结果 `log.txt` 里多出了空行。最后逐个修掉这些调用点，而没有在分发函数里统一剥除换行；契约写在名字里，后续调用时更容易注意到。
+`Ln` 后缀现在是接口契约的一部分：一次调用输出一行，换行由函数追加。迁移时发现有 46 个调用点在消息末尾自己写了 `\n`，结果 `log.txt` 里多出了空行。最后逐个修掉这些调用点，而没有在分发函数里统一剥除换行。契约写在名字里，后续调用时更容易注意到。
 
 ## 运行时格式串仍然需要 printf
 
@@ -198,7 +198,7 @@ This will permanently remove '%s' from the player roster!
 
 因此 `VFormat` 没有继续作为公共工具保留，而是在只剩一个调用者后，把两遍 `vsnprintf` 的实现直接移进 `LawnApp::GetFormattedString`。现在 printf 风格格式化只服务运行时资源模板，其他字面量格式串都走 `std::format`。
 
-这个改动还修掉了一处不明显的 UB。C 标准要求 `va_start` 的最后一个命名参数是 trivially copyable 类型；原来的签名使用 `const std::string&`，在常见 ABI 上虽然往往能运行，但标准并不保证这一点。`GetString` 本来就接受 `string_view`，所以这里改成 `string_view` 只是把签名改正确，不改变行为。
+这个改动还修掉了一处不明显的 UB。C 标准要求 `va_start` 的最后一个命名参数是 trivially copyable 类型。原来的签名使用 `const std::string&`，在常见 ABI 上虽然往往能运行，但标准并不保证这一点。`GetString` 本来就接受 `string_view`，所以这里改成 `string_view` 只是把签名改正确，不改变行为。
 
 ## 迁移时几个容易漏掉的细节
 
@@ -211,11 +211,11 @@ snprintf(aStr, sizeof(aStr), "%08X", aSizeBits);
 aString += std::format("{:08X}", static_cast<unsigned int>(aSizeBits));
 ```
 
-printf 的 `%X` 会按 `unsigned int` 解释实参，即使传入的是负数也会输出对应的位模式；`std::format` 会保留有符号类型的负号，结果可能变成 `-2A`。因此这里的 `static_cast<unsigned int>` 是保持语义一致所必需的，不是为了让类型看起来更整齐。
+printf 的 `%X` 会按 `unsigned int` 解释实参，即使传入的是负数也会输出对应的位模式。`std::format` 会保留有符号类型的负号，结果可能变成 `-2A`。因此这里的 `static_cast<unsigned int>` 是保持语义一致所必需的，不是为了让类型看起来更整齐。
 
 **Apple libc++ 对浮点格式化有可用性限制。** 迁移后新增的浮点格式化路径让 iOS 构建直接失败：Apple 的 libc++ 用 availability 宏控制这部分 `std::format`，支持门槛在 iOS 16.4，而项目原来的 deployment target 是 15.0。最后同步修改了 iOS triplet、CMake 的 `XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET` 和构建脚本，把目标版本提高到 16.4。macOS 在这里没有固定 deployment target，因此不需要改动。
 
-**模板转发的参数包不一定能再转发一层。** 限频日志 `PvzpTraceWithoutSpamming` 最初会在时间检查后，把 `format_string` 和实参原样转给 `PvzpLogLn`。只要实参全是左值，这样通常可以编译；一旦出现右值，两层模板推导出的参数包就可能不同，`basic_format_string` 的转换随之失败。最后的实现不再转发，而是像 `PvzpLogLn` 一样直接调用 `std::vformat`：
+**模板转发的参数包不一定能再转发一层。** 限频日志 `PvzpTraceWithoutSpamming` 最初会在时间检查后，把 `format_string` 和实参原样转给 `PvzpLogLn`。只要实参全是左值，这样通常可以编译。一旦出现右值，两层模板推导出的参数包就可能不同，`basic_format_string` 的转换随之失败。最后的实现不再转发，而是像 `PvzpLogLn` 一样直接调用 `std::vformat`：
 
 ```cpp
 template<typename... Args>
@@ -239,7 +239,7 @@ void PvzpTraceWithoutSpamming(std::format_string<Args...> theFmt, Args&&... theA
 
 验证时我没有只看“能不能编译”，还逐项比较了输出。内存泄漏的 hex dump、性能报告、资源错误信息、`ToWebString` 生成的 web 字符串、SEH 信息和字体数据等路径，从 `snprintf` 改为 `std::format` 后都保持了逐字节一致。文件日志除了修复 46 处多余换行、恢复正确的 `F1-2` 之外，没有其他变化。
 
-所有目标平台（GCC/Clang/MSVC，以及桌面、Android、iOS、WASM）均编译通过。现在只要是字面量格式串，调用点就会接受编译期检查；运行时格式串则集中在 `GetFormattedString` 这一处。
+所有目标平台（GCC/Clang/MSVC，以及桌面、Android、iOS、WASM）均编译通过。现在只要是字面量格式串，调用点就会接受编译期检查。运行时格式串则集中在 `GetFormattedString` 这一处。
 
 ## 结语
 
@@ -251,7 +251,7 @@ void PvzpTraceWithoutSpamming(std::format_string<Args...> theFmt, Args&&... theA
 
 **迁移时要比较语义，而不只是替换语法。** `%X` 对负数的处理、`va_start` 对最后一个命名参数的要求，以及 Apple 平台的标准库可用性，都不会在简单的文本替换中自动解决。对于本来就不应该变化的输出，逐字节比较仍然是最可靠的回归检查。
 
-以前，格式串和实参是否匹配只能靠调用者自己记住；现在，字面量调用不匹配就无法通过编译。运行时的行为基本没有变化，代码里却少了一类不容易察觉、也很难排查的隐患。
+以前，格式串和实参是否匹配只能靠调用者自己记住，现在，字面量调用不匹配就无法通过编译。运行时的行为基本没有变化，代码里却少了一类不容易察觉、也很难排查的隐患。
 
 ## ⚠️ 版权与说明
 
