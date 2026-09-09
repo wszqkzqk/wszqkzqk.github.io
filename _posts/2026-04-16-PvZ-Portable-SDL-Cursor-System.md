@@ -1,7 +1,7 @@
 ---
 layout:       post
 title:        PvZ-Portable：跨平台光标系统的 SDL 实现与自定义光标缓存
-subtitle:     从 Windows API 到 SDL 的完整迁移，以及 MemoryImage 动态创建自定义光标的链路设计
+subtitle:     从 Windows API 到 SDL 的完整迁移、自定义光标缓存与三处状态缺陷的修复
 date:         2026-04-16
 author:       wszqkzqk
 header-img:   img/games/pvz-portable/bg-pvz-portable.webp
@@ -13,7 +13,7 @@ tags:         C++ SDL2 游戏移植 开源软件 开源游戏 PvZ-Portable
 
 在将 PvZ-Portable 从 Windows 原生引擎改造为跨平台项目的过程中，渲染、音频、输入等核心子系统都经历了大规模重构。但有一个看似不起眼的模块长期被搁置——**光标系统**。旧代码里，`LawnApp::EnforceCursor()` 中躺着一大段被注释掉的 `::SetCursor` / `LoadCursor` Win32 API 调用，事实上，游戏此前一直并没有实现跨平台光标处理。
 
-光标系统虽小，却是玩家与游戏交互的第一触点。当玩家悬停在可点击的按钮上时需要手型光标，在文本输入框中需要 I 形光标，在战斗场景中还需要隐藏光标以避免干扰沉浸感。本文将记录笔者如何**彻底移除 Windows 专属的光标代码**，在 `SexyAppBase` 中基于 SDL 实现一套完整的跨平台光标系统，并解决自定义光标创建与运行时缓存的技术细节。
+光标系统虽小，却是玩家与游戏交互的第一触点。当玩家悬停在可点击的按钮上时需要手型光标，在文本输入框中需要 I 形光标，在战斗场景中还需要隐藏光标以避免干扰沉浸感。本文将记录笔者如何**彻底移除 Windows 专属的光标代码**，在 `SexyAppBase` 中基于 SDL 实现一套完整的跨平台光标系统，并解决自定义光标创建与运行时缓存的技术细节。系统投入使用后暴露出的几处状态缺陷，以及它们的修复过程，也一并整理在文末。
 
 ## 被遗留的 Windows 光标实现
 
@@ -261,11 +261,91 @@ if (aCursorNum == CURSOR_NONE)
 
 与此同时，从 `CURSOR_NONE` 切换回其他任何光标时，`EnforceCursor()` 的正常流程会在设置新光标后调用 `SDL_ShowCursor(SDL_ENABLE)`，确保指针重新出现。状态转换是可靠且可逆的。
 
+## 三处状态缺陷的修复
+
+结构搭好之后，问题才在日常使用中陆续浮现。接下来的几个月里，光标和鼠标相关的三处状态先后暴露出缺陷：一处缺了事件来源，一处生命周期没有复位，一处把缓存当成了判定依据。三处修复都不大，但各自指向状态管理的一个侧面。
+
+### 鼠标进出窗口：`mMouseIn` 没有事件来源
+
+`EnforceCursor()` 和 WidgetManager 的悬停处理都依赖 `mMouseIn` 这个状态：鼠标在窗口内才更新位置和悬停，离开窗口后光标恢复默认、悬停状态清除。原版 Win32 代码里，这个状态由窗口消息驱动。SDL 移植后，`SDL_WINDOWEVENT_ENTER` 和 `SDL_WINDOWEVENT_LEAVE` 两个事件却一直没有被处理——`mMouseIn` 在应用里没有任何更新来源。
+
+于是就有了两个平时能碰到的现象。鼠标移进窗口、恰好停在一个按钮上时，按钮没有悬停高亮，光标也不切换，直到动一下鼠标才恢复正常——因为状态更新一直依赖鼠标移动事件，而进入这一时刻本身没有事件驱动它。鼠标移出窗口时则相反：按钮的高亮残留在原地，因为没有任何代码通知 WidgetManager 鼠标已经离开。
+
+修复就是把这两个事件接上（`src/SexyAppFramework/platform/default/Input.cpp`）：
+
+```cpp
+					case SDL_WINDOWEVENT_ENTER:
+						if (!mMouseIn)
+						{
+							int x, y;
+							SDL_GetMouseState(&x, &y);
+							mWidgetManager->RemapMouse(x, y);
+							mMouseIn = true;
+							mWidgetManager->MouseMove(x, y);
+							EnforceCursor();
+						}
+						break;
+
+					case SDL_WINDOWEVENT_LEAVE:
+						if (mMouseIn)
+						{
+							mWidgetManager->MouseExit(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY);
+							mMouseIn = false;
+							EnforceCursor();
+						}
+						break;
+```
+
+进入时主动取一次实时鼠标位置（`SDL_GetMouseState`），而不是等下一个移动事件——否则进入瞬间悬停判定用的还是旧坐标。离开时先 `MouseExit` 清除悬停，再复位 `mMouseIn` 并刷新光标。
+
+值得一提的是，这两个事件也同步接进了 demo 命令流：录制时写入 `DEMO_MOUSE_ENTER`/`DEMO_MOUSE_EXIT`，回放时按同样的顺序驱动 `mMouseIn` 和 `EnforceCursor()`。光标状态由此也成为回放确定性的一部分——新输入事件类型接入游戏时，回放格式必须同步扩展，否则回放和实时运行在窗口焦点变化时就会产生分歧。
+
+### 锤子光标的加载时机与生命周期
+
+游戏里唯一的真实自定义光标，是锤击僵尸（Whack-a-Zombie）关卡中跟随鼠标的锤子动画。修复前，它的初始化写在 `CursorObject` 的构造函数里，用一个 `IsWhackAZombieLevel()` 判断把守：
+
+```cpp
+CursorObject::CursorObject()
+{
+    ...
+    if (mApp->IsWhackAZombieLevel())
+    {
+        ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_HAMMER, true);
+        Reanimation* aHammerReanim = mApp->AddReanimation(-25.0f, 16.0f, 0, ReanimationType::REANIM_HAMMER);
+        ...
+        mReanimCursorID = mApp->ReanimationGetID(aHammerReanim);
+    }
+```
+
+`CursorObject` 在 `Board::Board` 中创建（`mLevel` 此刻还是 0），关卡的初始化远未开始。在构造期就加载动画定义、创建动画实例，时机显然过早——真正需要锤子的只有这一个挑战关卡，加载动作却挂在所有关卡共享的对象构造上。更隐蔽的是生命周期上的缺陷：`CursorObject::Die()` 会移除这个动画，却不复位 `mReanimCursorID`，此后任何再读这个 ID 的代码拿到的都是悬空引用。
+
+修复把初始化移到 `Challenge::StartLevel()`——关卡特定逻辑集中在关卡初始化处，构造函数里的条件判断随之删除。`Die()` 里补上复位：
+
+```cpp
+void CursorObject::Die()
+{
+    mApp->RemoveReanimation(mReanimCursorID);
+    mReanimCursorID = ReanimationID::REANIMATIONID_NULL;
+}
+```
+
+这与[资源生命周期治理](https://wszqkzqk.github.io/2026/04/10/PvZ-Portable-Resource-Lifetime-Safety/)里动画附件的处理是同一类问题：持有 ID 的对象必须在自己的生命周期终点解除关联，否则 ID 本身就成了悬空的引用。
+
+### 按钮悬停状态的时效
+
+第三处缺陷在触屏设备上现身（PR [#343](https://github.com/wszqkzqk/PvZ-Portable/pull/343)）：种子选择界面上的模仿者（Imitater）按钮，第一次点按没有反应，第二次才响应。
+
+根子在于 `GameButton` 的身份：它不是 `Widget`，不受 WidgetManager 悬停事件驱动，只能靠自己每帧的 `Update()` 刷新缓存的 `mIsOver`。而主循环的顺序是先处理输入、后执行 `Update()`——触摸点按没有前置的悬停过程，`MouseDown` 里读到的 `mIsOver` 还是上一帧的陈旧值，第一次点按就这样被判定为不在按钮上。桌面鼠标因为移动事件频繁，缓存几乎总是新的，这个问题被掩盖了很久。触摸屏即点即走，缓存的滞后立刻现形。
+
+修复是把判定和缓存拆开（提交 `266224c`）：`IsMouseOver()` 不再读缓存，改用 WidgetManager 的实时鼠标位置当场计算；`Update()` 里的 `mIsOver` 改为从它派生，缓存只继续驱动悬停淡入动画。AwardScreen 里为绕过这个 bug 打的预热补丁（`MouseDown` 里先手动调用三个按钮的 `Update()`）也随之删除——这类预热补丁的存在，本身就说明根因还没修。
+
 ## 结语
 
 光标系统在游戏引擎中往往被视为"边缘功能"，但在跨平台移植的语境下，它其实是一个完整的子系统：从操作系统抽象、像素格式转换、资源生命周期管理到运行时缓存策略，每一个环节都需要仔细设计。
 
 通过这次重构，PvZ-Portable 彻底摆脱了 Win32 光标的遗留包袱，获得了真正意义上的跨平台光标支持。无论是桌面平台（Windows、Linux、macOS）、移动平台（通过外接鼠标），还是 WebAssembly 浏览器环境，玩家都能获得一致且完整的光标交互体验。
+
+而后续三处缺陷的修复也说明，光标系统的收尾不在结构搭好的那一刻，而在每个状态来源都接上之后。`mMouseIn` 缺的是驱动它的事件，`mReanimCursorID` 缺的是生命周期终点的复位，`mIsOver` 缺的则是判定与缓存的分离——三个问题互不相干，却都属于同一类：**状态与现实的脱节**。这类系统的正确性不取决于结构多清晰，而取决于每一个驱动状态的事件、每一个状态变更的时点是否都存在。结构图看不出这个状态现在是不是最新的，这只能逐个事件来源去核对。
 
 ## ⚠️ 版权与说明
 
