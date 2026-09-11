@@ -17,7 +17,7 @@ tags:         C++ SDL2 OpenGL WebAssembly Emscripten 开源软件 游戏移植 �
 
 **无需下载任何安装包、无需配置任何运行环境**——只要你有一个现代浏览器（Chrome、Firefox、Edge、Safari...），就可以直接游玩 100% 复原的开源版植物大战僵尸年度版。整个 C++ 引擎被编译为 WebAssembly，在浏览器沙箱中以接近原生的速度运行，存档自动保存到浏览器本地存储中。一切数据完全在用户设备上处理，**没有任何数据上传到服务器**，安全隐私无忧。
 
-**👉 [点击这里立即体验](https://wszqkzqk.github.io/pvz-portable-wasm/pvz-portable.html)**
+**👉 [点击这里立即体验](https://wszqkzqk.github.io/PvZ-Portable/)**
 
 打开页面后，导入你**合法拥有的正版** PC 版《植物大战僵尸：年度版》的 `main.pak` 和 `properties/` 目录，点击 **Start Game**，即可开始游戏。存档数据会自动保存在浏览器的 IndexedDB 中，关闭页面后再次打开需要重新导入资源包，但是存档会自动保存，可以直接继续游戏。
 
@@ -43,7 +43,7 @@ PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属�
 
 ### 在线体验
 
-直接访问 **[https://wszqkzqk.github.io/pvz-portable-wasm/pvz-portable.html](https://wszqkzqk.github.io/pvz-portable-wasm/pvz-portable.html)** 即可。
+直接访问 **[https://wszqkzqk.github.io/PvZ-Portable/](https://wszqkzqk.github.io/PvZ-Portable/)** 即可。
 
 1. 拖放或点击导入你的 `main.pak` 文件和 `properties/` 目录。
 2. 可选地点击 **Import Saves** 导入之前导出的存档 ZIP。
@@ -601,7 +601,7 @@ WebAssembly 适配让 PvZ-Portable 实现了**零安装**的跨平台目标—�
 
 这次适配最有趣的一点可能是：同一个 `UpdateAppStep` 状态机在桌面上被 `while` 循环驱动，在 Emscripten 上被 `requestAnimationFrame` 驱动，在模态对话框中被 Asyncify 协程驱动——三种完全不同的调度方式，但底层的状态转移逻辑完全一致。良好的架构分层使得这种换引擎不换内核的适配成为可能。
 
-👉 **立即体验**: [https://wszqkzqk.github.io/pvz-portable-wasm/pvz-portable.html](https://wszqkzqk.github.io/pvz-portable-wasm/pvz-portable.html)
+👉 **立即体验**: [https://wszqkzqk.github.io/PvZ-Portable/](https://wszqkzqk.github.io/PvZ-Portable/)
 
 👉 **项目地址**: [https://github.com/wszqkzqk/PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable)
 
