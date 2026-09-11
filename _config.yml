@@ -9,7 +9,7 @@ header-img:     img/bg2.webp
 email:          wszqkzqk@qq.com
 description:    "天下难事，必作于易；天下大事，必作于细"
 keyword:        "wszqkzqk, wszqkzqk Blog, 星外之神的博客, 星外之神"
-url:            "http://wszqkzqk.github.io"          # your host, for absolute URL
+url:            "https://wszqkzqk.github.io"          # your host, for absolute URL
 baseurl:        ""      # for example, '/blog' if your blog hosted on 'host/blog'
 github_repo:    "https://github.com/wszqkzqk/wszqkzqk.github.io.git" # you code repository
 
@@ -43,7 +43,7 @@ anchorjs: true                          # if you want to customize anchor. check
 
 # Gems
 # from PR#40, to support local preview for Jekyll 3.0
-gems: [jekyll-paginate]
+gems: [jekyll-paginate, jekyll-sitemap]
 
 
 
@@ -104,6 +104,6 @@ projects: [
         href: "/astrocalc/"
     },{
         title: "PvZ-Portable Web Edition",
-        href: "/pvz-portable-wasm/pvz-portable.html"
+        href: "/PvZ-Portable/pvz-portable.html"
     }
 ]
