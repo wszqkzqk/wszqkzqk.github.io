@@ -11,7 +11,7 @@ tags:         Linux 网络 DNS systemd Tailscale
 
 ## 引言
 
-笔者本机长期同时运行两个网络组件：一个是 Tailscale，负责把几台设备组成虚拟内网；另一个是以 TUN 模式工作的分流服务，把系统的出站流量统一接管过来，按规则分流（下文就称它"分流服务"）。两者共存了很长时间，一直相安无事。问题出现在把分流服务注册为 systemd 服务、设置开机自启之后——每次重启，Tailscale 都起不来：
+笔者本机长期同时运行两个网络组件：一个是 Tailscale，负责把几台设备组成虚拟内网；另一个是以 TUN 模式工作的分流服务，把系统的出站流量统一接管过来，按规则分流（下文就称它“分流服务”）。两者共存了很长时间，一直相安无事。问题出现在把分流服务注册为 systemd 服务、设置开机自启之后——每次重启，Tailscale 都起不来：
 
 ```text
 $ tailscale status
@@ -23,7 +23,7 @@ unexpected state: NoState
 
 临时解法并不复杂：停掉分流服务，`sudo tailscale login` 重新登录，再把它拉起来，之后一切正常。但每次开机都要手动来一遍，显然不是办法。整个排查过程绕了两个弯，最后确认的原因和最初的判断完全不同，值得记录下来。
 
-报错里的几个概念先交代一下。`fetch control key` 是 tailscaled 与协调服务器（coordination server）握手的第一步；`no DNS fallback candidates remain` 表示它内置的 DNS 回退机制已经用尽；`NoState` 则是 ipn 状态机的内存状态——state 文件里的登录凭据其实还在，并不是账号真的被登出了。
+先交代一下报错里的几个概念。`fetch control key` 是 tailscaled 与协调服务器（coordination server）握手的第一步；`no DNS fallback candidates remain` 表示它内置的 DNS 回退机制已经用尽；`NoState` 只是 ipn 状态机内存中的状态——state 文件里的登录凭据其实还在，并不是账号真的被登出了。
 
 ## 第一个假设：启动顺序竞争
 
@@ -35,7 +35,7 @@ tailscaled[810]: control: bootstrapDNS("derp1i.tailscale.com", "199.38.181.103")
 
 这里涉及 tailscaled 的一套容错设计：系统 DNS 解析失败时，它会用一批硬编码的 DERP 服务器 IP 直接发起 HTTPS 请求来解析协调服务器的域名，不依赖任何 DNS 服务器，本是最后的兜底。而日志显示，tailscaled 启动时系统里唯一的默认路由是分流服务刚建好的 TUN 设备，物理网卡 wlan0 几秒之后才拿到地址——bootstrap 的直连全部撞上 `network is unreachable`。
 
-时序上看证据是完整的：分流服务的 TUN 开了 `auto-route`，启动即接管路由；tailscaled 只排在 `network-pre.target` 之后，比网络就绪还要早。于是笔者给分流服务加了一个 systemd drop-in，让它等网络就绪：
+从时序上看，证据是完整的：分流服务的 TUN 开了 `auto-route`，启动即接管路由；tailscaled 只排在 `network-pre.target` 之后，比网络就绪还要早。于是笔者给分流服务加了一个 systemd drop-in，让它等网络就绪：
 
 ```ini
 [Unit]
@@ -47,14 +47,14 @@ After=network-online.target
 
 ## 插曲：两分钟启动延迟从何而来
 
-加了 drop-in 之后还冒出一个谜之现象：分流服务看似"不自启"了，每次都要手动拉一把。实际上它是被 `network-online.target` 挡住了，而这个 target 又被另一个系统服务拖住：
+加了 drop-in 之后还冒出一个谜之现象：分流服务看似“不自启”了，每次都要手动拉一把。实际上它是被 `network-online.target` 挡住了，而这个 target 又被另一个系统服务拖住：
 
 ```text
 systemd-networkd-wait-online[17670]: Timeout occurred while waiting for network connectivity.
 systemd[1]: systemd-networkd-wait-online.service: Failed with result 'exit-code'.
 ```
 
-`systemd-networkd-wait-online` 的职责是等待 systemd-networkd 管理的接口就绪。用 `networkctl list` 一看，本机所有接口对 networkd 全是 `unmanaged`：网络完全由 NetworkManager 管理，networkd 一个接口都没管。于是这个等待永远等不到结果，每次开机空转约 120 秒后超时失败，把所有排在 `network-online.target` 之后的服务都拖慢两分钟。
+`systemd-networkd-wait-online` 的职责是等待 systemd-networkd 管理的接口就绪。用 `networkctl list` 一看，本机所有接口对 networkd 来说全是 `unmanaged`：网络完全由 NetworkManager 管理，networkd 一个接口都没管。于是这个等待永远等不到结果，每次开机空转约 120 秒后超时失败，把所有排在 `network-online.target` 之后的服务都拖住两分钟。
 
 解决办法是禁用它，只保留 networkd 本体：
 
@@ -62,7 +62,7 @@ systemd[1]: systemd-networkd-wait-online.service: Failed with result 'exit-code'
 sudo systemctl disable systemd-networkd-wait-online.service
 ```
 
-networkd 本体要留着，因为本机以后还要跑 nspawn 容器，容器的 `ve-*` 虚拟网卡由 networkd 在运行时配置，这与 wait-online 无关。这是本次排查中一个真正有价值的附带发现：此后 `network-online.target` 只需等 NetworkManager 的三四秒，不再有两分钟空窗。
+networkd 本体要留着，因为本机以后还要跑 nspawn 容器，容器的 `ve-*` 虚拟网卡由 networkd 在运行时配置，这与 wait-online 无关。这算是本次排查的一个附带收获：此后 `network-online.target` 只要等 NetworkManager 就绪那三四秒，不再有两分钟的空窗。
 
 ## 第二次失败：注册请求持续超时
 
@@ -73,7 +73,7 @@ tailscaled[39574]: control: doLogin(regen=false, hasUrl=false)
 tailscaled[39574]: Received error: register request: Post "https://controlplane.tailscale.com/machine/register": connection attempts aborted by context: context deadline exceeded
 ```
 
-tailscaled 每 25~30 秒重试一次，十几分钟过去全部超时。此时 wlan0 早已上线，tailscale0 接口存在，tailscaled 自己的策略路由规则（fwmark `0x80000` 走 main 表）也都就位。网络明明是通的，协调服务器却怎么也连不上。到这一步，"启动顺序"假设基本破产。
+tailscaled 每 25~30 秒重试一次，十几分钟过去全部超时。此时 wlan0 早已上线，tailscale0 接口存在，tailscaled 自己的策略路由规则（fwmark `0x80000` 走 main 表）也都就位。网络明明是通的，协调服务器却怎么也连不上。到这一步，启动顺序的假设基本破产。
 
 ## 流量根本没有进 TUN
 
@@ -86,9 +86,9 @@ tailscaled 每 25~30 秒重试一次，十几分钟过去全部超时。此时 w
 - DOMAIN-SUFFIX,tailscale.io,DIRECT
 ```
 
-如果流量进了分流服务的 TUN 却被错误分流，这些规则本该兜住。排查时翻了分流服务的运行日志，结果非常关键：日志里没有任何一条与 tailscaled 相关的连接记录。也就是说，tailscaled 的流量压根没有进入 TUN，"分流规则配错了"这条线索整个不成立。
+如果流量进了分流服务的 TUN 却被错误分流，这些规则本该兜住。排查时翻了分流服务的运行日志，结果非常关键：日志里没有任何一条与 tailscaled 相关的连接记录。也就是说，tailscaled 的流量压根没有进入 TUN，分流规则配错这条线索也就不成立了。
 
-顺带说明这两条规则为什么在 TUN 模式下本来就靠不住。`PROCESS-NAME` 依赖连接的进程信息，而 TUN 是三层设备，数据包从协议栈上来时已经脱离了原始进程上下文，这类规则只对 mixed-port 的 SOCKS/HTTP 入站有效。`DOMAIN-SUFFIX` 需要域名信息，来源只有两种：经过分流服务自身 DNS 的查询记录，或者 sniffer 嗅探 TLS SNI。本机没有开 sniffer，tailscaled 又大量走"硬编码 IP 加裸 IP 直连"的路径，域名规则同样无从命中。
+顺带说明这两条规则为什么在 TUN 模式下本来就靠不住。`PROCESS-NAME` 依赖连接的进程信息，而 TUN 是三层设备，数据包从协议栈上来时已经脱离了原始进程上下文，这类规则只对 mixed-port 的 SOCKS/HTTP 入站有效。`DOMAIN-SUFFIX` 需要域名信息，来源只有两种：经过分流服务自身 DNS 的查询记录，或者 sniffer 嗅探 TLS SNI。本机没有开 sniffer，tailscaled 又大量走硬编码 IP 加裸 IP 直连的路径，域名规则同样无从命中。
 
 ## 根本原因：fake-ip 遇上绕过 TUN 的拨号
 
@@ -136,7 +136,7 @@ $ curl -m 8 --interface wlan0 --resolve controlplane.tailscale.com:443:192.200.0
 200            # 0.56 秒
 ```
 
-直连协调服务器本身完全畅通，唯一的问题就是 tailscaled 拿到的是 fake-ip。之前"停分流服务再 login"的土办法之所以有效，也是因为劫持消失后，tailscaled 改走 bootstrapDNS（硬编码 IP 的 HTTPS 查询）拿到真实地址，直连成功。至于这台机器以前为什么没事：以前分流服务启动得晚，tailscaled 早已完成登录并把真实地址缓存在进程内；改成开机服务后两者几乎同时启动，时序变化把问题暴露了出来。
+直连协调服务器这条路本身完全畅通，唯一的问题就是 tailscaled 拿到的是 fake-ip。之前停分流服务再 login 的土办法之所以有效，也是因为劫持消失后，tailscaled 改走 bootstrapDNS（硬编码 IP 的 HTTPS 查询）拿到真实地址，直连成功。至于这台机器以前为什么没事：以前分流服务启动得晚，tailscaled 早已完成登录并把真实地址缓存在进程内；改成开机服务后两者几乎同时启动，时序变化把问题暴露了出来。
 
 ## 修复
 
@@ -157,11 +157,11 @@ dns:
 
 ## 复盘
 
-这次排查有几次判断事后看是无效的，值得清点：
+这次排查有几步事后看都是无效操作，也有一步意外收获：
 
-- **systemd 排序 drop-in**：针对的是"开机瞬间网络未就绪"这个表象。根因修复后，笔者用 `systemctl revert` 撤掉了它。tailscaled 本身有 25~30 秒的登录重试，即使开机首轮失败也能自愈，排序不再是必需品。
-- **`PROCESS-NAME` 与 `DOMAIN-SUFFIX` 直连规则**：方向就是错的。前者在 TUN 模式下原理上无法命中，后者依赖本不存在的域名信息。
-- **"停分流服务再 login"**：绕开问题而非修复问题，还掩盖了真正的故障点。
-- **真正有价值的附带修复**：禁用 `systemd-networkd-wait-online.service`，消除了一个与本故障无关、但确实存在的两分钟启动延迟。
+- 给分流服务加排序 drop-in，对付的只是开机瞬间网络未就绪这个表象。根因修复后，笔者用 `systemctl revert` 把它撤了：tailscaled 自己有 25~30 秒的登录重试，开机首轮失败也能自愈，有没有这个排序其实无所谓。
+- `PROCESS-NAME` 和 `DOMAIN-SUFFIX` 那两条直连规则，方向就是错的：前者在 TUN 模式下原理上就不可能命中，后者要的域名信息这里根本不存在。
+- 停分流服务再 login 只是绕开问题，谈不上修复，还把真正的故障点盖住了。
+- 唯一算意外收获的是禁用 `systemd-networkd-wait-online.service`：它和本故障无关，但那个两分钟的启动延迟确实存在，禁掉之后这两分钟才真正省下来。
 
-方法论上也有两点收获。排查 TUN 模式的流量接管问题，第一步应该看接管方的日志里有没有这条流量——没进 TUN这一条证据，直接否决了整排关于分流规则的假设。另外，当"只有某一个进程异常、其他应用都正常"时，可以用 `curl --interface` 绑定接口、`--resolve` 指定地址来模拟那个进程的网络路径。把差异精确复现出来，根因往往就藏在这个差异里。
+排查 TUN 模式的流量接管问题，第一步应该看接管方的日志里有没有这条流量——没进 TUN 这一条证据，直接否决了一连串关于分流规则的假设。另外，当只有某一个进程异常、其他应用都正常时，可以用 `curl --interface` 绑定接口、`--resolve` 指定地址来模拟那个进程的网络路径。把差异精确复现出来，根因往往就藏在这个差异里。
