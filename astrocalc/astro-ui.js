@@ -123,13 +123,13 @@ export function initAstroApp(calculatorClass, label, color, formatTooltipFooter)
             status.innerText = "Located via Browser GPS";
         } catch (err) {
             try {
-                const resp = await fetch('https://ipapi.co/json/');
+                const resp = await fetch('https://ipwho.is/');
                 const ipData = await resp.json();
-                if (ipData.latitude) {
+                if (ipData.success) {
                     document.getElementById('lat').value = ipData.latitude.toFixed(2);
                     document.getElementById('lon').value = ipData.longitude.toFixed(2);
-                    if (ipData.utc_offset) {
-                        document.getElementById('tz').value = parseInt(ipData.utc_offset) / 100;
+                    if (ipData.timezone && ipData.timezone.offset !== undefined) {
+                        document.getElementById('tz').value = ipData.timezone.offset / 3600;
                     }
                     status.innerText = "Located via IP address";
                 }
