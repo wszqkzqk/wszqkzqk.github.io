@@ -4,7 +4,6 @@ export function initAstroApp(calculatorClass, label, color, formatTooltipFooter)
 
     const inputs = ['lat', 'lon', 'tz', 'date-picker', 'refraction'].map(id => document.getElementById(id));
     document.getElementById('date-picker').valueAsDate = new Date();
-    document.getElementById('tz').value = 0;
 
     const horizonPlugin = {
         id: 'horizonPlugin',
