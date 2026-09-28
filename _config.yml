@@ -105,5 +105,8 @@ projects: [
     },{
         title: "PvZ-Portable Web Edition",
         href: "/PvZ-Portable/pvz-portable.html"
+    },{
+        title: "Scrinium",
+        href: "/scrinium/"
     }
 ]
