@@ -79,7 +79,9 @@ export function initAstroApp(calculatorClass, label, color, formatTooltipFooter)
                             label: (item) => `Elevation: ${item.raw.toFixed(2)}°`,
                             footer: (items) => {
                                 const idx = items[0].dataIndex;
-                                return formatTooltipFooter(data, idx);
+                                const extraLines = formatTooltipFooter(data, idx);
+                                updateStatsPanel(data, idx, extraLines);
+                                return extraLines;
                             }
                         }
                     }
@@ -97,6 +99,14 @@ export function initAstroApp(calculatorClass, label, color, formatTooltipFooter)
                 }
             }
         });
+    }
+
+    function updateStatsPanel(data, idx, extraLines) {
+        const statsEl = document.getElementById('stats');
+        if (!statsEl) return;
+        const lines = [`Elevation: ${data.angles[idx].toFixed(2)}°`, ...[].concat(extraLines)];
+        statsEl.innerHTML = `<div class="highlight">${data.labels[idx]}</div>` +
+            lines.map(line => `<div>${line}</div>`).join('');
     }
 
     inputs.forEach(i => i.addEventListener('input', update));
