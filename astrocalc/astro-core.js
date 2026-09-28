@@ -52,20 +52,24 @@ export class SolarCalculator {
         
         const baseDays = AstroUtils.getDaysSinceJ2000(date);
         
-        // Pre-compute obliquity (changes very slowly)
-        const obliquityDeg = 23.439291111 - 3.560347e-7 * baseDays;
+        // Pre-compute slowly-varying orbital elements with higher-order terms (as in the Vala reference)
+        const baseDaysSq = baseDays * baseDays;
+        const baseDaysCb = baseDaysSq * baseDays;
+        const obliquityDeg = 23.439291111 - 3.560347e-7 * baseDays - 1.2285e-16 * baseDaysSq + 1.0335e-20 * baseDaysCb;
         const obliquitySin = Math.sin(obliquityDeg * DEG2RAD);
         const obliquityCos = Math.cos(obliquityDeg * DEG2RAD);
-        const eclipticC1 = 1.914602;
-        const eclipticC2 = 0.019993;
+        const eclipticC1 = 1.914602 - 1.3188e-7 * baseDays - 1.049e-14 * baseDaysSq;
+        const eclipticC2 = 0.019993 - 2.7652e-9 * baseDays;
         const tstOffset = 4.0 * lon - 60.0 * tz;
-        const eccentricity = 0.016708634;
+        const eccentricity = 0.016708634 - 1.15091e-9 * baseDays - 9.497e-17 * baseDaysSq;
 
-        for (let i = 0; i < 1440; i += 2) { // 2-minute steps for balance
+        for (let i = 0; i < 1440; i += 1) { // 1-minute steps (as in the Vala reference)
             const days = baseDays + (i / 60.0 - tz) / 24.0;
-            let meanAnomalyDeg = (357.52772 + 0.985600282 * days) % 360;
+            const daysSq = days * days;
+            const daysCb = daysSq * days;
+            let meanAnomalyDeg = (357.52772 + 0.985600282 * days - 1.2016e-13 * daysSq - 6.835e-20 * daysCb) % 360;
             if (meanAnomalyDeg < 0) meanAnomalyDeg += 360;
-            let meanLonDeg = (280.46645 + 0.98564736 * days) % 360;
+            let meanLonDeg = (280.46645 + 0.98564736 * days + 2.2727e-13 * daysSq) % 360;
             if (meanLonDeg < 0) meanLonDeg += 360;
             
             const meanAnomRad = meanAnomalyDeg * DEG2RAD;
@@ -95,8 +99,11 @@ export class SolarCalculator {
             
             angles.push(topoElevDeg + AstroUtils.calculateRefraction(topoElevDeg, refractionFactor));
             
+            // Sun-(Earth+Moon) barycenter distance, then corrected to geocentric
+            // and topocentric distances (as in the Vala reference)
             const distEmbAu = (1.0 - eccentricity * eccentricity) / (1.0 + eccentricity * Math.cos(meanAnomRad + eqCenterDeg * DEG2RAD));
-            distances.push(149597870.7 * distEmbAu);
+            const moonMeanElongDeg = 297.8501921 + 12.190749114398 * days - 1.41064e-12 * daysSq + 3.7596e-20 * daysCb;
+            distances.push(149597870.7 * distEmbAu - 6371.0 * sinElev + 4671.0 * Math.cos(moonMeanElongDeg * DEG2RAD));
             labels.push(`${Math.floor(i/60).toString().padStart(2,'0')}:${(i%60).toString().padStart(2,'0')}`);
         }
         return { angles, distances, labels };
@@ -136,23 +143,26 @@ export class LunarCalculator {
 
         // Pre-compute solar parameters for phase calculation
         const baseCenturies = baseDays / 36525.0;
-        const sunEqC1 = 1.914602 - 0.004817 * baseCenturies;
+        const baseCenturiesSq = baseCenturies * baseCenturies;
+        const baseCenturiesCu = baseCenturiesSq * baseCenturies;
+        const sunEqC1 = 1.914602 - 0.004817 * baseCenturies - 0.000014 * baseCenturiesSq;
         const sunEqC2 = 0.019993 - 0.000101 * baseCenturies;
-        const obliquityRad = (23.439291111 - 0.013004167 * baseCenturies) * DEG2RAD;
+        const obliquityRad = (23.439291111 - 0.013004167 * baseCenturies - 1.63889e-7 * baseCenturiesSq + 5.0361e-7 * baseCenturiesCu) * DEG2RAD;
         const cosObl = Math.cos(obliquityRad);
         const sinObl = Math.sin(obliquityRad);
 
-        for (let i = 0; i < 1440; i += 4) { // 4-minute steps
+        for (let i = 0; i < 1440; i += 1) { // 1-minute steps (as in the Vala reference)
             const localDays = baseDays + (i / 60.0 - tz) / 24.0;
             const T = localDays / 36525.0;
             const T2 = T * T;
             const T3 = T2 * T;
+            const T4 = T3 * T;
 
-            const moonMeanLon = 218.3164477 + 481267.88123421 * T - 0.0015786 * T2;
-            const meanElong = 297.8501921 + 445267.1114034 * T - 0.0018819 * T2;
-            const sunMeanAnom = 357.5291092 + 35999.0502909 * T;
-            const moonMeanAnom = 134.9633964 + 477198.8675055 * T + 0.0087414 * T2;
-            const moonArgLat = 93.2720950 + 483202.0175233 * T - 0.0036539 * T2;
+            const moonMeanLon = 218.3164477 + 481267.88123421 * T - 0.0015786 * T2 + T3 / 538841.0 - T4 / 65194000.0;
+            const meanElong = 297.8501921 + 445267.1114034 * T - 0.0018819 * T2 + T3 / 545868.0 - T4 / 113065000.0;
+            const sunMeanAnom = 357.5291092 + 35999.0502909 * T - 0.0001536 * T2 + T3 / 24490000.0;
+            const moonMeanAnom = 134.9633964 + 477198.8675055 * T + 0.0087414 * T2 + T3 / 69699.0 - T4 / 14712000.0;
+            const moonArgLat = 93.2720950 + 483202.0175233 * T - 0.0036539 * T2 - T3 / 3526000.0 + T4 / 863310000.0;
 
             const D = meanElong * DEG2RAD;
             const M = sunMeanAnom * DEG2RAD;
@@ -176,25 +186,28 @@ export class LunarCalculator {
                 + 0.2777 * Math.sin(Mm - F)
                 + 0.1732 * Math.sin(2 * D - F);
 
-            const dist = 385000.6 - 20905.0 * Math.cos(Mm) - 3699.0 * Math.cos(2 * D - Mm) - 2956.0 * Math.cos(2 * D);
+            const dist = 385000.6 - 20905.0 * Math.cos(Mm) - 3699.0 * Math.cos(2 * D - Mm) - 2956.0 * Math.cos(2 * D)
+                - 570.0 * Math.cos(2 * Mm) + 246.0 * Math.cos(2 * D - 2 * Mm) - 205.0 * Math.cos(2 * D - M)
+                - 171.0 * Math.cos(2 * D + Mm) - 152.0 * Math.cos(2 * D - M - Mm);
             
             const parallaxSin = 6378.137 / dist;
             const lambdaMoon = eclLon * DEG2RAD;
             const betaMoon = eclLat * DEG2RAD;
 
-            // Phase and Elongation
-            let sunMeanLon = (280.46646 + 36000.76983 * T) % 360;
-            const sunEqCenter = sunEqC1 * Math.sin(M) + sunEqC2 * Math.sin(2 * M);
-            const sunTrueLon = (sunMeanLon + sunEqCenter) * DEG2RAD;
-            const cosElong = Math.cos(betaMoon) * Math.cos(lambdaMoon - sunTrueLon);
+            // Phase and Elongation (using apparent solar longitude: aberration + nutation)
+            let sunMeanLon = (280.46646 + 36000.76983 * T + 0.0003032 * T2) % 360;
+            const sunEqCenter = sunEqC1 * Math.sin(M) + sunEqC2 * Math.sin(2 * M) + 0.000289 * Math.sin(3 * M);
+            const omegaDeg = moonMeanLon - moonArgLat;
+            const sunApparentLonDeg = sunMeanLon + sunEqCenter - 0.00569 - 0.00478 * Math.sin(omegaDeg * DEG2RAD);
+            const cosElong = Math.cos(betaMoon) * Math.cos(lambdaMoon - sunApparentLonDeg * DEG2RAD);
             const illuFraction = (1.0 - cosElong) / 2.0;
-            let elonDeg = (eclLon - (sunMeanLon + sunEqCenter)) % 360;
+            let elonDeg = (eclLon - sunApparentLonDeg) % 360;
 
             // Topocentric correction
             const raRad = Math.atan2(Math.sin(lambdaMoon) * cosObl - Math.tan(betaMoon) * sinObl, Math.cos(lambdaMoon));
             const decRad = Math.asin(Math.sin(betaMoon) * cosObl + Math.cos(betaMoon) * sinObl * Math.sin(lambdaMoon));
 
-            let gmst = (280.4606 + 360.985647 * localDays) % 360;
+            let gmst = (280.46061837 + 360.98564736629 * localDays) % 360;
             const haRad = (gmst + lon) * DEG2RAD - raRad;
             const cosDec = Math.cos(decRad);
             
