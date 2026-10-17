@@ -66,7 +66,7 @@ Binder 的情况比预期简单。排查中发现，Waydroid 在内层容器启�
 --property=DeviceAllow="char-binder rwm"
 ```
 
-第二条是针对传统 C 版 Binder 组名的兜底，解析不到设备时 systemd 会静默忽略该条目，留着无害。
+第二条是针对传统 C 版 Binder 组名的兜底，这样可以兼容不同构建配置、不同版本的内核。
 
 排查中有一次误判值得记录：验证 `DeviceAllow` 是否生效时，笔者最初去查 `machine-*.scope`，发现里面没有这些属性，一度认为属性没有生效。实际上直接由 `systemd-nspawn` 命令拉起的容器，scope 名是 `nv1-arch.scope`，单元名猜错了，看到的自然是空。实测删掉属性后 `binder-control` 打不开、加回后正常，属性一直是生效的。
 
