@@ -27,7 +27,7 @@ Waydroid 本身采用 LXC 容器方案，其 Android 镜像基于 LineageOS。�
 
 最终采用 `--network-bridge=virbr0`。nspawn 的私有网络模式默认保留 `CAP_NET_ADMIN`。将容器桥接到 libvirt 的 `virbr0` 后，即可直接使用 libvirt 提供的 DHCP、DNS 和 NAT。容器内的 NetworkManager 能自动获取地址，Waydroid 的网桥脚本也能正常运行。
 
-选择这个方案还有另一个原因。笔者曾让宿主上的 systemd-networkd 管理相关接口，但 networkd 重新加载时会清理它认为多余的策略路由规则，而 Mihomo 代理（TUN 模式）恰好依赖这些规则，结果导致宿主网络中断。因此，让 networkd 不参与相关接口的管理更为稳妥。
+选择这个方案还有另一个原因。笔者曾让宿主上的 systemd-networkd 管理相关接口，但 networkd 重新加载时会清理它认为多余的策略路由规则，而笔者的 TUN 代理恰好依赖这些规则，结果导致宿主网络中断。因此，让 networkd 不参与相关接口的管理更为稳妥。
 
 容器镜像中的 `/etc/resolv.conf` 是指向 systemd-resolved stub 的软链接，因此只需在容器内执行一次 `systemctl enable --now systemd-resolved`。该设置会持久保存在硬盘上，物理启动和虚拟机启动时同样有效。此外，启动命令中不应添加任何 `--resolv-conf` 参数。
 
