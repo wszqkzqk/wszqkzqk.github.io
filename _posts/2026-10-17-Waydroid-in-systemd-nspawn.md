@@ -173,6 +173,33 @@ sudo sh -c 'modprobe -r loop 2>/dev/null; modprobe loop max_loop=8; exec systemd
 
 容器启动后，在其中运行 `waydroid show-full-ui`（或先 `waydroid session start`），即可完整启动 Android。
 
+## dconf 运行目录的权限
+
+以普通用户身份在容器内运行 GUI 程序时，可能遇到以下警告：
+
+```
+dconf-CRITICAL **: unable to create directory '/run/xdg/dconf': Permission denied.
+```
+
+dconf 是 GTK 程序使用的设置后端，需要在 `$XDG_RUNTIME_DIR` 下创建 `dconf` 目录存放运行时文件。容器中的 `/run/xdg` 是为接入宿主 Wayland 和 Pulse 而创建的目录，属主是 root，普通用户进程无法在其中新建目录。这个警告不影响程序运行，但设置的读取与变更通知会失效。
+
+处理方法是预先创建该目录，并将属主指定给普通用户：
+
+```
+install -d -o wszqkzqk -g wszqkzqk -m 700 /run/xdg/dconf
+```
+
+不过 `/run` 是 tmpfs，重启后就会丢失，因此还需要在容器内写入 `/etc/tmpfiles.d/xdg-dconf.conf`，让 systemd-tmpfiles 在每次启动的早期重建：
+
+```
+d /run/xdg 0755 root root -
+d /run/xdg/dconf 0700 wszqkzqk wszqkzqk -
+```
+
+这条规则在物理启动和虚拟机启动时只会创建两个空目录，没有其他影响。
+
+还需要注意的是，普通用户会话在容器内有自己的 `/run/user/1000`，但不宜把 GUI 程序的 `XDG_RUNTIME_DIR` 切换过去。容器内运行的 pipewire 已经占用 `/run/user/1000/pulse`，而容器中没有声卡，走这条路径的音频不会有声音。继续使用 `/run/xdg` 直接接入宿主的 Wayland 和 Pulse 即可。
+
 ## 残留会话的清理
 
 清理残留的 Waydroid 会话进程时，笔者曾在 `sh -c '...'` 中执行 `pkill -f "waydroid session"`，结果后续命令都没有执行。原因是 `pkill -f` 会匹配完整命令行，而当前 `sh` 进程的 cmdline 也包含该模式，于是父进程被一并终止。将匹配模式写成 `[w]aydroid session`，就能避免匹配到当前命令行。
@@ -187,4 +214,4 @@ Waydroid 的容器服务还会在内存中保留会话跟踪状态。Android 异
 
 将 Android init 的 kmsg 日志接入宿主的 `journalctl -k` 后，每次失败的原因都能直接确认，后续排查无需再靠猜测。
 
-除前述在容器系统中启用 `systemd-resolved` 的一次性设置外，其余适配都通过 nspawn 的运行时参数完成，无需修改宿主配置或 Android 镜像。这块移动硬盘仍可直接在物理机上启动，或作为虚拟机启动，三种使用方式互不干扰。
+除在容器系统中启用 `systemd-resolved`、添加 dconf 目录的 tmpfiles 规则这两处一次性设置外，其余适配都通过 nspawn 的运行时参数完成，无需修改宿主配置或 Android 镜像。这块移动硬盘仍可直接在物理机上启动，或作为虚拟机启动，三种使用方式互不干扰。
