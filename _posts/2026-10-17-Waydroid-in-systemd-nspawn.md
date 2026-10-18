@@ -113,6 +113,8 @@ init: InitFatalReboot: signal 6
 
 logd、audioserver 和 lmkd 都因 `cap_set_proc()` 返回 EPERM 而退出。其中，lmkd 是 critical 服务。它在系统启动完成前退出 4 次后，init 按规则将其视为致命错误并重启，整个 LXC 容器也随之退出。
 
+起初，笔者直接使用了 `--capability=all`，希望一次性排除能力缺失的影响。当时尚未配置私有网络，容器与宿主机共享网络命名空间，该参数使容器获得了 `CAP_NET_ADMIN`。镜像中的 NetworkManager 处于启用状态，随即将宿主机的物理网卡纳入管理并重新配置，与宿主机自身的网络管理发生冲突，导致宿主网络中断。这块硬盘还需要保留独立启动能力，不宜为了避免容器中的冲突而在镜像中禁用 NetworkManager，因此笔者取消了 `--capability=all`，随后逐项排查所需能力。
+
 `cap_set_proc` 的参数是能力位掩码，可以直接换算。例如，另一条日志中的 `68719476736` 对应：
 
 ```
@@ -123,13 +125,11 @@ logd、audioserver 和 lmkd 都因 `cap_set_proc()` 返回 EPERM 而退出。其
 
 其背后的机制并不复杂。容器进程的 capability 边界集（bounding set）决定了它能够为子进程设置哪些能力。如果试图设置该集合之外的能力，操作就会返回 EPERM。在嵌套容器中，最终可用的能力集合相当于内外两层限制的交集：外层 nspawn 使用自己的默认保留集，内层 LXC 再通过 `lxc.cap.keep` 进行裁剪。Waydroid 的 `cap.keep` 列表虽然包含 syslog、block_suspend 等能力，但如果外层 nspawn 没有授予这些能力，内层同样无法获得。
 
-因此，只需精确补充这五项能力，无需使用 `--capability=all`：
+因此，最终只需精确补充这五项能力：
 
 ```
 --capability=CAP_SYSLOG,CAP_AUDIT_CONTROL,CAP_WAKE_ALARM,CAP_BLOCK_SUSPEND,CAP_IPC_LOCK
 ```
-
-不用 `--capability=all` 也不只是为了精简。早期的排查命令使用过这个参数，当时尚未配置私有网络，容器与宿主机共享网络命名空间，由此获得了 `CAP_NET_ADMIN`。镜像中的 NetworkManager 处于启用状态（这块硬盘需要保留独立启动能力，不宜在镜像中禁用），它会把宿主机的物理网卡当作自己的管理对象重新配置，与宿主机自身的网络管理冲突，宿主网络因此中断。改用私有网络模式后，容器内的 NetworkManager 只能看到自己的虚拟网卡，这一问题随之消失。
 
 ## 放行 bpf 系统调用
 
