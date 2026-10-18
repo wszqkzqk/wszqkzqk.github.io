@@ -129,6 +129,8 @@ logd、audioserver 和 lmkd 都因 `cap_set_proc()` 返回 EPERM 而退出。其
 --capability=CAP_SYSLOG,CAP_AUDIT_CONTROL,CAP_WAKE_ALARM,CAP_BLOCK_SUSPEND,CAP_IPC_LOCK
 ```
 
+不用 `--capability=all` 也不只是为了精简。早期的排查命令使用过这个参数，当时尚未配置私有网络，容器与宿主机共享网络命名空间，由此获得了 `CAP_NET_ADMIN`。镜像中的 NetworkManager 处于启用状态（这块硬盘需要保留独立启动能力，不宜在镜像中禁用），它会把宿主机的物理网卡当作自己的管理对象重新配置，与宿主机自身的网络管理冲突，宿主网络因此中断。改用私有网络模式后，容器内的 NetworkManager 只能看到自己的虚拟网卡，这一问题随之消失。
+
 ## 放行 bpf 系统调用
 
 此外，还有一个问题在补齐上述能力之前就已经发现，可以一并处理。nspawn 的 seccomp 过滤器采用白名单机制，默认允许的系统调用中不包括 `bpf`。实测结果如下：
