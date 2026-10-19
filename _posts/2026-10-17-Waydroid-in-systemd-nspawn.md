@@ -23,13 +23,9 @@ Waydroid 本身采用 LXC 容器方案，其 Android 镜像基于 LineageOS。�
 
 ## 网络配置
 
-首先需要配置网络，不过这部分并不复杂。Waydroid 的 `waydroid-net.sh` 需要在容器内创建网桥、启动 dnsmasq 并配置 NAT，因此容器必须保留 `CAP_NET_ADMIN`。
+网络部分不需要额外的启动参数。不加任何 `--network-*` 选项时，容器与宿主机共享网络命名空间，直接沿用宿主机的地址、路由和代理配置。Waydroid 的 `waydroid-net.sh` 在其中创建 waydroid0 网桥、启动 dnsmasq 并配置 NAT，Android 由此经宿主机访问网络。
 
-最终采用 `--network-bridge=virbr0`。nspawn 的私有网络模式默认保留 `CAP_NET_ADMIN`。将容器桥接到 libvirt 的 `virbr0` 后，即可直接使用 libvirt 提供的 DHCP、DNS 和 NAT。容器内的 NetworkManager 能自动获取地址，Waydroid 的网桥脚本也能正常运行。
-
-选择这个方案还有另一个原因。笔者曾让宿主上的 systemd-networkd 管理相关接口，但 networkd 重新加载时会清理它认为多余的策略路由规则，而笔者的 TUN 代理恰好依赖这些规则，结果导致宿主网络中断。因此，让 networkd 不参与相关接口的管理更为稳妥。
-
-容器镜像中的 `/etc/resolv.conf` 是指向 systemd-resolved stub 的软链接，因此只需在容器内执行一次 `systemctl enable --now systemd-resolved`。该设置会持久保存在硬盘上，物理启动和虚拟机启动时同样有效。此外，启动命令中不应添加任何 `--resolv-conf` 参数。
+需要注意的只有 DNS。容器镜像中的 `/etc/resolv.conf` 是指向 systemd-resolved stub 的软链接，因此只需在容器内执行一次 `systemctl enable --now systemd-resolved`。该设置会持久保存在硬盘上，物理启动和虚拟机启动时同样有效。此外，启动命令中不应添加任何 `--resolv-conf` 参数。
 
 ## loop 设备与镜像挂载
 
@@ -113,7 +109,7 @@ init: InitFatalReboot: signal 6
 
 logd、audioserver 和 lmkd 都因 `cap_set_proc()` 返回 EPERM 而退出。其中，lmkd 是 critical 服务。它在系统启动完成前退出 4 次后，init 按规则将其视为致命错误并重启，整个 LXC 容器也随之退出。
 
-起初，笔者直接使用了 `--capability=all`，希望一次性排除能力缺失的影响。当时尚未配置私有网络，容器与宿主机共享网络命名空间，该参数使容器获得了 `CAP_NET_ADMIN`。镜像中的 NetworkManager 处于启用状态，随即将宿主机的物理网卡纳入管理并重新配置，与宿主机自身的网络管理发生冲突，导致宿主网络中断。这块硬盘还需要保留独立启动能力，不宜为了避免容器中的冲突而在镜像中禁用 NetworkManager，因此笔者取消了 `--capability=all`，随后逐项排查所需能力。
+起初，笔者直接使用了 `--capability=all`，希望一次性排除能力缺失的影响。当时容器与宿主机共享网络命名空间，该参数使容器获得了 `CAP_NET_ADMIN`。镜像中的 NetworkManager 处于启用状态，随即将宿主机的物理网卡纳入管理并重新配置，与宿主机自身的网络管理发生冲突，导致宿主网络中断。这块硬盘还需要保留独立启动能力，不宜为了避免容器中的冲突而在镜像中禁用 NetworkManager，因此笔者取消了 `--capability=all`，随后逐项排查所需能力。
 
 `cap_set_proc` 的参数是能力位掩码，可以直接换算。例如，另一条日志中的 `68719476736` 对应：
 
@@ -156,7 +152,7 @@ Android 镜像中的 `bpfloader.rc` 将 bpfloader 声明为 critical 服务。�
 综合以上结论，可以得到以下启动命令。宿主上不需要额外的配置文件，也不需要手动预建设备。容器关闭后，没有额外配置需要清理：
 
 ```bash
-sudo sh -c 'modprobe -r loop 2>/dev/null; modprobe loop max_loop=8; exec systemd-nspawn -bD /tmp/nv1-arch --hostname=nv1-arch --network-bridge=virbr0 --capability=CAP_SYSLOG,CAP_AUDIT_CONTROL,CAP_WAKE_ALARM,CAP_BLOCK_SUSPEND,CAP_IPC_LOCK --bind=/dev/dri --bind=/dev/loop-control --bind=/dev/loop0 --bind=/dev/loop1 --bind=/dev/loop2 --bind=/dev/loop3 --bind=/dev/loop4 --bind=/dev/loop5 --bind=/dev/loop6 --bind=/dev/loop7 --bind=/dev/kmsg --bind-ro="$1/$2:/run/xdg/wayland-0" --bind-ro="$1/pulse:/run/xdg/pulse" --bind-ro="$3/.config/pulse/cookie:/root/.config/pulse/cookie" --property=DeviceAllow="char-drm rwm" --property=DeviceAllow="char-rust_binder rwm" --property=DeviceAllow="char-binder rwm" --property=DeviceAllow="block-loop rwm" --property=DeviceAllow="/dev/loop-control rwm" --property=DeviceAllow="/dev/kmsg rwm" --system-call-filter=bpf' _ "$XDG_RUNTIME_DIR" "$WAYLAND_DISPLAY" "$HOME"
+sudo sh -c 'modprobe -r loop 2>/dev/null; modprobe loop max_loop=8; exec systemd-nspawn -bD /tmp/nv1-arch --hostname=nv1-arch --capability=CAP_SYSLOG,CAP_AUDIT_CONTROL,CAP_WAKE_ALARM,CAP_BLOCK_SUSPEND,CAP_IPC_LOCK --bind=/dev/dri --bind=/dev/loop-control --bind=/dev/loop0 --bind=/dev/loop1 --bind=/dev/loop2 --bind=/dev/loop3 --bind=/dev/loop4 --bind=/dev/loop5 --bind=/dev/loop6 --bind=/dev/loop7 --bind=/dev/kmsg --bind-ro="$1/$2:/run/xdg/wayland-0" --bind-ro="$1/pulse:/run/xdg/pulse" --bind-ro="$3/.config/pulse/cookie:/root/.config/pulse/cookie" --property=DeviceAllow="char-drm rwm" --property=DeviceAllow="char-rust_binder rwm" --property=DeviceAllow="char-binder rwm" --property=DeviceAllow="block-loop rwm" --property=DeviceAllow="/dev/loop-control rwm" --property=DeviceAllow="/dev/kmsg rwm" --system-call-filter=bpf' _ "$XDG_RUNTIME_DIR" "$WAYLAND_DISPLAY" "$HOME"
 ```
 
 各段的作用如下：
@@ -164,7 +160,6 @@ sudo sh -c 'modprobe -r loop 2>/dev/null; modprobe loop max_loop=8; exec systemd
 | 部分 | 作用 |
 | --- | --- |
 | `modprobe loop max_loop=8` | 预先创建 loop 节点（容器内无权通过 `mknod` 创建块设备节点） |
-| `--network-bridge=virbr0` | 创建私有网络命名空间，保留 `CAP_NET_ADMIN`，并使用 libvirt 提供的 DHCP/DNS/NAT |
 | `--capability=CAP_SYSLOG,...` | 补充 Android 服务需要、但 nspawn 默认未授予的五项能力 |
 | `--bind=/dev/dri` + `char-drm` | GPU 渲染 |
 | `--bind=/dev/loop*` + `block-loop` | 挂载 system/vendor 镜像 |
