@@ -4,7 +4,8 @@ title:      GTK/Vala 开发教程：双后端架构与 XMP 元数据处理
 subtitle:   解析 Live Photo Converter 的后端设计
 date:       2026-05-08
 author:     wszqkzqk
-header-img: img/GTK-logo.webp
+header-img: img/GTK-logo.svg
+header-mask: 0.53
 catalog:    true
 tags:       开源软件 Vala GStreamer FFmpeg XMP 算法 GExiv2
 ---

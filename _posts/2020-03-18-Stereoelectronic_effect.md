@@ -4,7 +4,8 @@ title:      立体电子效应（英语）
 subtitle:   Wikipedia条目推荐
 date:       2020-3-18
 author:     wszqkzqk
-header-img: img/post-1122px-Wikipedia-logo-v2.svg-dark.webp
+header-img: img/Wikipedia-logo-v2.svg
+header-mask: 0.5
 catalog:    true
 tags:       Wikipedia 化学 有机化学 立体化学
 ---

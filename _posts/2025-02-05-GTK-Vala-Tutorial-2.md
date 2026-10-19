@@ -4,7 +4,8 @@ title:      GTK/Vala开发基础教程 2
 subtitle:   使用GTK/Vala构建简单应用
 date:       2025-02-05
 author:     wszqkzqk
-header-img: img/GTK-logo.webp
+header-img: img/GTK-logo.svg
+header-mask: 0.53
 catalog:    true
 tags:       开源软件 GTK Vala
 ---

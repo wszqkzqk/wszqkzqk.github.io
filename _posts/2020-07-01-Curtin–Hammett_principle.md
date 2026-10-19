@@ -4,7 +4,8 @@ title:      科廷–哈米特定律
 subtitle:   Wikipedia条目推荐
 date:       2020-07-01
 author:     wszqkzqk
-header-img: img/post-1122px-Wikipedia-logo-v2.svg-dark.webp
+header-img: img/Wikipedia-logo-v2.svg
+header-mask: 0.5
 catalog:    true
 tags:       Wikipedia 化学 有机化学  物理化学
 ---

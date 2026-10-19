@@ -4,7 +4,8 @@ title:      为龙架构的Arch Linux构建Chromium与Electron
 subtitle:   借助社区力量维护龙架构的Arch Linux软件生态
 date:       2025-01-04
 author:     wszqkzqk
-header-img: img/bg-mountain-darken.webp
+header-img: img/bg-mountain.jpg
+header-mask: 0.43
 catalog:    true
 tags:       开源软件 Linux archlinux 国产硬件 龙芯 LoongArchLinux Chromium Electron
 ---

@@ -4,7 +4,8 @@ title:      GTK/Vala 开发教程：Meson 构建系统与跨平台项目架构
 subtitle:   共享库、多二进制分发、GObject Introspection 与国际化
 date:       2026-05-06
 author:     wszqkzqk
-header-img: img/GTK-logo.webp
+header-img: img/GTK-logo.svg
+header-mask: 0.53
 catalog:    true
 tags:       开源软件 Vala GTK 构建系统 Meson
 ---

@@ -4,7 +4,8 @@ title:      Arch Linux字体配置
 subtitle:   Arch Linux中文默认字体行为变更后的配置
 date:       2024-07-29
 author:     wszqkzqk
-header-img: img/bg-mountain-darken.webp
+header-img: img/bg-mountain.jpg
+header-mask: 0.43
 catalog:    true
 tags:       开源软件 系统配置 Linux archlinux 字体
 ---

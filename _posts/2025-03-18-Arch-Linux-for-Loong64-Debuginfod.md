@@ -4,7 +4,8 @@ title:      Arch Linux for Loong64 项目 Debuginfod 调试符号服务正式上
 subtitle:   Loong Arch Linux 的 Debuginfod 服务上线公告与使用说明
 date:       2025-03-18
 author:     wszqkzqk
-header-img: img/bg-mountain-darken.webp
+header-img: img/bg-mountain.jpg
+header-mask: 0.43
 catalog:    true
 tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 龙芯 LoongArchLinux
 ---

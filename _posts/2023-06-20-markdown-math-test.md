@@ -4,7 +4,8 @@ title:      Markdown Math 及 mhchem 测试
 subtitle:   在 Markdown 中使用数学公式及化学式
 date:       2023-06-20
 author:     wszqkzqk
-header-img: img/bg-mountain-darken.webp
+header-img: img/bg-mountain.jpg
+header-mask: 0.43
 catalog:    true
 tags:       开源软件 化学
 ---

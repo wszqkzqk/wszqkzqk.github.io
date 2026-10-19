@@ -4,7 +4,8 @@ title:      GTK/Vala 开发教程：图形界面架构与异步线程模型
 subtitle:   自定义控件、ViewStack 布局、异步工作线程与错误处理
 date:       2026-05-07
 author:     wszqkzqk
-header-img: img/GTK-logo.webp
+header-img: img/GTK-logo.svg
+header-mask: 0.53
 catalog:    true
 tags:       开源软件 Vala GTK LibAdwaita GUI
 ---

@@ -4,7 +4,8 @@ title:      Live Photo Converter 的 Android 文件访问：适配 SAF 与 conte
 subtitle:   从 GTK content file 补丁到跨平台暂存
 date:       2026-08-25
 author:     wszqkzqk
-header-img: img/GTK-logo.webp
+header-img: img/GTK-logo.svg
+header-mask: 0.53
 catalog:    true
 tags:       开源软件 Vala GTK LibAdwaita Android GIO
 ---

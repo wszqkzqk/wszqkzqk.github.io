@@ -4,7 +4,8 @@ title:      通用共享的内核模块和initramfs
 subtitle:   可跨设备启动与跨发行版内核混搭架构
 date:       2024-07-26
 author:     wszqkzqk
-header-img: img/bg-mountain-darken.webp
+header-img: img/bg-mountain.jpg
+header-mask: 0.43
 catalog:    true
 tags:       开源软件 系统配置 Linux archlinux 文件系统
 ---

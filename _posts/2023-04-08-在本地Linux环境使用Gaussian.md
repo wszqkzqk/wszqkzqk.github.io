@@ -4,7 +4,8 @@ title:      在本地Linux环境使用Gaussian
 subtitle:   计算化学软件使用
 date:       2023-04-08
 author:     wszqkzqk
-header-img: img/bg-mountain-darken.webp
+header-img: img/bg-mountain.jpg
+header-mask: 0.43
 catalog:    true
 tags:       化学 计算化学 有机化学
 ---

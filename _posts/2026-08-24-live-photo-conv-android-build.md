@@ -4,7 +4,8 @@ title:      Live Photo Converter 的 Android 构建实践
 subtitle:   pixiewood、Meson、静态 GStreamer 与 CI 签名
 date:       2026-08-24
 author:     wszqkzqk
-header-img: img/GTK-logo.webp
+header-img: img/GTK-logo.svg
+header-mask: 0.53
 catalog:    true
 tags:       开源软件 Vala GTK LibAdwaita Android Meson 构建系统 GStreamer
 ---

@@ -4,7 +4,8 @@ title:      Vala 数值计算实践：月球位置算法
 subtitle:   探索月球运动的复杂性——计算月球位置与相位的 Vala 实现
 date:       2025-11-21
 author:     wszqkzqk
-header-img: img/Vala_Logo.webp
+header-img: img/Vala_Logo.svg
+header-mask: 0.49
 catalog:    true
 tags:       开源软件 GTK Vala 数值计算
 ---

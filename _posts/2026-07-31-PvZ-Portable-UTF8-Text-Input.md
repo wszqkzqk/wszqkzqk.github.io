@@ -2,7 +2,7 @@
 layout:       post
 title:        PvZ-Portable：打通 UTF-8 文本输入链路
 subtitle:     让 EditWidget 全面改用码点语义，解决软键盘遮挡、快捷键失效与多字符提交问题
-header-img:   img/games/bg-pvz-portable.webp
+header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 date:         2026-07-31
 author:       wszqkzqk
 catalog:      true

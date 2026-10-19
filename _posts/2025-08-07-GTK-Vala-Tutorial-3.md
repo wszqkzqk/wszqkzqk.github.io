@@ -4,7 +4,8 @@ title:      GTK4/Vala 教程：构建现代桌面应用
 subtitle:   GTK/Vala 开发基础教程 3
 date:       2025-08-07
 author:     wszqkzqk
-header-img: img/GTK-logo.webp
+header-img: img/GTK-logo.svg
+header-mask: 0.53
 catalog:    true
 tags:       开源软件 GTK Vala
 ---

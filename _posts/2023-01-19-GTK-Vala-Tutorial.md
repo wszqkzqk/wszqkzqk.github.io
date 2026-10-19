@@ -4,7 +4,8 @@ title:      GTK/Vala开发基础教程
 subtitle:   基础教程
 date:       2023-01-19
 author:     wszqkzqk
-header-img: img/GTK-logo.webp
+header-img: img/GTK-logo.svg
+header-mask: 0.53
 catalog:    true
 tags:       开源软件 GTK Vala
 ---

@@ -4,7 +4,8 @@ title:      碳氧𬭩离子
 subtitle:   Wikipedia条目推荐
 date:       2020-3-16
 author:     wszqkzqk
-header-img: img/post-1122px-Wikipedia-logo-v2.svg-dark.webp
+header-img: img/Wikipedia-logo-v2.svg
+header-mask: 0.5
 catalog:    true
 tags:       Wikipedia 化学 活性中间体 有机化学
 ---

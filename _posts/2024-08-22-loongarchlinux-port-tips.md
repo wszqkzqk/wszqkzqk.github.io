@@ -4,7 +4,8 @@ title:      龙芯Arch Linux移植技巧
 subtitle:   参与移植工作的注意事项及FAQ
 date:       2024-08-22
 author:     wszqkzqk
-header-img: img/bg-mountain-darken.webp
+header-img: img/bg-mountain.jpg
+header-mask: 0.43
 catalog:    true
 pinned:     true
 tags:       系统配置 系统维护 开源软件 Linux archlinux 国产硬件 虚拟化 龙芯 LoongArchLinux 容器

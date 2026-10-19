@@ -4,7 +4,8 @@ title:      在Linux下使用Wine构建与测试Windows应用
 subtitle:   在Wine环境中使用Meson/Vala构建GTK应用并进行测试
 date:       2025-06-03
 author:     wszqkzqk
-header-img: img/GTK-logo.webp
+header-img: img/GTK-logo.svg
+header-mask: 0.53
 catalog:    true
 tags:       开源软件 MSYS2 Wine Meson Vala GTK
 ---
