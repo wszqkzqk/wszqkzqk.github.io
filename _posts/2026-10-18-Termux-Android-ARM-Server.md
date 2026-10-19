@@ -210,12 +210,14 @@ Termux 提供了完整的原生编译工具链。按常见 C/C++ 项目的需要
 pkg install clang cmake ninja make pkg-config git
 ```
 
-假设项目已经通过 `rsync` 同步到手机的 `~/projects/example`，一个使用 CMake 的项目可以这样构建：
+工具链就绪后，可以直接在手机上克隆并构建项目。以使用 CMake 的项目为例：
 
 ```bash
+mkdir -p ~/projects
+git clone <项目仓库地址> ~/projects/example
 cd ~/projects/example
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j4
+cmake --build build --parallel "$(nproc)"
 ```
 
 如果项目带有测试，还可以继续运行：
@@ -224,9 +226,9 @@ cmake --build build -j4
 ctest --test-dir build --output-on-failure
 ```
 
-并行度可以结合手机内存和温度情况调整。
+`--parallel "$(nproc)"` 按设备的可用核心数设置并行度，也可以结合手机内存和温度手动调整。
 
-在日常使用中，可以在电脑上通过 sshfs 编辑源码，再通过 SSH 在手机上执行构建。这样既保留了电脑的编辑环境，也让编译、依赖检查和测试实际发生在手机的 ARM 环境中。
+如果需要修改源码，可以在电脑上通过 sshfs 编辑，再通过 SSH 在手机上执行构建。这样既保留了电脑的编辑环境，也让编译、依赖检查和测试实际发生在手机的 ARM 环境中。
 
 通过 `clang -v` 可以看到，Termux 编译器的目标通常是 `aarch64-unknown-linux-android` 及对应的 Android API 级别。程序直接在 Termux 的 Android/Bionic 用户空间中构建和运行，产物也面向这一环境。
 
