@@ -372,4 +372,4 @@ env XDG_RUNTIME_DIR="$runtime" WAYLAND_DISPLAY="$display" \
 
 Android 手机本身已经具备计算、存储、网络和图形硬件。Termux 将这些硬件接入 Linux 软件生态，SSH、sshfs 和 Waypipe 则让电脑能够方便地调用这些能力。这样，远程控制、文件访问、编译、转码、后台服务和 GUI 等任务都可以由同一台手机承担。
 
-这套方案的吸引力在于，功能相当完整，成本和门槛却很低。对于已经有 Android 手机的人来说，只需完成这些配置，就能把它变成一台全功能的 ARM Linux 服务器。
+这套方案的吸引力在于，利用 Android 手机搭建的服务器功能相当完整，成本和门槛却很低。对于已经有 Android 手机的人来说，只需完成这些配置，就能把它变成一台全功能的 ARM Linux 服务器。
