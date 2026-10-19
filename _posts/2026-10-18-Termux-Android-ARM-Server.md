@@ -141,9 +141,9 @@ ssh -p 8022 <Termux用户名>@<手机地址> mkdir -p projects
 rsync -av -e 'ssh -p 8022' ./example/ <Termux用户名>@<手机地址>:projects/example/
 ```
 
-这些工具适合明确的文件复制和目录同步。sshfs 则可以把手机目录直接呈现为 Linux 上的一个本地目录。
-
 ### 将手机目录挂载到 Linux
+
+前面介绍的 `scp` 和 `rsync` 已经能让电脑访问手机中的文件，不过每次都需要手动复制或同步。使用 sshfs 将手机目录挂载到 Linux 后，就可以像访问本地文件一样打开和修改手机文件。无论文件管理器、编辑器还是其他本地程序，都可以直接操作这些文件，方便很多。
 
 在 Linux 电脑上安装 sshfs。以 Arch Linux 为例：
 
@@ -164,7 +164,7 @@ sshfs -o idmap=user,follow_symlinks -p 8022 <Termux用户名>@<手机地址>: /t
 - `idmap=user` 用于处理本地用户和远程 Termux 用户之间的身份映射。
 - `follow_symlinks` 让 sshfs 跟随远程符号链接，后面访问 Termux 的 `storage` 链接时会用到。
 
-挂载完成后，手机文件就出现在 `/tmp/phone-sshfs` 中，可以直接用 Linux 文件管理器、编辑器或终端打开。查看照片、修改源码、取用转码结果，都可以像操作本地文件一样进行，这正是 sshfs 在这里最方便的地方。
+挂载完成后，Termux 家目录就对应到 `/tmp/phone-sshfs`。可以直接在本地编辑器中打开其中的源码，也可以用文件管理器查看手机文件。在编辑器中所做的修改会直接写回手机。
 
 使用完毕后可以卸载：
 
@@ -178,7 +178,7 @@ fusermount3 -u /tmp/phone-sshfs
 
 ## 访问手机共享存储
 
-默认情况下，Termux 主要使用自己的私有目录。若要通过 SSH 或 sshfs 访问手机中的照片、视频和下载文件，需要先在 **Termux 中**运行：
+前面的挂载对应的是 Termux 家目录。手机中已有的照片、视频和下载文件位于共享存储，完成 Android 存储授权后，也能通过同一个挂载访问。授权命令需要在 **Termux 中**运行：
 
 ```bash
 termux-setup-storage
@@ -204,7 +204,7 @@ ls /tmp/phone-sshfs/storage/shared/DCIM/
 
 ## 在手机上编译项目
 
-Termux 提供了完整的原生编译工具链。按常见 C/C++ 项目的需要，可以安装：
+手机也可以直接承担源码获取和构建任务。Termux 提供了完整的原生编译工具链，按常见 C/C++ 项目的需要，可以安装：
 
 ```bash
 pkg install clang cmake ninja make pkg-config git
@@ -236,7 +236,7 @@ C/C++ 项目可以利用 `__ANDROID__` 和 `__TERMUX__` 区分 Android 与 Termu
 
 ## 使用 FFmpeg 处理手机中的视频
 
-视频处理是很适合交给手机的一项任务。除了 ARM CPU 可以进行软件编解码，手机 SoC 通常还带有专门的视频编解码硬件。Termux 中的 FFmpeg 可以使用 Android 的 MediaCodec 接口：
+编译属于通用计算，视频处理则能进一步利用手机 SoC 中专门的编解码硬件。近年来，短视频和手机摄影的发展促使厂商不断优化这些硬件，使手机在视频编解码速度和能效上很有优势。Termux 中的 FFmpeg 可以通过 Android 的 MediaCodec 接口使用这些能力：
 
 ```bash
 pkg install ffmpeg
@@ -293,7 +293,7 @@ termux-wake-unlock
 
 ## 在电脑上显示手机中的 GUI 应用
 
-Termux 也可以运行 Wayland 程序。通过 Waypipe，手机上启动的应用窗口或 Weston 合成器可以显示在另一台电脑的 Wayland 桌面上。
+SSH、文件访问和后台任务已经覆盖了服务器的常见命令行用途。Waypipe 则把手机上的 Wayland 窗口显示到电脑的 Wayland 桌面上，让 GUI 程序和手机的图形硬件也能加入这套使用方式。
 
 ### 安装与 Termux 配置
 
