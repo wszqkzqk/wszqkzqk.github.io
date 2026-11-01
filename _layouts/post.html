@@ -248,4 +248,22 @@ layout: default
 </style>
 {% endif %}
 
+<style>
+    .mermaid {
+        overflow-x: auto;
+        text-align: center;
+    }
+</style>
+<script type="module">
+    const diagrams = document.querySelectorAll(".mermaid");
+    if (diagrams.length > 0) {
+        const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+        mermaid.initialize({
+            startOnLoad: false,
+            securityLevel: "strict",
+            theme: "default"
+        });
+        await mermaid.run({ nodes: diagrams });
+    }
+</script>
 
