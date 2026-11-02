@@ -1,7 +1,7 @@
 ---
 layout:       post
-title:        LinSYS2再进化：在Linux上直接构建MSYS2软件包
-subtitle:     从Wine执行到bubblewrap路径视图，linsys2-makepkg如何打通混合构建环境
+title:        LinSYS2再进化：在Linux上直接构建MSYS2的Windows软件包
+subtitle:     linsys2-makepkg如何打通混合构建环境
 header-img:   img/wine/wine-bg.webp
 date:         2026-11-01
 author:       wszqkzqk
@@ -13,7 +13,7 @@ tags:         开源软件 Wine MSYS2 跨平台开发 archlinux
 
 在[上一篇介绍LinSYS2的文章](https://wszqkzqk.github.io/2026/04/27/LinSYS2/)中，笔者展示了如何在Linux上安装MSYS2官方仓库中的Windows工具链，再通过Wine完成编译、调试和运行。那时，LinSYS2已经能够让开发者方便地使用MSYS2提供的软件包。
 
-现在，项目又向前跨了一步：新增的[`linsys2-makepkg`](https://github.com/wszqkzqk/LinSYS2)可以直接读取[MINGW-packages](https://github.com/msys2/MINGW-packages)中的PKGBUILD，在Linux上完成依赖安装、源码构建和软件打包，生成可由MSYS2自带的pacman直接安装的`.pkg.tar.zst`软件包。
+现在，项目又向前跨了一步：新增的[`linsys2-makepkg`](https://github.com/wszqkzqk/LinSYS2)可以直接读取[MINGW-packages](https://github.com/msys2/MINGW-packages)中的PKGBUILD，在Linux上完成依赖安装、源码构建和软件打包，生成**可由Windows下的MSYS2自带的pacman直接安装**的`.pkg.tar.zst`软件包。
 
 ```bash
 cd MINGW-packages/mingw-w64-zlib
