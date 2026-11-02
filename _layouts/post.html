@@ -250,6 +250,7 @@ layout: default
 
 <style>
     .mermaid-figure {
+        position: relative;
         margin: 1.5em 0;
     }
 
@@ -263,11 +264,39 @@ layout: default
     }
 
     .mermaid-controls {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        z-index: 1;
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 6px;
-        margin-top: 10px;
+        gap: 2px;
+        padding: 2px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.88);
+        opacity: 0.45;
+        transition: opacity 0.15s ease;
+    }
+
+    .mermaid-figure:hover .mermaid-controls,
+    .mermaid-controls:focus-within {
+        opacity: 1;
+    }
+
+    .mermaid-controls .btn {
+        padding: 1px 4px;
+    }
+
+    @media (hover: none) {
+        .mermaid-controls {
+            opacity: 0.85;
+        }
+    }
+
+    @media print {
+        .mermaid-controls {
+            display: none;
+        }
     }
 </style>
 <script type="module">
@@ -338,7 +367,7 @@ layout: default
             const controls = document.createElement("figcaption");
             controls.className = "mermaid-controls";
             controls.setAttribute("aria-label", "图表工具");
-            frame.append(controls);
+            frame.prepend(controls);
 
             const baseWidth = svg.getBoundingClientRect().width;
             const originalWidth = svg.style.width;
