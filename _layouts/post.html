@@ -373,6 +373,9 @@ layout: default
             const originalWidth = svg.style.width;
             const originalMaxWidth = svg.style.maxWidth;
             const originalHeight = svg.style.height;
+            const viewportHeight = diagram.getBoundingClientRect().height;
+            const originalDiagramHeight = diagram.style.height;
+            const originalOverflowY = diagram.style.overflowY;
             let scale = 1;
 
             const applyScale = () => {
@@ -380,11 +383,15 @@ layout: default
                     svg.style.width = originalWidth;
                     svg.style.maxWidth = originalMaxWidth;
                     svg.style.height = originalHeight;
+                    diagram.style.height = originalDiagramHeight;
+                    diagram.style.overflowY = originalOverflowY;
                     diagram.scrollLeft = 0;
                 } else {
                     svg.style.width = `${baseWidth * scale}px`;
                     svg.style.maxWidth = "none";
                     svg.style.height = "auto";
+                    diagram.style.height = `${viewportHeight}px`;
+                    diagram.style.overflowY = "auto";
                 }
             };
 
