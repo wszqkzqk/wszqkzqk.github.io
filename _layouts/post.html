@@ -278,7 +278,7 @@ layout: default
         transition: opacity 0.15s ease;
     }
 
-    .mermaid-figure:hover .mermaid-controls,
+    .mermaid-controls:hover,
     .mermaid-controls:focus-within {
         opacity: 1;
     }
@@ -389,11 +389,11 @@ layout: default
             };
 
             controls.append(
-                createButton("🔍−", "缩小", () => {
+                createButton("−", "缩小", () => {
                     scale = Math.max(0.5, scale - 0.25);
                     applyScale();
                 }),
-                createButton("🔍+", "放大", () => {
+                createButton("+", "放大", () => {
                     scale = Math.min(4, scale + 0.25);
                     applyScale();
                 }),
