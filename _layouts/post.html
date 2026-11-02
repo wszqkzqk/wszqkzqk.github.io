@@ -249,14 +249,33 @@ layout: default
 {% endif %}
 
 <style>
+    .mermaid-figure {
+        margin: 1.5em 0;
+    }
+
     .mermaid {
         overflow-x: auto;
-        text-align: center;
+    }
+
+    .mermaid svg {
+        display: block;
+        margin: 0 auto;
+    }
+
+    .mermaid-controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 10px;
     }
 </style>
 <script type="module">
     const diagrams = document.querySelectorAll(".mermaid");
     if (diagrams.length > 0) {
+        const sources = new WeakMap();
+        diagrams.forEach((diagram) => sources.set(diagram, diagram.textContent));
+
         const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
         mermaid.initialize({
             startOnLoad: false,
@@ -264,6 +283,133 @@ layout: default
             theme: "default"
         });
         await mermaid.run({ nodes: diagrams });
+
+        const copyText = async (text) => {
+            if (window.isSecureContext && navigator.clipboard) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return;
+                } catch (error) {
+                }
+            }
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            textarea.style.position = "fixed";
+            textarea.style.opacity = "0";
+            document.body.append(textarea);
+            textarea.select();
+            let copied = false;
+            try {
+                copied = document.execCommand("copy");
+            } finally {
+                textarea.remove();
+            }
+            if (!copied) {
+                throw new Error("Copy failed");
+            }
+        };
+
+        const setButtonLabel = (button, icon, label) => {
+            button.textContent = icon;
+            button.title = label;
+            button.setAttribute("aria-label", label);
+        };
+
+        const createButton = (icon, label, action) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "btn btn-default btn-xs";
+            setButtonLabel(button, icon, label);
+            button.addEventListener("click", action);
+            return button;
+        };
+
+        diagrams.forEach((diagram, index) => {
+            const svg = diagram.querySelector("svg");
+            if (!svg) {
+                return;
+            }
+
+            const frame = document.createElement("figure");
+            frame.className = "mermaid-figure";
+            diagram.before(frame);
+            frame.append(diagram);
+
+            const controls = document.createElement("figcaption");
+            controls.className = "mermaid-controls";
+            controls.setAttribute("aria-label", "图表工具");
+            frame.append(controls);
+
+            const baseWidth = svg.getBoundingClientRect().width;
+            const originalWidth = svg.style.width;
+            const originalMaxWidth = svg.style.maxWidth;
+            const originalHeight = svg.style.height;
+            let scale = 1;
+
+            const applyScale = () => {
+                if (scale === 1) {
+                    svg.style.width = originalWidth;
+                    svg.style.maxWidth = originalMaxWidth;
+                    svg.style.height = originalHeight;
+                    diagram.scrollLeft = 0;
+                } else {
+                    svg.style.width = `${baseWidth * scale}px`;
+                    svg.style.maxWidth = "none";
+                    svg.style.height = "auto";
+                }
+            };
+
+            controls.append(
+                createButton("🔍−", "缩小", () => {
+                    scale = Math.max(0.5, scale - 0.25);
+                    applyScale();
+                }),
+                createButton("🔍+", "放大", () => {
+                    scale = Math.min(4, scale + 0.25);
+                    applyScale();
+                }),
+                createButton("↺", "复位", () => {
+                    scale = 1;
+                    applyScale();
+                })
+            );
+
+            const copyButton = createButton("📋", "复制源码", async () => {
+                copyButton.disabled = true;
+                try {
+                    await copyText(sources.get(diagram).trim());
+                    setButtonLabel(copyButton, "✓", "已复制");
+                } catch (error) {
+                    setButtonLabel(copyButton, "✕", "复制失败");
+                }
+                setTimeout(() => {
+                    setButtonLabel(copyButton, "📋", "复制源码");
+                    copyButton.disabled = false;
+                }, 1500);
+            });
+
+            const downloadButton = createButton("📥", "下载SVG", () => {
+                const exportSvg = svg.cloneNode(true);
+                exportSvg.style.width = originalWidth;
+                exportSvg.style.maxWidth = originalMaxWidth;
+                exportSvg.style.height = originalHeight;
+                const content = new XMLSerializer().serializeToString(exportSvg);
+                const blob = new Blob([
+                    '<?xml version="1.0" encoding="UTF-8"?>\n',
+                    content
+                ], { type: "image/svg+xml;charset=utf-8" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = `mermaid-${index + 1}.svg`;
+                document.body.append(link);
+                link.click();
+                link.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            });
+
+            controls.append(copyButton, downloadButton);
+        });
     }
 </script>
 
