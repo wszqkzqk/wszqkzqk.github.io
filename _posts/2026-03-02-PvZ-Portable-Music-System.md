@@ -6,7 +6,7 @@ date:         2026-03-02
 author:       wszqkzqk
 header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
-tags:         C++ SDL2 开源软件 游戏移植 开源游戏 PvZ-Portable 音频
+tags:         C++ SDL 开源软件 游戏移植 开源游戏 PvZ-Portable 音频
 ---
 
 ## 引言

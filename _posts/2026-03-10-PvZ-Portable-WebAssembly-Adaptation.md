@@ -6,7 +6,7 @@ date:         2026-03-10
 author:       wszqkzqk
 header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
-tags:         C++ SDL2 OpenGL WebAssembly Emscripten 开源软件 游戏移植 开源游戏 PvZ-Portable
+tags:         C++ SDL OpenGL WebAssembly Emscripten 开源软件 游戏移植 开源游戏 PvZ-Portable
 ---
 
 ## 现在，打开浏览器就能玩

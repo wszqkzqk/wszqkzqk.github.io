@@ -8,7 +8,7 @@ header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 pinned:       true
 pinned_order: 2
-tags:         C++ SDL2 OpenGL 开源软件 游戏移植 开源游戏 PvZ-Portable
+tags:         C++ SDL OpenGL 开源软件 游戏移植 开源游戏 PvZ-Portable
 ---
 
 # [PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable)
