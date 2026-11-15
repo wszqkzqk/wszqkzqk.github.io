@@ -16,18 +16,18 @@ tags:       开源软件 化学
 
 ## MathJax
 
-在 Markdown 中使用 MathJax 的方法是在 Markdown 文件的头部添加以下内容：
+如果站点尚未统一加载 MathJax，可以在页面头部添加以下配置。本站已经在`_includes/head.html`中统一加载，写文章时无需重复添加：
 
-```markdown
-<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-        inlineMath: [['$','$']]
+```html
+<script>
+    window.MathJax = {
+        tex: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            inlineMath: [['$', '$']]
         }
-    });
+    };
 </script>
+<script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
 ```
 
 然后就可以在 Markdown 中使用 MathJax 了，例如：
@@ -50,21 +50,9 @@ $$
 \end{aligned}
 $$
 
-## 默认化配置
+## 全站配置
 
-如果不想在每篇博客中都添加 MathJax 的配置，可以在`_include/head.html`的`<head>`与`</head>`之间插入以下内容：
-
-```html
-<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-        inlineMath: [['$','$']]
-        }
-    });
-</script>
-```
+如果希望全站页面都能使用 MathJax，可以将上述配置放入`_includes/head.html`的`<head>`与`</head>`之间。`window.MathJax`必须位于加载 MathJax 的脚本之前，以便库启动时读取配置。
 
 ## 部分符号及其含义
 
@@ -100,25 +88,23 @@ $$
 
 ## 化学式支持
 
-使用拓展的 MathJax，可以方便地支持化学式的显示，只需要将插入内容换成：
+使用 MathJax 的 mhchem 扩展，可以方便地支持化学式显示。完整的加载配置如下：
 
 ```html
 <script>
-  window.MathJax = {
-    tex: {
-      inlineMath: [['$', '$']],
-      packages: {'[+]': ['mhchem']}
-    },
-    loader: {load: ['[tex]/mhchem']},
-    svg: {
-      fontCache: 'global'
-    }
-  };
+    window.MathJax = {
+        tex: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            inlineMath: [['$', '$']],
+            packages: {'[+]': ['mhchem']}
+        },
+        loader: {load: ['[tex]/mhchem']}
+    };
 </script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
 ```
 
-其中`svg:{...}`的内容是指定 svg 字体缓存为全局模式，减少开销。
+其中`packages`用于启用 mhchem 扩展，`loader`负责加载对应组件。
 
 * 化学符号：`\ce{化学式}`
   * 例如：`\ce{H2O}`
