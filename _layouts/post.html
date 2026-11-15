@@ -254,11 +254,11 @@ layout: default
         margin: 1.5em 0;
     }
 
-    .mermaid {
+    .language-mermaid {
         overflow-x: auto;
     }
 
-    .mermaid svg {
+    .language-mermaid svg {
         display: block;
         margin: 0 auto;
     }
@@ -300,7 +300,7 @@ layout: default
     }
 </style>
 <script type="module">
-    const diagrams = document.querySelectorAll(".mermaid");
+    const diagrams = document.querySelectorAll(".language-mermaid");
     if (diagrams.length > 0) {
         const sources = new WeakMap();
         diagrams.forEach((diagram) => sources.set(diagram, diagram.textContent));

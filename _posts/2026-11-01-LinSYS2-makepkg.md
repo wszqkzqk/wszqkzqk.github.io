@@ -61,7 +61,7 @@ MINGW_ARCH="ucrt64 clang64" linsys2-makepkg -s
 
 `linsys2-makepkg`沿用MSYS2的PKGBUILD和makepkg实现，采用分工明确的混合模型：让Linux原生工具负责组织构建，让Wine中的Windows工具负责目标平台的编译与运行。
 
-<div class="mermaid">
+```mermaid
 flowchart TD
     PKGBUILD["PKGBUILD"] --> Makepkg["Linux原生makepkg与bash"]
     Bwrap["bubblewrap：统一MSYS2规范路径"] --> Makepkg
@@ -72,7 +72,7 @@ flowchart TD
     PE --> Binfmt["binfmt_misc"]
     Binfmt --> Wine
     Makepkg --> Package["MSYS2 pacman可直接安装的软件包"]
-</div>
+```
 
 保留Linux原生makepkg是一个关键选择。PKGBUILD的函数、变量展开、源码下载、依赖处理和归档逻辑都由成熟的makepkg实现，LinSYS2只需提供适合各目标环境的`makepkg_linsys2.conf`，设置`MINGW_PREFIX`、`MINGW_CHOST`、`CC`、`CXX`和编译参数。Windows GCC、Clang、CMake等工具则继续来自MSYS2官方仓库，通过Wine运行。
 
