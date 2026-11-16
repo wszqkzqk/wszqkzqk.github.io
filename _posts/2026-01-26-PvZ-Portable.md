@@ -1,7 +1,7 @@
 ---
 layout:       post
 title:        PvZ-Portable：跨平台植物大战僵尸重实现
-subtitle:     近乎100%复现植物大战僵尸年度版体验的开源引擎，支持Linux、Windows、macOS、Android、iOS/iPadOS、浏览器(WebAssembly)等多平台
+subtitle:     《植物大战僵尸：年度版》的开源重实现，支持桌面、移动设备、Switch 与浏览器
 date:         2026-01-26
 author:       wszqkzqk
 header-img:   img/games/pvz-portable/bg-pvz-portable.webp
@@ -13,282 +13,145 @@ tags:         C++ SDL OpenGL 开源软件 游戏移植 开源游戏 PvZ-Portable
 
 # [PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable)
 
-笔者在大一时曾经尝试写过 [Python 版植物大战僵尸](https://wszqkzqk.github.io/2022/04/05/pypvz/)。那时候笔者还在起步阶段，用 Python 和 Pygame 做了一个简单的练习，主要目的是学习 Python 和面向对象编程。那个项目虽然能玩，但在还原度上和功能完成度上存在不少局限。
+笔者在大一时曾经写过 [Python 版植物大战僵尸](https://wszqkzqk.github.io/2022/04/05/pypvz/)，那个项目以学习 Python 和面向对象编程为主，虽然能玩，但还原度和完成度都相当有限。PvZ-Portable 则把目标放在《植物大战僵尸：年度版》的完整重实现与跨平台运行上，希望为现代桌面、移动设备、主机和浏览器带来忠实的原版体验。
 
-时隔几年，随着技术栈的深入，在开源社区前人大量代码[^1] [^2]的基础上，笔者带来了一个强大得多的新项目 —— [**PvZ-Portable**](https://github.com/wszqkzqk/PvZ-Portable)。
+目前，Windows、Linux、macOS、Android、iOS/iPadOS 和 Nintendo Switch 的预构建版本都可以从 [GitHub Releases](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载，其他平台可以自行编译，也可以直接打开[浏览器版](https://wszqkzqk.github.io/PvZ-Portable/pvz-portable.html)体验。预构建二进制由 GitHub Actions 编译，主要用于测试，有条件的话更推荐自行编译——例如 macOS 用户可以借此避开应用签名问题。
 
-这是一个**跨平台**的社区驱动项目，是对《植物大战僵尸：年度版》（GOTY Edition）的完整源码重实现。与之前的玩具项目不同，PvZ-Portable 的目标是 **100% 还原原版游戏体验**，同时让它能在现代软件、硬件和各种官方未支持的平台上流畅运行。项目开源开发，用于交流学习**跨平台移植技术**、**引擎现代化**以及研究如何将经典游戏逻辑适配到各种不同的软硬件平台上。
-
-| 🌿 原汁原味 | 🎮 可移植/跨平台 | 🛠️ 开源开放 |
-| :---: | :---: | :---: |
-| 几乎 100% 复刻原版所有特性 | 支持 Linux, Windows, macOS, Android, iOS/iPadOS, WebAssembly, Switch... | 基于 OpenGL & SDL |
-
-> **想先体验？**现在已经可以**直接在浏览器中运行**。访问 [**浏览器免安装体验页面**](https://wszqkzqk.github.io/PvZ-Portable/pvz-portable.html)，导入正版游戏的 `main.pak` 和 `properties/` 目录后即可**免安装开始游玩**。
+> **游戏资源说明**：仓库和预构建包只包含引擎。游玩时，请从你合法拥有的《植物大战僵尸：年度版》中准备 `main.pak` 和 `properties/` 目录（正版可在 [Steam](https://store.steampowered.com/app/3590/Plants_vs_Zombies_GOTY_Edition/) 或 [EA 官网](https://www.ea.com/games/plants-vs-zombies/plants-vs-zombies) 购买）。
 
 ## 为什么要重写？
 
-原版《植物大战僵尸》虽然经典，但毕竟是十几年前的游戏。原版使用了 DirectX 7 等过时技术，且只提供了 32 位可执行文件，在现代操作系统上运行可能会遇到兼容性问题，而且它从未官方支持过 Linux，也没有适配过 LoongArch 等新兴指令集架构。
+原版《植物大战僵尸》虽然经典，但毕竟是十几年前的游戏。原版使用了 DirectX 7 等过时技术，且只提供 32 位可执行文件，在现代操作系统上难免遇到兼容性问题；分辨率只有 800×600，在高分辨率屏幕上窗口小得可怜，想放大只能开全屏；而且它从未官方支持过 Linux，更没有适配 LoongArch 等新兴指令集架构。
 
-在开源社区，已经有前人基于逆向工程得到的文档和社区研究，[^3]重写出了最初的游戏引擎。PvZ-Portable 在此基础上进一步开发，作为一个专注于跨平台移植技术的研究项目，主要实现了：
+在开源社区，已经有前人基于逆向工程得到的文档和社区研究，重写出了最初的游戏引擎。[^1] [^2] [^3] PvZ-Portable 在此基础上进一步开发，是一个专注于跨平台移植技术的研究项目。
 
-1.  **现代化渲染**：使用 SDL2 和 OpenGL 替代了古老的 DirectX 7[^4]，支持硬件加速，并且终于**支持调整窗口大小**了！
-    *   由于游戏分辨率仅有 800x600，在高分辨率屏幕上运行原版时窗口会非常小，只有开启全屏模式才能放大。
-    *   PvZ-Portable **支持任意缩放比例**，也支持**窗口最大化**和全屏。
-2.  **真正、全面跨平台**：
-    *   **OS**: Linux, Windows, macOS, Android, iOS/iPadOS, Web (WebAssembly), BSD家族, ...
-        *   32 位和 64 位支持
-    *   **ISA**: i686, x86_64, aarch64, riscv64, loongarch64, ...
-    *   **字节序**: 小端和大端均支持，且**可移植存档相互兼容**
-    *   **主机**: Nintendo Switch
-    *   **其他**: Haiku OS 等小众系统
-3.  **音频升级**：基于 [Headshotnoby](https://github.com/headshot2017/) 的适配工作，使用 [SDL Mixer X](https://github.com/WohlSoft/SDL-Mixer-X) 和 libopenmpt，支持 MO3 音乐格式。
-4.  **修复原版 Bug**：在保持原汁原味的同时，本项目还**可选**修复一些原版游戏中存在的逻辑错误（例如有关特殊的魅惑僵尸的某些行为等）。当然，如果你喜欢那些“特性”，也可以选择不开启修复。（默认不启用额外修复，保证体验与原版一致）
-5.  **全平台 Unicode 路径支持**：原版游戏在 Windows 上不支持非 ASCII 路径，PvZ-Portable 彻底解决了这个问题，在所有平台上支持 Unicode 路径。
-6.  **多语言支持**：支持各种语言的官方年度版资源包，包括**汉语、德语、法语、西班牙语、意大利语**等。
-7.  **现代化实现**：使用 `std::string` 取代原版的宽字串，使用 `std::thread` 实现线程管理，使用 `std::filesystem` 实现文件操作，代码更简洁易懂。
+## 项目特点
 
-## ⚠️ 版权与使用说明
+### 图形、音频与游戏
 
-**重要：本项目仅包含代码引擎，不包含任何游戏素材！**
+- **SDL3 与 OpenGL ES 2.0**：渲染统一使用 OpenGL ES 2.0，并可回退到桌面 OpenGL 2.1+。这套接口可以覆盖桌面 GPU、移动芯片、WebGL 和主机平台。[^4]
+- **窗口与高分屏**：支持自由调整窗口、最大化、全屏缩放和 Alt+Enter 切换全屏，并根据高分屏的物理像素尺寸进行渲染。
+- **原版音乐与音效**：通过 SDL3_mixer 和 libopenmpt 播放原版 MO3 音乐，支持曲目跳转与逐通道音量控制。
+- **原版内容**：支持隐藏小游戏页面 Limbo 和僵尸头像工具 Zombatar。在小游戏、解谜或生存模式选择界面快速点击空白处 5 次，即可解锁 Limbo 页面。
+- **可选修复**：`DO_FIX_BUGS` 提供一组社区修复，默认关闭，由构建者选择是否启用。[^6]
+- **确定性回放**：可以把游戏过程录制为 `.dmo` 文件，用于问题复现和回归测试。
 
-PvZ-Portable 严格遵守版权协议。游戏的 IP（植物大战僵尸）属于 PopCap/EA。本项目与 EA/PopCap 没有任何商业合作或授权关系，也不包含任何受版权保护的游戏资源。
+### 可移植性
 
-要研究或使用此项目，你**必须**拥有正版游戏（如果没有，请在 [Steam](https://store.steampowered.com/app/3590/Plants_vs_Zombies_GOTY_Edition/) 或 [EA 官网](https://www.ea.com/games/plants-vs-zombies/plants-vs-zombies) 上购买）。你需要从正版游戏中提取以下文件放到 PvZ-Portable 的程序所在目录中：
+- **32 位与 64 位架构**：支持 i686、x86_64、aarch64、riscv64、loongarch64 等架构。
+- **字节序无关设计**：支持小端和大端系统，可移植存档能够跨字节序使用。大端支持已经实现，尚未在实体硬件上验证。
+- **现代化 C++20**：使用 `std::thread`、`std::filesystem` 和统一的 UTF-8 字符串处理，支持各平台的 Unicode 路径与多语言文本输入。
+- **低内存模式**：`LOW_MEMORY` 构建选项会减少资源预缓存，面向内存受限的主机设备。
 
-*   `main.pak`
-*   `properties/` 目录
+### 存档与资源兼容
 
-本项目仅提供引擎代码，用于技术学习，**不包含**上述任何游戏资源文件，任何游戏资源均需要用户自行提供正版游戏文件。
+- **原版用户进度**：可以直接读写原版 PC GOTY 的 `users.dat`、`user*.dat`，涵盖冒险进度、金币、禅境花园和成就等内容，并以向后兼容的方式修复 2038 年时间戳溢出问题。
+- **跨平台关卡存档**：关卡中途进度默认保存为 `.v4`，采用逐字段序列化的 TLV 结构，可以跨操作系统、编译器和 CPU 架构转移。仓库还提供 YAML 导出、编辑与导入工具。
+- **旧版关卡存档**：保留 `.dat` 后备读取与自动迁移支持。旧格式与程序内存布局有关，跨平台使用仍以 `.v4` 为准。
+- **多语言资源**：支持英语、汉语、德语、法语、西班牙语和意大利语等官方 GOTY 资源包。
 
-本项目的源代码以 [**LGPL-3.0-or-later**](https://www.gnu.org/licenses/lgpl-3.0.html) 许可证开源，欢迎学习和贡献。
+## 开始使用
 
-### 游戏版本兼容性
+### 游戏资源与版本
 
-本项目针对植物大战僵尸 **GOTY 1.2.0.1073** EN（宝开独立发行版）设计和测试。**其他语言 GOTY 版本**（1.2.0.1093 DE/ES/FR/IT 及基于 1.2.0.1073 的 1.1.0.1056 ZH）和 **Steam GOTY 1.2.0.1096** 均可正常游玩——所有游戏机制完全一致，仅有少量界面文本因版本间键名变更而显示不同。这些差异都是纯文本层面的小问题，用户可以通过自定义 `properties/default.xml` **轻松修复**（见下文）。
+游玩时需要 `main.pak` 和 `properties/` 目录，也可以使用解包后的资源文件替代 `main.pak`。
 
-**推荐使用 1.2.0.1073 EN 资源包以获得最佳体验。**
+项目主要针对 **GOTY 1.2.0.1073 EN** 设计和测试，推荐使用这一版本获得最佳开箱体验。Steam GOTY 1.2.0.1096、其他官方语言 GOTY 版本以及 1.1.0.1056 ZH 也可以正常游玩。不同版本的少量字符串键名存在差异，可能表现为图鉴介绍或按钮文字缺失。
 
-#### 多语言资源包支持
+遇到这种情况，可以在仓库根目录运行以下命令生成兼容覆盖文件：
 
-PvZ-Portable 支持加载**非英语版本**的正版游戏资源。引擎能够自动处理带 BOM 的 UTF-8 和 UTF-16 编码文件，文本渲染已支持完整 Unicode（包括 CJK 字符的自动换行和禁则处理）。如果资源包中存在 `properties/default.xml` 和 `properties/Layout.xml`，引擎会在 `LawnStrings.txt` **之后**加载它们，因此其中的值会覆盖 `LawnStrings.txt` 的同名键。两个文件均为可选——不存在时自动使用内置英文默认值，对英语版用户完全透明。
+```bash
+python3 scripts/make-compat-overrides.py "/path/to/main.pak"
+```
 
-这也意味着用户可以**自行创建或编辑 `properties/default.xml`**，在其中添加或覆盖所需的字符串键值对，即可修复下表中列出的任何显示差异——无需修改引擎代码。详细的实现过程和踩坑记录见[多语言支持技术博客](https://wszqkzqk.github.io/2026/03/01/PvZ-Portable-Multilingual-Support/)。
+脚本会在 `main.pak` 同级的 `properties/` 目录中生成 `pvz-portable.xml`，一次覆盖所有已知的键名差异。可以通过 `-o` 指定输出路径，通过 `--force` 覆盖已有文件。多语言支持的实现过程见[专题博客](https://wszqkzqk.github.io/2026/03/01/PvZ-Portable-Multilingual-Support/)。
 
-#### 已知版本差异（均可通过 `default.xml` 方便地修复）
+这些差异全部源于后续版本对字符串键名的调整，目前已知的有：
 
-以下问题**已在 1.2.0.1096（Steam 版）中确认**，也可能影响其他非 1.2.0.1073 EN 的版本。使用 1.2.0.1073 EN 资源包时**均不会出现**。
-
-| 问题（非 1.2.0.1073 EN 版本） | 原因 |
+| 现象（仅非 1.2.0.1073 EN 资源） | 原因 |
 | :--- | :--- |
-| **图鉴蓝色介绍文字不显示** | 1.2.0.1096 将描述开头的纯文本段落从 `[XXX_DESCRIPTION]` 拆分到了新的 `[XXX_DESCRIPTION_HEADER]` 键中，而引擎只读取 `[XXX_DESCRIPTION]`，因此不会显示头部文本。 |
-| **"重新开始"按钮文字缺失** | 按钮文本的键名从 `[RESTART_LEVEL]` 被改为了 `[RESTART_LEVEL_BUTTON]`。 |
-| **未遭遇的僵尸显示 `???`** 而非 `(not encountered yet)` | `[NOT_ENCOUNTERED_YET]` 的值在 1.2.0.1096 中被改为了 `???`，原文本移到了新键 `[NOT_ENCOUNTERED_YET_DESCRIPTION]`。 |
-| **戴夫卖植物价格显示为正确值的 1/10** | 1.2.0.1073 的 `[CRAZY_DAVE_1700]` 字符串模板中 `{SELL_PRICE}` 后有一个尾随的 `0`（即 `${SELL_PRICE}0`），因为引擎传入的是价格除以 10 的值。1.2.0.1096 去掉了这个 `0`，导致显示的卖价变为实际值的 1/10。 |
+| **图鉴蓝色介绍文字缺失** | 1.2.0.1096 将介绍段落从 `[XXX_DESCRIPTION]` 拆分到新的 `[XXX_DESCRIPTION_HEADER]` 键，旧引擎只读取前者。 |
+| **“重新开始”按钮文字缺失** | 键名由 `[RESTART_LEVEL]` 改为 `[RESTART_LEVEL_BUTTON]`。 |
+| **未遭遇的僵尸显示 `???`** | `[NOT_ENCOUNTERED_YET]` 的值被改为 `???`，原文本移至 `[NOT_ENCOUNTERED_YET_DESCRIPTION]`。 |
+| **戴夫收购物品的价格显示为实际值的 1/10** | 1.2.0.1073 的 `[CRAZY_DAVE_1700]` 模板在 `{SELL_PRICE}` 后有一个字面量 `0`（因为引擎传入的是价格÷10），1.2.0.1096 把这个 `0` 删掉了。 |
 
-## 使用指南
+### Windows、Linux、macOS 与 BSD
 
-### 程序下载
+将 `main.pak` 和 `properties/` 放在 `pvz-portable` 可执行文件所在目录，然后启动程序。资源路径以可执行文件为基准，因此可以从任意工作目录启动。
 
-你可以从 [GitHub Releases 页面](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载预编译的二进制文件，或者从源代码自行编译（见下文）。如果你只是想快速体验，也可以直接使用下文的**浏览器在线体验版**，无需下载安装。预构建二进制仅包含若干主流架构和操作系统搭配，实际支持的平台远远不止这些，如果你需要其他平台的版本，也请自行从源代码编译。预构建二进制均使用 GitHub Actions 编译，主要用于测试。Android 用户可以直接从 Releases 下载 APK 安装。iOS/iPadOS 用户可以从 Releases 下载未签名的 IPA（`pvz-portable-ios-arm64.ipa`），通过 AltStore、TrollStore 或 Xcode 等方式侧载安装。macOS 用户如果不想处理签名问题，**推荐自行编译**。本项目编译流程较为简单，也推荐其他**有条件的用户尽量自行编译**。若没有条件自行构建且有对应平台的预构建文件，从 [GitHub Releases](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载使用**亦可**。
+存档、设置与缓存保存在系统的用户数据目录：
 
-再次提醒，本项目需要**自行提供正版游戏资源**，二进制包和源码仓库中均不包含任何游戏素材。
+- **Linux**：`~/.local/share/io.github.wszqkzqk/PvZPortable/`
+- **Windows**：`%APPDATA%\io.github.wszqkzqk\PvZPortable\`
+- **macOS**：`~/Library/Application Support/io.github.wszqkzqk/PvZPortable/`
 
-### WebAssembly（浏览器）使用说明
+原版的 `users.dat`、`user1.dat` 等文件可以复制到其中的 `userdata/` 子目录继续使用。
 
-**无需下载安装——打开浏览器即可游玩。** 访问 **[浏览器免安装体验页面](https://wszqkzqk.github.io/PvZ-Portable/pvz-portable.html)**，导入你的 `main.pak` 和 `properties/` 目录，点击 **Start Game** 即可开始。存档自动保存在浏览器的 IndexedDB 中，支持导出/导入。资源与存档数据等所有数据均保存在本地，**没有任何数据会被上传到服务器**。
+### Android
 
-也可以从 [Releases](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载或从源码构建 WASM 构建包（`.html` + `.js` + `.wasm`），用本地 HTTP 服务器本地托管。更多技术细节见 [WebAssembly 适配技术博客](https://wszqkzqk.github.io/2026/03/10/PvZ-Portable-WebAssembly-Adaptation/)。
+Android 版需要 Android 7.0 或更高版本。Releases 提供 `arm64-v8a` APK，其他 ABI 可以从源码构建。
 
-### Android 使用说明
+1. 安装并打开 APK，首次启动时会进入资源导入界面。
+2. 选择包含 `main.pak` 和 `properties/` 的 ZIP 文件或文件夹。
+3. 导入完成后点击 **Start Game**。
+4. 之后可以长按应用图标，通过 **Manage Data** 重新导入资源或导入、导出存档。
 
-由于本项目不包含任何游戏素材，Android 版需要在首次启动时**导入游戏资源**。
+资源导入与存档管理使用 Android Storage Access Framework，无需广泛存储权限。更多实现细节见 [Android 适配博客](https://wszqkzqk.github.io/2026/03/04/PvZ-Portable-Android-Adaptation/)。
 
-1. 从 [Releases](https://github.com/wszqkzqk/PvZ-Portable/releases) 下载 APK 并安装（可能需要开启"允许安装未知来源应用"）。
-2. 首次启动时，应用会自动进入**资源导入界面**。
-3. 选择包含 `main.pak` 和 `properties/` 的 **ZIP 文件**或**文件夹**进行导入。
-4. 导入成功后点击**开始游戏**。
+### iOS/iPadOS
 
-之后如需重新导入资源或管理存档，可以长按应用图标，通过 **App Shortcut** 打开数据管理界面。
+iOS/iPadOS 版需要 iOS/iPadOS 16.4 或更高版本，支持 arm64 设备。
 
-Android 版使用 **Storage Access Framework（SAF）**，无需额外存储权限。存档数据与桌面版通用，详见[存档格式 v4](https://wszqkzqk.github.io/2026/01/30/PvZ-Portable-Save-Format-v4/)。更多 Android 适配的技术细节见 [Android 适配技术博客](https://wszqkzqk.github.io/2026/03/04/PvZ-Portable-Android-Adaptation/)。
+1. 从 Releases 下载未签名 IPA，通过 AltStore、TrollStore 或 Xcode 侧载。免费 Apple ID 的签名有效期为 7 天。
+2. 打开 iOS Files 应用，或通过 Finder/iTunes 文件共享，将 `main.pak` 和 `properties/` 复制到 **PvZ Portable** 的 Documents 目录。
 
-### iOS/iPadOS 使用说明
+存档位于同一目录下的 `userdata/` 中，可以通过 Files 或 Finder 导出。更多实现细节见 [iOS 适配博客](https://wszqkzqk.github.io/2026/03/08/PvZ-Portable-iOS-Adaptation/)。
 
-iOS 版**没有 app 内资源导入界面**，需要用户手动拷贝文件。Info.plist 中声明了文件共享支持，app 的 Documents 目录暴露在以下位置：
+### 浏览器
 
-- **iOS Files 应用**：打开 Files → 浏览 → 我的 iPhone/iPad → PvZ Portable
-- **Finder/iTunes 文件共享**：连接设备到 Mac/PC，在 Finder 侧边栏（或 iTunes 的"文件共享"）中选择 PvZ Portable
+1. 打开[浏览器版页面](https://wszqkzqk.github.io/PvZ-Portable/pvz-portable.html)。
+2. 选择包含 `main.pak` 和 `properties/` 的 ZIP 文件或文件夹，点击 **Start Game**。
 
-将正版游戏的 `main.pak` 和 `properties/` 目录直接拷贝到此处即可。启动时如果资源缺失，会弹出提示对话框说明操作步骤。
+资源处理全部在浏览器本地完成。存档保存在 IndexedDB 中，可以通过页面控件导出或导入 ZIP 文件。更多实现细节见 [WebAssembly 适配博客](https://wszqkzqk.github.io/2026/03/10/PvZ-Portable-WebAssembly-Adaptation/)。
 
-存档数据同样保存在 Documents 目录下的 `userdata/` 子目录中，与桌面版和 Android 版**完全兼容**，可以通过 Files app 或 Finder 直接拷贝进出设备。更多 iOS 适配的技术细节见 [iOS 适配技术博客](https://wszqkzqk.github.io/2026/03/08/PvZ-Portable-iOS-Adaptation/)。
+## 从源码构建
 
-### 数据存储
-
-PvZ-Portable 会自动在各操作系统的标准应用数据目录下存储存档和配置：
-
-*   **Linux**: `~/.local/share/io.github.wszqkzqk/PvZPortable/`
-*   **Windows**: `%APPDATA%\io.github.wszqkzqk\PvZPortable\`
-*   **macOS**: `~/Library/Application Support/io.github.wszqkzqk/PvZPortable/`
-*   **Android**: `Android/data/io.github.wszqkzqk.pvzportable/files/`
-*   **iOS/iPadOS**: app 沙箱内的 `Documents/`（通过 Files app 或 Finder 文件共享可见）
-*   **Nintendo Switch**: `sdmc:/switch/PvZPortable`
-*   **Web (WASM)**: 浏览器 IndexedDB（通过页面上的按钮可导出/导入存档 ZIP）
-
-你可以手动将原版的**用户进度**文件复制到上述路径的 `userdata` 子目录下，以继续你的游戏进度（例如复制 `users.dat`, `user1.dat` 等）。但是请注意，由于**关卡内进度**（例如 `game1_13.dat`）的保存涉及到内存数据，无法兼容原版。虽然笔者自己实现的[存档格式 v4](https://wszqkzqk.github.io/2026/01/30/PvZ-Portable-Save-Format-v4/) 支持跨平台使用，但很遗憾，原版的存档格式是与 ABI 高度绑定的，不具有可移植性。
-
-### 游戏录制与回放
-
-PvZ-Portable 可以把一段游戏过程录制为 `.dmo` 演示文件，并在之后**确定性地回放**，主要用于调试和回归测试。运行时加上 `-record` 参数即可将游戏过程录制到当前目录下的 `.dmo` 文件中，加上 `-play` 参数则会回放最近一次的录制。
-
-## 构建与测试
-
-作为开源项目，你可以自由地编译它。本项目使用了现代化的 CMake 构建系统。
-
-在构建前首先克隆 Git 仓库：
+构建需要 C++20 编译器、CMake（≥ 3.12）、Ninja、SDL3（≥ 3.2.12）、SDL3_mixer、libopenmpt、libpng、libjpeg-turbo 和 zlib。各平台的依赖安装命令见 [README](https://github.com/wszqkzqk/PvZ-Portable#building-from-source)。
 
 ```bash
 git clone https://github.com/wszqkzqk/PvZ-Portable.git
 cd PvZ-Portable
-```
-
-### 构建
-
-这部分涉及引擎的编译。
-
-#### 依赖安装
-
-确保安装了 CMake, Ninja, SDL2, OpenGL, libopenmpt 等依赖。这里列出了部分平台的依赖安装命令：
-
-*   **Arch Linux**:
-    ```bash
-    sudo pacman -S --needed base-devel cmake libjpeg-turbo libogg libopenmpt libpng libvorbis mpg123 ninja sdl2-compat
-    ```
-*   **Debian/Ubuntu**:
-    ```bash
-    sudo apt install cmake ninja-build libogg-dev libjpeg-dev libopenmpt-dev libpng-dev libvorbis-dev libmpg123-dev libsdl2-dev
-    ```
-*   **Windows (MSYS2 UCRT64)**:
-    ```bash
-    pacman -S --needed base-devel mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-libjpeg-turbo mingw-w64-ucrt-x86_64-libopenmpt mingw-w64-ucrt-x86_64-libogg mingw-w64-ucrt-x86_64-libpng mingw-w64-ucrt-x86_64-libvorbis mingw-w64-ucrt-x86_64-mpg123 mingw-w64-ucrt-x86_64-ninja mingw-w64-ucrt-x86_64-SDL2
-    ```
-*   **macOS (Homebrew)**:
-    ```bash
-    brew install cmake dylibbundler jpeg-turbo libogg libopenmpt libpng libvorbis mpg123 ninja sdl2
-    ```
-
-#### 基本配置
-
-这里列出的是**最基础、不含编译器优化等其他选项的编译步骤**。进入项目根目录，执行以下命令：
-
-```bash
-cmake -G Ninja -B build
-```
-
-#### 性能优化
-
-在实际使用中，推荐使用 Release 模式编译以获得更好的性能：
-
-```bash
 cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
 ```
 
-对于需要调试的用户，可以使用 RelWithDebInfo 模式：
+编译完成后，将游戏资源放到可执行文件所在目录，也可以通过 `-resdir` 指定资源目录，通过 `-savedir` 指定可写数据目录。
 
-```bash
-cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
-```
+常用构建选项如下：
 
-#### 构建选项
-
-在配置 CMake 项目时，你可以使用以下选项来启用或禁用特定功能：
-
-| 选项 | 默认值 | 说明 |
+| 选项 | 默认值 | 作用 |
 | :--- | :--- | :--- |
-| `PVZ_DEBUG` | `OFF`<br>(如果 `CMAKE_BUILD_TYPE` 是 `Debug` 则默认为 `ON`) | 启用**作弊键**、调试显示和其他调试功能。 |
-| `DO_FIX_BUGS` | `OFF` | 应用社区对官方 1.2.0.1073 GOTY 版的“错误”修复。[^6] 不过这些“错误”通常被许多玩家视为“特性”。 |
-| `CONSOLE` | `OFF`<br>(如果 `CMAKE_BUILD_TYPE` 是 `Debug` 则默认为 `ON`) | 显示控制台窗口（仅限 Windows）。 |
+| `PVZ_DEBUG` | `OFF`（Debug 构建为 `ON`） | 启用作弊键、调试显示和诊断功能。[^5] |
+| `DO_FIX_BUGS` | `OFF` | 启用可选的原版逻辑修复。[^6] |
+| `LOW_MEMORY` | `OFF` | 减少资源预缓存与内存占用。 |
+| `CONSOLE` | `OFF`（Debug 构建为 `ON`） | 在 Windows 上显示控制台窗口。 |
+| `BUILD_STATIC` | `OFF` | 在 Windows（MinGW）和使用 glibc 的 Linux 上静态链接依赖。 |
 
-隐藏关卡页面（Limbo Page）默认隐藏，在**小游戏 / 解谜 / 生存模式选择界面快速连点空白处 5 次**即可解锁。
-
-例如，如果需要使用**作弊键** `-cheat` 等功能，可以启用 `PVZ_DEBUG` 选项：
+例如，以下命令会构建启用作弊键的 Release 版本，运行时添加 `-cheat` 即可使用：[^5]
 
 ```bash
 cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -DPVZ_DEBUG=ON
 ```
 
-这样如果在运行时向程序添加 `-cheat` 参数，就可以启用作弊功能。[^5]
+关于渲染、音频、存档与回放的实现，可以继续阅读 [SDL3 迁移](https://wszqkzqk.github.io/2026/11/09/PvZ-Portable-SDL3-Migration/)、[OpenGL ES 2.0 迁移](https://wszqkzqk.github.io/2026/02/16/PvZ-Portable-GLES2-Migration/)、[存档格式 v4](https://wszqkzqk.github.io/2026/01/30/PvZ-Portable-Save-Format-v4/) 和[确定性回放](https://wszqkzqk.github.io/2026/07/22/PvZ-Portable-Demo-Deterministic-Replay/)等专题文章。
 
-#### 编译
+## 开源协议与致谢
 
-```bash
-cmake --build build
-```
+PvZ-Portable 的源代码以 [LGPL-3.0-or-later](https://www.gnu.org/licenses/lgpl-3.0.html) 发布。项目以非商业的教育与研究为目的，游戏 IP 和原始素材属于 PopCap/EA，与 PopCap/EA 没有授权、合作或隶属关系。
 
-编译完成后，你需要手动将正版游戏的 `main.pak` 和 `properties/` 复制到生成的可执行文件所在目录才能运行。
+感谢 Patoke 和 Headshotnoby 的早期移植工作，感谢 SDL、OpenMPT 等项目提供的跨平台基础，也感谢所有整理游戏机制、报告问题和参与贡献的社区成员。
 
-### Arch Linux 打包与环境测试
-
-为了方便在 Arch Linux 环境下进行测试，仓库中提供了 `PKGBUILD` 脚本；笔者创建这个文件的原因主要是为了**研究引擎在不同显示服务器（Wayland vs. X11）下的行为差异**。
-
-由于法律原因，我们无法在软件包中分发游戏资源。在打包前，你需要**自行提供**正版游戏资源：
-1.  找到你购买的正版游戏安装目录，常见路径包括：
-    *   **Steam (Linux/Proton)**:
-        `~/.steam/steam/steamapps/common/PvZPortable/`
-    *   **Steam (Windows)**:
-        `C:\Program Files (x86)\Steam\steamapps\common\PvZPortable\`
-    *   **PopCap (Windows)**:
-        `C:\Program Files (x86)\PopCap Games\PvZPortable\` 或
-        `C:\Program Files\PopCap Games\PvZPortable\`
-2.  将 `main.pak` 和 `properties/` 目录打包为 `Plants_vs._Zombies_1.2.0.1073_EN.zip`。
-    *   确保 `main.pak` 位于 ZIP 文件的根目录，而不是子目录内。例如，可以使用以下命令（假设你在游戏目录下）：
-        ```bash
-        7z a Plants_vs._Zombies_1.2.0.1073_EN.zip main.pak properties/
-        ```
-3.  将该 ZIP 文件放置在 `archlinux/` 目录下。
-
-然后执行打包命令：
-
-```bash
-cd archlinux
-makepkg -si
-```
-
-#### 关于 Wayland 的测试
-
-在 Linux 平台上，我们特别关注 SDL2 后端在 Wayland 和 X11 环境下的表现差异（例如全屏下的黑边闪烁问题）。为此，Arch Linux 包中引入了一个特殊的启动脚本，用于自动检测环境并在必要时调整 SDL 视频驱动：
-
-```
-#!/usr/bin/env sh
-
-# Default to Wayland SDL video driver if running in a Wayland session and $SDL_VIDEODRIVER is not set
-if [ -n "$WAYLAND_DISPLAY" ] && [ -z "$SDL_VIDEODRIVER" ]; then
-    export SDL_VIDEODRIVER="wayland,x11"
-fi
-
-exec /usr/share/pvz-portable/pvz-portable "$@"
-```
-
-在运行的时候，这个脚本会检查当前是否在 Wayland 会话中运行，如果是且没有设置 `SDL_VIDEODRIVER` 环境变量，则会将其设置为 `wayland,x11`，以优先使用 Wayland 后端。在需要测试 Xwayland 的情况下，可以在启动时手动设置 `SDL_VIDEODRIVER=x11`。
-
-## [DeepWiki](https://deepwiki.com/wszqkzqk/PvZ-Portable) AI 助手
-
-如果你在测试、学习或开发 PvZ-Portable 过程中遇到问题，可以询问项目的 [DeepWiki AI 助手](https://deepwiki.com/wszqkzqk/PvZ-Portable)。
-
-由于本项目高度精准地实现了原版的游戏逻辑，你也可以通过 DeepWiki AI 助手来**查询原版游戏的详细内部机制和规则**。
-
-## 致谢
-
-这个项目站在了巨人的肩膀上。
-
-* 特别感谢 [Patoke](https://github.com/Patoke/) 和 [Headshotnoby](https://github.com/headshot2017/) 对引擎的跨平台移植的杰出贡献！
-*  感谢 SDL 开发团队提供的强大跨平台库！
-*  感谢所有为游戏研究做出贡献的社区成员！
-*  感谢宝开创造了这个经典游戏，并使用宽松的 [PopCap Games Framework License](https://github.com/wszqkzqk/PvZ-Portable/blob/main/src/SexyAppFramework/LICENSE) 开放 `SexyAppFramework`，让开源社区能够更方便地研究这个游戏引擎！
-
-如果你对游戏引擎开发或者跨平台移植感兴趣，欢迎访问项目仓库给个 Star，或者参与贡献！
-
-👉 **项目地址**: [https://github.com/wszqkzqk/PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable)
+项目地址：[https://github.com/wszqkzqk/PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable)
 
 ## 备注
 
@@ -359,7 +222,7 @@ exec /usr/share/pvz-portable/pvz-portable "$@"
         * 破罐模式中按住 `Shift` 可让罐子半透明（透视内容）。
 
 [^6]: 目前 `DO_FIX_BUGS` 包含以下修复：
-    * 修复我是僵尸关卡中蹦极僵尸同时命中同一朵向日葵时重复掉落阳光的问题。
+    * 修复我是僵尸关卡中蹦极僵尸重复掉落阳光或物品的问题。
     * 使魅惑的巨人僵尸攻击敌方僵尸，而非植物。
     * 使魅惑的巨人僵尸投掷魅惑小鬼（修正比例、生命值和方向）。
     * 使魅惑的巨人僵尸在解谜模式中可以砸碎花瓶。
@@ -367,6 +230,5 @@ exec /usr/share/pvz-portable/pvz-portable "$@"
     * 使魅惑的辣椒/窝瓜僵尸伤害敌方僵尸而非植物。
     * 修正魅惑窝瓜僵尸追踪和砸碎敌方僵尸的坐标问题。
     * 使魅惑的辣椒僵尸正确清除僵王博士的技能（冰球/火球）和梯子。
-    * 同步舞王僵尸动画（修复“女仆秘籍”）。
+    * 同步伴舞僵尸与舞王僵尸的动画（修复“女仆秘籍”位移问题）。
     * 修复扶梯僵尸手臂恢复的视觉故障。
-    * 修复僵王博士的攻击（扔车、火球/冰球）和6车道（泳池）关卡的召唤范围覆盖问题。
