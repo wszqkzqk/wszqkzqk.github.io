@@ -75,6 +75,10 @@ Waypane 尽量避免把使用门槛堆在那一端：
 - 横屏时把操作入口放在侧边，把更多的空间留给窗口本身。
 - 可以导入私钥或使用密码登录；导入的私钥保存在只有应用自己能访问的存储中，加密私钥支持口令解锁。
 
+|[![#~/img/wayland/waypane-android-termux-session.webp](/img/wayland/waypane-android-termux-session.webp)](/img/wayland/waypane-android-termux-session.webp)|[![#~/img/wayland/waypane-android-window-options.webp](/img/wayland/waypane-android-window-options.webp)](/img/wayland/waypane-android-window-options.webp)|
+|:----:|:----:|
+|Waypane 中的 Termux 会话：操作栏可唤起键盘或 Fit 适配，下方提示来自远端 Weston 的输出|窗口选项：自动适配远端窗口、Direct touch、显示倍率，以及关闭当前远端窗口|
+
 ## 适用场景
 
 ### 在笔记本上开发远端项目
