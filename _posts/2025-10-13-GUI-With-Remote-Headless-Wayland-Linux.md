@@ -7,6 +7,7 @@ author:     wszqkzqk
 header-img: img/wayland/wayland-bg.webp
 catalog:    true
 tags:       开源软件 Wayland Linux
+table-fixed-layout: true
 ---
 
 ## 前言

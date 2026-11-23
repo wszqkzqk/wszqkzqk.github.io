@@ -8,6 +8,7 @@ header-img: img/Vala_Logo.svg
 header-mask: 0.49
 catalog:    true
 tags:       开源软件 GTK Vala 数值计算
+table-fixed-layout: true
 ---
 
 ## 前言

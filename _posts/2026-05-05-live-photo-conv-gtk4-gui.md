@@ -9,6 +9,7 @@ catalog:      true
 pinned:       true
 pinned_order: 3
 tags:         开源软件 Vala GTK4 LibAdwaita 媒体文件 Flatpak 动态照片
+table-fixed-layout: true
 ---
 
 ## 动态照片，能做的事比你想象的更多

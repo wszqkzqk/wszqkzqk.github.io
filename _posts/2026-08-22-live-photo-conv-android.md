@@ -7,6 +7,7 @@ author:       wszqkzqk
 header-img:   img/bg-sunrise.webp
 catalog:      true
 tags:         开源软件 Vala GTK4 LibAdwaita Android 媒体文件 动态照片
+table-fixed-layout: true
 ---
 
 ## Android 版本

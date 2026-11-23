@@ -8,6 +8,7 @@ header-img: img/GTK-logo.svg
 header-mask: 0.53
 catalog:    true
 tags:       开源软件 GTK Vala
+table-fixed-layout: true
 ---
 
 ## 前言

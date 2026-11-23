@@ -23,8 +23,8 @@ layout: default
     {% endif %}
 
     {% if page.table-fixed-layout %}
-    /* 配图表格固定布局，多列时均分列宽，避免由图片固有尺寸决定列宽 */
-    .post-container table {
+    /* 仅配图表格固定布局，多列时均分列宽；纯文字表格仍按内容分配列宽 */
+    .post-container table:has(img) {
         width: 100%;
         table-layout: fixed;
     }

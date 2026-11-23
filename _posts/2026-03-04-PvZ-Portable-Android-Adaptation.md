@@ -7,6 +7,7 @@ author:       wszqkzqk
 header-img:   img/games/pvz-portable/bg-pvz-portable.webp
 catalog:      true
 tags:         C++ SDL OpenGL Android 开源软件 游戏移植 开源游戏 PvZ-Portable
+table-fixed-layout: true
 ---
 
 ## 引言

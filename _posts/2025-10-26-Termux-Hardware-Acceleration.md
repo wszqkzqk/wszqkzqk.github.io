@@ -8,6 +8,7 @@ header-img: img/media/hardware-acceleration/bg-hardware-acceleration.webp
 header-mask: 0.38
 catalog:    true
 tags:       Termux Android FFmpeg 开源软件 媒体编解码
+table-fixed-layout: true
 ---
 
 ## 前言
