@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 900" role="img" aria-labelledby="waypane-header-title">
+  <title id="waypane-header-title">Waypane</title>
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FCA55C"/>
+      <stop offset="0.46" stop-color="#F0547A"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#16081E" stop-opacity="0.27"/>
+      <stop offset="1" stop-color="#16081E" stop-opacity="0.72"/>
+    </linearGradient>
+    <g id="waypane-mark">
+<defs>
+    <linearGradient id="pane" x1="72" y1="72" x2="440" y2="440" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FCA55C"/>
+      <stop offset="0.46" stop-color="#F0547A"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="256" y1="136" x2="256" y2="408" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1F0B1E" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#1F0B1E" stop-opacity="0.08"/>
+    </linearGradient>
+    <linearGradient id="stream" x1="132" y1="196" x2="380" y2="326" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.55" stop-color="#FFF1F2"/>
+      <stop offset="1" stop-color="#F5F3FF"/>
+    </linearGradient>
+    <linearGradient id="inset" x1="302" y1="252" x2="450" y2="408" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2A1230"/>
+      <stop offset="1" stop-color="#100814"/>
+    </linearGradient>
+    <clipPath id="pane-clip">
+      <rect x="72" y="72" width="368" height="336" rx="56"/>
+    </clipPath>
+    <clipPath id="receiver-clip">
+      <rect x="302" y="218" width="148" height="190" rx="20"/>
+    </clipPath>
+  </defs>
+
+  <g>
+    <rect x="72" y="72" width="368" height="336" rx="56" fill="url(#pane)"/>
+    <path d="M128 72H384C414.928 72 440 97.072 440 128V136H72V128C72 97.072 97.072 72 128 72Z" fill="#FFFFFF" fill-opacity="0.14"/>
+    <rect x="72" y="136" width="368" height="272" fill="url(#screen)" clip-path="url(#pane-clip)"/>
+    <circle cx="116" cy="104" r="9" fill="#FFFFFF" fill-opacity="0.95"/>
+    <circle cx="148" cy="104" r="9" fill="#FFFFFF" fill-opacity="0.65"/>
+    <circle cx="180" cy="104" r="9" fill="#FFFFFF" fill-opacity="0.4"/>
+    <path d="M132 196C152 268 168 326 198 326C228 326 240 232 256 232C272 232 284 326 314 326C344 326 360 268 380 196" fill="none" stroke="url(#stream)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <g>
+    <rect x="296" y="214" width="168" height="200" rx="28" fill="#1F0B1E" fill-opacity="0.24"/>
+    <rect x="292" y="208" width="168" height="200" rx="28" fill="#FFF7F5"/>
+    <g clip-path="url(#receiver-clip)">
+      <rect x="302" y="218" width="148" height="190" fill="url(#inset)"/>
+      <path d="M322 218H430C441.046 218 450 226.954 450 238V252H302V238C302 226.954 310.954 218 322 218Z" fill="#F5D6D8"/>
+    </g>
+    <circle cx="322" cy="235" r="5" fill="#F43F5E"/>
+    <circle cx="340" cy="235" r="5" fill="#FB7185"/>
+    <circle cx="358" cy="235" r="5" fill="#FDA4AF"/>
+    <rect x="322" y="268" width="100" height="14" rx="7" fill="#FBBF24"/>
+    <rect x="322" y="300" width="64" height="14" rx="7" fill="#FB7185" fill-opacity="0.92"/>
+    <rect x="322" y="332" width="82" height="14" rx="7" fill="#C4B5FD" fill-opacity="0.94"/>
+  </g>
+    </g>
+  </defs>
+  <rect width="1800" height="900" fill="url(#brand)"/>
+  <rect width="1800" height="900" fill="url(#shade)"/>
+  <g opacity="0.12" transform="translate(-230 40) scale(2.7027) translate(-60 -60)" fill="#FFF0F5">
+    <use href="#waypane-mark"/>
+  </g>
+  <use href="#waypane-mark" transform="translate(1450 596) scale(0.7135) translate(-60 -60)"/>
+</svg>
