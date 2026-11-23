@@ -4,6 +4,7 @@ title:        Waypane：把 Linux 的窗口带到你的 Mac、Windows 和 Androi
 subtitle:     基于 SSH 与 Waypipe 的窗口级 Wayland 转发，让无桌面服务器上的图形应用像本地窗口一样出现在手边
 header-img:   img/wayland/waypane-header.svg
 header-mask:  0.5
+table-fixed-layout: true
 date:         2026-11-23
 author:       wszqkzqk
 catalog:      true

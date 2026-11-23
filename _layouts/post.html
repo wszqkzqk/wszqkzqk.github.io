@@ -21,6 +21,14 @@ layout: default
         background: rgba(0,0,0, {{ page.header-mask }});
     }
     {% endif %}
+
+    {% if page.table-fixed-layout %}
+    /* 配图表格固定布局，多列时均分列宽，避免由图片固有尺寸决定列宽 */
+    .post-container table {
+        width: 100%;
+        table-layout: fixed;
+    }
+    {% endif %}
 </style>
 <header class="intro-header" >
     <div class="header-mask"></div>
